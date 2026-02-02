@@ -1,607 +1,280 @@
-// ============= ГЛОБАЛЬНОЕ СОСТОЯНИЕ =============
-const State = {
-    activeBlock: 'hand',
-    selectedCards: new Map(),  // slotId -> card
-    usedCards: new Set(),      // cardCode -> true
-    opponentsCount: 1,
-    isCalculating: false
-};
-
-// ============= ПРОФЕССИОНАЛЬНЫЙ АЛГОРИТМ ОЦЕНКИ РУК =============
-const HandEvaluator = {
-    ranks: { '2':0, '3':1, '4':2, '5':3, '6':4, '7':5, '8':6, '9':7, '10':8, 'J':9, 'Q':10, 'K':11, 'A':12 },
-    suits: { 's':0, 'h':1, 'c':2, 'd':3 },
-    
-    evaluate(cards) {
-        const formatted = cards.map(c => ({ rank: this.ranks[c.value], suit: this.suits[c.suitCode] }));
-        formatted.sort((a,b) => b.rank - a.rank);
-        
-        const flush = this.hasFlush(formatted);
-        const straight = this.hasStraight(formatted);
-        
-        if (flush && straight) {
-            const straightValue = this.getStraightValue(formatted, true);
-            if (straightValue === 12) return 9 << 20;
-            return (8 << 20) + (straightValue << 16);
-        }
-        
-        const counts = this.getRankCounts(formatted);
-        const values = Object.values(counts).sort((a,b) => b - a);
-        
-        if (values[0] === 4) {
-            const quadsRank = this.getRankOfCount(counts, 4);
-            const kicker = this.getKickers(formatted, [quadsRank], 1);
-            return (7 << 20) + (quadsRank << 16) + (kicker[0] << 12);
-        }
-        
-        if (values[0] === 3 && values[1] >= 2) {
-            const tripsRank = this.getRankOfCount(counts, 3);
-            const pairRank = this.getRankOfCount(counts, 2, tripsRank);
-            return (6 << 20) + (tripsRank << 16) + (pairRank << 12);
-        }
-        
-        if (flush) {
-            const flushCards = this.getFlushCards(formatted);
-            return (5 << 20) + this.getHandValue(flushCards.slice(0,5));
-        }
-        
-        if (straight) {
-            const straightValue = this.getStraightValue(formatted, false);
-            return (4 << 20) + (straightValue << 16);
-        }
-        
-        if (values[0] === 3) {
-            const tripsRank = this.getRankOfCount(counts, 3);
-            const kickers = this.getKickers(formatted, [tripsRank], 2);
-            return (3 << 20) + (tripsRank << 16) + (kickers[0] << 12) + (kickers[1] << 8);
-        }
-        
-        if (values[0] === 2 && values[1] === 2) {
-            const pairs = this.getRanksOfCount(counts, 2);
-            pairs.sort((a,b) => b - a);
-            const kicker = this.getKickers(formatted, pairs, 1)[0];
-            return (2 << 20) + (pairs[0] << 16) + (pairs[1] << 12) + (kicker << 8);
-        }
-        
-        if (values[0] === 2) {
-            const pairRank = this.getRankOfCount(counts, 2);
-            const kickers = this.getKickers(formatted, [pairRank], 3);
-            return (1 << 20) + (pairRank << 16) + (kickers[0] << 12) + (kickers[1] << 8) + (kickers[2] << 4);
-        }
-        
-        return this.getHandValue(formatted.slice(0,5));
+let active='hand', cards=new Map(), used=new Set(), opponents=1, calculating=false;
+const ranks={'2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'10':8,'J':9,'Q':10,'K':11,'A':12};
+const suits={'s':0,'h':1,'c':2,'d':3};
+const HandEvaluator={
+    eval(cards){
+        const f=cards.map(c=>({r:ranks[c.v],s:suits[c.s]}));
+        f.sort((a,b)=>b.r-a.r);
+        const fl=this.flush(f),st=this.straight(f);
+        if(fl&&st){const sv=this.straightVal(f);if(sv===12)return 9<<20;return (8<<20)+(sv<<16);}
+        const cnt=this.counts(f),vals=Object.values(cnt).sort((a,b)=>b-a);
+        if(vals[0]===4){const q=this.rankOf(cnt,4),k=this.kickers(f,[q],1);return (7<<20)+(q<<16)+(k[0]<<12);}
+        if(vals[0]===3&&vals[1]>=2){const t=this.rankOf(cnt,3),p=this.rankOf(cnt,2,t);return (6<<20)+(t<<16)+(p<<12);}
+        if(fl){const fc=this.flushCards(f);return (5<<20)+this.handVal(fc.slice(0,5));}
+        if(st){return (4<<20)+(this.straightVal(f)<<16);}
+        if(vals[0]===3){const t=this.rankOf(cnt,3),k=this.kickers(f,[t],2);return (3<<20)+(t<<16)+(k[0]<<12)+(k[1]<<8);}
+        if(vals[0]===2&&vals[1]===2){const p=this.ranksOf(cnt,2);p.sort((a,b)=>b-a);const k=this.kickers(f,p,1)[0];return (2<<20)+(p[0]<<16)+(p[1]<<12)+(k<<8);}
+        if(vals[0]===2){const p=this.rankOf(cnt,2),k=this.kickers(f,[p],3);return (1<<20)+(p<<16)+(k[0]<<12)+(k[1]<<8)+(k[2]<<4);}
+        return this.handVal(f.slice(0,5));
     },
-    
-    hasFlush(cards) {
-        const suitCounts = [0,0,0,0];
-        cards.forEach(c => suitCounts[c.suit]++);
-        return suitCounts.some(count => count >= 5);
-    },
-    
-    hasStraight(cards) {
-        const uniqueRanks = [...new Set(cards.map(c => c.rank))];
-        uniqueRanks.sort((a,b) => b - a);
-        
-        for (let i = 0; i <= uniqueRanks.length - 5; i++) {
-            if (uniqueRanks[i] - uniqueRanks[i+4] === 4) return true;
-        }
-        
-        if (uniqueRanks.includes(12)) {
-            const lowStraight = [0,1,2,3];
-            if (lowStraight.every(r => uniqueRanks.includes(r))) return true;
-        }
-        
+    flush(c){let s=[0,0,0,0];c.forEach(x=>s[x.s]++);return s.some(x=>x>=5);},
+    straight(c){let u=[...new Set(c.map(x=>x.r))];u.sort((a,b)=>b-a);
+        for(let i=0;i<=u.length-5;i++)if(u[i]-u[i+4]===4)return true;
+        if(u.includes(12)&&[0,1,2,3].every(r=>u.includes(r)))return true;
         return false;
     },
-    
-    getStraightValue(cards) {
-        const uniqueRanks = [...new Set(cards.map(c => c.rank))];
-        uniqueRanks.sort((a,b) => b - a);
-        
-        for (let i = 0; i <= uniqueRanks.length - 5; i++) {
-            if (uniqueRanks[i] - uniqueRanks[i+4] === 4) return uniqueRanks[i];
-        }
-        
-        if (uniqueRanks.includes(12)) {
-            const lowStraight = [0,1,2,3];
-            if (lowStraight.every(r => uniqueRanks.includes(r))) return 3;
-        }
-        
+    straightVal(c){let u=[...new Set(c.map(x=>x.r))];u.sort((a,b)=>b-a);
+        for(let i=0;i<=u.length-5;i++)if(u[i]-u[i+4]===4)return u[i];
+        if(u.includes(12)&&[0,1,2,3].every(r=>u.includes(r)))return 3;
         return -1;
     },
-    
-    getRankCounts(cards) {
-        const counts = {};
-        cards.forEach(c => { counts[c.rank] = (counts[c.rank] || 0) + 1; });
-        return counts;
-    },
-    
-    getRankOfCount(counts, targetCount, exclude = -1) {
-        for (const [rank, count] of Object.entries(counts)) {
-            const rankNum = parseInt(rank);
-            if (count === targetCount && rankNum !== exclude) return rankNum;
-        }
-        return -1;
-    },
-    
-    getRanksOfCount(counts, targetCount) {
-        const result = [];
-        for (const [rank, count] of Object.entries(counts)) {
-            if (count === targetCount) result.push(parseInt(rank));
-        }
-        return result;
-    },
-    
-    getKickers(cards, excludeRanks, count) {
-        const kickers = cards
-            .filter(c => !excludeRanks.includes(c.rank))
-            .map(c => c.rank)
-            .sort((a,b) => b - a)
-            .slice(0, count);
-        while (kickers.length < count) kickers.push(0);
-        return kickers;
-    },
-    
-    getFlushCards(cards) {
-        const suitCounts = [0,0,0,0];
-        cards.forEach(c => suitCounts[c.suit]++);
-        const flushSuit = suitCounts.findIndex(count => count >= 5);
-        return cards.filter(c => c.suit === flushSuit).sort((a,b) => b.rank - a.rank).slice(0,5);
-    },
-    
-    getHandValue(cards) {
-        let value = 0;
-        cards.forEach((c,i) => { value += c.rank << (4 * (4 - i)); });
-        return value;
-    }
+    counts(c){let o={};c.forEach(x=>{o[x.r]=(o[x.r]||0)+1;});return o;},
+    rankOf(cnt,target,exclude=-1){for(const[r,c]of Object.entries(cnt)){const rn=parseInt(r);if(c===target&&rn!==exclude)return rn;}return -1;},
+    ranksOf(cnt,target){let res=[];for(const[r,c]of Object.entries(cnt))if(c===target)res.push(parseInt(r));return res;},
+    kickers(c,exclude,count){let k=c.filter(x=>!exclude.includes(x.r)).map(x=>x.r).sort((a,b)=>b-a).slice(0,count);while(k.length<count)k.push(0);return k;},
+    flushCards(c){let s=[0,0,0,0];c.forEach(x=>s[x.s]++);const fs=s.findIndex(x=>x>=5);return c.filter(x=>x.s===fs).sort((a,b)=>b.r-a.r).slice(0,5);},
+    handVal(c){let v=0;c.forEach((x,i)=>{v+=x.r<<(4*(4-i));});return v;}
 };
 
-// ============= ИНИЦИАЛИЗАЦИЯ =============
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("Poker Calculator v2 - оптимизированная версия");
+document.addEventListener('DOMContentLoaded',()=>{
     createDeck();
-    initEventListeners();
-    initDragAndDrop();
-    selectBlock('hand');
-    updateStatus();
+    document.getElementById('handSection').onclick=()=>select('hand');
+    document.getElementById('boardSection').onclick=()=>select('board');
+    document.getElementById('calculateBtn').onclick=calculate;
+    document.getElementById('clearAllBtn').onclick=clear;
+    document.querySelectorAll('.opponent-pill').forEach(p=>p.onclick=()=>setOpp(parseInt(p.dataset.opponents)));
+    document.querySelectorAll('.card-slot').forEach(s=>s.onclick=e=>{
+        if(e.target.classList.contains('slot-empty')||e.target.classList.contains('remove-hint'))return;
+        if(e.target.closest('.real-card'))remove(s.dataset.slot);
+    });
+    initDragDrop();
+    select('hand');
 });
 
-// ============= СОЗДАНИЕ КОЛОДЫ =============
-function createDeck() {
-    const deck = document.getElementById('deck');
-    deck.innerHTML = '';
-    
-    const suits = [
-        {code:'s', symbol:'♠', color:'black'},
-        {code:'h', symbol:'♥', color:'red'},
-        {code:'c', symbol:'♣', color:'black'},
-        {code:'d', symbol:'♦', color:'red'}
-    ];
-    
-    const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-    
-    suits.forEach(suit => {
-        values.forEach(value => {
-            const cardCode = value + suit.code;
-            const card = document.createElement('div');
-            card.className = `deck-card ${suit.color}`;
-            card.dataset.card = cardCode;
-            card.draggable = true;
-            card.innerHTML = `<div class="card-face"><div class="card-value">${value}</div><div class="card-suit-large">${suit.symbol}</div></div>`;
-            deck.appendChild(card);
-            
-            // Клик по карте в колоде
-            card.addEventListener('click', (e) => {
-                if (card.classList.contains('selected')) return;
-                handleDeckCardClick(cardCode);
-            });
-        });
-    });
+function createDeck(){
+    const d=document.getElementById('deck');
+    d.innerHTML='';
+    const suits=[{c:'s',s:'♠',cl:'black'},{c:'h',s:'♥',cl:'red'},{c:'c',s:'♣',cl:'black'},{c:'d',s:'♦',cl:'red'}];
+    const vals=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+    suits.forEach(suit=>vals.forEach(v=>{
+        const code=v+suit.c,card=document.createElement('div');
+        card.className=`deck-card ${suit.cl}`;
+        card.dataset.card=code;
+        card.draggable=true;
+        card.innerHTML=`<div class="card-face"><div class="card-value">${v}</div><div class="card-suit-large">${suit.s}</div></div>`;
+        card.onclick=e=>{if(!card.classList.contains('selected'))cardClick(code);};
+        d.appendChild(card);
+    }));
 }
 
-function handleDeckCardClick(cardCode) {
-    if (State.usedCards.has(cardCode)) {
-        showNotification("Эта карта уже выбрана!");
-        return;
-    }
-    
-    // Ищем свободный слот в активном блоке
-    const slots = State.activeBlock === 'hand' 
-        ? ['hero-1','hero-2'] 
-        : ['board-1','board-2','board-3','board-4','board-5'];
-    
-    // Находим свободный слот
-    let freeSlot = null;
-    for (const slot of slots) {
-        if (!State.selectedCards.has(slot)) {
-            freeSlot = slot;
-            break;
-        }
-    }
-    
-    // Если в текущем блоке нет места, пробуем другой
-    if (!freeSlot) {
-        const otherSlots = State.activeBlock === 'hand' 
-            ? ['board-1','board-2','board-3','board-4','board-5']
-            : ['hero-1','hero-2'];
-        
-        for (const slot of otherSlots) {
-            if (!State.selectedCards.has(slot)) {
-                State.activeBlock = State.activeBlock === 'hand' ? 'board' : 'hand';
-                updateActiveBlockUI();
-                freeSlot = slot;
-                break;
+function initDragDrop(){
+    document.addEventListener('dragstart',e=>{
+        const dc=e.target.closest('.deck-card');
+        if(dc&&dc.draggable){e.dataTransfer.setData('text',dc.dataset.card);e.dataTransfer.effectAllowed='copyMove';dc.style.opacity='0.5';return;}
+        const rc=e.target.closest('.real-card');
+        if(rc){const s=rc.parentElement,id=s.dataset.slot,c=cards.get(id);if(c){e.dataTransfer.setData('text',JSON.stringify({c:c.code,s:id}));e.dataTransfer.effectAllowed='move';rc.style.opacity='0.5';}}
+    });
+    document.addEventListener('dragend',()=>{
+        document.querySelectorAll('.deck-card, .real-card').forEach(x=>x.style.opacity='1');
+        document.querySelectorAll('.card-slot').forEach(x=>x.classList.remove('drag-over'));
+    });
+    document.querySelectorAll('.card-slot').forEach(slot=>{
+        slot.ondragover=e=>{e.preventDefault();slot.classList.add('drag-over');};
+        slot.ondragleave=()=>slot.classList.remove('drag-over');
+        slot.ondrop=e=>{e.preventDefault();slot.classList.remove('drag-over');
+            const data=e.dataTransfer.getData('text');
+            if(!data)return;
+            const sid=slot.dataset.slot;
+            try{const p=JSON.parse(data);if(p.s&&p.s!==sid)move(p.s,sid);}
+            catch{if(used.has(data)){show("Карта уже выбрана!");return;}
+                if(cards.has(sid)){show("Слот занят!");return;}
+                add(data,sid);
             }
+        };
+    });
+    const dg=document.getElementById('deck');
+    dg.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';dg.style.borderColor='var(--neon-yellow)';dg.style.boxShadow='0 0 15px var(--neon-yellow)';};
+    dg.ondragleave=e=>{if(!dg.contains(e.relatedTarget)){dg.style.borderColor='';dg.style.boxShadow='';}};
+    dg.ondrop=e=>{e.preventDefault();dg.style.borderColor='';dg.style.boxShadow='';
+        try{const p=JSON.parse(e.dataTransfer.getData('text'));if(p.s)remove(p.s);}catch{}
+    };
+}
+
+function move(from,to){
+    if(!cards.has(from))return;
+    const card=cards.get(from);
+    if(cards.has(to)){const temp=cards.get(to);cards.set(to,card);cards.set(from,temp);}
+    else{cards.set(to,card);cards.delete(from);}
+    updateUI();checkAll();
+}
+
+function select(block){
+    active=block;
+    document.getElementById('handSection').classList.toggle('active',block==='hand');
+    document.getElementById('boardSection').classList.toggle('active',block==='board');
+    document.getElementById('handTitle').classList.toggle('active',block==='hand');
+    document.getElementById('boardTitle').classList.toggle('active',block==='board');
+    document.getElementById('currentBlockName').textContent=block==='hand'?'Ваша рука':'Борд';
+}
+
+function cardClick(code){
+    if(used.has(code)){show("Карта уже выбрана!");return;}
+    if(active==='hand'){if(handCount()<2)addCard(code,'hand');else addCard(code,'board');}
+    else{if(boardCount()<5)addCard(code,'board');else{if(handCount()<2)addCard(code,'hand');else show("Все слоты заполнены!");}}
+}
+
+function handCount(){return Array.from(cards.keys()).filter(s=>s.startsWith('hero')).length;}
+function boardCount(){return Array.from(cards.keys()).filter(s=>s.startsWith('board')).length;}
+
+function addCard(code,type=null){
+    const t=type||active;
+    const slots=t==='hand'?['hero-1','hero-2']:['board-1','board-2','board-3','board-4','board-5'];
+    let free=slots.find(s=>!cards.has(s));
+    if(!free){
+        const other=t==='hand'?['board-1','board-2','board-3','board-4','board-5']:['hero-1','hero-2'];
+        free=other.find(s=>!cards.has(s));
+        if(free){active=t==='hand'?'board':'hand';select(active);}
+        else{show("Все слоты заполнены!");return;}
+    }
+    add(code,free);
+}
+
+function add(code,slot){
+    const v=code.slice(0,-1),s=code.slice(-1);
+    const suit=s==='h'?'♥':s==='d'?'♦':s==='s'?'♠':'♣';
+    cards.set(slot,{code:v+s,v:v,s:suit,sc:s,r:ranks[v]});
+    used.add(code);
+    updateUI();checkAll();
+    if(slot.startsWith('hero')&&handCount()>=2){setTimeout(()=>{if(active==='hand')select('board');},100);}
+    else if(slot.startsWith('board')&&boardCount()>=5){setTimeout(()=>{if(active==='board')select('hand');},100);}
+}
+
+function remove(slot){
+    const c=cards.get(slot);
+    if(c){used.delete(c.code);cards.delete(slot);updateUI();checkAll();}
+}
+
+function updateUI(){
+    document.querySelectorAll('.card-slot').forEach(s=>{
+        const id=s.dataset.slot,c=cards.get(id);
+        if(c){
+            const red=c.s==='♥'||c.s==='♦';
+            s.innerHTML=`<div class="real-card ${red?'red':'black'}" draggable="true"><div class="card-content">${c.v}<br>${c.s}</div></div><div class="remove-hint">клик для удаления</div>`;
+        }else s.innerHTML='<div class="slot-empty">+</div><div class="remove-hint">клик для удаления</div>';
+    });
+    document.querySelectorAll('.deck-card').forEach(dc=>{
+        const is=used.has(dc.dataset.card);
+        dc.classList.toggle('selected',is);
+        dc.draggable=!is;
+    });
+}
+
+function checkAll(){
+    const hc=handCount(),bc=boardCount();
+    document.getElementById('handWarning').style.display=hc===2?'none':'block';
+    document.getElementById('boardWarning').style.display=(bc===0||bc===3||bc===4||bc===5)?'none':'block';
+    document.getElementById('calculateBtn').disabled=calculating||hc!==2||!(bc===0||bc===3||bc===4||bc===5);
+}
+
+function setOpp(cnt){
+    opponents=cnt;
+    document.querySelectorAll('.opponent-pill').forEach(p=>p.classList.toggle('active',parseInt(p.dataset.opponents)===cnt));
+    document.getElementById('currentOpponents').textContent=cnt;
+}
+
+async function calculate(){
+    if(calculating)return;
+    const hero=Array.from(cards.entries()).filter(([s])=>s.startsWith('hero')).map(([,c])=>c);
+    const board=Array.from(cards.entries()).filter(([s])=>s.startsWith('board')).map(([,c])=>c);
+    if(handCount()!==2||!(boardCount()===0||boardCount()===3||boardCount()===4||boardCount()===5))return;
+    
+    calculating=true;
+    document.getElementById('calculateBtn').disabled=true;
+    document.getElementById('progressContainer').style.display='block';
+    document.getElementById('resultsPanel').style.display='block';
+    
+    const SIM=10000;
+    let hw=0,ow=0,ties=0;
+    let deck=fullDeck().filter(c=>!used.has(c.code));
+    const pf=document.getElementById('progressFill'),pt=document.getElementById('progressText');
+    
+    for(let i=0;i<SIM;i++){
+        if(i%200===0){
+            const p=Math.round((i/SIM)*100);
+            pf.style.width=p+'%';
+            pt.textContent=`Идет расчет: ${p}%`;
+            await new Promise(r=>setTimeout(r,0));
         }
-        
-        if (!freeSlot) {
-            showNotification("Все слоты заполнены!");
-            return;
-        }
+        const d=[...deck].sort(()=>Math.random()-0.5);
+        const fb=[...board];
+        while(fb.length<5)fb.push(d.pop());
+        const oh=[];
+        for(let j=0;j<opponents;j++)oh.push([d.pop(),d.pop()]);
+        const hs=HandEvaluator.eval([...hero,...fb]);
+        const os=oh.map(h=>HandEvaluator.eval([...h,...fb]));
+        const best=Math.max(...os);
+        if(hs>best)hw++;else if(hs<best)ow++;else ties++;
     }
     
-    // Создаем объект карты
-    const value = cardCode.slice(0,-1);
-    const suitCode = cardCode.slice(-1);
-    const suitSymbols = { 's':'♠', 'h':'♥', 'c':'♣', 'd':'♦' };
+    pf.style.width='100%';
+    pt.textContent='Расчет завершен!';
+    document.getElementById('resultHero').textContent=(hw/SIM*100).toFixed(1)+'%';
+    document.getElementById('resultOpponent').textContent=(ow/SIM*100).toFixed(1)+'%';
+    document.getElementById('resultTie').textContent=(ties/SIM*100).toFixed(1)+'%';
+    document.getElementById('heroHandDesc').textContent=describe(hero,board);
+    const pl=opponents===1?'':opponents>=2&&opponents<=4?'а':'ов';
+    document.getElementById('opponentInfo').textContent=opponents===1?"Хедз-ап (1 на 1)":`${opponents} оппонент${pl}`;
+    document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth'});
     
-    State.selectedCards.set(freeSlot, {
-        code: cardCode,
-        value: value,
-        suit: suitSymbols[suitCode],
-        suitCode: suitCode,
-        rank: HandEvaluator.ranks[value]
-    });
-    
-    State.usedCards.add(cardCode);
-    updateCardDisplay();
-    checkValidity();
-    updateStatus();
+    setTimeout(()=>{
+        document.getElementById('progressContainer').style.display='none';
+        calculating=false;
+        checkAll();
+    },1000);
 }
 
-// ============= ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ =============
-function updateCardDisplay() {
-    // Обновляем слоты
-    document.querySelectorAll('.card-slot').forEach(slot => {
-        const slotId = slot.dataset.slot;
-        const card = State.selectedCards.get(slotId);
-        
-        if (card) {
-            const isRed = card.suit === '♥' || card.suit === '♦';
-            slot.innerHTML = `
-                <div class="real-card ${isRed?'red':'black'}" draggable="true">
-                    <div class="card-content">${card.value}<br>${card.suit}</div>
-                </div>
-                <div class="remove-hint">клик для удаления</div>
-            `;
-        } else {
-            slot.innerHTML = '<div class="slot-empty">+</div><div class="remove-hint">клик для удаления</div>';
-        }
-    });
-    
-    // Обновляем колоду
-    document.querySelectorAll('.deck-card').forEach(deckCard => {
-        const cardCode = deckCard.dataset.card;
-        const isSelected = State.usedCards.has(cardCode);
-        deckCard.classList.toggle('selected', isSelected);
-        deckCard.draggable = !isSelected;
-    });
+function fullDeck(){
+    const ss=['s','h','c','d'];
+    const vs=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+    let d=[];
+    ss.forEach(s=>vs.forEach(v=>{
+        const suit=s==='h'?'♥':s==='d'?'♦':s==='s'?'♠':'♣';
+        d.push({code:v+s,v:v,s:suit,sc:s,r:ranks[v]});
+    }));
+    return d;
 }
 
-// ============= ОБРАБОТЧИКИ СОБЫТИЙ =============
-function initEventListeners() {
-    document.getElementById('handSection').addEventListener('click', () => selectBlock('hand'));
-    document.getElementById('boardSection').addEventListener('click', () => selectBlock('board'));
-    document.getElementById('calculateBtn').addEventListener('click', calculateEquity);
-    document.getElementById('clearAllBtn').addEventListener('click', clearAll);
-    
-    document.querySelectorAll('.opponent-pill').forEach(pill => {
-        pill.addEventListener('click', () => setOpponents(parseInt(pill.dataset.opponents)));
-    });
-    
-    // Клик по слотам для удаления карт
-    document.querySelectorAll('.card-slot').forEach(slot => {
-        slot.addEventListener('click', (e) => {
-            if (e.target.classList.contains('slot-empty') || e.target.classList.contains('remove-hint')) return;
-            if (e.target.closest('.real-card')) {
-                removeCardFromSlot(slot.dataset.slot);
-            }
-        });
-    });
-    
-    // Горячие клавиши
-    document.addEventListener('keydown', handleHotkeys);
-}
-
-function handleHotkeys(e) {
-    switch(e.key) {
-        case 'Escape': clearAll(); break;
-        case '1': selectBlock('hand'); break;
-        case '2': selectBlock('board'); break;
-        case 'Enter':
-        case ' ': if (!document.getElementById('calculateBtn').disabled) calculateEquity(); break;
-        default: if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
-    }
-}
-
-// ============= DRAG & DROP =============
-function initDragAndDrop() {
-    document.addEventListener('dragstart', (e) => {
-        const deckCard = e.target.closest('.deck-card');
-        if (deckCard && deckCard.draggable) {
-            e.dataTransfer.setData('text/plain', deckCard.dataset.card);
-            e.dataTransfer.effectAllowed = 'copyMove';
-            deckCard.style.opacity = '0.5';
-            return;
-        }
-        
-        const realCard = e.target.closest('.real-card');
-        if (realCard) {
-            const slot = realCard.parentElement;
-            const slotId = slot.dataset.slot;
-            const card = State.selectedCards.get(slotId);
-            if (card) {
-                e.dataTransfer.setData('text/plain', JSON.stringify({cardCode:card.code, fromSlot:slotId}));
-                e.dataTransfer.effectAllowed = 'move';
-                realCard.style.opacity = '0.5';
-            }
-        }
-    });
-    
-    document.addEventListener('dragend', () => {
-        document.querySelectorAll('.deck-card, .real-card').forEach(el => el.style.opacity = '1');
-        document.querySelectorAll('.card-slot').forEach(slot => slot.classList.remove('drag-over'));
-    });
-    
-    document.querySelectorAll('.card-slot').forEach(slot => {
-        slot.addEventListener('dragover', (e) => { e.preventDefault(); slot.classList.add('drag-over'); });
-        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
-        slot.addEventListener('drop', (e) => handleDrop(e, slot));
-    });
-}
-
-function handleDrop(e, slot) {
-    e.preventDefault();
-    slot.classList.remove('drag-over');
-    
-    const data = e.dataTransfer.getData('text/plain');
-    if (!data) return;
-    
-    const slotId = slot.dataset.slot;
-    
-    try {
-        // Drag из слота (перемещение)
-        const parsed = JSON.parse(data);
-        const fromSlot = parsed.fromSlot;
-        if (fromSlot && fromSlot !== slotId) {
-            const card = State.selectedCards.get(fromSlot);
-            if (card) {
-                if (State.selectedCards.has(slotId)) {
-                    const otherCard = State.selectedCards.get(slotId);
-                    State.selectedCards.set(fromSlot, otherCard);
-                    State.selectedCards.set(slotId, card);
-                } else {
-                    State.selectedCards.delete(fromSlot);
-                    State.selectedCards.set(slotId, card);
-                }
-                updateCardDisplay();
-                checkValidity();
-                updateStatus();
-            }
-        }
-    } catch {
-        // Drag из колоды (добавление)
-        const cardCode = data;
-        if (State.usedCards.has(cardCode)) {
-            showNotification("Эта карта уже выбрана!");
-            return;
-        }
-        if (State.selectedCards.has(slotId)) {
-            showNotification("Слот уже занят!");
-            return;
-        }
-        
-        const value = cardCode.slice(0,-1);
-        const suitCode = cardCode.slice(-1);
-        const suitSymbols = { 's':'♠', 'h':'♥', 'c':'♣', 'd':'♦' };
-        
-        State.selectedCards.set(slotId, {
-            code: cardCode,
-            value: value,
-            suit: suitSymbols[suitCode],
-            suitCode: suitCode,
-            rank: HandEvaluator.ranks[value]
-        });
-        
-        State.usedCards.add(cardCode);
-        updateCardDisplay();
-        checkValidity();
-        updateStatus();
+function describe(hero,board){
+    if(board.length===0)return"Префлоп";
+    const all=[...hero,...board];
+    const sc=HandEvaluator.eval(all);
+    const hr=sc>>20;
+    switch(hr){
+        case 9:return"Роял-флеш";case 8:return"Стрит-флеш";case 7:return"Каре";case 6:return"Фулл-хаус";
+        case 5:return"Флеш";case 4:return"Стрит";case 3:return"Сет";case 2:return"Две пары";
+        case 1:return"Пара";default:return"Старшая карта";
     }
 }
 
-// ============= ОСНОВНЫЕ ФУНКЦИИ =============
-function selectBlock(block) {
-    State.activeBlock = block;
-    updateActiveBlockUI();
+function clear(){
+    cards.clear();used.clear();active='hand';
+    updateUI();select('hand');
+    document.getElementById('resultsPanel').style.display='none';
+    document.getElementById('progressContainer').style.display='none';
+    show("Все карты очищены!");
 }
 
-function updateActiveBlockUI() {
-    const isHand = State.activeBlock === 'hand';
-    document.getElementById('handSection').classList.toggle('active', isHand);
-    document.getElementById('boardSection').classList.toggle('active', !isHand);
-    document.getElementById('handTitle').classList.toggle('active', isHand);
-    document.getElementById('boardTitle').classList.toggle('active', !isHand);
-    document.getElementById('currentBlockName').textContent = isHand ? 'Ваша рука' : 'Борд';
+function show(msg,dur=2000){
+    const n=document.getElementById('notification');
+    n.textContent=msg;
+    n.style.display='block';
+    setTimeout(()=>n.style.display='none',dur);
 }
 
-function setOpponents(count) {
-    State.opponentsCount = count;
-    document.querySelectorAll('.opponent-pill').forEach(pill => {
-        pill.classList.toggle('active', parseInt(pill.dataset.opponents) === count);
-    });
-    document.getElementById('currentOpponents').textContent = count;
-}
-
-function removeCardFromSlot(slotId) {
-    const card = State.selectedCards.get(slotId);
-    if (card) {
-        State.selectedCards.delete(slotId);
-        State.usedCards.delete(card.code);
-        updateCardDisplay();
-        checkValidity();
-        updateStatus();
-        showNotification(`Карта ${card.value}${card.suit} удалена`, 1500);
-    }
-}
-
-function checkValidity() {
-    const heroCards = Array.from(State.selectedCards.keys()).filter(s => s.startsWith('hero')).length;
-    const boardCards = Array.from(State.selectedCards.keys()).filter(s => s.startsWith('board')).length;
-    
-    const handValid = heroCards === 2;
-    const boardValid = boardCards === 0 || boardCards === 3 || boardCards === 4 || boardCards === 5;
-    
-    document.getElementById('handWarning').style.display = handValid ? 'none' : 'block';
-    document.getElementById('boardWarning').style.display = boardValid ? 'none' : 'block';
-    
-    return handValid && boardValid;
-}
-
-function updateStatus() {
-    const calculateBtn = document.getElementById('calculateBtn');
-    const isValid = checkValidity();
-    calculateBtn.disabled = State.isCalculating || !isValid;
-}
-
-// ============= РАСЧЁТ ВЕРОЯТНОСТЕЙ =============
-async function calculateEquity() {
-    if (State.isCalculating || !checkValidity()) return;
-    
-    State.isCalculating = true;
-    document.getElementById('calculateBtn').disabled = true;
-    document.getElementById('progressContainer').style.display = 'block';
-    document.getElementById('resultsPanel').style.display = 'block';
-    
-    const heroCards = Array.from(State.selectedCards.entries())
-        .filter(([s]) => s.startsWith('hero')).map(([,c]) => c);
-    const boardCards = Array.from(State.selectedCards.entries())
-        .filter(([s]) => s.startsWith('board')).map(([,c]) => c);
-    
-    // Создаем колоду
-    const deck = createDeckArray().filter(c => !State.usedCards.has(c.code));
-    const SIMULATIONS = 10000;
-    let heroWins = 0, opponentWins = 0, ties = 0;
-    
-    for (let i = 0; i < SIMULATIONS; i++) {
-        if (i % 200 === 0) {
-            const progress = Math.round((i / SIMULATIONS) * 100);
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('progressText').textContent = `Идет расчет: ${progress}%`;
-            await new Promise(resolve => setTimeout(resolve, 0));
-        }
-        
-        const shuffled = [...deck].sort(() => Math.random() - 0.5);
-        const fullBoard = [...boardCards];
-        while (fullBoard.length < 5) fullBoard.push(shuffled.pop());
-        
-        const opponentHands = [];
-        for (let j = 0; j < State.opponentsCount; j++) {
-            opponentHands.push([shuffled.pop(), shuffled.pop()]);
-        }
-        
-        const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
-        const opponentScores = opponentHands.map(h => HandEvaluator.evaluate([...h, ...fullBoard]));
-        const bestOpponentScore = Math.max(...opponentScores);
-        
-        if (heroScore > bestOpponentScore) heroWins++;
-        else if (heroScore < bestOpponentScore) opponentWins++;
-        else ties++;
-    }
-    
-    // Результаты
-    document.getElementById('resultHero').textContent = (heroWins / SIMULATIONS * 100).toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = (opponentWins / SIMULATIONS * 100).toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = (ties / SIMULATIONS * 100).toFixed(1) + '%';
-    
-    // Описание руки
-    const handDesc = describeHand(heroCards, boardCards);
-    document.getElementById('heroHandDesc').textContent = handDesc;
-    
-    // Оппоненты
-    const plural = State.opponentsCount === 1 ? '' : State.opponentsCount >= 2 && State.opponentsCount <= 4 ? 'а' : 'ов';
-    const oppText = State.opponentsCount === 1 ? "Хедз-ап (1 на 1)" : `${State.opponentsCount} оппонент${plural}`;
-    document.getElementById('opponentInfo').textContent = oppText;
-    
-    document.getElementById('progressFill').style.width = '100%';
-    document.getElementById('progressText').textContent = 'Расчет завершен!';
-    showNotification(`Расчёт завершён! ${SIMULATIONS} симуляций, точность ±0.5%`);
-    document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
-    
-    setTimeout(() => {
-        document.getElementById('progressContainer').style.display = 'none';
-        State.isCalculating = false;
-        updateStatus();
-    }, 1000);
-}
-
-function createDeckArray() {
-    const suits = ['s','h','c','d'];
-    const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-    const deck = [];
-    
-    for (const suit of suits) {
-        for (const value of values) {
-            const suitSymbols = { 's':'♠', 'h':'♥', 'c':'♣', 'd':'♦' };
-            deck.push({
-                code: value + suit,
-                value: value,
-                suit: suitSymbols[suit],
-                suitCode: suit,
-                rank: HandEvaluator.ranks[value]
-            });
-        }
-    }
-    return deck;
-}
-
-function describeHand(heroCards, boardCards) {
-    if (boardCards.length === 0) return "Префлоп";
-    const allCards = [...heroCards, ...boardCards];
-    const score = HandEvaluator.evaluate(allCards);
-    const handRank = score >> 20;
-    
-    switch(handRank) {
-        case 9: return "Роял-флеш";
-        case 8: return "Стрит-флеш";
-        case 7: return "Каре";
-        case 6: return "Фулл-хаус";
-        case 5: return "Флеш";
-        case 4: return "Стрит";
-        case 3: return "Сет";
-        case 2: return "Две пары";
-        case 1: return "Пара";
-        default: return "Старшая карта";
-    }
-}
-
-function clearAll() {
-    State.selectedCards.clear();
-    State.usedCards.clear();
-    State.activeBlock = 'hand';
-    State.isCalculating = false;
-    updateCardDisplay();
-    updateActiveBlockUI();
-    checkValidity();
-    updateStatus();
-    document.getElementById('resultsPanel').style.display = 'none';
-    document.getElementById('progressContainer').style.display = 'none';
-    showNotification("Все карты очищены!");
-}
-
-function showNotification(message, duration = 2000) {
-    const notif = document.getElementById('notification');
-    notif.textContent = message;
-    notif.style.display = 'block';
-    setTimeout(() => notif.style.display = 'none', duration);
-}
+document.addEventListener('keydown',e=>{
+    if(e.key==='Escape')clear();
+    if(e.key==='1')select('hand');
+    if(e.key==='2')select('board');
+    if((e.key==='Enter'||e.key===' ')&&!document.getElementById('calculateBtn').disabled)calculate();
+    if(e.key>='1'&&e.key<='9')setOpp(parseInt(e.key));
+});
