@@ -140,20 +140,40 @@ function initDragDrop(){
         });
     });
     
-    // Drop на колоду (возврат карт)
+    // Drop на колоду (возврат карт) - ИСПРАВЛЕНО
     const dg=document.getElementById('deck');
     dg.addEventListener('dragover',function(e){
         e.preventDefault();
         const data=e.dataTransfer.getData('text');
         if(!data)return;
+        
+        // Проверяем что это карта из слота (формат JSON)
         try{
-            JSON.parse(data); // Если это JSON, значит карта из слота
-            e.dataTransfer.dropEffect='move';
-            this.classList.add('deck-highlight'); // ИСПРАВЛЕНО: добавляем класс для подсветки
+            const parsed=JSON.parse(data);
+            if(parsed.s){ // Если есть поле s (slot), значит это карта из слота
+                e.dataTransfer.dropEffect='move';
+                this.classList.add('deck-highlight');
+            }
         }catch{
-            // Не карта из слота - игнорируем
+            // Если не JSON, значит это карта из колоды - игнорируем
         }
     });
+    
+    dg.addEventListener('dragleave',function(){
+        this.classList.remove('deck-highlight');
+    });
+    
+    dg.addEventListener('drop',function(e){
+        e.preventDefault();
+        this.classList.remove('deck-highlight');
+        const data=e.dataTransfer.getData('text');
+        if(!data)return;
+        try{
+            const p=JSON.parse(data);
+            if(p.s)remove(p.s);
+        }catch{}
+    });
+}
     
     dg.addEventListener('dragleave',function(){
         this.classList.remove('deck-highlight'); // ИСПРАВЛЕНО: убираем класс
@@ -365,3 +385,4 @@ document.addEventListener('keydown',e=>{
     if((e.key==='Enter'||e.key===' ')&&!document.getElementById('calculateBtn').disabled)calculate();
     if(e.key>='1'&&e.key<='9')setOpp(parseInt(e.key));
 });
+
