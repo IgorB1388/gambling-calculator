@@ -1,18 +1,25 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-
+        
 :root {
+    /* === NEON ACCENTS (GTA Vice City) === */
     --neon-teal:   #00f0ff;
     --neon-pink:   #ff5fd2;
     --neon-blue:   #6aa8ff;
     --neon-purple: #b36bff;
     --neon-yellow: #ffd966;
     --neon-green:  #2effc7;
+
+    /* === BACKGROUNDS (более гармоничные) === */
     --bg-dark:   #2a2f4a;
     --bg-medium: #3a3f5a;
     --bg-light:  #4a4f6a;
     --panel-bg:  #353a55;
+
+    /* === TEXT === */
     --text-light:  #ffffff;
     --text-medium: #ccccff;
+
+    /* === BORDERS & SHADOWS === */
     --border-color: rgba(255, 255, 255, 0.15);
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
@@ -23,12 +30,12 @@ body {
     color: var(--text-light);
     padding: 20px;
 }
-
+        
 .container { 
     max-width: 1400px; 
     margin: 0 auto;
 }
-
+        
 .header {
     text-align: center;
     margin-bottom: 40px;
@@ -38,17 +45,17 @@ body {
     border: 2px solid var(--neon-teal);
     box-shadow: var(--shadow);
 }
-
+        
 .header-suits {
     font-size: 2.8rem;
     margin-bottom: 10px;
 }
-
+        
 .header-suits span:nth-child(1) { color: #000000; }
 .header-suits span:nth-child(2) { color: #ff3366; }
 .header-suits span:nth-child(3) { color: #000000; }
 .header-suits span:nth-child(4) { color: #ff3366; }
-
+        
 h1 {
     font-size: 2.8rem;
     background: linear-gradient(45deg, var(--neon-teal), var(--neon-pink));
@@ -56,23 +63,23 @@ h1 {
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
-
+        
 .subtitle {
     color: var(--text-medium);
     font-size: 1.1rem;
 }
-
+        
 .main-area {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     gap: 30px;
     margin-bottom: 40px;
 }
-
+        
 @media (max-width: 1100px) {
     .main-area { grid-template-columns: 1fr; }
 }
-
+        
 .panel {
     background: var(--panel-bg);
     border-radius: 15px;
@@ -80,7 +87,7 @@ h1 {
     border: 2px solid var(--neon-teal);
     box-shadow: var(--shadow);
 }
-
+        
 .panel-title {
     font-size: 1.5rem;
     color: var(--neon-teal);
@@ -88,7 +95,7 @@ h1 {
     padding-bottom: 10px;
     border-bottom: 2px solid rgba(0, 204, 255, 0.3);
 }
-
+        
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
@@ -98,66 +105,30 @@ h1 {
     transition: all 0.3s;
     border: 2px solid;
 }
-
+        
 .hand-section {
     border-color: var(--neon-teal);
 }
-
+        
 .board-section {
     border-color: var(--neon-pink);
 }
-
+        
 .hand-section:hover, .board-section:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
-
+        
 .hand-section.active {
-    transform: scale(1.01);
-    box-shadow: 0 0 25px rgba(51, 204, 153, 0.3);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 20px rgba(51, 204, 153, 0.3);
 }
-
+        
 .board-section.active {
-    transform: scale(1.01);
-    box-shadow: 0 0 25px rgba(51, 204, 153, 0.3);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 20px rgba(51, 204, 153, 0.3);
 }
-
-.hand-section.block-highlight {
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.3) !important;
-    transition: box-shadow 0.2s ease;
-}
-
-.board-section.block-highlight {
-    box-shadow: 0 0 25px rgba(255, 95, 210, 0.3) !important;
-    transition: box-shadow 0.2s ease;
-}
-
-.deck-grid.block-highlight {
-    box-shadow: 0 0 25px rgba(255, 217, 102, 0.3) !important;
-    transition: box-shadow 0.2s ease;
-}
-
-.hand-section.drag-target {
-    transform: scale(1.02) !important;
-    box-shadow: 0 0 35px rgba(0, 240, 255, 0.7) !important;
-    border-color: var(--neon-teal) !important;
-    transition: all 0.2s ease !important;
-}
-
-.board-section.drag-target {
-    transform: scale(1.02) !important;
-    box-shadow: 0 0 35px rgba(255, 95, 210, 0.7) !important;
-    border-color: var(--neon-pink) !important;
-    transition: all 0.2s ease !important;
-}
-
-.deck-grid.drag-target {
-    transform: scale(1.02) !important;
-    box-shadow: 0 0 35px rgba(255, 217, 102, 0.7) !important;
-    border-color: var(--neon-yellow) !important;
-    transition: all 0.2s ease !important;
-}
-
+        
 .section-title {
     margin-bottom: 15px;
     font-size: 1.3rem;
@@ -165,15 +136,19 @@ h1 {
     align-items: center;
     gap: 10px;
 }
-
+        
 .hand-section .section-title {
     color: var(--neon-teal);
 }
-
+        
 .board-section .section-title {
     color: var(--neon-pink);
 }
-
+        
+.section-title.active {
+    color: var(--neon-green);
+}
+        
 .cards-row {
     display: flex;
     gap: 15px;
@@ -182,7 +157,7 @@ h1 {
     align-items: center;
     justify-content: center;
 }
-
+        
 .card-slot {
     width: 80px;
     height: 115px;
@@ -198,22 +173,21 @@ h1 {
     transition: all 0.3s;
     cursor: pointer;
 }
-
+        
 .card-slot.drag-over {
-    border-color: var(--neon-yellow) !important;
-    border-style: solid !important;
-    background: rgba(255, 217, 102, 0.1) !important;
-    transform: scale(1.08);
-    box-shadow: 0 0 20px var(--neon-yellow) !important;
+    border-color: var(--neon-yellow);
+    background: rgba(255, 204, 0, 0.1);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--neon-yellow);
 }
-
+        
 .real-card {
     background: white;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     overflow: hidden;
     border: 1px solid rgba(0,0,0,0.2);
-    cursor: grab;
+    cursor: move;
     position: relative;
     transition: all 0.2s;
     width: 80px;
@@ -222,16 +196,16 @@ h1 {
     align-items: center;
     justify-content: center;
 }
-
+        
 .real-card:hover {
     transform: translateY(-3px) scale(1.03);
     box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     z-index: 10;
 }
-
+        
 .real-card.red { color: #ff3366; }
 .real-card.black { color: #000000; }
-
+        
 .card-content {
     font-size: 2.5rem;
     font-weight: bold;
@@ -243,7 +217,7 @@ h1 {
     justify-content: center;
     line-height: 1.2;
 }
-
+        
 .opponents-control {
     background: var(--bg-medium);
     padding: 15px;
@@ -251,7 +225,7 @@ h1 {
     margin-bottom: 25px;
     border: 2px solid var(--neon-purple);
 }
-
+        
 .opponents-label {
     color: var(--neon-yellow);
     font-weight: bold;
@@ -259,14 +233,14 @@ h1 {
     text-align: center;
     font-size: 1.1rem;
 }
-
+        
 .opponent-pills {
     display: flex;
     justify-content: center;
     gap: 8px;
     flex-wrap: wrap;
 }
-
+        
 .opponent-pill {
     width: 45px;
     height: 45px;
@@ -282,19 +256,19 @@ h1 {
     align-items: center;
     justify-content: center;
 }
-
+        
 .opponent-pill:hover {
     transform: scale(1.1);
     background: rgba(102, 153, 255, 0.3);
 }
-
+        
 .opponent-pill.active {
     background: var(--neon-blue);
     color: white;
     border-color: var(--neon-teal);
     box-shadow: 0 0 15px var(--neon-blue);
 }
-
+        
 .deck-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
@@ -305,9 +279,8 @@ h1 {
     border-radius: 12px;
     border: 2px solid var(--neon-purple);
     min-height: auto;
-    transition: all 0.3s;
 }
-
+        
 .deck-card {
     aspect-ratio: 2/3;
     background: #f0f0f0;
@@ -324,30 +297,30 @@ h1 {
     position: relative;
     overflow: hidden;
 }
-
+        
 .deck-card:hover {
     transform: scale(1.1);
     border-color: var(--neon-yellow);
     box-shadow: 0 0 10px var(--neon-yellow);
     z-index: 10;
 }
-
+        
 .deck-card.selected {
     background: var(--bg-medium);
     border-color: rgba(255, 255, 255, 0.1);
     cursor: default;
 }
-
+        
 .deck-card.selected:hover {
     transform: none;
     border-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-
+        
 .deck-card.selected .card-face {
     display: none;
 }
-
+        
 .deck-card.selected::after {
     content: "✕";
     font-size: 1.8rem;
@@ -357,13 +330,13 @@ h1 {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
+        
 .deck-card.red { color: #ff5555; }
 .deck-card.black { color: #000000; }
-
+        
 .card-value { font-size: 1.2rem; margin-bottom: 3px; }
 .card-suit-large { font-size: 1.6rem; margin-top: 3px; }
-
+        
 .controls {
     display: flex;
     gap: 15px;
@@ -371,7 +344,7 @@ h1 {
     justify-content: center;
     flex-wrap: wrap;
 }
-
+        
 .btn {
     padding: 12px 25px;
     border: none;
@@ -382,35 +355,35 @@ h1 {
     transition: all 0.3s;
     min-width: 180px;
 }
-
+        
 .btn-primary {
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
     color: white;
 }
-
+        
 .btn-primary:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(255, 102, 204, 0.4);
 }
-
+        
 .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
-
+        
 .btn-secondary {
     background: rgba(0, 204, 255, 0.1);
     color: var(--neon-teal);
     border: 2px solid var(--neon-teal);
 }
-
+        
 .btn-secondary:hover {
     background: var(--neon-teal);
     color: white;
 }
-
+        
 .notification {
     position: fixed;
     top: 15px;
@@ -424,19 +397,19 @@ h1 {
     max-width: 350px;
     z-index: 1000;
 }
-
+        
 .results-panel {
     margin-top: 30px;
     display: none;
 }
-
+        
 .results-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin-bottom: 20px;
 }
-
+        
 .result-card {
     background: var(--bg-medium);
     border-radius: 12px;
@@ -445,21 +418,21 @@ h1 {
     border: 2px solid;
     box-shadow: var(--shadow);
 }
-
+        
 .result-card:nth-child(1) { border-color: var(--neon-teal); }
 .result-card:nth-child(2) { border-color: var(--neon-pink); }
 .result-card:nth-child(3) { border-color: var(--neon-blue); }
-
+        
 .result-percent {
     font-size: 3rem;
     font-weight: bold;
     margin: 10px 0;
 }
-
+        
 .result-card:nth-child(1) .result-percent { color: var(--neon-teal); }
 .result-card:nth-child(2) .result-percent { color: var(--neon-pink); }
 .result-card:nth-child(3) .result-percent { color: var(--neon-blue); }
-
+        
 .warning {
     color: #ff9966;
     font-size: 0.9rem;
@@ -467,35 +440,35 @@ h1 {
     margin-top: 5px;
     display: none;
 }
-
+        
 .current-selection {
     text-align: center;
     margin-bottom: 15px;
     color: var(--neon-yellow);
     font-size: 1rem;
 }
-
+        
 .drop-hint {
     color: var(--neon-green);
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
 }
-
+        
 .board-subtitle {
     color: var(--text-medium);
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
 }
-
+        
 .hand-subtitle {
     color: var(--text-medium);
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
 }
-
+        
 .progress-container {
     margin-top: 20px;
     background: var(--bg-medium);
@@ -504,7 +477,7 @@ h1 {
     border: 2px solid var(--neon-green);
     display: none;
 }
-
+        
 .progress-bar {
     height: 20px;
     background: rgba(0, 0, 0, 0.3);
@@ -512,28 +485,51 @@ h1 {
     overflow: hidden;
     margin-top: 10px;
 }
-
+        
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--neon-green), var(--neon-teal));
     width: 0%;
     transition: width 0.3s;
 }
-
+        
 .progress-text {
     text-align: center;
     color: var(--neon-green);
     font-weight: bold;
     margin-bottom: 5px;
 }
-
+        
 .accuracy-note {
     color: var(--neon-yellow);
     font-size: 0.8rem;
     text-align: center;
     margin-top: 10px;
 }
-
+        
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+        
+.remove-hint {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--neon-yellow);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+        
+.real-card:hover + .remove-hint,
+.remove-hint:hover {
+    opacity: 1;
+}
+        
 .card-face {
     display: flex;
     flex-direction: column;
@@ -542,8 +538,16 @@ h1 {
     width: 100%;
     height: 100%;
 }
-
+        
 .slot-empty {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
+
 }
+
+.deck-highlight {
+    border-color: var(--neon-yellow) !important;
+    box-shadow: 0 0 20px var(--neon-yellow) !important;
+    background-color: rgba(255, 255, 0, 0.1) !important;
+}
+
