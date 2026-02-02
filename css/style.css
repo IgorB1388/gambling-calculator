@@ -1,3 +1,4 @@
+/* === OPTIMIZED CSS === */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         
 :root {
@@ -9,7 +10,7 @@
     --neon-yellow: #ffd966;
     --neon-green:  #2effc7;
 
-    /* === BACKGROUNDS (более гармоничные) === */
+    /* === BACKGROUNDS === */
     --bg-dark:   #2a2f4a;
     --bg-medium: #3a3f5a;
     --bg-light:  #4a4f6a;
@@ -51,9 +52,9 @@ body {
     margin-bottom: 10px;
 }
         
-.header-suits span:nth-child(1) { color: #000000; }
-.header-suits span:nth-child(2) { color: #ff3366; }
+.header-suits span:nth-child(1),
 .header-suits span:nth-child(3) { color: #000000; }
+.header-suits span:nth-child(2),
 .header-suits span:nth-child(4) { color: #ff3366; }
         
 h1 {
@@ -114,19 +115,20 @@ h1 {
     border-color: var(--neon-pink);
 }
         
-.hand-section:hover, .board-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-        
+/* ФИКС: активная секция подсвечивается своим цветом */
 .hand-section.active {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(51, 204, 153, 0.3);
+    border-color: var(--neon-teal); /* Был neon-green */
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); /* Усиленная подсветка */
 }
         
 .board-section.active {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(51, 204, 153, 0.3);
+    border-color: var(--neon-pink); /* Был neon-green */
+    box-shadow: 0 0 25px rgba(255, 95, 210, 0.4); /* Усиленная подсветка */
+}
+        
+.hand-section:hover, .board-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
         
 .section-title {
@@ -145,8 +147,9 @@ h1 {
     color: var(--neon-pink);
 }
         
+/* ФИКС: заголовок активной секции сохраняет цвет */
 .section-title.active {
-    color: var(--neon-green);
+    /* Убираем переопределение цвета - оставляем исходный */
 }
         
 .cards-row {
@@ -265,7 +268,7 @@ h1 {
 .opponent-pill.active {
     background: var(--neon-blue);
     color: white;
-    border-color: var(--neon-teal);
+    border-color: var(--neon-blue);
     box-shadow: 0 0 15px var(--neon-blue);
 }
         
@@ -278,7 +281,6 @@ h1 {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     border: 2px solid var(--neon-purple);
-    min-height: auto;
 }
         
 .deck-card {
@@ -455,13 +457,7 @@ h1 {
     margin-top: 5px;
 }
         
-.board-subtitle {
-    color: var(--text-medium);
-    font-size: 0.9rem;
-    text-align: center;
-    margin-top: 5px;
-}
-        
+.board-subtitle,
 .hand-subtitle {
     color: var(--text-medium);
     font-size: 0.9rem;
@@ -507,12 +503,6 @@ h1 {
     margin-top: 10px;
 }
         
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
-}
-        
 .remove-hint {
     position: absolute;
     bottom: -20px;
@@ -525,7 +515,7 @@ h1 {
     transition: opacity 0.3s;
 }
         
-.real-card:hover + .remove-hint,
+.real-card:hover ~ .remove-hint,
 .remove-hint:hover {
     opacity: 1;
 }
