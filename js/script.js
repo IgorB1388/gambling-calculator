@@ -43,9 +43,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('calculateBtn').onclick=calculate;
     document.getElementById('clearAllBtn').onclick=clear;
     document.querySelectorAll('.opponent-pill').forEach(p=>p.onclick=()=>setOpp(parseInt(p.dataset.opponents)));
-    document.querySelectorAll('.card-slot').forEach(s=>s.onclick=e=>{
-        if(e.target.classList.contains('slot-empty')||e.target.classList.contains('remove-hint'))return;
-        if(e.target.closest('.real-card'))remove(s.dataset.slot);
+    document.querySelectorAll('.card-slot').forEach(s=>{
+        s.onclick=function(e){
+            if(e.target.classList.contains('slot-empty')||e.target.classList.contains('remove-hint'))return;
+            const realCard=e.target.closest?e.target.closest('.real-card'):e.target.parentElement.closest('.real-card');
+            if(realCard)remove(this.dataset.slot);
+        };
     });
     initDragDrop();
     select('hand');
@@ -56,28 +59,38 @@ function createDeck(){
     d.innerHTML='';
     const suits=[{c:'s',s:'♠',cl:'black'},{c:'h',s:'♥',cl:'red'},{c:'c',s:'♣',cl:'black'},{c:'d',s:'♦',cl:'red'}];
     const vals=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+    
     suits.forEach(suit=>vals.forEach(v=>{
         const code=v+suit.c,card=document.createElement('div');
         card.className=`deck-card ${suit.cl}`;
         card.dataset.card=code;
         card.draggable=true;
         card.innerHTML=`<div class="card-face"><div class="card-value">${v}</div><div class="card-suit-large">${suit.s}</div></div>`;
-        card.onclick=e=>{if(!card.classList.contains('selected'))cardClick(code);};
+        
+        // ИСПРАВЛЕНО: без closest
+        card.onclick=function(){
+            if(!this.classList.contains('selected'))cardClick(code);
+        };
+        
         d.appendChild(card);
     }));
 }
 
 function initDragDrop(){
     document.addEventListener('dragstart',e=>{
-        const dc=e.target.closest('.deck-card');
+        const dc=e.target.closest?e.target.closest('.deck-card'):e.target;
         if(dc&&dc.draggable){e.dataTransfer.setData('text',dc.dataset.card);e.dataTransfer.effectAllowed='copyMove';dc.style.opacity='0.5';return;}
-        const rc=e.target.closest('.real-card');
-        if(rc){const s=rc.parentElement,id=s.dataset.slot,c=cards.get(id);if(c){e.dataTransfer.setData('text',JSON.stringify({c:c.code,s:id}));e.dataTransfer.effectAllowed='move';rc.style.opacity='0.5';}}
+        const rc=e.target.closest?e.target.closest('.real-card'):e.target;
+        if(rc&&rc.classList.contains('real-card')){
+            const s=rc.parentElement,id=s.dataset.slot,c=cards.get(id);
+            if(c){e.dataTransfer.setData('text',JSON.stringify({c:c.code,s:id}));e.dataTransfer.effectAllowed='move';rc.style.opacity='0.5';}
+        }
     });
+    
     document.addEventListener('dragend',()=>{
         document.querySelectorAll('.deck-card, .real-card').forEach(x=>x.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(x=>x.classList.remove('drag-over'));
-        document.getElementById('deck').querySelectorAll('.deck-card').forEach(c=>c.style.border='');
+        document.getElementById('deck').classList.remove('deck-highlight');
     });
     
     // Drop в слоты
@@ -94,7 +107,6 @@ function initDragDrop(){
             }catch{
                 const cardCode=data;
                 if(used.has(cardCode))return;
-                // ИСПРАВЛЕНО: Разрешаем дроп на занятый слот - заменяем карты
                 if(cards.has(sid)){
                     const oldCard=cards.get(sid);
                     used.delete(oldCard.code);
@@ -105,7 +117,7 @@ function initDragDrop(){
         };
     });
     
-    // Drop на колоду (возврат карт)
+    // Drop на колоду (только для возврата карт)
     const dg=document.getElementById('deck');
     dg.ondragover=e=>{
         e.preventDefault();
