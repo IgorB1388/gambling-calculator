@@ -106,6 +106,9 @@ h1 {
     transition: all 0.3s;
     border: 2px solid;
     position: relative;
+    min-height: 230px; /* Фиксированная минимальная высота */
+    display: flex;
+    flex-direction: column;
 }
         
 .hand-section {
@@ -138,6 +141,7 @@ h1 {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0; /* Не сжимается */
 }
         
 .hand-section .section-title {
@@ -155,6 +159,7 @@ h1 {
     min-height: 120px;
     align-items: center;
     justify-content: center;
+    flex-grow: 1; /* Занимает доступное пространство */
 }
         
 .card-slot {
@@ -423,6 +428,8 @@ h1 {
     text-align: center;
     margin-top: 5px;
     display: none;
+    min-height: 20px; /* Фиксированная высота для предупреждений */
+    flex-shrink: 0; /* Не сжимается */
 }
         
 .current-selection {
@@ -445,6 +452,7 @@ h1 {
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
+    flex-shrink: 0; /* Не сжимается */
 }
         
 .progress-container {
@@ -485,23 +493,7 @@ h1 {
     margin-top: 10px;
 }
         
-.remove-hint {
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--neon-yellow);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-        
-.real-card:hover ~ .remove-hint,
-.remove-hint:hover {
-    opacity: 1;
-}
-        
+/* УБРАЛ: подсказки "клик для удаления" */
 .card-face {
     display: flex;
     flex-direction: column;
