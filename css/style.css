@@ -120,13 +120,13 @@ h1 {
 }
 
 .hand-section.active {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(51, 204, 153, 0.3);
+    transform: scale(1.01);
+    box-shadow: 0 0 25px rgba(51, 204, 153, 0.3);
 }
 
 .board-section.active {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(51, 204, 153, 0.3);
+    transform: scale(1.01);
+    box-shadow: 0 0 25px rgba(51, 204, 153, 0.3);
 }
 
 /* ПОДСВЕТКА БЛОКОВ ПРИ DRAG (только граница) */
@@ -542,3 +542,4 @@ h1 {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
 }
+
