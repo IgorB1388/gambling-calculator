@@ -139,8 +139,8 @@ let opponentsCount = 1;
 let isCalculating = false;
 
 // ФЛАГИ ДЛЯ ПЕРЕТАСКИВАНИЯ
-let currentDragCard = null;
 let currentDragSource = null;
+let currentDragCard = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Покерный калькулятор запущен!");
@@ -174,9 +174,17 @@ function createDeck() {
         deckCard.dataset.card = cardCode;
         deckCard.draggable = true;
         
-        // ПРЕДОТВРАЩАЕМ ВЫДЕЛЕНИЕ И ПЕРЕТАСКИВАНИЕ КОЛОДЫ
-        deckCard.addEventListener('mousedown', e => e.stopPropagation());
-        deckCard.addEventListener('dragstart', e => e.stopPropagation());
+        // НЕ БЛОКИРУЕМ события, чтобы drag работал
+        deckCard.addEventListener('dragstart', function(e) {
+            if (this.classList.contains('selected')) {
+                e.preventDefault();
+                return;
+            }
+            currentDragSource = 'deck';
+            currentDragCard = { cardCode: cardCode };
+            e.dataTransfer.setData('text/plain', cardCode);
+            this.style.opacity = '0.5';
+        });
         
         const cardFace = document.createElement('div');
         cardFace.className = 'card-face';
@@ -190,14 +198,16 @@ function createDeck() {
         });
     }));
     
-    // ПРЕДОТВРАЩАЕМ ВЫДЕЛЕНИЕ ВСЕЙ КОЛОДЫ
-    deckGrid.addEventListener('mousedown', e => {
-        e.preventDefault();
-        e.stopPropagation();
-    });
-    
+    // Предотвращаем выделение текста в колоде
     deckGrid.addEventListener('selectstart', e => {
         e.preventDefault();
+    });
+    
+    // Предотвращаем drag самой колоды
+    deckGrid.addEventListener('dragstart', e => {
+        if (!e.target.closest('.deck-card')) {
+            e.preventDefault();
+        }
     });
 }
 
@@ -222,18 +232,6 @@ function initEventListeners() {
 
 function initDragAndDrop() {
     document.addEventListener('dragstart', e => {
-        // Drag из колоды
-        const deckCard = e.target.closest('.deck-card');
-        if (deckCard?.draggable && !deckCard.classList.contains('selected')) {
-            currentDragSource = 'deck';
-            currentDragCard = {
-                cardCode: deckCard.dataset.card
-            };
-            e.dataTransfer.setData('text/plain', deckCard.dataset.card);
-            deckCard.style.opacity = '0.5';
-            return;
-        }
-        
         // Drag из слотов (карт в руке/борде)
         const realCard = e.target.closest('.real-card');
         if (realCard) {
@@ -647,7 +645,7 @@ async function calculateEquity() {
     
     document.getElementById('heroHandDesc').textContent = describeHand(heroCards,boardCards);
     document.getElementById('opponentInfo').textContent = opponentsCount === 1 
-        ? "Хедз-ап (1 на 1)" 
+        ? "Хедз 1 на 1" 
         : `${opponentsCount} оппонент${opponentsCount===1?'':opponentsCount<=4?'а':'ов'}`;
     
     document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth'});
