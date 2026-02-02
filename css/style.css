@@ -105,6 +105,7 @@ h1 {
     cursor: pointer;
     transition: all 0.3s;
     border: 2px solid;
+    position: relative;
 }
         
 .hand-section {
@@ -117,13 +118,13 @@ h1 {
         
 /* ФИКС: активная секция подсвечивается своим цветом */
 .hand-section.active {
-    border-color: var(--neon-teal); /* Был neon-green */
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); /* Усиленная подсветка */
+    border-color: var(--neon-teal);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
 }
         
 .board-section.active {
-    border-color: var(--neon-pink); /* Был neon-green */
-    box-shadow: 0 0 25px rgba(255, 95, 210, 0.4); /* Усиленная подсветка */
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 25px rgba(255, 95, 210, 0.4);
 }
         
 .hand-section:hover, .board-section:hover {
@@ -145,11 +146,6 @@ h1 {
         
 .board-section .section-title {
     color: var(--neon-pink);
-}
-        
-/* ФИКС: заголовок активной секции сохраняет цвет */
-.section-title.active {
-    /* Убираем переопределение цвета - оставляем исходный */
 }
         
 .cards-row {
@@ -386,20 +382,6 @@ h1 {
     color: white;
 }
         
-.notification {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: rgba(255, 51, 102, 0.9);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: 2px solid #ff3366;
-    display: none;
-    max-width: 350px;
-    z-index: 1000;
-}
-        
 .results-panel {
     margin-top: 30px;
     display: none;
@@ -532,4 +514,36 @@ h1 {
 .slot-empty {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
+}
+
+/* Стили для подсказок */
+.tips-section {
+    margin-top: 30px;
+    background: var(--bg-medium);
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid var(--neon-yellow);
+}
+
+.tips-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.tip {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.result-label {
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.result-desc {
+    color: var(--text-medium);
+    font-size: 0.8rem;
 }
