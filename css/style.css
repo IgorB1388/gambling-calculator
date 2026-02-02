@@ -539,5 +539,28 @@ h1 {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
 }
+/* Увеличение блока при drag over */
+.hand-section.drag-target {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.6) !important;
+    transition: all 0.2s ease !important;
+}
+
+.board-section.drag-target {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(255, 95, 210, 0.6) !important;
+    transition: all 0.2s ease !important;
+}
+
+.deck-grid.drag-target {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(255, 217, 102, 0.6) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Простая подсветка без увеличения */
+.block-highlight {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) !important;
+}
 
 
