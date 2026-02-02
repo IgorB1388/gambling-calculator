@@ -223,9 +223,10 @@ function initEventListeners() {
     
     document.querySelectorAll('.card-slot').forEach(slot => {
         slot.addEventListener('click', e => {
-            if (e.target.classList.contains('slot-empty') || e.target.classList.contains('remove-hint')) return;
             const realCard = e.target.closest('.real-card');
-            if (realCard) removeCardFromSlot(slot.dataset.slot);
+            if (realCard) {
+                removeCardFromSlot(slot.dataset.slot);
+            }
         });
     });
 }
@@ -527,13 +528,9 @@ function updateCardDisplay() {
                 <div class="real-card ${isRed ? 'red' : 'black'}" draggable="true">
                     <div class="card-content">${card.value}<br>${card.suit}</div>
                 </div>
-                <div class="remove-hint">клик для удаления</div>
             `;
         } else {
-            slot.innerHTML = `
-                <div class="slot-empty">+</div>
-                <div class="remove-hint">клик для удаления</div>
-            `;
+            slot.innerHTML = '<div class="slot-empty">+</div>';
         }
     });
     
@@ -545,6 +542,7 @@ function updateCardDisplay() {
         deckCard.style.cursor = isUsed ? 'default' : 'pointer';
     });
 }
+
 
 function updateStatus() {
     const calculateBtn = document.getElementById('calculateBtn');
@@ -713,3 +711,4 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
