@@ -36,10 +36,6 @@ const HandEvaluator={
     handVal(c){let v=0;c.forEach((x,i)=>{v+=x.r<<(4*(4-i));});return v;}
 };
 
-// Глобальные переменные для drag & drop
-let dragSource = null; // откуда тащим: 'deck', 'hand', 'board'
-let dragCardCode = null; // код карты
-
 document.addEventListener('DOMContentLoaded',()=>{
     createDeck();
     document.getElementById('handSection').onclick=()=>select('hand');
@@ -82,66 +78,82 @@ function createDeck(){
 }
 
 function initDragDrop(){
-    // Переменная для отслеживания drag
-    let isDragging = false;
     let dragFromDeck = false;
+    let dragFromSlot = null;
     
     // Drag start
     document.addEventListener('dragstart',function(e){
-        isDragging = true;
-        
         // Карта из колоды
         if(e.target.classList && e.target.classList.contains('deck-card') && e.target.draggable){
             dragFromDeck = true;
+            dragFromSlot = null;
             e.dataTransfer.setData('text', e.target.dataset.card);
-            e.dataTransfer.effectAllowed='copyMove';
+            e.dataTransfer.effectAllowed = 'copy';
             e.target.style.opacity='0.5';
+            
+            // Подсвечиваем руку и борд (куда можно положить)
+            document.getElementById('handSection').classList.add('block-highlight');
+            document.getElementById('boardSection').classList.add('block-highlight');
         }
         
         // Карта из слота
         if(e.target.classList && e.target.classList.contains('real-card')){
             dragFromDeck = false;
             const slot=e.target.parentElement;
-            const slotId=slot.dataset.slot;
-            const card=cards.get(slotId);
+            dragFromSlot = slot.dataset.slot;
+            const card=cards.get(dragFromSlot);
             if(card){
-                e.dataTransfer.setData('text', JSON.stringify({c:card.code,s:slotId}));
-                e.dataTransfer.effectAllowed='move';
+                e.dataTransfer.setData('text', JSON.stringify({c:card.code,s:dragFromSlot}));
+                e.dataTransfer.effectAllowed = 'move';
                 e.target.style.opacity='0.5';
+                
+                // Подсвечиваем возможные цели
+                if(dragFromSlot.startsWith('hero')){
+                    // Из руки -> в борд или колоду
+                    document.getElementById('boardSection').classList.add('block-highlight');
+                    document.getElementById('deck').classList.add('block-highlight');
+                }else{
+                    // Из борда -> в руку или колоду
+                    document.getElementById('handSection').classList.add('block-highlight');
+                    document.getElementById('deck').classList.add('block-highlight');
+                }
             }
         }
-        
-        // СРАЗУ подсвечиваем ВСЕ возможные цели
-        if(dragFromDeck){
-            // Из колоды -> в руку или борд
-            document.getElementById('handSection').classList.add('block-highlight');
-            document.getElementById('boardSection').classList.add('block-highlight');
-        }else{
-            // Из слота -> в другой блок или в колоду
-            document.getElementById('handSection').classList.add('block-highlight');
-            document.getElementById('boardSection').classList.add('block-highlight');
-            document.getElementById('deck').classList.add('deck-highlight');
-        }
     });
     
-    // Drag end - убираем все подсветки
+    // Drag end
     document.addEventListener('dragend',function(){
-        isDragging = false;
+        // Убираем все подсветки
         document.querySelectorAll('.deck-card, .real-card').forEach(x=>x.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(x=>x.classList.remove('drag-over'));
-        
-        // Убираем все подсветки
         document.getElementById('handSection').classList.remove('block-highlight');
         document.getElementById('boardSection').classList.remove('block-highlight');
-        document.getElementById('deck').classList.remove('deck-highlight');
+        document.getElementById('deck').classList.remove('block-highlight');
+        
+        dragFromDeck = false;
+        dragFromSlot = null;
     });
     
-    // Drag over СЛОТОВ в руке и борде
+    // Drag over СЛОТОВ (рука и борд)
     document.querySelectorAll('.card-slot').forEach(slot=>{
         slot.addEventListener('dragover',function(e){
             e.preventDefault();
-            e.dataTransfer.dropEffect = 'move'; // Всегда разрешаем move
+            
+            // Всегда разрешаем drop в слоты
+            e.dataTransfer.dropEffect = 'copy';
+            
+            // Подсвечиваем слот
             this.classList.add('drag-over');
+            
+            // Если drag из колоды, подсвечиваем соответствующий блок
+            if(dragFromDeck){
+                const slotId = this.dataset.slot;
+                if(slotId.startsWith('hero')){
+                    document.getElementById('handSection').classList.add('block-highlight');
+                }else{
+                    document.getElementById('boardSection').classList.add('block-highlight');
+                }
+            }
         });
         
         slot.addEventListener('dragleave',function(){
@@ -175,12 +187,21 @@ function initDragDrop(){
     const dg=document.getElementById('deck');
     dg.addEventListener('dragover',function(e){
         e.preventDefault();
-        e.dataTransfer.dropEffect = 'move'; // Всегда разрешаем move
-        // Подсветка уже включена в dragstart
+        
+        // Разрешаем drop только если drag НЕ из колоды
+        if(!dragFromDeck){
+            e.dataTransfer.dropEffect = 'copy';
+            this.classList.add('block-highlight');
+        }
+    });
+    
+    dg.addEventListener('dragleave',function(){
+        this.classList.remove('block-highlight');
     });
     
     dg.addEventListener('drop',function(e){
         e.preventDefault();
+        this.classList.remove('block-highlight');
         const data=e.dataTransfer.getData('text');
         if(!data)return;
         try{
@@ -189,15 +210,28 @@ function initDragDrop(){
         }catch{}
     });
     
-    // Drag over БЛОКОВ (руки и борда) для общей подсветки
+    // Drag over БЛОКОВ (для общей подсветки)
     document.getElementById('handSection').addEventListener('dragover', function(e){
         e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
+        if(!dragFromDeck || dragFromSlot && dragFromSlot.startsWith('hero')) return;
+        e.dataTransfer.dropEffect = 'copy';
+        this.classList.add('block-highlight');
     });
     
     document.getElementById('boardSection').addEventListener('dragover', function(e){
         e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
+        if(!dragFromDeck || dragFromSlot && dragFromSlot.startsWith('board')) return;
+        e.dataTransfer.dropEffect = 'copy';
+        this.classList.add('block-highlight');
+    });
+    
+    // Drag leave блоков
+    document.getElementById('handSection').addEventListener('dragleave', function(){
+        this.classList.remove('block-highlight');
+    });
+    
+    document.getElementById('boardSection').addEventListener('dragleave', function(){
+        this.classList.remove('block-highlight');
     });
 }
 
@@ -394,4 +428,3 @@ document.addEventListener('keydown',e=>{
     if((e.key==='Enter'||e.key===' ')&&!document.getElementById('calculateBtn').disabled)calculate();
     if(e.key>='1'&&e.key<='9')setOpp(parseInt(e.key));
 });
-
