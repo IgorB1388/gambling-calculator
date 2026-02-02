@@ -164,9 +164,6 @@ h1 {
     color: var(--neon-pink);
 }
 
-.section-title.active {
-    color: var(--neon-green);
-}
 
 .cards-row {
     display: flex;
@@ -542,4 +539,5 @@ h1 {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
 }
+
 
