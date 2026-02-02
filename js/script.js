@@ -36,6 +36,10 @@ const HandEvaluator={
     handVal(c){let v=0;c.forEach((x,i)=>{v+=x.r<<(4*(4-i));});return v;}
 };
 
+// Глобальные переменные для drag & drop
+let dragSource = null; // откуда тащим: 'deck', 'hand', 'board'
+let dragCardCode = null; // код карты
+
 document.addEventListener('DOMContentLoaded',()=>{
     createDeck();
     document.getElementById('handSection').onclick=()=>select('hand');
@@ -44,7 +48,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('clearAllBtn').onclick=clear;
     document.querySelectorAll('.opponent-pill').forEach(p=>p.onclick=()=>setOpp(parseInt(p.dataset.opponents)));
     
-    // Обработчик клика по слотам
     document.querySelectorAll('.card-slot').forEach(s=>{
         s.addEventListener('click', function(e){
             if(e.target.classList.contains('slot-empty'))return;
@@ -79,38 +82,80 @@ function createDeck(){
 }
 
 function initDragDrop(){
+    // Drag start
     document.addEventListener('dragstart',function(e){
+        dragSource = null;
+        dragCardCode = null;
+        
+        // Карта из колоды
         if(e.target.classList && e.target.classList.contains('deck-card') && e.target.draggable){
-            e.dataTransfer.setData('text', e.target.dataset.card);
+            dragSource = 'deck';
+            dragCardCode = e.target.dataset.card;
+            e.dataTransfer.setData('text', dragCardCode);
             e.dataTransfer.effectAllowed='copyMove';
             e.target.style.opacity='0.5';
             return;
         }
         
+        // Карта из слота
         if(e.target.classList && e.target.classList.contains('real-card')){
             const slot=e.target.parentElement;
             const slotId=slot.dataset.slot;
             const card=cards.get(slotId);
             if(card){
+                dragSource = slotId.startsWith('hero') ? 'hand' : 'board';
+                dragCardCode = card.code;
                 e.dataTransfer.setData('text', JSON.stringify({c:card.code,s:slotId}));
                 e.dataTransfer.effectAllowed='move';
                 e.target.style.opacity='0.5';
             }
         }
+        
+        // ПОДСВЕТКА ВСЕХ ВОЗМОЖНЫХ БЛОКОВ ПРИ НАЧАЛЕ DRAG
+        setTimeout(() => {
+            if(dragSource === 'deck'){
+                // Из колоды можно в руку или борд
+                document.getElementById('handSection').classList.add('block-highlight');
+                document.getElementById('boardSection').classList.add('block-highlight');
+            }else if(dragSource === 'hand' || dragSource === 'board'){
+                // Из руки/борда можно в другой блок или в колоду
+                if(dragSource === 'hand'){
+                    document.getElementById('boardSection').classList.add('block-highlight');
+                }else{
+                    document.getElementById('handSection').classList.add('block-highlight');
+                }
+                document.getElementById('deck').classList.add('deck-highlight');
+            }
+        }, 10);
     });
     
+    // Drag end - убираем все подсветки
     document.addEventListener('dragend',function(){
         document.querySelectorAll('.deck-card, .real-card').forEach(x=>x.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(x=>x.classList.remove('drag-over'));
+        
+        // Убираем все подсветки блоков
+        document.getElementById('handSection').classList.remove('block-highlight');
+        document.getElementById('boardSection').classList.remove('block-highlight');
         document.getElementById('deck').classList.remove('deck-highlight');
+        
+        dragSource = null;
+        dragCardCode = null;
     });
     
-    // Drop в слоты
+    // Drag over слотов в руке и борде
     document.querySelectorAll('.card-slot').forEach(slot=>{
         slot.addEventListener('dragover',function(e){
             e.preventDefault();
-            e.dataTransfer.dropEffect='move';
-            this.classList.add('drag-over');
+            
+            // Определяем откуда drag
+            if(!dragSource) return;
+            
+            // Если drag из колоды или другого слота - разрешаем drop
+            if(dragSource === 'deck' || dragSource === 'hand' || dragSource === 'board'){
+                e.dataTransfer.dropEffect = 'move';
+                this.classList.add('drag-over');
+            }
         });
         
         slot.addEventListener('dragleave',function(){
@@ -140,32 +185,23 @@ function initDragDrop(){
         });
     });
     
-    // Drop на колоду (возврат карт) - ИСПРАВЛЕНО
+    // Drag over колоды
     const dg=document.getElementById('deck');
     dg.addEventListener('dragover',function(e){
         e.preventDefault();
-        const data=e.dataTransfer.getData('text');
-        if(!data)return;
         
-        // Проверяем что это карта из слота (формат JSON)
-        try{
-            const parsed=JSON.parse(data);
-            if(parsed.s){ // Если есть поле s (slot), значит это карта из слота
-                e.dataTransfer.dropEffect='move';
-                this.classList.add('deck-highlight');
-            }
-        }catch{
-            // Если не JSON, значит это карта из колоды - игнорируем
+        // Разрешаем drop только если drag из слота (не из колоды)
+        if(dragSource === 'hand' || dragSource === 'board'){
+            e.dataTransfer.dropEffect = 'move';
         }
     });
     
     dg.addEventListener('dragleave',function(){
-        this.classList.remove('deck-highlight');
+        // Ничего не делаем - подсветка убирается в dragend
     });
     
     dg.addEventListener('drop',function(e){
         e.preventDefault();
-        this.classList.remove('deck-highlight');
         const data=e.dataTransfer.getData('text');
         if(!data)return;
         try{
@@ -173,21 +209,20 @@ function initDragDrop(){
             if(p.s)remove(p.s);
         }catch{}
     });
-}
     
-    dg.addEventListener('dragleave',function(){
-        this.classList.remove('deck-highlight'); // ИСПРАВЛЕНО: убираем класс
+    // Drag over блоков руки и борда (для общей подсветки)
+    document.getElementById('handSection').addEventListener('dragover', function(e){
+        e.preventDefault();
+        if(dragSource && dragSource !== 'hand'){
+            e.dataTransfer.dropEffect = 'move';
+        }
     });
     
-    dg.addEventListener('drop',function(e){
+    document.getElementById('boardSection').addEventListener('dragover', function(e){
         e.preventDefault();
-        this.classList.remove('deck-highlight'); // ИСПРАВЛЕНО: убираем класс
-        const data=e.dataTransfer.getData('text');
-        if(!data)return;
-        try{
-            const p=JSON.parse(data);
-            if(p.s)remove(p.s);
-        }catch{}
+        if(dragSource && dragSource !== 'board'){
+            e.dataTransfer.dropEffect = 'move';
+        }
     });
 }
 
@@ -266,7 +301,6 @@ function remove(slot){
 }
 
 function updateUI(){
-    // ИСПРАВЛЕНО: убрали подсказку "клик для удаления"
     document.querySelectorAll('.card-slot').forEach(s=>{
         const id=s.dataset.slot,c=cards.get(id);
         if(c){
@@ -385,4 +419,3 @@ document.addEventListener('keydown',e=>{
     if((e.key==='Enter'||e.key===' ')&&!document.getElementById('calculateBtn').disabled)calculate();
     if(e.key>='1'&&e.key<='9')setOpp(parseInt(e.key));
 });
-
