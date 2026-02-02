@@ -97,6 +97,7 @@ h1 {
     border-bottom: 2px solid rgba(0, 204, 255, 0.3);
 }
         
+/* ФИКСИРОВАННЫЕ РАЗМЕРЫ БЛОКОВ РУКИ И БОРДА */
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
@@ -106,9 +107,10 @@ h1 {
     transition: all 0.3s;
     border: 2px solid;
     position: relative;
-    min-height: 230px; /* Фиксированная минимальная высота */
+    height: 260px; /* ФИКСИРОВАННАЯ высота */
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Скрываем выход за границы */
 }
         
 .hand-section {
@@ -136,12 +138,13 @@ h1 {
 }
         
 .section-title {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 1.3rem;
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-shrink: 0; /* Не сжимается */
+    flex-shrink: 0;
+    height: 30px; /* Фиксированная высота */
 }
         
 .hand-section .section-title {
@@ -155,11 +158,11 @@ h1 {
 .cards-row {
     display: flex;
     gap: 15px;
-    margin-bottom: 10px;
+    margin: 10px 0;
     min-height: 120px;
     align-items: center;
     justify-content: center;
-    flex-grow: 1; /* Занимает доступное пространство */
+    flex-grow: 1;
 }
         
 .card-slot {
@@ -422,14 +425,16 @@ h1 {
 .result-card:nth-child(2) .result-percent { color: var(--neon-pink); }
 .result-card:nth-child(3) .result-percent { color: var(--neon-blue); }
         
+/* ФИКСИРОВАННОЕ МЕСТО ДЛЯ ПРЕДУПРЕЖДЕНИЙ */
 .warning {
     color: #ff9966;
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
     display: none;
-    min-height: 20px; /* Фиксированная высота для предупреждений */
-    flex-shrink: 0; /* Не сжимается */
+    height: 20px; /* Фиксированная высота */
+    flex-shrink: 0;
+    line-height: 20px; /* Центрируем текст */
 }
         
 .current-selection {
@@ -452,7 +457,9 @@ h1 {
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
-    flex-shrink: 0; /* Не сжимается */
+    height: 20px; /* Фиксированная высота */
+    flex-shrink: 0;
+    line-height: 20px;
 }
         
 .progress-container {
@@ -493,7 +500,6 @@ h1 {
     margin-top: 10px;
 }
         
-/* УБРАЛ: подсказки "клик для удаления" */
 .card-face {
     display: flex;
     flex-direction: column;
@@ -506,36 +512,4 @@ h1 {
 .slot-empty {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
-}
-
-/* Стили для подсказок */
-.tips-section {
-    margin-top: 30px;
-    background: var(--bg-medium);
-    padding: 20px;
-    border-radius: 12px;
-    border: 2px solid var(--neon-yellow);
-}
-
-.tips-grid {
-    display: grid;
-    gap: 10px;
-}
-
-.tip {
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    font-size: 0.9rem;
-}
-
-.result-label {
-    color: var(--text-medium);
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-}
-
-.result-desc {
-    color: var(--text-medium);
-    font-size: 0.8rem;
 }
