@@ -78,33 +78,73 @@ function initDragDrop(){
         document.querySelectorAll('.deck-card, .real-card').forEach(x=>x.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(x=>x.classList.remove('drag-over'));
     });
+    
+    // ОБНОВЛЕНО: Drop в слоты (разрешаем замену карт)
     document.querySelectorAll('.card-slot').forEach(slot=>{
-        slot.ondragover=e=>{e.preventDefault();slot.classList.add('drag-over');};
+        slot.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';slot.classList.add('drag-over');};
         slot.ondragleave=()=>slot.classList.remove('drag-over');
         slot.ondrop=e=>{e.preventDefault();slot.classList.remove('drag-over');
             const data=e.dataTransfer.getData('text');
             if(!data)return;
             const sid=slot.dataset.slot;
-            try{const p=JSON.parse(data);if(p.s&&p.s!==sid)move(p.s,sid);}
-            catch{if(used.has(data)){show("Карта уже выбрана!");return;}
-                if(cards.has(sid)){show("Слот занят!");return;}
-                add(data,sid);
+            try{
+                const p=JSON.parse(data);
+                if(p.s&&p.s!==sid)move(p.s,sid);
+            }catch{
+                const cardCode=data;
+                if(used.has(cardCode))return; // УБРАНО УВЕДОМЛЕНИЕ
+                // ОБНОВЛЕНО: Разрешаем дроп на занятый слот - заменяем карты
+                if(cards.has(sid)){
+                    // Удаляем старую карту из этого слота
+                    const oldCard=cards.get(sid);
+                    used.delete(oldCard.code);
+                    cards.delete(sid);
+                }
+                add(cardCode,sid);
             }
         };
     });
+    
+    // ОБНОВЛЕНО: Drop на колоду (возврат карт)
     const dg=document.getElementById('deck');
-    dg.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';dg.style.borderColor='var(--neon-yellow)';dg.style.boxShadow='0 0 15px var(--neon-yellow)';};
-    dg.ondragleave=e=>{if(!dg.contains(e.relatedTarget)){dg.style.borderColor='';dg.style.boxShadow='';}};
-    dg.ondrop=e=>{e.preventDefault();dg.style.borderColor='';dg.style.boxShadow='';
-        try{const p=JSON.parse(e.dataTransfer.getData('text'));if(p.s)remove(p.s);}catch{}
+    dg.ondragover=e=>{
+        e.preventDefault();
+        e.dataTransfer.dropEffect='move';
+        dg.style.borderColor='var(--neon-yellow)';
+        dg.style.boxShadow='0 0 15px var(--neon-yellow)';
+        // Подсвечиваем все карты в колоде
+        dg.querySelectorAll('.deck-card').forEach(c=>c.style.border='2px solid var(--neon-yellow)');
+    };
+    dg.ondragleave=e=>{
+        if(!dg.contains(e.relatedTarget)){
+            dg.style.borderColor='';
+            dg.style.boxShadow='';
+            dg.querySelectorAll('.deck-card').forEach(c=>c.style.border='');
+        }
+    };
+    dg.ondrop=e=>{
+        e.preventDefault();
+        dg.style.borderColor='';
+        dg.style.boxShadow='';
+        dg.querySelectorAll('.deck-card').forEach(c=>c.style.border='');
+        try{
+            const p=JSON.parse(e.dataTransfer.getData('text'));
+            if(p.s)remove(p.s);
+        }catch{}
     };
 }
 
 function move(from,to){
     if(!cards.has(from))return;
     const card=cards.get(from);
-    if(cards.has(to)){const temp=cards.get(to);cards.set(to,card);cards.set(from,temp);}
-    else{cards.set(to,card);cards.delete(from);}
+    if(cards.has(to)){
+        const temp=cards.get(to);
+        cards.set(to,card);
+        cards.set(from,temp);
+    }else{
+        cards.set(to,card);
+        cards.delete(from);
+    }
     updateUI();checkAll();
 }
 
@@ -118,9 +158,17 @@ function select(block){
 }
 
 function cardClick(code){
-    if(used.has(code)){show("Карта уже выбрана!");return;}
-    if(active==='hand'){if(handCount()<2)addCard(code,'hand');else addCard(code,'board');}
-    else{if(boardCount()<5)addCard(code,'board');else{if(handCount()<2)addCard(code,'hand');else show("Все слоты заполнены!");}}
+    if(used.has(code))return; // УБРАНО УВЕДОМЛЕНИЕ
+    if(active==='hand'){
+        if(handCount()<2)addCard(code,'hand');
+        else addCard(code,'board');
+    }else{
+        if(boardCount()<5)addCard(code,'board');
+        else{
+            if(handCount()<2)addCard(code,'hand');
+            else return; // УБРАНО УВЕДОМЛЕНИЕ
+        }
+    }
 }
 
 function handCount(){return Array.from(cards.keys()).filter(s=>s.startsWith('hero')).length;}
@@ -134,7 +182,7 @@ function addCard(code,type=null){
         const other=t==='hand'?['board-1','board-2','board-3','board-4','board-5']:['hero-1','hero-2'];
         free=other.find(s=>!cards.has(s));
         if(free){active=t==='hand'?'board':'hand';select(active);}
-        else{show("Все слоты заполнены!");return;}
+        else return; // УБРАНО УВЕДОМЛЕНИЕ
     }
     add(code,free);
 }
@@ -261,14 +309,7 @@ function clear(){
     updateUI();select('hand');
     document.getElementById('resultsPanel').style.display='none';
     document.getElementById('progressContainer').style.display='none';
-    show("Все карты очищены!");
-}
-
-function show(msg,dur=2000){
-    const n=document.getElementById('notification');
-    n.textContent=msg;
-    n.style.display='block';
-    setTimeout(()=>n.style.display='none',dur);
+    // УБРАНО УВЕДОМЛЕНИЕ
 }
 
 document.addEventListener('keydown',e=>{
