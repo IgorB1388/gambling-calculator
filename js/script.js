@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('clearAllBtn').onclick=clear;
     document.querySelectorAll('.opponent-pill').forEach(p=>p.onclick=()=>setOpp(parseInt(p.dataset.opponents)));
     
-    // ИСПРАВЛЕНО: обработчик клика по слотам
+    // Обработчик клика по слотам
     document.querySelectorAll('.card-slot').forEach(s=>{
         s.addEventListener('click', function(e){
-            if(e.target.classList.contains('slot-empty')||e.target.classList.contains('remove-hint'))return;
+            if(e.target.classList.contains('slot-empty'))return;
             const realCard = this.querySelector('.real-card');
             if(realCard)remove(this.dataset.slot);
         });
@@ -70,7 +70,6 @@ function createDeck(){
         card.draggable=true;
         card.innerHTML=`<div class="card-face"><div class="card-value">${v}</div><div class="card-suit-large">${suit.s}</div></div>`;
         
-        // ИСПРАВЛЕНО: простой обработчик без closest
         card.addEventListener('click', function(){
             if(!this.classList.contains('selected'))cardClick(code);
         });
@@ -81,7 +80,6 @@ function createDeck(){
 
 function initDragDrop(){
     document.addEventListener('dragstart',function(e){
-        // Проверяем, что это карта из колоды
         if(e.target.classList && e.target.classList.contains('deck-card') && e.target.draggable){
             e.dataTransfer.setData('text', e.target.dataset.card);
             e.dataTransfer.effectAllowed='copyMove';
@@ -89,7 +87,6 @@ function initDragDrop(){
             return;
         }
         
-        // Проверяем, что это карта в слоте
         if(e.target.classList && e.target.classList.contains('real-card')){
             const slot=e.target.parentElement;
             const slotId=slot.dataset.slot;
@@ -152,19 +149,19 @@ function initDragDrop(){
         try{
             JSON.parse(data); // Если это JSON, значит карта из слота
             e.dataTransfer.dropEffect='move';
-            this.classList.add('deck-highlight');
+            this.classList.add('deck-highlight'); // ИСПРАВЛЕНО: добавляем класс для подсветки
         }catch{
             // Не карта из слота - игнорируем
         }
     });
     
     dg.addEventListener('dragleave',function(){
-        this.classList.remove('deck-highlight');
+        this.classList.remove('deck-highlight'); // ИСПРАВЛЕНО: убираем класс
     });
     
     dg.addEventListener('drop',function(e){
         e.preventDefault();
-        this.classList.remove('deck-highlight');
+        this.classList.remove('deck-highlight'); // ИСПРАВЛЕНО: убираем класс
         const data=e.dataTransfer.getData('text');
         if(!data)return;
         try{
@@ -231,11 +228,11 @@ function add(code,slot){
     const v=code.slice(0,-1),s=code.slice(-1);
     const suit=s==='h'?'♥':s==='d'?'♦':s==='s'?'♠':'♣';
     cards.set(slot,{
-        code: code,  // ИСПРАВЛЕНО: сохраняем полный код
-        v: v,        // значение
-        s: suit,     // символ масти
-        sc: s,       // код масти
-        r: ranks[v]  // ранг
+        code: code,
+        v: v,
+        s: suit,
+        sc: s,
+        r: ranks[v]
     });
     used.add(code);
     updateUI();checkAll();
@@ -249,15 +246,14 @@ function remove(slot){
 }
 
 function updateUI(){
-    // ИСПРАВЛЕНО: правильное отображение карт
+    // ИСПРАВЛЕНО: убрали подсказку "клик для удаления"
     document.querySelectorAll('.card-slot').forEach(s=>{
         const id=s.dataset.slot,c=cards.get(id);
         if(c){
             const red=c.s==='♥'||c.s==='♦';
-            // ОЧЕНЬ ВАЖНО: используем c.v (значение) и c.s (символ масти)
-            s.innerHTML=`<div class="real-card ${red?'red':'black'}" draggable="true"><div class="card-content">${c.v}<br>${c.s}</div></div><div class="remove-hint">клик для удаления</div>`;
+            s.innerHTML=`<div class="real-card ${red?'red':'black'}" draggable="true"><div class="card-content">${c.v}<br>${c.s}</div></div>`;
         }else{
-            s.innerHTML='<div class="slot-empty">+</div><div class="remove-hint">клик для удаления</div>';
+            s.innerHTML='<div class="slot-empty">+</div>';
         }
     });
     
