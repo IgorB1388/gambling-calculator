@@ -82,80 +82,66 @@ function createDeck(){
 }
 
 function initDragDrop(){
+    // Переменная для отслеживания drag
+    let isDragging = false;
+    let dragFromDeck = false;
+    
     // Drag start
     document.addEventListener('dragstart',function(e){
-        dragSource = null;
-        dragCardCode = null;
+        isDragging = true;
         
         // Карта из колоды
         if(e.target.classList && e.target.classList.contains('deck-card') && e.target.draggable){
-            dragSource = 'deck';
-            dragCardCode = e.target.dataset.card;
-            e.dataTransfer.setData('text', dragCardCode);
+            dragFromDeck = true;
+            e.dataTransfer.setData('text', e.target.dataset.card);
             e.dataTransfer.effectAllowed='copyMove';
             e.target.style.opacity='0.5';
-            return;
         }
         
         // Карта из слота
         if(e.target.classList && e.target.classList.contains('real-card')){
+            dragFromDeck = false;
             const slot=e.target.parentElement;
             const slotId=slot.dataset.slot;
             const card=cards.get(slotId);
             if(card){
-                dragSource = slotId.startsWith('hero') ? 'hand' : 'board';
-                dragCardCode = card.code;
                 e.dataTransfer.setData('text', JSON.stringify({c:card.code,s:slotId}));
                 e.dataTransfer.effectAllowed='move';
                 e.target.style.opacity='0.5';
             }
         }
         
-        // ПОДСВЕТКА ВСЕХ ВОЗМОЖНЫХ БЛОКОВ ПРИ НАЧАЛЕ DRAG
-        setTimeout(() => {
-            if(dragSource === 'deck'){
-                // Из колоды можно в руку или борд
-                document.getElementById('handSection').classList.add('block-highlight');
-                document.getElementById('boardSection').classList.add('block-highlight');
-            }else if(dragSource === 'hand' || dragSource === 'board'){
-                // Из руки/борда можно в другой блок или в колоду
-                if(dragSource === 'hand'){
-                    document.getElementById('boardSection').classList.add('block-highlight');
-                }else{
-                    document.getElementById('handSection').classList.add('block-highlight');
-                }
-                document.getElementById('deck').classList.add('deck-highlight');
-            }
-        }, 10);
+        // СРАЗУ подсвечиваем ВСЕ возможные цели
+        if(dragFromDeck){
+            // Из колоды -> в руку или борд
+            document.getElementById('handSection').classList.add('block-highlight');
+            document.getElementById('boardSection').classList.add('block-highlight');
+        }else{
+            // Из слота -> в другой блок или в колоду
+            document.getElementById('handSection').classList.add('block-highlight');
+            document.getElementById('boardSection').classList.add('block-highlight');
+            document.getElementById('deck').classList.add('deck-highlight');
+        }
     });
     
     // Drag end - убираем все подсветки
     document.addEventListener('dragend',function(){
+        isDragging = false;
         document.querySelectorAll('.deck-card, .real-card').forEach(x=>x.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(x=>x.classList.remove('drag-over'));
         
-        // Убираем все подсветки блоков
+        // Убираем все подсветки
         document.getElementById('handSection').classList.remove('block-highlight');
         document.getElementById('boardSection').classList.remove('block-highlight');
         document.getElementById('deck').classList.remove('deck-highlight');
-        
-        dragSource = null;
-        dragCardCode = null;
     });
     
-    // Drag over слотов в руке и борде
+    // Drag over СЛОТОВ в руке и борде
     document.querySelectorAll('.card-slot').forEach(slot=>{
         slot.addEventListener('dragover',function(e){
             e.preventDefault();
-            
-            // Определяем откуда drag
-            if(!dragSource) return;
-            
-            // Если drag из колоды или другого слота - разрешаем drop
-            if(dragSource === 'deck' || dragSource === 'hand' || dragSource === 'board'){
-                e.dataTransfer.dropEffect = 'move';
-                this.classList.add('drag-over');
-            }
+            e.dataTransfer.dropEffect = 'move'; // Всегда разрешаем move
+            this.classList.add('drag-over');
         });
         
         slot.addEventListener('dragleave',function(){
@@ -185,19 +171,12 @@ function initDragDrop(){
         });
     });
     
-    // Drag over колоды
+    // Drag over КОЛОДЫ
     const dg=document.getElementById('deck');
     dg.addEventListener('dragover',function(e){
         e.preventDefault();
-        
-        // Разрешаем drop только если drag из слота (не из колоды)
-        if(dragSource === 'hand' || dragSource === 'board'){
-            e.dataTransfer.dropEffect = 'move';
-        }
-    });
-    
-    dg.addEventListener('dragleave',function(){
-        // Ничего не делаем - подсветка убирается в dragend
+        e.dataTransfer.dropEffect = 'move'; // Всегда разрешаем move
+        // Подсветка уже включена в dragstart
     });
     
     dg.addEventListener('drop',function(e){
@@ -210,19 +189,15 @@ function initDragDrop(){
         }catch{}
     });
     
-    // Drag over блоков руки и борда (для общей подсветки)
+    // Drag over БЛОКОВ (руки и борда) для общей подсветки
     document.getElementById('handSection').addEventListener('dragover', function(e){
         e.preventDefault();
-        if(dragSource && dragSource !== 'hand'){
-            e.dataTransfer.dropEffect = 'move';
-        }
+        e.dataTransfer.dropEffect = 'move';
     });
     
     document.getElementById('boardSection').addEventListener('dragover', function(e){
         e.preventDefault();
-        if(dragSource && dragSource !== 'board'){
-            e.dataTransfer.dropEffect = 'move';
-        }
+        e.dataTransfer.dropEffect = 'move';
     });
 }
 
@@ -419,3 +394,4 @@ document.addEventListener('keydown',e=>{
     if((e.key==='Enter'||e.key===' ')&&!document.getElementById('calculateBtn').disabled)calculate();
     if(e.key>='1'&&e.key<='9')setOpp(parseInt(e.key));
 });
+
