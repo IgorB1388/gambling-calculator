@@ -542,4 +542,10 @@ h1 {
 .slot-empty {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
+
+}
+
+.deck-highlight {
+    border-color: var(--neon-yellow) !important;
+    box-shadow: 0 0 20px var(--neon-yellow) !important;
 }
