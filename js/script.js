@@ -77,9 +77,10 @@ function initDragDrop(){
     document.addEventListener('dragend',()=>{
         document.querySelectorAll('.deck-card, .real-card').forEach(x=>x.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(x=>x.classList.remove('drag-over'));
+        document.getElementById('deck').querySelectorAll('.deck-card').forEach(c=>c.style.border='');
     });
     
-    // ОБНОВЛЕНО: Drop в слоты (разрешаем замену карт)
+    // Drop в слоты
     document.querySelectorAll('.card-slot').forEach(slot=>{
         slot.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';slot.classList.add('drag-over');};
         slot.ondragleave=()=>slot.classList.remove('drag-over');
@@ -92,10 +93,9 @@ function initDragDrop(){
                 if(p.s&&p.s!==sid)move(p.s,sid);
             }catch{
                 const cardCode=data;
-                if(used.has(cardCode))return; // УБРАНО УВЕДОМЛЕНИЕ
-                // ОБНОВЛЕНО: Разрешаем дроп на занятый слот - заменяем карты
+                if(used.has(cardCode))return;
+                // ИСПРАВЛЕНО: Разрешаем дроп на занятый слот - заменяем карты
                 if(cards.has(sid)){
-                    // Удаляем старую карту из этого слота
                     const oldCard=cards.get(sid);
                     used.delete(oldCard.code);
                     cards.delete(sid);
@@ -105,30 +105,25 @@ function initDragDrop(){
         };
     });
     
-    // ОБНОВЛЕНО: Drop на колоду (возврат карт)
+    // Drop на колоду (возврат карт)
     const dg=document.getElementById('deck');
     dg.ondragover=e=>{
         e.preventDefault();
-        e.dataTransfer.dropEffect='move';
-        dg.style.borderColor='var(--neon-yellow)';
-        dg.style.boxShadow='0 0 15px var(--neon-yellow)';
-        // Подсвечиваем все карты в колоде
-        dg.querySelectorAll('.deck-card').forEach(c=>c.style.border='2px solid var(--neon-yellow)');
+        const data=e.dataTransfer.getData('text');
+        if(!data)return;
+        try{
+            const p=JSON.parse(data);
+            if(p.s){e.dataTransfer.dropEffect='move';dg.classList.add('deck-highlight');}
+        }catch{}
     };
-    dg.ondragleave=e=>{
-        if(!dg.contains(e.relatedTarget)){
-            dg.style.borderColor='';
-            dg.style.boxShadow='';
-            dg.querySelectorAll('.deck-card').forEach(c=>c.style.border='');
-        }
-    };
+    dg.ondragleave=()=>dg.classList.remove('deck-highlight');
     dg.ondrop=e=>{
         e.preventDefault();
-        dg.style.borderColor='';
-        dg.style.boxShadow='';
-        dg.querySelectorAll('.deck-card').forEach(c=>c.style.border='');
+        dg.classList.remove('deck-highlight');
+        const data=e.dataTransfer.getData('text');
+        if(!data)return;
         try{
-            const p=JSON.parse(e.dataTransfer.getData('text'));
+            const p=JSON.parse(data);
             if(p.s)remove(p.s);
         }catch{}
     };
@@ -158,7 +153,7 @@ function select(block){
 }
 
 function cardClick(code){
-    if(used.has(code))return; // УБРАНО УВЕДОМЛЕНИЕ
+    if(used.has(code))return;
     if(active==='hand'){
         if(handCount()<2)addCard(code,'hand');
         else addCard(code,'board');
@@ -166,7 +161,7 @@ function cardClick(code){
         if(boardCount()<5)addCard(code,'board');
         else{
             if(handCount()<2)addCard(code,'hand');
-            else return; // УБРАНО УВЕДОМЛЕНИЕ
+            else return;
         }
     }
 }
@@ -182,7 +177,7 @@ function addCard(code,type=null){
         const other=t==='hand'?['board-1','board-2','board-3','board-4','board-5']:['hero-1','hero-2'];
         free=other.find(s=>!cards.has(s));
         if(free){active=t==='hand'?'board':'hand';select(active);}
-        else return; // УБРАНО УВЕДОМЛЕНИЕ
+        else return;
     }
     add(code,free);
 }
@@ -309,7 +304,6 @@ function clear(){
     updateUI();select('hand');
     document.getElementById('resultsPanel').style.display='none';
     document.getElementById('progressContainer').style.display='none';
-    // УБРАНО УВЕДОМЛЕНИЕ
 }
 
 document.addEventListener('keydown',e=>{
