@@ -253,8 +253,6 @@ function select(block){
     active=block;
     document.getElementById('handSection').classList.toggle('active',block==='hand');
     document.getElementById('boardSection').classList.toggle('active',block==='board');
-    document.getElementById('handTitle').classList.toggle('active',block==='hand');
-    document.getElementById('boardTitle').classList.toggle('active',block==='board');
     document.getElementById('currentBlockName').textContent=block==='hand'?'Ваша рука':'Борд';
 }
 
@@ -428,3 +426,4 @@ document.addEventListener('keydown',e=>{
     if((e.key==='Enter'||e.key===' ')&&!document.getElementById('calculateBtn').disabled)calculate();
     if(e.key>='1'&&e.key<='9')setOpp(parseInt(e.key));
 });
+
