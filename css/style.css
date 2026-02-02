@@ -97,7 +97,7 @@ h1 {
     border-bottom: 2px solid rgba(0, 204, 255, 0.3);
 }
         
-/* ФИКСИРОВАННЫЕ РАЗМЕРЫ БЛОКОВ РУКИ И БОРДА */
+/* ФИКСИРОВАННЫЕ БЛОКИ РУКИ И БОРДА */
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
@@ -110,7 +110,6 @@ h1 {
     height: 260px; /* ФИКСИРОВАННАЯ высота */
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Скрываем выход за границы */
 }
         
 .hand-section {
@@ -138,13 +137,13 @@ h1 {
 }
         
 .section-title {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: 1.3rem;
     display: flex;
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
-    height: 30px; /* Фиксированная высота */
+    height: 30px;
 }
         
 .hand-section .section-title {
@@ -155,14 +154,34 @@ h1 {
     color: var(--neon-pink);
 }
         
+.board-subtitle,
+.hand-subtitle {
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 10px;
+    height: 20px;
+    flex-shrink: 0;
+    line-height: 20px;
+}
+
+/* КОНТЕЙНЕР ДЛЯ КАРТ - ФИКСИРОВАННАЯ ПОЗИЦИЯ */
+.section-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+        
 .cards-row {
     display: flex;
     gap: 15px;
-    margin: 10px 0;
-    min-height: 120px;
     align-items: center;
     justify-content: center;
-    flex-grow: 1;
+    min-height: 120px;
+    margin: 0;
+    position: relative;
 }
         
 .card-slot {
@@ -223,6 +242,21 @@ h1 {
     align-items: center;
     justify-content: center;
     line-height: 1.2;
+}
+        
+/* АБСОЛЮТНО ПОЗИЦИОНИРОВАННЫЕ ПРЕДУПРЕЖДЕНИЯ */
+.warning {
+    color: #ff9966;
+    font-size: 0.9rem;
+    text-align: center;
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    right: 20px;
+    height: 20px;
+    line-height: 20px;
+    z-index: 2;
 }
         
 .opponents-control {
@@ -425,18 +459,6 @@ h1 {
 .result-card:nth-child(2) .result-percent { color: var(--neon-pink); }
 .result-card:nth-child(3) .result-percent { color: var(--neon-blue); }
         
-/* ФИКСИРОВАННОЕ МЕСТО ДЛЯ ПРЕДУПРЕЖДЕНИЙ */
-.warning {
-    color: #ff9966;
-    font-size: 0.9rem;
-    text-align: center;
-    margin-top: 5px;
-    display: none;
-    height: 20px; /* Фиксированная высота */
-    flex-shrink: 0;
-    line-height: 20px; /* Центрируем текст */
-}
-        
 .current-selection {
     text-align: center;
     margin-bottom: 15px;
@@ -449,17 +471,6 @@ h1 {
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
-}
-        
-.board-subtitle,
-.hand-subtitle {
-    color: var(--text-medium);
-    font-size: 0.9rem;
-    text-align: center;
-    margin-top: 5px;
-    height: 20px; /* Фиксированная высота */
-    flex-shrink: 0;
-    line-height: 20px;
 }
         
 .progress-container {
