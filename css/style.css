@@ -503,13 +503,7 @@ h1 {
     font-weight: bold;
     margin-bottom: 5px;
 }
-        
-.accuracy-note {
-    color: var(--neon-yellow);
-    font-size: 0.8rem;
-    text-align: center;
-    margin-top: 10px;
-}
+      
         
 .card-face {
     display: flex;
@@ -524,3 +518,4 @@ h1 {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
 }
+
