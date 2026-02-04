@@ -1,4 +1,4 @@
-// language.js
+// language.js - ПОЛНЫЙ ФАЙЛ
 let currentLanguage = 'ru';
 
 function changeLanguage(lang) {
@@ -14,106 +14,61 @@ function changeLanguage(lang) {
         }
     });
     
-    // 2. Обновляем активный блок (рука/борд)
-    updateActiveBlockText();
-    
-    // 3. Обновляем текст оппонентов в результатах (если есть)
-    updateOpponentText();
-    
-    // 4. Обновляем комбинацию в результатах (если уже рассчитано)
-    updateHandDescription();
-    
-    // 5. Обновляем прогресс текст (если виден)
-    updateProgressText();
-    
-    // 6. Обновляем переключатель языка
+    // 2. Обновляем переключатель языка
     updateLanguageSwitcher(lang);
     
-    // 7. Сохраняем в localStorage
+    // 3. Обновляем текст оппонентов в результатах (если уже рассчитано)
+    updateOpponentText();
+    
+    // 4. Обновляем комбинацию в результатах
+    updateHandDescription();
+    
+    // 5. Сохраняем в localStorage
     localStorage.setItem('poker-calc-language', lang);
     
-    // 8. Обновляем атрибут lang у html
+    // 6. Обновляем атрибут lang у html
     document.documentElement.lang = lang;
-}
-
-function updateActiveBlockText() {
-    const blockName = document.getElementById('currentBlockName');
-    if (blockName) {
-        const isHand = document.getElementById('handSection').classList.contains('active');
-        blockName.textContent = isHand 
-            ? translations[currentLanguage].yourHandText 
-            : translations[currentLanguage].boardText;
-    }
 }
 
 function updateOpponentText() {
     const opponentInfo = document.getElementById('opponentInfo');
     if (!opponentInfo) return;
     
-    // Если текст не стандартный (уже есть результаты расчета)
-    if (opponentInfo.textContent.includes('оппонент') || 
-        opponentInfo.textContent.includes('opponent') ||
-        opponentInfo.textContent.includes('oponente')) {
-        
-        const count = parseInt(document.getElementById('currentOpponents').textContent);
-        let text;
-        
-        if (count === 1) {
-            text = translations[currentLanguage].headsUp;
-        } else {
-            if (currentLanguage === 'en') {
-                text = `${count} ${translations[currentLanguage].opponents}`;
-            } else if (currentLanguage === 'ru') {
-                // Русские формы: 1 оппонент, 2-4 оппонента, 5+ оппонентов
-                const lastDigit = count % 10;
-                const lastTwoDigits = count % 100;
-                
-                if (lastDigit === 1 && lastTwoDigits !== 11) {
-                    text = `${count} оппонент`;
-                } else if (lastDigit >= 2 && lastDigit <= 4 && !(lastTwoDigits >= 12 && lastTwoDigits <= 14)) {
-                    text = `${count} оппонента`;
-                } else {
-                    text = `${count} оппонентов`;
-                }
-            } else if (currentLanguage === 'es') {
-                // Испанские формы: 1 oponente, 2+ oponentes
-                text = count === 1 
-                    ? `${count} ${translations[currentLanguage].opponentSingle}`
-                    : `${count} ${translations[currentLanguage].opponents}`;
+    // Получаем текущее количество оппонентов
+    const count = parseInt(document.getElementById('currentOpponents').textContent) || 1;
+    
+    // Обновляем текст оппонентов в результатах
+    if (count === 1) {
+        opponentInfo.textContent = translations[currentLanguage].headsUp;
+    } else {
+        if (currentLanguage === 'en') {
+            opponentInfo.textContent = `${count} ${translations[currentLanguage].opponents}`;
+        } else if (currentLanguage === 'ru') {
+            // Русские формы: 1 оппонент, 2-4 оппонента, 5+ оппонентов
+            const lastDigit = count % 10;
+            const lastTwoDigits = count % 100;
+            
+            if (lastDigit === 1 && lastTwoDigits !== 11) {
+                opponentInfo.textContent = `${count} оппонент`;
+            } else if (lastDigit >= 2 && lastDigit <= 4 && !(lastTwoDigits >= 12 && lastTwoDigits <= 14)) {
+                opponentInfo.textContent = `${count} оппонента`;
+            } else {
+                opponentInfo.textContent = `${count} оппонентов`;
             }
+        } else if (currentLanguage === 'es') {
+            // Испанские формы: 1 oponente, 2+ oponentes
+            opponentInfo.textContent = count === 1 
+                ? `${count} ${translations[currentLanguage].opponentSingle}`
+                : `${count} ${translations[currentLanguage].opponents}`;
         }
-        
-        opponentInfo.textContent = text;
     }
 }
 
 function updateHandDescription() {
     const heroHandDesc = document.getElementById('heroHandDesc');
     if (heroHandDesc && heroHandDesc.textContent !== '-') {
-        // Функция describeHand теперь использует текущий язык
+        // Функция describeHand уже использует текущий язык
         // Она была переопределена в initLanguage
-    }
-}
-
-function updateProgressText() {
-    const progressText = document.getElementById('progressText');
-    if (progressText && progressText.style.display !== 'none') {
-        const currentText = progressText.textContent;
-        if (currentText.includes('Идет расчет') || 
-            currentText.includes('Calculating') || 
-            currentText.includes('Calculando')) {
-            
-            const percentMatch = currentText.match(/(\d+)%/);
-            if (percentMatch) {
-                const percent = percentMatch[1];
-                progressText.textContent = `${translations[currentLanguage].calculating}: ${percent}%`;
-            }
-        } else if (currentText.includes('Расчет завершен') || 
-                   currentText.includes('Calculation complete') || 
-                   currentText.includes('Cálculo completado')) {
-            
-            progressText.textContent = translations[currentLanguage].calculationComplete;
-        }
     }
 }
 
@@ -167,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Инициализируем систему языков
     initLanguage();
     
-    // 3. Устанавливаем язык (но только после полной загрузки)
+    // 3. Устанавливаем язык
     setTimeout(() => {
         changeLanguage(currentLanguage);
     }, 100);
