@@ -1,4 +1,4 @@
-# Poker Calculator 🃏
+# Poker Calculator Multilanguage
 
 Калькулятор шансов для покера с Monte Carlo симуляцией.
 
