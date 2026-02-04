@@ -17,17 +17,34 @@ function changeLanguage(lang) {
     // 2. Обновляем переключатель языка
     updateLanguageSwitcher(lang);
     
-    // 3. Обновляем текст оппонентов в результатах (если уже рассчитано)
-    updateOpponentText();
+    // 3. Обновляем активный блок
+    updateActiveBlock();
     
-    // 4. Обновляем комбинацию в результатах
-    updateHandDescription();
+    // 4. Обновляем текст оппонентов в результатах (если уже рассчитано)
+    updateOpponentText();
     
     // 5. Сохраняем в localStorage
     localStorage.setItem('poker-calc-language', lang);
     
     // 6. Обновляем атрибут lang у html
     document.documentElement.lang = lang;
+    
+    console.log(`Язык изменен на: ${lang}`);
+}
+
+function updateActiveBlock() {
+    const currentBlockName = document.getElementById('currentBlockName');
+    if (!currentBlockName) return;
+    
+    // Определяем какой блок активен
+    const isHand = document.getElementById('handSection').classList.contains('active');
+    
+    // Обновляем текст в зависимости от языка
+    if (isHand) {
+        currentBlockName.textContent = translations[currentLanguage].yourHandText;
+    } else {
+        currentBlockName.textContent = translations[currentLanguage].boardText;
+    }
 }
 
 function updateOpponentText() {
@@ -35,7 +52,10 @@ function updateOpponentText() {
     if (!opponentInfo) return;
     
     // Получаем текущее количество оппонентов
-    const count = parseInt(document.getElementById('currentOpponents').textContent) || 1;
+    const currentOpponents = document.getElementById('currentOpponents');
+    if (!currentOpponents) return;
+    
+    const count = parseInt(currentOpponents.textContent) || 1;
     
     // Обновляем текст оппонентов в результатах
     if (count === 1) {
@@ -64,14 +84,6 @@ function updateOpponentText() {
     }
 }
 
-function updateHandDescription() {
-    const heroHandDesc = document.getElementById('heroHandDesc');
-    if (heroHandDesc && heroHandDesc.textContent !== '-') {
-        // Функция describeHand уже использует текущий язык
-        // Она была переопределена в initLanguage
-    }
-}
-
 function updateLanguageSwitcher(activeLang) {
     document.querySelectorAll('.lang-btn').forEach(btn => {
         const lang = btn.getAttribute('data-lang');
@@ -87,7 +99,7 @@ function updateLanguageSwitcher(activeLang) {
 function initLanguage() {
     // Сохраняем оригинальную функцию
     if (typeof window.describeHand === 'function') {
-        const originalDescribeHand = window.describeHand;
+        console.log("Переопределяем describeHand для поддержки языков");
         
         // Создаем новую функцию с поддержкой языков
         window.describeHand = function(heroCards, boardCards) {
@@ -113,24 +125,30 @@ function initLanguage() {
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Инициализация языка...");
+    
     // 1. Проверяем сохраненный язык
     const savedLang = localStorage.getItem('poker-calc-language');
     if (savedLang && translations[savedLang]) {
         currentLanguage = savedLang;
+        console.log(`Найден сохраненный язык: ${savedLang}`);
+    } else {
+        console.log("Используем язык по умолчанию: ru");
     }
     
     // 2. Инициализируем систему языков
     initLanguage();
     
-    // 3. Устанавливаем язык
+    // 3. Устанавливаем язык (с небольшой задержкой для гарантии)
     setTimeout(() => {
         changeLanguage(currentLanguage);
-    }, 100);
+    }, 50);
     
     // 4. Добавляем обработчики на кнопки языка
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const lang = btn.getAttribute('data-lang');
+            console.log(`Клик по языку: ${lang}`);
             changeLanguage(lang);
         });
     });
@@ -142,12 +160,17 @@ document.addEventListener('DOMContentLoaded', () => {
         calculateBtn.onclick = function(e) {
             if (originalClick) originalClick.call(this, e);
             // После расчета обновляем текст оппонентов
-            setTimeout(updateOpponentText, 100);
+            setTimeout(() => {
+                updateOpponentText();
+            }, 150);
         };
     }
+    
+    console.log("Языковая система инициализирована");
 });
 
 // Экспортируем функции для использования в script.js
 window.changeLanguage = changeLanguage;
 window.getCurrentLanguage = () => currentLanguage;
 window.updateOpponentText = updateOpponentText;
+window.updateActiveBlock = updateActiveBlock;
