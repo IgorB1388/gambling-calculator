@@ -554,7 +554,7 @@ h1 {
 .progress-container {
     margin-top: 20px;
     background: var(--bg-medium);
-    padding: 15px;
+    padding: 10px 15px; /* МЕНЬШЕ PADDING */
     border-radius: 10px;
     border: 2px solid var(--neon-green);
     display: none;
@@ -576,10 +576,7 @@ h1 {
 }
         
 .progress-text {
-    text-align: center;
-    color: var(--neon-green);
-    font-weight: bold;
-    margin-bottom: 5px;
+    display:none;
 }
       
         
@@ -673,3 +670,4 @@ h1 {
         font-size: 2.5rem;
     }
 }
+
