@@ -417,13 +417,13 @@ function moveCardBetweenSlots(fromSlotId, toSlotId) {
 function selectHandBlock() {
     activeBlock = 'hand';
     updateActiveSection('handSection', 'handTitle');
-    document.getElementById('currentBlockName').textContent = 'Ваша рука';
+    // ТЕКСТ БУДЕТ ОБНОВЛЕН СИСТЕМОЙ ПЕРЕВОДОВ ЧЕРЕЗ data-i18n
 }
 
 function selectBoardBlock() {
     activeBlock = 'board';
     updateActiveSection('boardSection', 'boardTitle');
-    document.getElementById('currentBlockName').textContent = 'Борд';
+    // ТЕКСТ БУДЕТ ОБНОВЛЕН СИСТЕМОЙ ПЕРЕВОДОВ ЧЕРЕЗ data-i18n
 }
 
 function updateActiveSection(sectionId, titleId) {
@@ -543,7 +543,6 @@ function updateCardDisplay() {
     });
 }
 
-
 function updateStatus() {
     const calculateBtn = document.getElementById('calculateBtn');
     calculateBtn.disabled = !(checkHandValidity() && checkBoardValidity() && !isCalculating);
@@ -597,13 +596,11 @@ async function calculateEquity() {
     let deck = createFullDeck().filter(card => !usedCards.has(card.code));
     
     const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
     
     for (let i=0; i<SIMULATIONS; i++) {
         if (i % 200 === 0) {
             const progress = Math.round((i/SIMULATIONS)*100);
             progressFill.style.width = progress + '%';
-            progressText.textContent = `Идет расчет: ${progress}%`;
             await new Promise(resolve => setTimeout(resolve,0));
         }
         
@@ -631,7 +628,6 @@ async function calculateEquity() {
     }
     
     progressFill.style.width = '100%';
-    progressText.textContent = 'Расчет завершен!';
     
     const heroPercent = (heroWins/SIMULATIONS*100).toFixed(1);
     const opponentPercent = (opponentWins/SIMULATIONS*100).toFixed(1);
@@ -642,9 +638,11 @@ async function calculateEquity() {
     document.getElementById('resultTie').textContent = tiePercent + '%';
     
     document.getElementById('heroHandDesc').textContent = describeHand(heroCards,boardCards);
-    document.getElementById('opponentInfo').textContent = opponentsCount === 1 
-        ? "Хедз 1 на 1" 
-        : `${opponentsCount} оппонент${opponentsCount===1?'':opponentsCount<=4?'а':'ов'}`;
+    
+    // ОБНОВЛЯЕМ ТЕКСТ ОППОНЕНТОВ НА ТЕКУЩЕМ ЯЗЫКЕ
+    if (window.updateOpponentText) {
+        window.updateOpponentText();
+    }
     
     document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth'});
     
@@ -680,10 +678,21 @@ function shuffleArray(array) {
 }
 
 function describeHand(heroCards, boardCards) {
-    if (boardCards.length === 0) return "Префлоп";
+    if (boardCards.length === 0) return translations[currentLanguage].preflop;
     const handRank = HandEvaluator.evaluate([...heroCards,...boardCards]) >> 20;
-    const handNames = ["Старшая карта","Пара","Две пары","Сет","Стрит","Флеш","Фулл-хаус","Каре","Стрит-флеш","Роял-флеш"];
-    return handNames[handRank] || "Неизвестная комбинация";
+    const handNames = [
+        translations[currentLanguage].highCard,
+        translations[currentLanguage].pair,
+        translations[currentLanguage].twoPair,
+        translations[currentLanguage].threeOfAKind,
+        translations[currentLanguage].straight,
+        translations[currentLanguage].flush,
+        translations[currentLanguage].fullHouse,
+        translations[currentLanguage].fourOfAKind,
+        translations[currentLanguage].straightFlush,
+        translations[currentLanguage].royalFlush
+    ];
+    return handNames[handRank] || translations[currentLanguage].unknownCombo;
 }
 
 function clearAll() {
@@ -711,4 +720,3 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
-
