@@ -35,7 +35,7 @@ const translations = {
         calculationComplete: "Расчет завершен!",
         
         // Результаты
-        panelResults: "📊 РЕЗУЛЬТАТЫ (Monte Carlo)",
+        panelResults: "📊 РЕЗУЛЬТАТЫ",
         yourHandResult: "ВАША РУКА",
         opponentsResult: "ОППОНЕНТЫ",
         tieResult: "НИЧЬЯ",
@@ -97,7 +97,7 @@ const translations = {
         calculationComplete: "Calculation complete!",
         
         // Results
-        panelResults: "📊 RESULTS (Monte Carlo)",
+        panelResults: "📊 RESULTS",
         yourHandResult: "YOUR HAND",
         opponentsResult: "OPPONENTS",
         tieResult: "TIE",
@@ -106,8 +106,7 @@ const translations = {
         // Descriptions
         headsUp: "Heads up 1 vs 1",
         opponentSingle: "opponent",
-        opponentFew: "opponents",
-        opponentMany: "opponents",
+        opponents: "opponents",
         
         // Hand combinations
         preflop: "Preflop",
@@ -159,7 +158,7 @@ const translations = {
         calculationComplete: "¡Cálculo completado!",
         
         // Resultados
-        panelResults: "📊 RESULTADOS (Monte Carlo)",
+        panelResults: "📊 RESULTADOS",
         yourHandResult: "TU MANO",
         opponentsResult: "OPONENTES",
         tieResult: "EMPATE",
@@ -168,8 +167,7 @@ const translations = {
         // Descripciones
         headsUp: "Cara a cara 1 vs 1",
         opponentSingle: "oponente",
-        opponentFew: "oponentes",
-        opponentMany: "oponentes",
+        opponents: "oponentes",
         
         // Combinaciones de mano
         preflop: "Preflop",
