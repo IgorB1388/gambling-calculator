@@ -417,13 +417,19 @@ function moveCardBetweenSlots(fromSlotId, toSlotId) {
 function selectHandBlock() {
     activeBlock = 'hand';
     updateActiveSection('handSection', 'handTitle');
-    // ТЕКСТ БУДЕТ ОБНОВЛЕН СИСТЕМОЙ ПЕРЕВОДОВ ЧЕРЕЗ data-i18n
+    // ОБНОВЛЯЕМ НАЗВАНИЕ БЛОКА НА ТЕКУЩЕМ ЯЗЫКЕ
+    if (window.updateActiveBlock) {
+        window.updateActiveBlock();
+    }
 }
 
 function selectBoardBlock() {
     activeBlock = 'board';
     updateActiveSection('boardSection', 'boardTitle');
-    // ТЕКСТ БУДЕТ ОБНОВЛЕН СИСТЕМОЙ ПЕРЕВОДОВ ЧЕРЕЗ data-i18n
+    // ОБНОВЛЯЕМ НАЗВАНИЕ БЛОКА НА ТЕКУЩЕМ ЯЗЫКЕ
+    if (window.updateActiveBlock) {
+        window.updateActiveBlock();
+    }
 }
 
 function updateActiveSection(sectionId, titleId) {
@@ -640,9 +646,14 @@ async function calculateEquity() {
     document.getElementById('heroHandDesc').textContent = describeHand(heroCards,boardCards);
     
     // ОБНОВЛЯЕМ ТЕКСТ ОППОНЕНТОВ НА ТЕКУЩЕМ ЯЗЫКЕ
-    if (window.updateOpponentText) {
-        window.updateOpponentText();
-    }
+    setTimeout(() => {
+        if (window.updateOpponentText) {
+            window.updateOpponentText();
+        }
+        if (window.updateActiveBlock) {
+            window.updateActiveBlock();
+        }
+    }, 100);
     
     document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth'});
     
