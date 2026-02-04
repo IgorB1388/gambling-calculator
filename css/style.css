@@ -45,6 +45,7 @@ body {
     border-radius: 15px;
     border: 2px solid var(--neon-teal);
     box-shadow: var(--shadow);
+    position: relative;
 }
         
 .header-suits {
@@ -64,6 +65,60 @@ h1 {
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
+
+/* === ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА === */
+.language-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 30px;
+    border: 2px solid var(--neon-purple);
+    backdrop-filter: blur(10px);
+}
+
+.lang-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: var(--text-light);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    min-width: 70px;
+    justify-content: center;
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    border-color: var(--neon-yellow);
+}
+
+.lang-btn.active {
+    background: var(--neon-purple);
+    color: white;
+    border-color: var(--neon-purple);
+    box-shadow: 0 0 15px var(--neon-purple);
+}
+
+.lang-flag {
+    font-size: 1.2rem;
+}
+
+.lang-code {
+    font-weight: bold;
+}
         
 .subtitle {
     color: var(--text-medium);
@@ -79,6 +134,13 @@ h1 {
         
 @media (max-width: 1100px) {
     .main-area { grid-template-columns: 1fr; }
+    .language-switcher {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin: 15px auto;
+        width: fit-content;
+    }
 }
         
 .panel {
@@ -519,3 +581,27 @@ h1 {
     color: rgba(255, 255, 255, 0.4);
 }
 
+/* Для мобилок */
+@media (max-width: 768px) {
+    .language-switcher {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin: 10px auto 20px;
+    }
+    
+    .lang-btn {
+        padding: 6px 10px;
+        min-width: 60px;
+        font-size: 0.8rem;
+    }
+    
+    .lang-flag {
+        font-size: 1rem;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        margin-top: 10px;
+    }
+}
