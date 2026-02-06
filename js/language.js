@@ -39,11 +39,13 @@ function updateActiveBlock() {
     // Определяем какой блок активен
     const isHand = document.getElementById('handSection').classList.contains('active');
     
-    // Обновляем текст в зависимости от языка
+    // Обновляем текст и цвет
     if (isHand) {
         currentBlockName.textContent = translations[currentLanguage].yourHandText;
+        currentBlockName.className = 'hand-color';
     } else {
         currentBlockName.textContent = translations[currentLanguage].boardText;
+        currentBlockName.className = 'board-color';
     }
 }
 
