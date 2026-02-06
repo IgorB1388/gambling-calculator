@@ -1,4 +1,3 @@
-/* === OPTIMIZED CSS === */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         
 :root {
@@ -181,7 +180,7 @@ h1 {
     border-bottom: 2px solid rgba(0, 204, 255, 0.3);
 }
         
-/* ===== БЛОКИ РУКИ И БОРДА С НОВЫМИ ПРАВИЛАМИ ===== */
+/* ===== БЛОКИ РУКИ И БОРДА С НОВОЙ ЛОГИКОЙ ПОДСВЕТКИ ===== */
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
@@ -195,53 +194,65 @@ h1 {
     display: flex;
     flex-direction: column;
 }
-        
+
+/* БАЗОВЫЕ ГРАНИЦЫ */
 .hand-section {
     border-color: var(--neon-teal);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3); /* слабое свечение */
 }
-        
 .board-section {
     border-color: var(--neon-pink);
+    box-shadow: 0 0 10px rgba(255, 95, 210, 0.3);
 }
 
-/* ХОВЕР БЕЗ КАРТЫ: подпрыгивает только неактивные блоки */
-.hand-section:not(.active):hover:not(.drag-over),
-.board-section:not(.active):hover:not(.drag-over) {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+/* КОЛОДА */
+#deck {
+    box-shadow: 0 0 10px rgba(179, 107, 255, 0.3); /* слабое свечение */
 }
 
-/* АКТИВНЫЙ БЛОК: постоянная подсветка, НИКОГДА не прыгает */
+/* АКТИВНЫЙ БЛОК (средняя яркость) */
 .hand-section.active {
-    border-color: var(--neon-teal);
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-    transform: translateY(0) !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6); /* среднее свечение */
 }
-        
 .board-section.active {
-    border-color: var(--neon-pink);
-    box-shadow: 0 0 25px rgba(255, 95, 210, 0.4);
-    transform: translateY(0) !important;
+    box-shadow: 0 0 20px rgba(255, 95, 210, 0.6);
 }
 
-/* HOVER на активном блоке (без карты) - без изменений */
-.hand-section.active:hover:not(.drag-over),
-.board-section.active:hover:not(.drag-over) {
-    transform: translateY(0) !important;
+/* ХОВЕР БЕЗ КАРТЫ (яркое свечение) */
+.hand-section:hover:not(.drag-over):not(.drag-over-no-space) {
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.9);
+}
+.board-section:hover:not(.drag-over):not(.drag-over-no-space) {
+    box-shadow: 0 0 25px rgba(255, 95, 210, 0.9);
+}
+#deck:hover:not(.drag-over) {
+    box-shadow: 0 0 25px rgba(179, 107, 255, 0.9);
 }
 
-/* ДРАГ-ОВЕР: подпрыгивает при перетаскивании карты (если есть место) */
-.hand-section.drag-over,
+/* ДРАГ-ОВЕР С КАРТОЙ (если есть свободные слоты) */
+.hand-section.drag-over {
+    box-shadow: 0 0 30px rgba(0, 240, 255, 1) !important; /* максимальное свечение */
+}
 .board-section.drag-over {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 0 25px rgba(255, 215, 102, 0.7) !important;
+    box-shadow: 0 0 30px rgba(255, 95, 210, 1) !important;
+}
+#deck.drag-over {
+    box-shadow: 0 0 30px rgba(179, 107, 255, 1) !important;
 }
 
-/* ДРАГ-ОВЕР НЕВОЗМОЖЕН: если нет места для карты */
+/* ДРАГ-ОВЕР НЕВОЗМОЖЕН (нет свободных слотов) */
 .hand-section.drag-over-no-space,
-.board-section.drag-over-no-space {
-    transform: translateY(0) !important;
-    box-shadow: none !important;
+.board-section.drag-over-no-space,
+#deck.drag-over-no-space {
+    box-shadow: none !important; /* убираем свечение */
+}
+
+/* ХОВЕР НА АКТИВНОМ БЛОКЕ (без карты) - остается средняя яркость */
+.hand-section.active:hover:not(.drag-over):not(.drag-over-no-space) {
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6); /* не меняется */
+}
+.board-section.active:hover:not(.drag-over):not(.drag-over-no-space) {
+    box-shadow: 0 0 20px rgba(255, 95, 210, 0.6);
 }
         
 .section-title {
