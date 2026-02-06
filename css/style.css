@@ -146,6 +146,7 @@ h1 {
 .lang-flag {
     display: block;
     line-height: 1;
+    font-family: 'Segoe UI', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
         
 .subtitle {
@@ -597,6 +598,38 @@ h1 {
 .slot-empty {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
+}
+
+/* ===== ФИКС: ПОДСВЕТКА ПРИ КЛИКЕ (решение проблемы №1) ===== */
+.hand-section.active, 
+.hand-section.active:hover {
+    border-color: var(--neon-teal) !important;
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+.board-section.active, 
+.board-section.active:hover {
+    border-color: var(--neon-pink) !important;
+    box-shadow: 0 0 25px rgba(255, 95, 210, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ===== ФИКС: ЭМОДЗИ ФЛАГОВ (решение проблемы №2) ===== */
+@font-face {
+    font-family: 'EmojiFont';
+    src: local('Apple Color Emoji'),
+         local('Segoe UI Emoji'),
+         local('Segoe UI Symbol'),
+         local('Noto Color Emoji'),
+         local('Android Emoji');
+    unicode-range: U+1F1E6-1F1FF, U+1F300-1F5FF, U+1F600-1F64F, U+1F680-1F6FF, U+2600-26FF;
+}
+
+.lang-flag {
+    font-family: 'Segoe UI', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'EmojiFont';
+    font-size: 2rem;
+    line-height: 1;
 }
 
 /* Для мобилок */
