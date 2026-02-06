@@ -145,6 +145,15 @@ let currentDragCard = null;
 let currentDragOverSection = null;
 let dragOverTimer = null;
 
+// Функция для активации блока по ID слота
+function activateBlockBySlotId(slotId) {
+    if (slotId.startsWith('hero')) {
+        selectHandBlock();
+    } else if (slotId.startsWith('board')) {
+        selectBoardBlock();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Покерный калькулятор запущен!");
     createDeck();
@@ -255,9 +264,9 @@ function initDragAndDrop() {
         document.querySelectorAll('.deck-card, .real-card').forEach(el => el.style.opacity = '1');
         document.querySelectorAll('.card-slot').forEach(slot => slot.classList.remove('drag-over'));
         
-        // Сбрасываем подсветку блоков
-        document.querySelectorAll('.hand-section, .board-section').forEach(section => {
-            section.classList.remove('drag-over', 'drag-over-no-space');
+        // Сбрасываем подсветку блоков (ТОЛЬКО через классы)
+        document.querySelectorAll('.hand-section, .board-section, #deck').forEach(el => {
+            el.classList.remove('drag-over', 'drag-over-no-space');
         });
         
         currentDragCard = null;
@@ -309,25 +318,20 @@ function initDragAndDrop() {
     deckGrid.addEventListener('dragover', e => {
         e.preventDefault();
         if (currentDragSource === 'slot') {
-            deckGrid.style.borderColor = 'var(--neon-yellow)';
-            deckGrid.style.boxShadow = '0 0 20px var(--neon-yellow)';
-            deckGrid.style.transform = 'scale(1.01)';
+            // Добавляем класс вместо style
+            deckGrid.classList.add('drag-over');
         }
     });
     
     deckGrid.addEventListener('dragleave', e => {
         if (!deckGrid.contains(e.relatedTarget)) {
-            deckGrid.style.borderColor = '';
-            deckGrid.style.boxShadow = '';
-            deckGrid.style.transform = '';
+            deckGrid.classList.remove('drag-over', 'drag-over-no-space');
         }
     });
     
     deckGrid.addEventListener('drop', e => {
         e.preventDefault();
-        deckGrid.style.borderColor = '';
-        deckGrid.style.boxShadow = '';
-        deckGrid.style.transform = '';
+        deckGrid.classList.remove('drag-over', 'drag-over-no-space');
         
         if (currentDragSource === 'slot' && currentDragCard?.fromSlot) {
             removeCardFromSlot(currentDragCard.fromSlot);
@@ -349,8 +353,9 @@ function hasFreeSlotsInSection(sectionId) {
 function initSectionDrop() {
     const handSection = document.getElementById('handSection');
     const boardSection = document.getElementById('boardSection');
+    const deckGrid = document.getElementById('deck');
     
-    [handSection, boardSection].forEach(section => {
+    [handSection, boardSection, deckGrid].forEach(section => {
         section.addEventListener('dragover', e => {
             e.preventDefault();
             
@@ -364,11 +369,14 @@ function initSectionDrop() {
                 currentDragOverSection.classList.remove('drag-over', 'drag-over-no-space');
             }
             
-            // Проверяем есть ли свободные слоты
-            const hasFreeSlots = hasFreeSlotsInSection(section.id);
+            // Проверяем есть ли свободные слоты (для колоды всегда есть)
+            let hasFreeSlots = true;
+            if (section !== deckGrid) {
+                hasFreeSlots = hasFreeSlotsInSection(section.id);
+            }
             
             if (hasFreeSlots) {
-                // Есть место - желтая подсветка
+                // Есть место - подсветка
                 section.classList.remove('drag-over-no-space');
                 section.classList.add('drag-over');
             } else {
@@ -416,6 +424,16 @@ function initSectionDrop() {
             if (!currentDragCard) return;
             
             const cardCode = currentDragCard.cardCode;
+            
+            // Обработка дропа на колоду
+            if (section === deckGrid) {
+                if (currentDragSource === 'slot' && currentDragCard?.fromSlot) {
+                    removeCardFromSlot(currentDragCard.fromSlot);
+                }
+                return;
+            }
+            
+            // Обработка дропа на блоки руки/борда
             if (usedCards.has(cardCode) && currentDragSource !== 'slot') return;
             
             const sectionType = section.id === 'handSection' ? 'hand' : 'board';
@@ -448,6 +466,9 @@ function initSectionDrop() {
                     // Перемещение из слота в слот
                     moveCardBetweenSlots(currentDragCard.fromSlot, freeSlot);
                 }
+                
+                // АКТИВИРУЕМ БЛОК КУДА КИНУЛИ КАРТУ
+                activateBlockBySlotId(freeSlot);
             }
         });
     });
@@ -469,6 +490,9 @@ function moveCardBetweenSlots(fromSlotId, toSlotId) {
     // Сбрасываем прогресс при изменении карт
     document.getElementById('progressFill').style.width = '0%';
     document.getElementById('resultsPanel').style.display = 'none';
+    
+    // Активируем блок куда переместили карту
+    activateBlockBySlotId(toSlotId);
     
     updateCardDisplay();
     updateStatus();
@@ -589,11 +613,7 @@ function addCardToSlot(cardCode, slotId) {
     usedCards.add(cardCode);
     
     // Активируем соответствующий блок
-    if (slotId.startsWith('hero')) {
-        selectHandBlock();
-    } else if (slotId.startsWith('board')) {
-        selectBoardBlock();
-    }
+    activateBlockBySlotId(slotId);
     
     // Сбрасываем прогресс
     document.getElementById('progressFill').style.width = '0%';
@@ -843,6 +863,7 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.checkFreeSlots = checkFreeSlots;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
+window.activateBlockBySlotId = activateBlockBySlotId;
 
 document.addEventListener('keydown', e => {
     switch(e.key) {
