@@ -563,7 +563,7 @@ h1 {
     padding: 10px 15px;
     border-radius: 10px;
     border: 2px solid var(--neon-green);
-    display: none;
+    display: block;
 }
         
 .progress-bar {
@@ -711,3 +711,4 @@ h1 {
 /* Цвета для активного блока в строке статуса */
 #currentBlockName.hand-color { color: var(--neon-teal) !important; }
 #currentBlockName.board-color { color: var(--neon-pink) !important; }
+
