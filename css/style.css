@@ -708,3 +708,6 @@ h1 {
         font-size: 2.5rem;
     }
 }
+/* Цвета для активного блока в строке статуса */
+#currentBlockName.hand-color { color: var(--neon-teal) !important; }
+#currentBlockName.board-color { color: var(--neon-pink) !important; }
