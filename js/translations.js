@@ -2,7 +2,7 @@
 const translations = {
     ru: {
         // Заголовок
-        title: "POKER CALCULATOR",
+        title: "ПОКЕРНЫЙ КАЛЬКУЛЯТОР",
         
         // Панель руки и борда
         panelHandBoard: "ВАША РУКА И БОРД",
