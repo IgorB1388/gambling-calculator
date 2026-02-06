@@ -141,6 +141,10 @@ let isCalculating = false;
 let currentDragSource = null;
 let currentDragCard = null;
 
+// Глобальные переменные для отслеживания drag-over
+let currentDragOverSection = null;
+let dragOverTimer = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Покерный калькулятор запущен!");
     createDeck();
@@ -176,7 +180,6 @@ function createDeck() {
         deckCard.dataset.card = cardCode;
         deckCard.draggable = true;
         
-        // НЕ БЛОКИРУЕМ события, чтобы drag работал
         deckCard.addEventListener('dragstart', function(e) {
             if (this.classList.contains('selected')) {
                 e.preventDefault();
@@ -200,16 +203,9 @@ function createDeck() {
         });
     }));
     
-    // Предотвращаем выделение текста в колоде
-    deckGrid.addEventListener('selectstart', e => {
-        e.preventDefault();
-    });
-    
-    // Предотвращаем drag самой колоды
+    deckGrid.addEventListener('selectstart', e => e.preventDefault());
     deckGrid.addEventListener('dragstart', e => {
-        if (!e.target.closest('.deck-card')) {
-            e.preventDefault();
-        }
+        if (!e.target.closest('.deck-card')) e.preventDefault();
     });
 }
 
@@ -259,16 +255,19 @@ function initDragAndDrop() {
         document.querySelectorAll('.deck-card, .real-card').forEach(el => el.style.opacity = '1');
         document.querySelectorAll('.card-slot').forEach(slot => slot.classList.remove('drag-over'));
         
-        // Сбрасываем флаги
+        // Сбрасываем подсветку блоков
+        document.querySelectorAll('.hand-section, .board-section').forEach(section => {
+            section.classList.remove('drag-over', 'drag-over-no-space');
+        });
+        
         currentDragCard = null;
         currentDragSource = null;
+        currentDragOverSection = null;
         
-        // Убираем подсветку секций и колоды
-        document.querySelectorAll('.hand-section, .board-section, #deck').forEach(el => {
-            el.style.transform = '';
-            el.style.boxShadow = '';
-            el.style.borderColor = '';
-        });
+        if (dragOverTimer) {
+            clearTimeout(dragOverTimer);
+            dragOverTimer = null;
+        }
     });
     
     // Drop в слоты
@@ -336,7 +335,17 @@ function initDragAndDrop() {
     });
 }
 
-// Drop на секции (рука/борд)
+// Проверка свободных слотов в секции
+function hasFreeSlotsInSection(sectionId) {
+    if (sectionId === 'handSection') {
+        return getHandCardsCount() < 2;
+    } else if (sectionId === 'boardSection') {
+        return getBoardCardsCount() < 5;
+    }
+    return false;
+}
+
+// Новый улучшенный initSectionDrop с логикой проверки свободных слотов
 function initSectionDrop() {
     const handSection = document.getElementById('handSection');
     const boardSection = document.getElementById('boardSection');
@@ -344,32 +353,74 @@ function initSectionDrop() {
     [handSection, boardSection].forEach(section => {
         section.addEventListener('dragover', e => {
             e.preventDefault();
-            if (currentDragSource === 'deck') {
-                section.style.boxShadow = '0 0 25px rgba(255, 215, 102, 0.7)';
-                section.style.transform = 'translateY(-3px) scale(1.01)';
+            
+            // Удаляем предыдущий таймер если есть
+            if (dragOverTimer) {
+                clearTimeout(dragOverTimer);
             }
+            
+            // Снимаем подсветку с предыдущей секции
+            if (currentDragOverSection && currentDragOverSection !== section) {
+                currentDragOverSection.classList.remove('drag-over', 'drag-over-no-space');
+            }
+            
+            // Проверяем есть ли свободные слоты
+            const hasFreeSlots = hasFreeSlotsInSection(section.id);
+            
+            if (hasFreeSlots) {
+                // Есть место - желтая подсветка
+                section.classList.remove('drag-over-no-space');
+                section.classList.add('drag-over');
+            } else {
+                // Нет места - специальный класс (без подсветки)
+                section.classList.remove('drag-over');
+                section.classList.add('drag-over-no-space');
+            }
+            
+            currentDragOverSection = section;
+            
+            // Таймер для плавного скрытия если ушли с секции
+            dragOverTimer = setTimeout(() => {
+                if (!section.contains(document.elementFromPoint(e.clientX, e.clientY))) {
+                    section.classList.remove('drag-over', 'drag-over-no-space');
+                }
+            }, 50);
         });
         
         section.addEventListener('dragleave', e => {
-            if (!section.contains(e.relatedTarget)) {
-                section.style.transform = '';
-                section.style.boxShadow = '';
+            // Не убираем подсветку сразу, используем таймер
+            if (dragOverTimer) {
+                clearTimeout(dragOverTimer);
             }
+            
+            dragOverTimer = setTimeout(() => {
+                if (!section.contains(e.relatedTarget)) {
+                    section.classList.remove('drag-over', 'drag-over-no-space');
+                    currentDragOverSection = null;
+                }
+            }, 100);
         });
         
         section.addEventListener('drop', e => {
             e.preventDefault();
-            section.style.transform = '';
-            section.style.boxShadow = '';
             
-            if (!currentDragCard || currentDragSource !== 'deck') return;
+            // Снимаем все классы
+            section.classList.remove('drag-over', 'drag-over-no-space');
+            currentDragOverSection = null;
+            
+            if (dragOverTimer) {
+                clearTimeout(dragOverTimer);
+                dragOverTimer = null;
+            }
+            
+            if (!currentDragCard) return;
             
             const cardCode = currentDragCard.cardCode;
-            if (usedCards.has(cardCode)) return;
+            if (usedCards.has(cardCode) && currentDragSource !== 'slot') return;
             
             const sectionType = section.id === 'handSection' ? 'hand' : 'board';
             
-            // Находим первый свободный слот в этой секции
+            // Находим первый свободный слот
             let freeSlot = null;
             if (sectionType === 'hand') {
                 for (let i = 1; i <= 2; i++) {
@@ -390,9 +441,14 @@ function initSectionDrop() {
             }
             
             if (freeSlot) {
-                addCardToSlot(cardCode, freeSlot);
+                // Если drag из колоды или из другого слота
+                if (currentDragSource === 'deck') {
+                    addCardToSlot(cardCode, freeSlot);
+                } else if (currentDragSource === 'slot') {
+                    // Перемещение из слота в слот
+                    moveCardBetweenSlots(currentDragCard.fromSlot, freeSlot);
+                }
             }
-            // Если нет свободных слотов, не делаем ничего
         });
     });
 }
@@ -424,20 +480,16 @@ function selectHandBlock() {
     console.log("Selecting hand block");
     activeBlock = 'hand';
     
-    // Убираем активные классы со всех секций
     document.querySelectorAll('.hand-section, .board-section').forEach(section => {
         section.classList.remove('active');
     });
     
-    // Добавляем активный класс к руке
     const handSection = document.getElementById('handSection');
     handSection.classList.add('active');
     
-    // Убираем активный класс с борда
     const boardSection = document.getElementById('boardSection');
     boardSection.classList.remove('active');
     
-    // Обновляем интерфейс
     updateActiveSection('handSection', 'handTitle');
     if (window.updateActiveBlock) {
         window.updateActiveBlock();
@@ -448,20 +500,16 @@ function selectBoardBlock() {
     console.log("Selecting board block");
     activeBlock = 'board';
     
-    // Убираем активные классы со всех секций
     document.querySelectorAll('.hand-section, .board-section').forEach(section => {
         section.classList.remove('active');
     });
     
-    // Добавляем активный класс к борду
     const boardSection = document.getElementById('boardSection');
     boardSection.classList.add('active');
     
-    // Убираем активный класс с руки
     const handSection = document.getElementById('handSection');
     handSection.classList.remove('active');
     
-    // Обновляем интерфейс
     updateActiveSection('boardSection', 'boardTitle');
     if (window.updateActiveBlock) {
         window.updateActiveBlock();
@@ -540,16 +588,14 @@ function addCardToSlot(cardCode, slotId) {
     
     usedCards.add(cardCode);
     
-    // ФИКС 1: Активируем соответствующий блок при добавлении карты
+    // Активируем соответствующий блок
     if (slotId.startsWith('hero')) {
-        // Это карта руки - активируем блок руки
         selectHandBlock();
     } else if (slotId.startsWith('board')) {
-        // Это карта борда - активируем блок борда
         selectBoardBlock();
     }
     
-    // ФИКС 2: Сбрасываем прогресс при изменении карт
+    // Сбрасываем прогресс
     document.getElementById('progressFill').style.width = '0%';
     document.getElementById('resultsPanel').style.display = 'none';
     
@@ -565,7 +611,6 @@ function removeCardFromSlot(slotId) {
         usedCards.delete(card.code);
         selectedCards.delete(slotId);
         
-        // ФИКС: Сбрасываем прогресс при удалении карты
         document.getElementById('progressFill').style.width = '0%';
         document.getElementById('resultsPanel').style.display = 'none';
         
@@ -611,7 +656,6 @@ function updateStatus() {
     
     calculateBtn.disabled = !isValid;
     
-    // ФИКС 3: Делаем кнопку бледной если уже есть результаты
     if (hasResults && !isCalculating) {
         calculateBtn.classList.add('has-results');
     } else {
@@ -660,10 +704,7 @@ async function calculateEquity() {
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
     
-    // Сброс прогресс-бара (всегда виден, просто сбрасываем ширину)
     document.getElementById('progressFill').style.width = '0%';
-    
-    // Показываем результаты
     document.getElementById('resultsPanel').style.display = 'block';
     
     const SIMULATIONS = 10000;
@@ -714,7 +755,6 @@ async function calculateEquity() {
     
     document.getElementById('heroHandDesc').textContent = describeHand(heroCards,boardCards);
     
-    // ОБНОВЛЯЕМ ТЕКСТ ОППОНЕНТОВ НА ТЕКУЩЕМ ЯЗЫКЕ
     setTimeout(() => {
         if (window.updateOpponentText) {
             window.updateOpponentText();
@@ -728,7 +768,7 @@ async function calculateEquity() {
     
     setTimeout(() => {
         isCalculating = false;
-        updateStatus(); // Обновим состояние кнопки
+        updateStatus();
     }, 1000);
 }
 
@@ -779,7 +819,6 @@ function clearAll() {
     usedCards.clear();
     updateCardDisplay();
     
-    // Сбрасываем прогресс и результаты
     document.getElementById('progressFill').style.width = '0%';
     document.getElementById('resultsPanel').style.display = 'none';
     
@@ -789,7 +828,6 @@ function clearAll() {
     selectHandBlock();
 }
 
-// Горячие клавиши
 document.addEventListener('keydown', e => {
     switch(e.key) {
         case 'Escape': clearAll(); break;
