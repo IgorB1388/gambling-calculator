@@ -1,4 +1,3 @@
-// Оптимизированный JavaScript код БЕЗ УВЕДОМЛЕНИЙ
 const HandEvaluator = {
     ranks: { '2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'10':8,'J':9,'Q':10,'K':11,'A':12 },
     suits: { 's':0,'h':1,'c':2,'d':3 },
@@ -411,6 +410,10 @@ function moveCardBetweenSlots(fromSlotId, toSlotId) {
         selectedCards.delete(fromSlotId);
     }
     
+    // Сбрасываем прогресс при изменении карт
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('resultsPanel').style.display = 'none';
+    
     updateCardDisplay();
     updateStatus();
     checkBoardValidity();
@@ -536,6 +539,20 @@ function addCardToSlot(cardCode, slotId) {
     });
     
     usedCards.add(cardCode);
+    
+    // ФИКС 1: Активируем соответствующий блок при добавлении карты
+    if (slotId.startsWith('hero')) {
+        // Это карта руки - активируем блок руки
+        selectHandBlock();
+    } else if (slotId.startsWith('board')) {
+        // Это карта борда - активируем блок борда
+        selectBoardBlock();
+    }
+    
+    // ФИКС 2: Сбрасываем прогресс при изменении карт
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('resultsPanel').style.display = 'none';
+    
     updateCardDisplay();
     updateStatus();
     checkBoardValidity();
@@ -547,6 +564,11 @@ function removeCardFromSlot(slotId) {
         const card = selectedCards.get(slotId);
         usedCards.delete(card.code);
         selectedCards.delete(slotId);
+        
+        // ФИКС: Сбрасываем прогресс при удалении карты
+        document.getElementById('progressFill').style.width = '0%';
+        document.getElementById('resultsPanel').style.display = 'none';
+        
         updateCardDisplay();
         updateStatus();
         checkBoardValidity();
@@ -584,7 +606,17 @@ function updateCardDisplay() {
 
 function updateStatus() {
     const calculateBtn = document.getElementById('calculateBtn');
-    calculateBtn.disabled = !(checkHandValidity() && checkBoardValidity() && !isCalculating);
+    const hasResults = document.getElementById('resultsPanel').style.display === 'block';
+    const isValid = checkHandValidity() && checkBoardValidity() && !isCalculating;
+    
+    calculateBtn.disabled = !isValid;
+    
+    // ФИКС 3: Делаем кнопку бледной если уже есть результаты
+    if (hasResults && !isCalculating) {
+        calculateBtn.classList.add('has-results');
+    } else {
+        calculateBtn.classList.remove('has-results');
+    }
 }
 
 function checkHandValidity() {
@@ -696,7 +728,7 @@ async function calculateEquity() {
     
     setTimeout(() => {
         isCalculating = false;
-        updateStatus();
+        updateStatus(); // Обновим состояние кнопки
     }, 1000);
 }
 
@@ -746,14 +778,14 @@ function clearAll() {
     selectedCards.clear();
     usedCards.clear();
     updateCardDisplay();
+    
+    // Сбрасываем прогресс и результаты
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('resultsPanel').style.display = 'none';
+    
     updateStatus();
     checkBoardValidity();
     checkHandValidity();
-    document.getElementById('resultsPanel').style.display = 'none';
-    
-    // Сбрасываем прогресс-бар (но он остается видимым)
-    document.getElementById('progressFill').style.width = '0%';
-    
     selectHandBlock();
 }
 
