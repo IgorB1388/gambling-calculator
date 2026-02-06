@@ -152,6 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
     checkBoardValidity();
     checkHandValidity();
     selectHandBlock();
+    
+    // Сброс прогресс-бара при загрузке
+    document.getElementById('progressFill').style.width = '0%';
 });
 
 function createDeck() {
@@ -624,7 +627,11 @@ async function calculateEquity() {
     
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
-    document.getElementById('progressContainer').style.display = 'block';
+    
+    // Сброс прогресс-бара (всегда виден, просто сбрасываем ширину)
+    document.getElementById('progressFill').style.width = '0%';
+    
+    // Показываем результаты
     document.getElementById('resultsPanel').style.display = 'block';
     
     const SIMULATIONS = 10000;
@@ -688,7 +695,6 @@ async function calculateEquity() {
     document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth'});
     
     setTimeout(() => {
-        document.getElementById('progressContainer').style.display = 'none';
         isCalculating = false;
         updateStatus();
     }, 1000);
@@ -744,7 +750,10 @@ function clearAll() {
     checkBoardValidity();
     checkHandValidity();
     document.getElementById('resultsPanel').style.display = 'none';
-    document.getElementById('progressContainer').style.display = 'none';
+    
+    // Сбрасываем прогресс-бар (но он остается видимым)
+    document.getElementById('progressFill').style.width = '0%';
+    
     selectHandBlock();
 }
 
@@ -761,4 +770,3 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
-
