@@ -415,18 +415,48 @@ function moveCardBetweenSlots(fromSlotId, toSlotId) {
 }
 
 function selectHandBlock() {
+    console.log("Selecting hand block");
     activeBlock = 'hand';
+    
+    // Убираем активные классы со всех секций
+    document.querySelectorAll('.hand-section, .board-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Добавляем активный класс к руке
+    const handSection = document.getElementById('handSection');
+    handSection.classList.add('active');
+    
+    // Убираем активный класс с борда
+    const boardSection = document.getElementById('boardSection');
+    boardSection.classList.remove('active');
+    
+    // Обновляем интерфейс
     updateActiveSection('handSection', 'handTitle');
-    // ОБНОВЛЯЕМ НАЗВАНИЕ БЛОКА НА ТЕКУЩЕМ ЯЗЫКЕ
     if (window.updateActiveBlock) {
         window.updateActiveBlock();
     }
 }
 
 function selectBoardBlock() {
+    console.log("Selecting board block");
     activeBlock = 'board';
+    
+    // Убираем активные классы со всех секций
+    document.querySelectorAll('.hand-section, .board-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Добавляем активный класс к борду
+    const boardSection = document.getElementById('boardSection');
+    boardSection.classList.add('active');
+    
+    // Убираем активный класс с руки
+    const handSection = document.getElementById('handSection');
+    handSection.classList.remove('active');
+    
+    // Обновляем интерфейс
     updateActiveSection('boardSection', 'boardTitle');
-    // ОБНОВЛЯЕМ НАЗВАНИЕ БЛОКА НА ТЕКУЩЕМ ЯЗЫКЕ
     if (window.updateActiveBlock) {
         window.updateActiveBlock();
     }
@@ -731,3 +761,4 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
