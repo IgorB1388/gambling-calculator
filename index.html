@@ -84,13 +84,10 @@
                     </div>
                 </div>
                 
-               <div class="current-selection">
-    <span data-i18n="activeSelection">Активно</span>: 
-    <span id="currentBlockName" data-i18n="yourHandText">Ваша рука</span>
-    • 
-    <span data-i18n="opponentsText">Оппонентов</span>: 
-    <span id="currentOpponents" style="color: var(--neon-blue)">1</span>
-</div>
+                <!-- ИСПРАВЛЕНО: убрано дублирование -->
+                <div class="current-selection">
+                    <span data-i18n="activeSelection">Активно</span>: 
+                    <span id="currentBlockName" data-i18n="yourHandText">Ваша рука</span>
                     • 
                     <span data-i18n="opponentsText">Оппонентов</span>: 
                     <span id="currentOpponents" style="color: var(--neon-blue)">1</span>
@@ -105,6 +102,7 @@
                 
                 <div class="drop-hint" data-i18n="dropHint">Кликните на карту для выбора или перетаскивайте между слотами</div>
                 
+                <!-- ПРОГРЕСС-БАР (всегда виден) -->
                 <div class="progress-container" id="progressContainer">
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill"></div>
@@ -148,4 +146,3 @@
     <script src="js/script.js"></script>
 </body>
 </html>
-
