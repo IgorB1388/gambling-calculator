@@ -181,17 +181,17 @@ h1 {
     border-bottom: 2px solid rgba(0, 204, 255, 0.3);
 }
         
-/* ФИКСИРОВАННЫЕ БЛОКИ РУКИ И БОРДА */
+/* ===== БЛОКИ РУКИ И БОРДА С НОВЫМИ ПРАВИЛАМИ ===== */
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 25px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border: 2px solid;
     position: relative;
-    height: 260px; /* ФИКСИРОВАННАЯ высота */
+    height: 260px;
     display: flex;
     flex-direction: column;
 }
@@ -203,21 +203,45 @@ h1 {
 .board-section {
     border-color: var(--neon-pink);
 }
-        
-/* ФИКС: активная секция подсвечивается своим цветом */
+
+/* ХОВЕР БЕЗ КАРТЫ: подпрыгивает только неактивные блоки */
+.hand-section:not(.active):hover:not(.drag-over),
+.board-section:not(.active):hover:not(.drag-over) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* АКТИВНЫЙ БЛОК: постоянная подсветка, НИКОГДА не прыгает */
 .hand-section.active {
     border-color: var(--neon-teal);
     box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+    transform: translateY(0) !important;
 }
         
 .board-section.active {
     border-color: var(--neon-pink);
     box-shadow: 0 0 25px rgba(255, 95, 210, 0.4);
+    transform: translateY(0) !important;
 }
-        
-.hand-section:hover, .board-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+
+/* HOVER на активном блоке (без карты) - без изменений */
+.hand-section.active:hover:not(.drag-over),
+.board-section.active:hover:not(.drag-over) {
+    transform: translateY(0) !important;
+}
+
+/* ДРАГ-ОВЕР: подпрыгивает при перетаскивании карты (если есть место) */
+.hand-section.drag-over,
+.board-section.drag-over {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 0 25px rgba(255, 215, 102, 0.7) !important;
+}
+
+/* ДРАГ-ОВЕР НЕВОЗМОЖЕН: если нет места для карты */
+.hand-section.drag-over-no-space,
+.board-section.drag-over-no-space {
+    transform: translateY(0) !important;
+    box-shadow: none !important;
 }
         
 .section-title {
@@ -249,7 +273,7 @@ h1 {
     line-height: 20px;
 }
 
-/* КОНТЕЙНЕР ДЛЯ КАРТ - ФИКСИРОВАННАЯ ПОЗИЦИЯ */
+/* КОНТЕЙНЕР ДЛЯ КАРТ */
 .section-content {
     flex-grow: 1;
     display: flex;
@@ -328,7 +352,7 @@ h1 {
     line-height: 1.2;
 }
         
-/* АБСОЛЮТНО ПОЗИЦИОНИРОВАННЫЕ ПРЕДУПРЕЖДЕНИЯ */
+/* ПРЕДУПРЕЖДЕНИЯ */
 .warning {
     color: #ff9966;
     font-size: 0.9rem;
@@ -582,10 +606,9 @@ h1 {
 }
         
 .progress-text {
-    display: none; /* СКРЫТ ТЕКСТ ПРОГРЕССА */
+    display: none;
 }
       
-        
 .card-face {
     display: flex;
     flex-direction: column;
@@ -600,22 +623,7 @@ h1 {
     color: rgba(255, 255, 255, 0.4);
 }
 
-/* ===== ФИКС: ПОДСВЕТКА ПРИ КЛИКЕ (решение проблемы №1) ===== */
-.hand-section.active, 
-.hand-section.active:hover {
-    border-color: var(--neon-teal) !important;
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.4) !important;
-    transform: translateY(-2px) !important;
-}
-
-.board-section.active, 
-.board-section.active:hover {
-    border-color: var(--neon-pink) !important;
-    box-shadow: 0 0 25px rgba(255, 95, 210, 0.4) !important;
-    transform: translateY(-2px) !important;
-}
-
-/* ===== ФИКС: ЭМОДЗИ ФЛАГОВ (решение проблемы №2) ===== */
+/* ФИКС: ЭМОДЗИ ФЛАГОВ */
 @font-face {
     font-family: 'EmojiFont';
     src: local('Apple Color Emoji'),
@@ -630,6 +638,25 @@ h1 {
     font-family: 'Segoe UI', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', 'EmojiFont';
     font-size: 2rem;
     line-height: 1;
+}
+
+/* Цвета для активного блока в строке статуса */
+#currentBlockName.hand-color { color: var(--neon-teal) !important; }
+#currentBlockName.board-color { color: var(--neon-pink) !important; }
+
+/* Стили для кнопки когда есть результаты */
+#calculateBtn.has-results {
+    opacity: 0.7;
+    filter: grayscale(0.4);
+    background: linear-gradient(45deg, 
+        rgba(255, 95, 210, 0.7), 
+        rgba(179, 107, 255, 0.7)
+    ) !important;
+}
+
+#calculateBtn.has-results:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(255, 102, 204, 0.3) !important;
 }
 
 /* Для мобилок */
@@ -707,22 +734,4 @@ h1 {
     .result-percent {
         font-size: 2.5rem;
     }
-}
-/* Цвета для активного блока в строке статуса */
-#currentBlockName.hand-color { color: var(--neon-teal) !important; }
-#currentBlockName.board-color { color: var(--neon-pink) !important; }
-
-/* Стили для кнопки когда есть результаты */
-#calculateBtn.has-results {
-    opacity: 0.7;
-    filter: grayscale(0.4);
-    background: linear-gradient(45deg, 
-        rgba(255, 95, 210, 0.7), 
-        rgba(179, 107, 255, 0.7)
-    ) !important;
-}
-
-#calculateBtn.has-results:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 5px 15px rgba(255, 102, 204, 0.3) !important;
 }
