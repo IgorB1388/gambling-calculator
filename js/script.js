@@ -797,21 +797,24 @@ function shuffleArray(array) {
 }
 
 function describeHand(heroCards, boardCards) {
-    if (boardCards.length === 0) return translations[currentLanguage].preflop;
+    // Получаем текущий язык из window (объявлен в language.js)
+    const currentLang = window.currentLanguage || 'ru';
+    
+    if (boardCards.length === 0) return translations[currentLang].preflop;
     const handRank = HandEvaluator.evaluate([...heroCards,...boardCards]) >> 20;
     const handNames = [
-        translations[currentLanguage].highCard,
-        translations[currentLanguage].pair,
-        translations[currentLanguage].twoPair,
-        translations[currentLanguage].threeOfAKind,
-        translations[currentLanguage].straight,
-        translations[currentLanguage].flush,
-        translations[currentLanguage].fullHouse,
-        translations[currentLanguage].fourOfAKind,
-        translations[currentLanguage].straightFlush,
-        translations[currentLanguage].royalFlush
+        translations[currentLang].highCard,
+        translations[currentLang].pair,
+        translations[currentLang].twoPair,
+        translations[currentLang].threeOfAKind,
+        translations[currentLang].straight,
+        translations[currentLang].flush,
+        translations[currentLang].fullHouse,
+        translations[currentLang].fourOfAKind,
+        translations[currentLang].straightFlush,
+        translations[currentLang].royalFlush
     ];
-    return handNames[handRank] || translations[currentLanguage].unknownCombo;
+    return handNames[handRank] || translations[currentLang].unknownCombo;
 }
 
 function clearAll() {
@@ -827,6 +830,19 @@ function clearAll() {
     checkHandValidity();
     selectHandBlock();
 }
+
+// Вспомогательные функции для других файлов
+function checkFreeSlots(sectionId) {
+    return hasFreeSlotsInSection(sectionId);
+}
+
+// Экспорт функций для использования в других файлах
+window.getHandCardsCount = getHandCardsCount;
+window.getBoardCardsCount = getBoardCardsCount;
+window.checkHandValidity = checkHandValidity;
+window.checkBoardValidity = checkBoardValidity;
+window.checkFreeSlots = checkFreeSlots;
+window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 
 document.addEventListener('keydown', e => {
     switch(e.key) {
