@@ -847,7 +847,7 @@ window.getHandCardsCount = getHandCardsCount;
 window.getBoardCardsCount = getBoardCardsCount;
 window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
-window.checkFreeSlots = checkFreeSlots;
+window.checkFreeSlots = hasFreeSlotsInSection;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
 
@@ -863,3 +863,4 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
