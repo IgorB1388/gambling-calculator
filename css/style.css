@@ -81,6 +81,7 @@ h1 {
     border: 2px solid var(--neon-purple);
     backdrop-filter: blur(10px);
     z-index: 100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .lang-btn {
@@ -88,22 +89,21 @@ h1 {
     border: 2px solid transparent;
     border-radius: 8px;
     padding: 0;
-    width: 50px;
-    height: 35px;
-    color: var(--text-light);
-    font-weight: bold;
+    width: 44px;
+    height: 32px;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
     position: relative;
+    overflow: hidden;
 }
 
 .lang-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: var(--neon-yellow);
+    transform: translateY(-2px);
 }
 
 .lang-btn.active {
@@ -112,6 +112,16 @@ h1 {
     box-shadow: 0 0 15px var(--neon-purple);
 }
 
+/* Флаги PNG */
+.lang-flag {
+    width: 28px;
+    height: 21px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+/* Подсказки при наведении */
 .lang-btn::after {
     content: attr(title);
     position: absolute;
@@ -135,15 +145,6 @@ h1 {
 .lang-btn:hover::after {
     opacity: 1;
     visibility: visible;
-}
-
-/* Стили для флагов-картинок */
-.lang-flag {
-    width: 24px;
-    height: 18px;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
 }
         
 .subtitle {
@@ -620,19 +621,18 @@ h1 {
     }
     
     .lang-btn {
-        width: 45px;
-        height: 32px;
-        font-size: 1.8rem;
+        width: 40px;
+        height: 30px;
+    }
+    
+    .lang-flag {
+        width: 24px;
+        height: 18px;
     }
     
     .lang-btn::after {
         font-size: 0.7rem;
         bottom: -25px;
-    }
-    
-    .lang-flag {
-        width: 20px;
-        height: 15px;
     }
     
     h1 {
@@ -716,20 +716,19 @@ h1 {
     }
     
     .lang-btn {
-        width: 40px;
-        height: 28px;
-        font-size: 1.6rem;
+        width: 36px;
+        height: 27px;
+    }
+    
+    .lang-flag {
+        width: 22px;
+        height: 16px;
     }
     
     .lang-btn::after {
         font-size: 0.6rem;
         bottom: -22px;
         padding: 3px 6px;
-    }
-    
-    .lang-flag {
-        width: 18px;
-        height: 14px;
     }
     
     .panel {
