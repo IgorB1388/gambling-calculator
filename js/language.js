@@ -1,72 +1,146 @@
-// language.js - ПОЛНЫЙ ФАЙЛ
+// language.js - ИСПРАВЛЕННЫЙ ФАЙЛ (без мигания)
 let currentLanguage = 'ru';
 
+// Применяем язык ДО загрузки DOM (чтобы не было мигания)
+function applyLanguageImmediately() {
+    const savedLang = localStorage.getItem('poker-calc-language');
+    if (savedLang && translations[savedLang]) {
+        currentLanguage = savedLang;
+        console.log(`Применяем сохраненный язык: ${savedLang}`);
+    }
+    
+    // Применяем язык как можно раньше
+    if (document.readyState === 'loading') {
+        // DOM еще загружается, используем MutationObserver
+        const observer = new MutationObserver((mutations, obs) => {
+            const elements = document.querySelectorAll('[data-i18n]');
+            if (elements.length > 0) {
+                applyTranslationsToElements(elements);
+                obs.disconnect();
+            }
+        });
+        
+        observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
+    } else {
+        // DOM уже загружен
+        setTimeout(applyCurrentLanguage, 0);
+    }
+    
+    // Устанавливаем атрибут lang
+    document.documentElement.lang = currentLanguage;
+}
+
+// Основная функция смены языка
 function changeLanguage(lang) {
-    if (!translations[lang]) return;
+    if (!translations[lang] || currentLanguage === lang) return;
+    
+    console.log(`Смена языка с ${currentLanguage} на ${lang}`);
     
     currentLanguage = lang;
     
-    // 1. Обновляем все элементы с data-i18n
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        if (translations[lang][key]) {
-            element.textContent = translations[lang][key];
-        }
-    });
-    
-    // 2. Обновляем переключатель языка
-    updateLanguageSwitcher(lang);
-    
-    // 3. Обновляем активный блок
-    updateActiveBlock();
-    
-    // 4. Обновляем текст оппонентов в результатах (если уже рассчитано)
-    updateOpponentText();
-    
-    // 5. Сохраняем в localStorage
+    // 1. Сохраняем в localStorage
     localStorage.setItem('poker-calc-language', lang);
     
-    // 6. Обновляем атрибут lang у html
+    // 2. Устанавливаем атрибут lang у html
     document.documentElement.lang = lang;
     
-    console.log(`Язык изменен на: ${lang}`);
+    // 3. Применяем переводы
+    applyCurrentLanguage();
+    
+    // 4. Обновляем переключатель языка
+    updateLanguageSwitcher(lang);
+    
+    // 5. Обновляем остальные элементы
+    updateUIAfterLanguageChange();
 }
 
+// Применяет текущий язык ко всем элементам
+function applyCurrentLanguage() {
+    if (!translations[currentLanguage]) return;
+    
+    // 1. Обновляем все элементы с data-i18n
+    const elements = document.querySelectorAll('[data-i18n]');
+    applyTranslationsToElements(elements);
+    
+    console.log(`Применен язык: ${currentLanguage} к ${elements.length} элементам`);
+}
+
+// Применяет переводы к конкретным элементам
+function applyTranslationsToElements(elements) {
+    elements.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[currentLanguage] && translations[currentLanguage][key]) {
+            const translation = translations[currentLanguage][key];
+            
+            // Сохраняем специальные атрибуты
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                if (element.hasAttribute('placeholder')) {
+                    element.placeholder = translation;
+                }
+                if (element.hasAttribute('title')) {
+                    element.title = translation;
+                }
+                if (element.hasAttribute('value') && element.type !== 'submit' && element.type !== 'button') {
+                    element.value = translation;
+                }
+            } else if (element.tagName === 'IMG') {
+                if (element.hasAttribute('alt')) {
+                    element.alt = translation;
+                }
+            } else {
+                // Для обычных элементов
+                element.textContent = translation;
+            }
+        }
+    });
+}
+
+// Обновляет интерфейс после смены языка
+function updateUIAfterLanguageChange() {
+    // 1. Обновляем активный блок
+    updateActiveBlock();
+    
+    // 2. Обновляем текст оппонентов в результатах
+    updateOpponentText();
+    
+    // 3. Обновляем описание руки (если есть расчет)
+    updateHandDescription();
+}
+
+// Обновляет активный блок
 function updateActiveBlock() {
     const currentBlockName = document.getElementById('currentBlockName');
-    if (!currentBlockName) return;
+    if (!currentBlockName || !translations[currentLanguage]) return;
     
-    // Определяем какой блок активен
-    const isHand = document.getElementById('handSection').classList.contains('active');
+    const isHand = document.getElementById('handSection')?.classList.contains('active');
     
-    // Обновляем текст и цвет
     if (isHand) {
         currentBlockName.textContent = translations[currentLanguage].yourHandText;
-        currentBlockName.className = 'hand-color';
     } else {
         currentBlockName.textContent = translations[currentLanguage].boardText;
-        currentBlockName.className = 'board-color';
     }
 }
 
+// Обновляет текст оппонентов
 function updateOpponentText() {
     const opponentInfo = document.getElementById('opponentInfo');
-    if (!opponentInfo) return;
+    if (!opponentInfo || !translations[currentLanguage]) return;
     
-    // Получаем текущее количество оппонентов
     const currentOpponents = document.getElementById('currentOpponents');
     if (!currentOpponents) return;
     
     const count = parseInt(currentOpponents.textContent) || 1;
     
-    // Обновляем текст оппонентов в результатах
     if (count === 1) {
-        opponentInfo.textContent = translations[currentLanguage].headsUp;
+        opponentInfo.textContent = translations[currentLanguage].headsUp || '1 opponent';
     } else {
         if (currentLanguage === 'en') {
             opponentInfo.textContent = `${count} ${translations[currentLanguage].opponents}`;
         } else if (currentLanguage === 'ru') {
-            // Русские формы: 1 оппонент, 2-4 оппонента, 5+ оппонентов
+            // Русские формы
             const lastDigit = count % 10;
             const lastTwoDigits = count % 100;
             
@@ -78,14 +152,33 @@ function updateOpponentText() {
                 opponentInfo.textContent = `${count} оппонентов`;
             }
         } else if (currentLanguage === 'es') {
-            // Испанские формы: 1 oponente, 2+ oponentes
+            // Испанские формы
             opponentInfo.textContent = count === 1 
-                ? `${count} ${translations[currentLanguage].opponentSingle}`
-                : `${count} ${translations[currentLanguage].opponents}`;
+                ? `${count} ${translations[currentLanguage].opponentSingle || 'oponente'}`
+                : `${count} ${translations[currentLanguage].opponents || 'oponentes'}`;
         }
     }
 }
 
+// Обновляет описание руки
+function updateHandDescription() {
+    const heroHandDesc = document.getElementById('heroHandDesc');
+    if (!heroHandDesc || !heroHandDesc.textContent || heroHandDesc.textContent === '') return;
+    
+    // Если уже есть описание руки, обновляем его
+    if (window.describeHand && window.selectedCards) {
+        const heroCards = Array.from(selectedCards.entries())
+            .filter(([slot]) => slot.startsWith('hero'))
+            .map(([,card]) => card);
+        const boardCards = Array.from(selectedCards.entries())
+            .filter(([slot]) => slot.startsWith('board'))
+            .map(([,card]) => card);
+        
+        heroHandDesc.textContent = window.describeHand(heroCards, boardCards);
+    }
+}
+
+// Обновляет переключатель языка
 function updateLanguageSwitcher(activeLang) {
     document.querySelectorAll('.lang-btn').forEach(btn => {
         const lang = btn.getAttribute('data-lang');
@@ -97,14 +190,27 @@ function updateLanguageSwitcher(activeLang) {
     });
 }
 
-// Переопределяем функцию describeHand для поддержки языков
-function initLanguage() {
-    // Сохраняем оригинальную функцию
+// Инициализация языковой системы
+function initLanguageSystem() {
+    console.log("Инициализация языковой системы...");
+    
+    // 1. Применяем язык СРАЗУ (чтобы не было мигания)
+    applyLanguageImmediately();
+    
+    // 2. Добавляем обработчики на кнопки языка
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            changeLanguage(lang);
+        });
+    });
+    
+    // 3. Переназначаем describeHand для поддержки языков
     if (typeof window.describeHand === 'function') {
-        console.log("Переопределяем describeHand для поддержки языков");
-        
-        // Создаем новую функцию с поддержкой языков
+        const originalDescribeHand = window.describeHand;
         window.describeHand = function(heroCards, boardCards) {
+            if (!translations[currentLanguage]) return originalDescribeHand(heroCards, boardCards);
+            
             if (boardCards.length === 0) return translations[currentLanguage].preflop;
             
             const handRank = HandEvaluator.evaluate([...heroCards, ...boardCards]) >> 20;
@@ -120,59 +226,30 @@ function initLanguage() {
                 translations[currentLanguage].straightFlush,
                 translations[currentLanguage].royalFlush
             ];
-            return handNames[handRank] || translations[currentLanguage].unknownCombo;
-        };
-    }
-}
-
-// Инициализация при загрузке
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("Инициализация языка...");
-    
-    // 1. Проверяем сохраненный язык
-    const savedLang = localStorage.getItem('poker-calc-language');
-    if (savedLang && translations[savedLang]) {
-        currentLanguage = savedLang;
-        console.log(`Найден сохраненный язык: ${savedLang}`);
-    } else {
-        console.log("Используем язык по умолчанию: ru");
-    }
-    
-    // 2. Инициализируем систему языков
-    initLanguage();
-    
-    // 3. Устанавливаем язык (с небольшой задержкой для гарантии)
-    setTimeout(() => {
-        changeLanguage(currentLanguage);
-    }, 50);
-    
-    // 4. Добавляем обработчики на кнопки языка
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const lang = btn.getAttribute('data-lang');
-            console.log(`Клик по языку: ${lang}`);
-            changeLanguage(lang);
-        });
-    });
-    
-    // 5. Перехватываем клик на кнопку расчета для обновления текста оппонентов
-    const calculateBtn = document.getElementById('calculateBtn');
-    if (calculateBtn) {
-        const originalClick = calculateBtn.onclick;
-        calculateBtn.onclick = function(e) {
-            if (originalClick) originalClick.call(this, e);
-            // После расчета обновляем текст оппонентов
-            setTimeout(() => {
-                updateOpponentText();
-            }, 150);
+            
+            const result = handNames[handRank] || translations[currentLanguage].unknownCombo;
+            return result || originalDescribeHand(heroCards, boardCards);
         };
     }
     
     console.log("Языковая система инициализирована");
-});
+}
 
-// Экспортируем функции для использования в script.js
+// Запускаем инициализацию при загрузке DOM
+document.addEventListener('DOMContentLoaded', initLanguageSystem);
+
+// Запускаем предварительную инициализацию как можно раньше
+if (document.readyState === 'loading') {
+    // Если скрипт загружается в head, DOM еще не готов
+    // Применяем язык при полной загрузке
+    document.addEventListener('DOMContentLoaded', () => {
+        // Уже запустится в initLanguageSystem
+    });
+} else {
+    // DOM уже загружен
+    initLanguageSystem();
+}
+
+// Экспортируем функции
 window.changeLanguage = changeLanguage;
 window.getCurrentLanguage = () => currentLanguage;
-window.updateOpponentText = updateOpponentText;
-window.updateActiveBlock = updateActiveBlock;
