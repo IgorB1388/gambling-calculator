@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poker Calculator</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,6 +16,20 @@
                 <span>♣</span>
                 <span>♦</span>
             </div>
+            
+            <!-- ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА -->
+            <div class="language-switcher">
+                <button class="lang-btn active" data-lang="ru" title="Русский">
+                    <img src="flags/ru.png" alt="RU" class="lang-flag">
+                </button>
+                <button class="lang-btn" data-lang="en" title="English">
+                    <img src="flags/gb.png" alt="GB" class="lang-flag">
+                </button>
+                <button class="lang-btn" data-lang="es" title="Español">
+                    <img src="flags/es.png" alt="ES" class="lang-flag">
+                </button>
+            </div>
+            
             <h1>POKER CALCULATOR</h1>
         </div>
         
@@ -22,7 +37,7 @@
             <div class="panel">
                 <div class="panel-title">👤 ВАША РУКА И БОРД</div>
                 
-                <!-- ОБНОВЛЕННАЯ СЕКЦИЯ РУКИ -->
+                <!-- СЕКЦИЯ РУКИ -->
                 <div class="hand-section" id="handSection">
                     <div class="section-title" id="handTitle">⭐ ВАША РУКА</div>
                     <div class="hand-subtitle">2 карты</div>
@@ -35,7 +50,7 @@
                     <div class="warning" id="handWarning">⚠️ В руке должно быть 2 карты</div>
                 </div>
                 
-                <!-- ОБНОВЛЕННАЯ СЕКЦИЯ БОРДА -->
+                <!-- СЕКЦИЯ БОРДА -->
                 <div class="board-section" id="boardSection">
                     <div class="section-title" id="boardTitle">🎴 БОРД</div>
                     <div class="board-subtitle">0, 3, 4 или 5 карт</div>
@@ -85,7 +100,6 @@
                 <div class="drop-hint">Кликните на карту для выбора или перетаскивайте между слотами</div>
                 
                 <div class="progress-container" id="progressContainer">
-                    <div class="progress-text" id="progressText">Идет расчет: 0%</div>
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill"></div>
                     </div>                    
@@ -99,31 +113,30 @@
         </div>
         
         <div class="results-panel panel" id="resultsPanel">
-            <div class="panel-title">📊 РЕЗУЛЬТАТЫ (Monte Carlo)</div>
+            <div class="panel-title">📊 РЕЗУЛЬТАТЫ</div>
             
             <div class="results-grid">
                 <div class="result-card">
                     <div style="color: var(--neon-teal); font-size: 1.1rem;">ВАША РУКА</div>
-                    <div class="result-percent" id="resultHero">0%</div>
-                    <div style="color: var(--text-medium); font-size: 0.9rem;" id="heroHandDesc">-</div>
+                    <div class="result-percent" id="resultHero">—</div>
+                    <div class="hand-description" id="heroHandDesc"></div>
                 </div>
                 
                 <div class="result-card">
                     <div style="color: var(--neon-pink); font-size: 1.1rem;">ОППОНЕНТЫ</div>
-                    <div class="result-percent" id="resultOpponent">0%</div>
-                    <div style="color: var(--text-medium); font-size: 0.9rem;" id="opponentInfo">1 оппонент</div>
+                    <div class="result-percent" id="resultOpponent">—</div>
+                    <div class="hand-description" id="opponentInfo"></div>
                 </div>
                 
                 <div class="result-card">
                     <div style="color: var(--neon-blue); font-size: 1.1rem;">НИЧЬЯ</div>
-                    <div class="result-percent" id="resultTie">0%</div>
-                    <div style="color: var(--text-medium); font-size: 0.9rem;">Раздел банка</div>
+                    <div class="result-percent" id="resultTie">—</div>
+                    <div class="hand-description">Раздел банка</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="js/script.js" defer></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
-
