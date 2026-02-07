@@ -1,4 +1,4 @@
-// language.js - ИСПРАВЛЕННЫЙ ФАЙЛ (без мигания)
+// language.js - ИСПРАВЛЕННЫЙ ФАЙЛ (без мигания, с правильным переключателем)
 let currentLanguage = 'ru';
 
 // Применяем язык ДО загрузки DOM (чтобы не было мигания)
@@ -8,6 +8,12 @@ function applyLanguageImmediately() {
         currentLanguage = savedLang;
         console.log(`Применяем сохраненный язык: ${savedLang}`);
     }
+    
+    // СРАЗУ обновляем переключатель языка если он уже в DOM
+    updateLanguageSwitcherImmediately();
+    
+    // Устанавливаем атрибут lang
+    document.documentElement.lang = currentLanguage;
     
     // Применяем язык как можно раньше
     if (document.readyState === 'loading') {
@@ -28,9 +34,22 @@ function applyLanguageImmediately() {
         // DOM уже загружен
         setTimeout(applyCurrentLanguage, 0);
     }
+}
+
+// Сразу обновляет переключатель языка
+function updateLanguageSwitcherImmediately() {
+    if (!document.querySelector('.lang-btn')) return;
     
-    // Устанавливаем атрибут lang
-    document.documentElement.lang = currentLanguage;
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        const lang = btn.getAttribute('data-lang');
+        if (lang === currentLanguage) {
+            btn.classList.add('active');
+            btn.classList.remove('inactive');
+        } else {
+            btn.classList.remove('active');
+            btn.classList.add('inactive');
+        }
+    });
 }
 
 // Основная функция смены языка
@@ -47,11 +66,11 @@ function changeLanguage(lang) {
     // 2. Устанавливаем атрибут lang у html
     document.documentElement.lang = lang;
     
-    // 3. Применяем переводы
-    applyCurrentLanguage();
-    
-    // 4. Обновляем переключатель языка
+    // 3. Обновляем переключатель языка СРАЗУ
     updateLanguageSwitcher(lang);
+    
+    // 4. Применяем переводы
+    applyCurrentLanguage();
     
     // 5. Обновляем остальные элементы
     updateUIAfterLanguageChange();
@@ -184,8 +203,10 @@ function updateLanguageSwitcher(activeLang) {
         const lang = btn.getAttribute('data-lang');
         if (lang === activeLang) {
             btn.classList.add('active');
+            btn.classList.remove('inactive');
         } else {
             btn.classList.remove('active');
+            btn.classList.add('inactive');
         }
     });
 }
@@ -253,3 +274,4 @@ if (document.readyState === 'loading') {
 // Экспортируем функции
 window.changeLanguage = changeLanguage;
 window.getCurrentLanguage = () => currentLanguage;
+window.updateLanguageSwitcher = updateLanguageSwitcher;
