@@ -11,9 +11,13 @@ const HandEvaluator = {
         const flush = this.hasFlush(formatted);
         const straight = this.hasStraight(formatted);
         
+        // ФИКС 1: Стрит-флеш с A-2-3-4-5 (wheel)
         if (flush && straight) {
             const straightValue = this.getStraightValue(formatted, true);
-            return straightValue === 12 ? 9 << 20 : (8 << 20) + (straightValue << 16);
+            // Стрит A-2-3-4-5 имеет straightValue = 3 (ранг пятерки)
+            // Стрит 10-J-Q-K-A имеет straightValue = 12 (ранг туза)
+            const isRoyal = straightValue === 12 && formatted.some(c => c.rank === 12); // Проверяем что есть туз
+            return isRoyal ? 9 << 20 : (8 << 20) + (straightValue << 16);
         }
         
         const counts = this.getRankCounts(formatted);
@@ -69,20 +73,35 @@ const HandEvaluator = {
     },
     
     hasStraight(cards) {
+        if (cards.length < 5) return false;
         const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b) => b-a);
+        
+        // Проверяем обычные стриты
         for (let i=0; i<=uniqueRanks.length-5; i++) {
             if (uniqueRanks[i] - uniqueRanks[i+4] === 4) return true;
         }
-        if (uniqueRanks.includes(12) && [0,1,2,3].every(r => uniqueRanks.includes(r))) return true;
-        return false;
+        
+        // Специальная проверка для A-2-3-4-5 (wheel)
+        const hasWheel = [12, 0, 1, 2, 3].every(r => uniqueRanks.includes(r));
+        return hasWheel;
     },
     
     getStraightValue(cards, forFlush) {
         const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b) => b-a);
+        
+        // Проверяем обычные стриты
         for (let i=0; i<=uniqueRanks.length-5; i++) {
-            if (uniqueRanks[i] - uniqueRanks[i+4] === 4) return uniqueRanks[i];
+            if (uniqueRanks[i] - uniqueRanks[i+4] === 4) {
+                return uniqueRanks[i]; // Возвращаем старшую карту стрита
+            }
         }
-        if (uniqueRanks.includes(12) && [0,1,2,3].every(r => uniqueRanks.includes(r))) return 3;
+        
+        // Проверяем A-2-3-4-5
+        const wheelRanks = [12, 0, 1, 2, 3];
+        if (wheelRanks.every(r => uniqueRanks.includes(r))) {
+            return 3; // Возвращаем 5 как старшую карту (ранг 3)
+        }
+        
         return -1;
     },
     
@@ -674,42 +693,84 @@ async function calculateEquity() {
     document.getElementById('calculateBtn').disabled = true;
     
     const SIMULATIONS = 10000;
-    let heroWins = 0, opponentWins = 0, ties = 0;
-    let deck = createFullDeck().filter(card => !usedCards.has(card.code));
+    let heroWins = 0, opponentEquity = 0, ties = 0;
     
     for (let i=0; i<SIMULATIONS; i++) {
-        const simulationDeck = [...deck];
-        shuffleArray(simulationDeck);
+        // Создаем свежую колоду без использованных карт
+        const fullDeck = createFullDeck();
+        const availableDeck = fullDeck.filter(card => !usedCards.has(card.code));
+        
+        // Перемешиваем
+        shuffleArray(availableDeck);
+        
+        // Собираем полный борд
         const fullBoard = [...boardCards];
+        const neededBoardCards = 5 - boardCards.length;
         
-        for (let j=0; j<5-boardCards.length; j++) fullBoard.push(simulationDeck.pop());
-        
-        const opponentScores = [];
-        for (let j=0; j<opponentsCount; j++) {
-            opponentScores.push(HandEvaluator.evaluate([
-                simulationDeck.pop(),
-                simulationDeck.pop(),
-                ...fullBoard
-            ]));
+        // Берем карты для борда из начала колоды
+        for (let j = 0; j < neededBoardCards; j++) {
+            fullBoard.push(availableDeck[j]);
         }
         
-        const heroScore = HandEvaluator.evaluate([...heroCards,...fullBoard]);
-        const bestOpponentScore = Math.max(...opponentScores);
+        // Берем карты для оппонентов (уникальные, не пересекающиеся)
+        const opponentHands = [];
+        let cardIndex = neededBoardCards;
         
-        if (heroScore > bestOpponentScore) heroWins++;
-        else if (heroScore < bestOpponentScore) opponentWins++;
-        else ties++;
+        // ФИКС 3: Гарантируем что у оппонентов разные карты
+        for (let opp = 0; opp < opponentsCount; opp++) {
+            if (cardIndex + 1 >= availableDeck.length) {
+                // Не хватает карт в колоде (маловероятно при 10000 симуляций)
+                cardIndex = neededBoardCards;
+                shuffleArray(availableDeck);
+            }
+            
+            opponentHands.push([
+                availableDeck[cardIndex++],
+                availableDeck[cardIndex++]
+            ]);
+        }
+        
+        // Оцениваем руки
+        const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
+        
+        // ФИКС 4: Правильный подсчет с дележом банка
+        let bestOpponentScore = -1;
+        let winnersCount = 0;
+        
+        for (const hand of opponentHands) {
+            const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
+            if (score > bestOpponentScore) {
+                bestOpponentScore = score;
+                winnersCount = 1;
+            } else if (score === bestOpponentScore) {
+                winnersCount++;
+            }
+        }
+        
+        // Подсчет результатов
+        if (heroScore > bestOpponentScore) {
+            heroWins++;
+        } else if (heroScore < bestOpponentScore) {
+            // Оппоненты выигрывают - делим банк между победителями
+            opponentEquity += 1 / winnersCount;
+        } else {
+            // Ничья - делим банк между всеми участниками ничьи
+            const tyingOpponents = opponentHands.filter(hand => 
+                HandEvaluator.evaluate([...hand, ...fullBoard]) === heroScore
+            ).length;
+            ties += 1 / (tyingOpponents + 1);
+        }
     }
     
-    const heroPercent = (heroWins/SIMULATIONS*100).toFixed(1);
-    const opponentPercent = (opponentWins/SIMULATIONS*100).toFixed(1);
-    const tiePercent = (ties/SIMULATIONS*100).toFixed(1);
+    const heroPercent = (heroWins / SIMULATIONS * 100).toFixed(1);
+    const opponentPercent = (opponentEquity / SIMULATIONS * 100).toFixed(1);
+    const tiePercent = (ties / SIMULATIONS * 100).toFixed(1);
     
     document.getElementById('resultHero').textContent = heroPercent + '%';
     document.getElementById('resultOpponent').textContent = opponentPercent + '%';
     document.getElementById('resultTie').textContent = tiePercent + '%';
     
-    document.getElementById('heroHandDesc').textContent = describeHand(heroCards,boardCards);
+    document.getElementById('heroHandDesc').textContent = describeHand(heroCards, boardCards);
     
     const currentLang = window.currentLanguage || 'ru';
     const translations = window.translations || {};
