@@ -1,4 +1,3 @@
-// Оптимизированный JavaScript код БЕЗ УВЕДОМЛЕНИЙ
 const HandEvaluator = {
     ranks: { '2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'10':8,'J':9,'Q':10,'K':11,'A':12 },
     suits: { 's':0,'h':1,'c':2,'d':3 },
@@ -711,4 +710,5 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
 
