@@ -734,7 +734,7 @@ async function calculateEquity() {
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
     
-    const SIMULATIONS = 15000;
+    const SIMULATIONS = 25000; // Изменил на 25к
     let heroWins = 0, opponentWins = 0, ties = 0;
     
     const createInitialDeck = () => {
@@ -808,23 +808,31 @@ async function calculateEquity() {
             }
         }
         
+        // ИСПРАВЛЕННАЯ ЛОГИКА ПОДСЧЕТА
         if (heroScore > bestOpponentScore) {
-            heroWins++;
+            heroWins += 1; // Герой выиграл - ему весь банк
         } else if (heroScore < bestOpponentScore) {
-            opponentWins += 1 / winningOpponents;
+            // Оппоненты выиграли - делим банк между победителями
+            opponentWins += 1;
         } else {
+            // Ничья - делим банк между всеми
             const tyingOpponents = opponentHands.filter(hand => 
                 HandEvaluator.evaluate([...hand, ...fullBoard]) === heroScore
             ).length;
-            ties += 1 / (tyingOpponents + 1);
-            opponentWins += tyingOpponents / (tyingOpponents + 1);
+            const totalPlayersInTie = tyingOpponents + 1; // герой + оппоненты
+            
+            // Делим банк поровну
+            heroWins += 1 / totalPlayersInTie;
+            opponentWins += tyingOpponents / totalPlayersInTie;
+            ties += 1; // Считаем как одну ничью для статистики
         }
     }
     
-   const total = heroWins + opponentWins + ties;
-   const heroPercent = total > 0 ? ((heroWins / total) * 100).toFixed(1) : "0.0";
-   const opponentPercent = total > 0 ? ((opponentWins / total) * 100).toFixed(1) : "0.0";
-   const tiePercent = total > 0 ? ((ties / total) * 100).toFixed(1) : "0.0";
+    // НОРМАЛИЗАЦИЯ К 100%
+    const totalEquity = heroWins + opponentWins;
+    const heroPercent = totalEquity > 0 ? ((heroWins / totalEquity) * 100).toFixed(1) : "0.0";
+    const opponentPercent = totalEquity > 0 ? ((opponentWins / totalEquity) * 100).toFixed(1) : "0.0";
+    const tiePercent = ((ties / SIMULATIONS) * 100).toFixed(1);
     
     document.getElementById('resultHero').textContent = heroPercent + '%';
     document.getElementById('resultOpponent').textContent = opponentPercent + '%';
@@ -868,6 +876,7 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
 
 
 
