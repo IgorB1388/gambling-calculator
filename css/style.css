@@ -188,7 +188,7 @@ h1 {
     transition: all 0.3s;
     border: 2px solid;
     position: relative;
-    min-height: 240px; /* УМЕНЬШЕНА высота */
+    min-height: 240px;
     display: flex;
     flex-direction: column;
 }
@@ -212,10 +212,11 @@ h1 {
     box-shadow: 0 0 25px rgba(255, 95, 210, 0.4);
 }
         
-.hand-section:hover, .board-section:hover {
+/* УБРАНО: подскакивание при наведении */
+/* .hand-section:hover, .board-section:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
+} */
         
 .section-title {
     margin-bottom: 5px;
@@ -344,7 +345,7 @@ h1 {
     background: var(--bg-medium);
     padding: 15px;
     border-radius: 10px;
-    margin-bottom: 20px; /* УМЕНЬШЕН отступ */
+    margin-bottom: 20px;
     border: 2px solid var(--neon-purple);
 }
         
@@ -515,7 +516,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    margin-bottom: 10px; /* УМЕНЬШЕН отступ */
+    margin-bottom: 10px;
 }
         
 .result-card {
@@ -525,7 +526,7 @@ h1 {
     text-align: center;
     border: 2px solid;
     box-shadow: var(--shadow);
-    min-height: 160px; /* УМЕНЬШЕНА высота */
+    min-height: 160px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -536,9 +537,9 @@ h1 {
 .result-card:nth-child(3) { border-color: var(--neon-blue); }
         
 .result-percent {
-    font-size: 3.5rem; /* УВЕЛИЧЕН шрифт */
+    font-size: 3.5rem;
     font-weight: bold;
-    margin: 15px 0; /* УВЕЛИЧЕН отступ */
+    margin: 15px 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -634,7 +635,6 @@ h1 {
     box-shadow: 0 0 10px #ff3366, 0 0 20px rgba(255, 51, 102, 0.5);
     border-color: rgba(255, 255, 255, 0.9);
     opacity: 1;
-    /* Без анимации - статично */
 }
 
 /* Дополнительная подсветка для активного блока */
@@ -644,6 +644,23 @@ h1 {
 
 .board-section.active {
     border-width: 2.5px;
+}
+
+/* Подсветка при drag-over (только если есть свободные места) */
+.hand-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--neon-teal) !important;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6) !important;
+}
+
+.board-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--neon-pink) !important;
+    box-shadow: 0 0 20px rgba(255, 95, 210, 0.6) !important;
+}
+
+/* Колода подсвечивается при drag-over карты из слота */
+#deck.drag-over:not(.drag-over-no-space) {
+    border-color: var(--neon-purple) !important;
+    box-shadow: 0 0 20px rgba(179, 107, 255, 0.6) !important;
 }
 
 /* Для мобилок */
