@@ -840,15 +840,19 @@ h1 {
         font-size: 1rem;
     }
 }
-/* Однократное моргание на 1 секунду */
-@keyframes quick-glow {
+
+/* Быстрое моргание на 0.5 секунды для всей панели результатов */
+@keyframes quick-glow-teal {
     0% { box-shadow: var(--shadow); }
-    50% { box-shadow: 0 0 15px currentColor, 0 0 25px rgba(255, 255, 255, 0.3); }
+    50% { 
+        box-shadow: 
+            var(--shadow),
+            0 0 20px var(--neon-teal),
+            0 0 40px rgba(0, 240, 255, 0.4);
+    }
     100% { box-shadow: var(--shadow); }
 }
 
-.result-card.fresh-result {
-    animation: quick-glow 1s ease-in-out;
+.results-panel.fresh-result {
+    animation: quick-glow-teal 0.5s ease-in-out;
 }
-
-
