@@ -825,33 +825,41 @@ async function calculateEquity() {
         }
     }
     
-    // ПРОСТОЙ РАСЧЕТ С ГАРАНТИЕЙ 100%
+    // ПРАВИЛЬНЫЙ РАСЧЕТ ПРОЦЕНТОВ
     const totalEquity = heroWins + opponentWins;
     
-    // Рассчитываем точные проценты
-    let heroPercent = totalEquity > 0 ? (heroWins / totalEquity) * 100 : 0;
-    let oppPercent = totalEquity > 0 ? (opponentWins / totalEquity) * 100 : 0;
-    let tiePercent = (ties / SIMULATIONS) * 100;
+    // 1. Процент ничьих раздач (не зависит от equity)
+    const tiePercentOfHands = (ties / SIMULATIONS) * 100;
+    const tieRounded = Math.round(tiePercentOfHands * 10) / 10;
     
-    // Округляем до одного знака
-    heroPercent = Math.round(heroPercent * 10) / 10;
-    oppPercent = Math.round(oppPercent * 10) / 10;
-    tiePercent = Math.round(tiePercent * 10) / 10;
+    // 2. Equity (процент банка) - должно суммироваться до 100%
+    let heroEquity = 0;
+    let oppEquity = 0;
     
-    // Проверяем и корректируем сумму
-    let sum = heroPercent + oppPercent + tiePercent;
-    let diff = 100 - sum;
+    if (totalEquity > 0) {
+        heroEquity = (heroWins / totalEquity) * 100;
+        oppEquity = (opponentWins / totalEquity) * 100;
+    }
     
-    // Корректируем разницу (просто добавляем к герою)
-    heroPercent += diff;
+    // Округляем equity до одного знака
+    heroEquity = Math.round(heroEquity * 10) / 10;
+    oppEquity = Math.round(oppEquity * 10) / 10;
     
-    // Форматируем и выводим
-    document.getElementById('resultHero').textContent = heroPercent.toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = oppPercent.toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = tiePercent.toFixed(1) + '%';
+    // Гарантируем, что equity суммируется до 100%
+    const equitySum = heroEquity + oppEquity;
+    const equityDiff = 100 - equitySum;
     
-    // Для проверки в консоли
-    console.log('Сумма после корректировки:', (heroPercent + oppPercent + tiePercent).toFixed(10) + '%');
+    // Корректируем equity героя (или оппонента, если нужно)
+    heroEquity += equityDiff;
+    
+    // Выводим результаты
+    document.getElementById('resultHero').textContent = heroEquity.toFixed(1) + '%';
+    document.getElementById('resultOpponent').textContent = oppEquity.toFixed(1) + '%';
+    document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
+    
+    // Проверка в консоли
+    console.log('Equity сумма:', (heroEquity + oppEquity).toFixed(10) + '%');
+    console.log('Ничьи раздач:', tieRounded.toFixed(1) + '%');
     
     isCalculating = false;
     updateStatus();
@@ -890,6 +898,7 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
 
 
 
