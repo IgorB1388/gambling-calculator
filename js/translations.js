@@ -1,4 +1,3 @@
-// translations.js
 const translations = {
     ru: {
         // Заголовок
@@ -17,10 +16,6 @@ const translations = {
         // Панель настроек
         panelSettings: "⚙️ НАСТРОЙКИ",
         opponentsLabel: "КОЛИЧЕСТВО ОППОНЕНТОВ:",
-        activeSelection: "Активно",
-        yourHandText: "Ваша рука",
-        boardText: "Борд",
-        opponentsText: "Оппонентов",
         
         // Панель выбора карт
         panelChooseCards: "🃏 ВЫБЕРИТЕ КАРТЫ",
@@ -30,24 +25,13 @@ const translations = {
         calculateBtn: "🎯 РАССЧИТАТЬ",
         clearBtn: "🗑️ ОЧИСТИТЬ",
         
-        // Прогресс
-        calculating: "Идет расчет",
-        calculationComplete: "Расчет завершен!",
-        
         // Результаты
         panelResults: "📊 РЕЗУЛЬТАТЫ",
         yourHandResult: "ВАША РУКА",
         opponentsResult: "ОППОНЕНТЫ",
         tieResult: "НИЧЬЯ",
-        splitPot: "Раздел банка",
         
-        // Описания
-        headsUp: "Хедз 1 на 1",
-        opponentSingle: "оппонент",
-        opponentFew: "оппонента",
-        opponentMany: "оппонентов",
-        
-        // Комбинации
+        // Комбинации (если еще используются где-то)
         preflop: "Префлоп",
         highCard: "Старшая карта",
         pair: "Пара",
@@ -79,10 +63,6 @@ const translations = {
         // Settings panel
         panelSettings: "⚙️ SETTINGS",
         opponentsLabel: "NUMBER OF OPPONENTS:",
-        activeSelection: "Active",
-        yourHandText: "Your hand",
-        boardText: "Board",
-        opponentsText: "Opponents",
         
         // Choose cards panel
         panelChooseCards: "🃏 CHOOSE CARDS",
@@ -92,21 +72,11 @@ const translations = {
         calculateBtn: "🎯 CALCULATE",
         clearBtn: "🗑️ CLEAR ALL",
         
-        // Progress
-        calculating: "Calculating",
-        calculationComplete: "Calculation complete!",
-        
         // Results
         panelResults: "📊 RESULTS",
         yourHandResult: "YOUR HAND",
         opponentsResult: "OPPONENTS",
         tieResult: "TIE",
-        splitPot: "Split pot",
-        
-        // Descriptions
-        headsUp: "Heads up 1 vs 1",
-        opponentSingle: "opponent",
-        opponents: "opponents",
         
         // Hand combinations
         preflop: "Preflop",
@@ -140,10 +110,6 @@ const translations = {
         // Panel de ajustes
         panelSettings: "⚙️ AJUSTES",
         opponentsLabel: "NÚMERO DE OPONENTES:",
-        activeSelection: "Activo",
-        yourHandText: "Tu mano",
-        boardText: "Mesa",
-        opponentsText: "Oponentes",
         
         // Panel de selección de cartas
         panelChooseCards: "🃏 ELIGE CARTAS",
@@ -153,21 +119,11 @@ const translations = {
         calculateBtn: "🎯 CALCULAR",
         clearBtn: "🗑️ LIMPIAR TODO",
         
-        // Progreso
-        calculating: "Calculando",
-        calculationComplete: "¡Cálculo completado!",
-        
         // Resultados
         panelResults: "📊 RESULTADOS",
         yourHandResult: "TU MANO",
         opponentsResult: "OPONENTES",
         tieResult: "EMPATE",
-        splitPot: "Bote dividido",
-        
-        // Descripciones
-        headsUp: "Cara a cara 1 vs 1",
-        opponentSingle: "oponente",
-        opponents: "oponentes",
         
         // Combinaciones de mano
         preflop: "Preflop",
@@ -184,20 +140,3 @@ const translations = {
         unknownCombo: "Combinación desconocida"
     }
 };
-
-// Названия языков для отображения в переключателе
-const languageNames = {
-    ru: "Русский",
-    en: "English", 
-    es: "Español"
-};
-
-// Символы флагов для кнопок
-const languageFlags = {
-    ru: "🇷🇺",
-    en: "🇬🇧",
-    es: "🇪🇸"
-};
-
-// Коды языков
-const supportedLanguages = ['ru', 'en', 'es'];
