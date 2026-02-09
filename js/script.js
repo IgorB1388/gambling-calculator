@@ -8,13 +8,12 @@ const HandEvaluator = {
         const formatted = cards.map(c => ({
             rank: this.ranks[c.value],
             suit: this.suits[c.suitCode],
-            originalRank: this.ranks[c.value] // Сохраняем оригинальный ранг для wheel
+            originalRank: this.ranks[c.value]
         })).sort((a,b) => b.rank - a.rank);
         
         const flush = this.hasFlush(formatted);
         const straight = this.hasStraight(formatted);
         
-        // Стрит-флеш
         if (flush && straight) {
             const straightValue = this.getStraightValue(formatted);
             const isRoyal = straightValue === 12 && formatted.some(c => c.rank === 12);
@@ -77,25 +76,20 @@ const HandEvaluator = {
     hasStraight(cards) {
         if (cards.length < 5) return false;
         
-        // Создаем два набора рангов: обычные и с тузом как 0 (для wheel)
         const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b) => b-a);
         
-        // Проверяем обычные стриты
         for (let i=0; i<=uniqueRanks.length-5; i++) {
             if (uniqueRanks[i] - uniqueRanks[i+4] === 4) {
                 return true;
             }
         }
         
-        // Проверяем стрит A-2-3-4-5 (wheel)
-        // Тузу присваиваем ранг -1 для проверки wheel
         const ranksWithWheel = uniqueRanks.map(r => r === 12 ? -1 : r).sort((a,b) => b-a);
-        const wheelRanks = [-1, 0, 1, 2, 3]; // A,2,3,4,5 в рангах
+        const wheelRanks = [-1, 0, 1, 2, 3];
         
         for (let i=0; i<=ranksWithWheel.length-5; i++) {
             const slice = ranksWithWheel.slice(i, i+5);
             if (slice[0] - slice[4] === 4) {
-                // Проверяем что это именно wheel (A-2-3-4-5)
                 const hasAllWheelCards = wheelRanks.every(r => slice.includes(r));
                 if (hasAllWheelCards) return true;
             }
@@ -107,14 +101,12 @@ const HandEvaluator = {
     getStraightValue(cards) {
         const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b) => b-a);
         
-        // Проверяем обычные стриты
         for (let i=0; i<=uniqueRanks.length-5; i++) {
             if (uniqueRanks[i] - uniqueRanks[i+4] === 4) {
-                return uniqueRanks[i]; // Возвращаем старшую карту стрита
+                return uniqueRanks[i];
             }
         }
         
-        // Проверяем стрит A-2-3-4-5 (wheel)
         const ranksWithWheel = uniqueRanks.map(r => r === 12 ? -1 : r).sort((a,b) => b-a);
         const wheelRanks = [-1, 0, 1, 2, 3];
         
@@ -123,7 +115,7 @@ const HandEvaluator = {
             if (slice[0] - slice[4] === 4) {
                 const hasAllWheelCards = wheelRanks.every(r => slice.includes(r));
                 if (hasAllWheelCards) {
-                    return 3; // Для wheel старшая карта - пятерка (ранг 3)
+                    return 3;
                 }
             }
         }
@@ -401,6 +393,9 @@ function initSectionDrop() {
             let hasFreeSlots = true;
             if (section !== deckGrid) {
                 hasFreeSlots = hasFreeSlotsInSection(section.id);
+            } else {
+                // Колода подсвечивается ТОЛЬКО когда тянут карту из слота
+                hasFreeSlots = currentDragSource === 'slot';
             }
             
             if (hasFreeSlots) {
@@ -509,6 +504,7 @@ function moveCardBetweenSlots(fromSlotId, toSlotId) {
     updateStatus();
     checkBoardValidity();
     checkHandValidity();
+    checkAndSwitchActiveBlock();
 }
 
 function selectHandBlock() {
@@ -525,9 +521,6 @@ function selectHandBlock() {
     boardSection.classList.remove('active');
     
     updateActiveSection('handSection', 'handTitle');
-    if (window.updateActiveBlock) {
-        window.updateActiveBlock();
-    }
 }
 
 function selectBoardBlock() {
@@ -544,9 +537,6 @@ function selectBoardBlock() {
     handSection.classList.remove('active');
     
     updateActiveSection('boardSection', 'boardTitle');
-    if (window.updateActiveBlock) {
-        window.updateActiveBlock();
-    }
 }
 
 function updateActiveSection(sectionId, titleId) {
@@ -561,10 +551,18 @@ function handleCardClick(cardCode) {
     
     if (activeBlock === 'hand') {
         const handCardsCount = getHandCardsCount();
-        handCardsCount < 2 ? addCardToHand(cardCode) : addCardToBoard(cardCode);
+        if (handCardsCount < 2) {
+            addCardToHand(cardCode);
+        } else {
+            addCardToBoard(cardCode);
+        }
     } else {
         const boardCardsCount = getBoardCardsCount();
-        boardCardsCount < 5 ? addCardToBoard(cardCode) : addCardToHand(cardCode);
+        if (boardCardsCount < 5) {
+            addCardToBoard(cardCode);
+        } else {
+            addCardToHand(cardCode);
+        }
     }
 }
 
@@ -627,6 +625,8 @@ function addCardToSlot(cardCode, slotId) {
     updateStatus();
     checkBoardValidity();
     checkHandValidity();
+    
+    checkAndSwitchActiveBlock();
 }
 
 function removeCardFromSlot(slotId) {
@@ -639,6 +639,8 @@ function removeCardFromSlot(slotId) {
         updateStatus();
         checkBoardValidity();
         checkHandValidity();
+        
+        checkAndSwitchActiveBlock();
     }
 }
 
@@ -698,7 +700,21 @@ function setOpponents(count) {
         const isActive = parseInt(pill.dataset.opponents) === count;
         pill.classList.toggle('active', isActive);
     });
-    // currentOpponents элемент удален из HTML
+}
+
+function checkAndSwitchActiveBlock() {
+    const handCardsCount = getHandCardsCount();
+    const boardCardsCount = getBoardCardsCount();
+    
+    if (activeBlock === 'hand' && handCardsCount >= 2 && boardCardsCount < 5) {
+        selectBoardBlock();
+        return;
+    }
+    
+    if (activeBlock === 'board' && boardCardsCount >= 5 && handCardsCount < 2) {
+        selectHandBlock();
+        return;
+    }
 }
 
 async function calculateEquity() {
@@ -721,7 +737,6 @@ async function calculateEquity() {
     const SIMULATIONS = 10000;
     let heroWins = 0, opponentWins = 0, ties = 0;
     
-    // Создаем колоду один раз (оптимизация)
     const createInitialDeck = () => {
         const suits = ['s','h','c','d'];
         const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -741,24 +756,19 @@ async function calculateEquity() {
     const initialDeck = createInitialDeck();
     
     for (let i = 0; i < SIMULATIONS; i++) {
-        // Фильтруем использованные карты
         const availableDeck = initialDeck.filter(card => !usedCards.has(card.code));
         
-        // Проверяем что карт достаточно
         const neededCards = boardCards.length + opponentsCount * 2 + (5 - boardCards.length);
         if (availableDeck.length < neededCards) {
-            console.warn(`Недостаточно карт в симуляции ${i}: нужно ${neededCards}, есть ${availableDeck.length}`);
             continue;
         }
         
-        // Перемешиваем колоду
         const shuffled = [...availableDeck];
         for (let j = shuffled.length - 1; j > 0; j--) {
             const k = Math.floor(Math.random() * (j + 1));
             [shuffled[j], shuffled[k]] = [shuffled[k], shuffled[j]];
         }
         
-        // Собираем полный борд
         const fullBoard = [...boardCards];
         const neededBoardCards = 5 - boardCards.length;
         
@@ -766,13 +776,11 @@ async function calculateEquity() {
             fullBoard.push(shuffled[j]);
         }
         
-        // Берем карты для оппонентов (гарантируем уникальность)
         const opponentHands = [];
         let cardIndex = neededBoardCards;
         
         for (let opp = 0; opp < opponentsCount; opp++) {
             if (cardIndex + 1 >= shuffled.length) {
-                // Если карт не хватает, пропускаем эту симуляцию
                 break;
             }
             
@@ -783,13 +791,10 @@ async function calculateEquity() {
             cardIndex += 2;
         }
         
-        // Если не удалось раздать всем оппонентам, пропускаем
         if (opponentHands.length !== opponentsCount) continue;
         
-        // Оцениваем руки
         const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
         
-        // Находим лучший счет среди оппонентов
         let bestOpponentScore = -1;
         let winningOpponents = 0;
         
@@ -803,13 +808,11 @@ async function calculateEquity() {
             }
         }
         
-        // Считаем результаты
         if (heroScore > bestOpponentScore) {
             heroWins++;
         } else if (heroScore < bestOpponentScore) {
             opponentWins += 1 / winningOpponents;
         } else {
-            // Ничья - считаем сколько оппонентов имеют такой же счет
             const tyingOpponents = opponentHands.filter(hand => 
                 HandEvaluator.evaluate([...hand, ...fullBoard]) === heroScore
             ).length;
@@ -825,8 +828,6 @@ async function calculateEquity() {
     document.getElementById('resultHero').textContent = heroPercent + '%';
     document.getElementById('resultOpponent').textContent = opponentPercent + '%';
     document.getElementById('resultTie').textContent = tiePercent + '%';
-    
-    // Элемент heroHandDesc удален из HTML
     
     isCalculating = false;
     updateStatus();
@@ -847,7 +848,6 @@ function clearAll() {
     selectHandBlock();
 }
 
-// Экспортируем функции если нужно
 window.getHandCardsCount = getHandCardsCount;
 window.getBoardCardsCount = getBoardCardsCount;
 window.checkHandValidity = checkHandValidity;
@@ -855,7 +855,6 @@ window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
 
-// Горячие клавиши
 document.addEventListener('keydown', e => {
     switch(e.key) {
         case 'Escape': clearAll(); break;
