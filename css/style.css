@@ -219,6 +219,7 @@ h1 {
     gap: 10px;
     flex-shrink: 0;
     height: 28px;
+    position: relative; /* Для красного индикатора */
 }
         
 .hand-section .section-title {
@@ -569,7 +570,7 @@ h1 {
         
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--neon-green), var(--neon-teal);
+    background: linear-gradient(90deg, var(--neon-green), var(--neon-teal));
     width: 0%;
     transition: width 0.3s;
 }
@@ -602,9 +603,7 @@ h1 {
 /* ============================================== */
 /* ИНДИКАТОР АКТИВНОГО БЛОКА (для всех языков) */
 /* ============================================== */
-.section-title {
-    position: relative;
-}
+/* .section-title уже имеет position: relative выше */
 
 .section-title::before {
     content: "";
@@ -628,15 +627,6 @@ h1 {
     box-shadow: 0 0 10px #ff3366, 0 0 20px rgba(255, 51, 102, 0.5);
     border-color: rgba(255, 255, 255, 0.9);
     opacity: 1;
-}
-
-/* Дополнительная подсветка для активного блока */
-.hand-section.active {
-    border-width: 2.5px;
-}
-
-.board-section.active {
-    border-width: 2.5px;
 }
 
 /* Подсветка при drag-over (только если есть свободные места) */
