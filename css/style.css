@@ -840,5 +840,15 @@ h1 {
         font-size: 1rem;
     }
 }
+/* Однократное моргание на 1 секунду */
+@keyframes quick-glow {
+    0% { box-shadow: var(--shadow); }
+    50% { box-shadow: 0 0 15px currentColor, 0 0 25px rgba(255, 255, 255, 0.3); }
+    100% { box-shadow: var(--shadow); }
+}
+
+.result-card.fresh-result {
+    animation: quick-glow 1s ease-in-out;
+}
 
 
