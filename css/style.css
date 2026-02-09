@@ -182,13 +182,13 @@ h1 {
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
+    padding: 15px 20px; 
+    margin-bottom: 15px; 
     cursor: pointer;
     transition: all 0.3s;
     border: 2px solid;
     position: relative;
-    min-height: 240px;
+    min-height: 200px; 
     display: flex;
     flex-direction: column;
 }
@@ -855,3 +855,4 @@ h1 {
         font-size: 1rem;
     }
 }
+
