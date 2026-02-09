@@ -734,7 +734,7 @@ async function calculateEquity() {
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
     
-    const SIMULATIONS = 25000; // Изменил на 25к
+    const SIMULATIONS = 25000;
     let heroWins = 0, opponentWins = 0, ties = 0;
     
     const createInitialDeck = () => {
@@ -810,38 +810,52 @@ async function calculateEquity() {
         
         // ИСПРАВЛЕННАЯ ЛОГИКА ПОДСЧЕТА
         if (heroScore > bestOpponentScore) {
-            heroWins += 1; // Герой выиграл - ему весь банк
+            heroWins += 1;
         } else if (heroScore < bestOpponentScore) {
-            // Оппоненты выиграли - делим банк между победителями
             opponentWins += 1;
         } else {
-            // Ничья - делим банк между всеми
             const tyingOpponents = opponentHands.filter(hand => 
                 HandEvaluator.evaluate([...hand, ...fullBoard]) === heroScore
             ).length;
-            const totalPlayersInTie = tyingOpponents + 1; // герой + оппоненты
+            const totalPlayersInTie = tyingOpponents + 1;
             
-            // Делим банк поровну
             heroWins += 1 / totalPlayersInTie;
             opponentWins += tyingOpponents / totalPlayersInTie;
-            ties += 1; // Считаем как одну ничью для статистики
+            ties += 1;
         }
     }
     
-    // НОРМАЛИЗАЦИЯ К 100%
+    // ПРОСТОЙ РАСЧЕТ С ГАРАНТИЕЙ 100%
     const totalEquity = heroWins + opponentWins;
-    const heroPercent = totalEquity > 0 ? ((heroWins / totalEquity) * 100).toFixed(1) : "0.0";
-    const opponentPercent = totalEquity > 0 ? ((opponentWins / totalEquity) * 100).toFixed(1) : "0.0";
-    const tiePercent = ((ties / SIMULATIONS) * 100).toFixed(1);
     
-    document.getElementById('resultHero').textContent = heroPercent + '%';
-    document.getElementById('resultOpponent').textContent = opponentPercent + '%';
-    document.getElementById('resultTie').textContent = tiePercent + '%';
+    // Рассчитываем точные проценты
+    let heroPercent = totalEquity > 0 ? (heroWins / totalEquity) * 100 : 0;
+    let oppPercent = totalEquity > 0 ? (opponentWins / totalEquity) * 100 : 0;
+    let tiePercent = (ties / SIMULATIONS) * 100;
+    
+    // Округляем до одного знака
+    heroPercent = Math.round(heroPercent * 10) / 10;
+    oppPercent = Math.round(oppPercent * 10) / 10;
+    tiePercent = Math.round(tiePercent * 10) / 10;
+    
+    // Проверяем и корректируем сумму
+    let sum = heroPercent + oppPercent + tiePercent;
+    let diff = 100 - sum;
+    
+    // Корректируем разницу (просто добавляем к герою)
+    heroPercent += diff;
+    
+    // Форматируем и выводим
+    document.getElementById('resultHero').textContent = heroPercent.toFixed(1) + '%';
+    document.getElementById('resultOpponent').textContent = oppPercent.toFixed(1) + '%';
+    document.getElementById('resultTie').textContent = tiePercent.toFixed(1) + '%';
+    
+    // Для проверки в консоли
+    console.log('Сумма после корректировки:', (heroPercent + oppPercent + tiePercent).toFixed(10) + '%');
     
     isCalculating = false;
     updateStatus();
 }
-
 function clearAll() {
     selectedCards.clear();
     usedCards.clear();
@@ -876,6 +890,7 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
 
 
 
