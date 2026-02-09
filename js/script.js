@@ -830,7 +830,7 @@ async function calculateEquity() {
             const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
             if (score > bestOpponentScore) {
                 bestOpponentScore = score;
-                tyingOpponents = 1;
+                tyingOpponents = 1; // Сброс при новом лучшем счете
             } else if (score === bestOpponentScore) {
                 tyingOpponents++;
             }
@@ -841,21 +841,19 @@ async function calculateEquity() {
             // Герой выиграл - получает 1 очко
             heroTotal += 1;
         } else if (heroScore < bestOpponentScore) {
-            // Оппоненты выиграли - все оппоненты делят 1 очко
+            // Оппоненты выиграли
+            // Если несколько оппонентов имеют одинаковый лучший счет, они делят 1 очко
             oppTotal += 1;
         } else {
-            // Ничья - делим банк между всеми
+            // Ничья - делим банк между всеми участниками ничьей
             tieHands += 1;
-            const totalPlayersInTie = tyingOpponents + 1; // герой + оппоненты
+            const totalPlayersInTie = tyingOpponents + 1; // герой + оппоненты с таким же счетом
             heroTotal += 1 / totalPlayersInTie;
             oppTotal += tyingOpponents / totalPlayersInTie;
         }
     }
     
     // РАСЧЕТ ПРОЦЕНТОВ ПРАВИЛЬНО
-    // Всего "очков" распределено: SIMULATIONS
-    // Каждая раздача дает в сумме 1 очко
-    
     const heroPercent = (heroTotal / SIMULATIONS) * 100;
     const oppPercent = (oppTotal / SIMULATIONS) * 100;
     const tiePercent = (tieHands / SIMULATIONS) * 100;
@@ -869,18 +867,17 @@ async function calculateEquity() {
     let sum = heroRounded + oppRounded + tieRounded;
     let diff = 100 - sum;
     
-    // Корректируем если нужно
+    // Корректируем если нужно (просто добавляем разницу к герою)
     if (Math.abs(diff) > 0.05) {
-        // Корректируем героя (или можно любой другой)
         heroRounded += diff;
     }
     
-    // Финальная проверка
+    // Проверяем на NaN
     if (!isFinite(heroRounded) || isNaN(heroRounded)) heroRounded = 0;
     if (!isFinite(oppRounded) || isNaN(oppRounded)) oppRounded = 0;
     if (!isFinite(tieRounded) || isNaN(tieRounded)) tieRounded = 0;
     
-    // Выводим
+    // Финальная проверка и вывод
     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
     document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
     document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
@@ -923,5 +920,6 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
 
 
