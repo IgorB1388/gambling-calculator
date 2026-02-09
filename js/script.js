@@ -821,9 +821,10 @@ async function calculateEquity() {
         }
     }
     
-    const heroPercent = (heroWins / SIMULATIONS * 100).toFixed(1);
-    const opponentPercent = (opponentWins / SIMULATIONS * 100).toFixed(1);
-    const tiePercent = (ties / SIMULATIONS * 100).toFixed(1);
+   const total = heroWins + opponentWins + ties;
+   const heroPercent = total > 0 ? ((heroWins / total) * 100).toFixed(1) : "0.0";
+   const opponentPercent = total > 0 ? ((opponentWins / total) * 100).toFixed(1) : "0.0";
+   const tiePercent = total > 0 ? ((ties / total) * 100).toFixed(1) : "0.0";
     
     document.getElementById('resultHero').textContent = heroPercent + '%';
     document.getElementById('resultOpponent').textContent = opponentPercent + '%';
@@ -867,3 +868,4 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
