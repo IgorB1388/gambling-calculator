@@ -734,7 +734,7 @@ async function calculateEquity() {
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
     
-    const SIMULATIONS = 25000;
+    const SIMULATIONS = 15000;
     let heroWins = 0, opponentWins = 0, ties = 0;
     
     const createInitialDeck = () => {
@@ -868,5 +868,6 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
 
 
