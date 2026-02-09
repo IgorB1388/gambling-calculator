@@ -632,18 +632,18 @@ h1 {
 /* Подсветка при drag-over (только если есть свободные места) - ОДИНАКОВАЯ ТЕНЬ */
 .hand-section.drag-over:not(.drag-over-no-space) {
     border-color: var(--neon-teal) !important;
-    box-shadow: 0 0 20px var(--neon-teal), 0 0 30px rgba(0, 240, 255, 0.5) !important;
+    box-shadow: 0 0 20px var(--neon-teal), 0 0 20px rgba(0, 240, 255, 0.5) !important;
 }
 
 .board-section.drag-over:not(.drag-over-no-space) {
     border-color: var(--neon-pink) !important;
-    box-shadow: 0 0 20px var(--neon-pink), 0 0 30px rgba(255, 95, 210, 0.5) !important;
+    box-shadow: 0 0 20px var(--neon-pink), 0 0 20px rgba(255, 95, 210, 0.5) !important;
 }
 
 /* Колода подсвечивается при drag-over карты из слота */
 #deck.drag-over:not(.drag-over-no-space) {
     border-color: var(--neon-purple) !important;
-    box-shadow: 0 0 20px var(--neon-purple), 0 0 30px rgba(179, 107, 255, 0.5) !important;
+    box-shadow: 0 0 20px var(--neon-purple), 0 0 20px rgba(179, 107, 255, 0.5) !important;
 }
 
 /* Для мобилок */
@@ -840,4 +840,5 @@ h1 {
         font-size: 1rem;
     }
 }
+
 
