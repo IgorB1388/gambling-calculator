@@ -169,28 +169,27 @@ h1 {
     border: 2px solid var(--neon-teal);
     box-shadow: var(--shadow);
 }
-        
-.panel-title {
-    font-size: 1.5rem;
-    color: var(--neon-teal);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid rgba(0, 204, 255, 0.3);
+
+/* Первая панель (рука+борд) */
+.panel:first-child {
+    display: flex;
+    flex-direction: column;
 }
         
 /* ФИКСИРОВАННЫЕ БЛОКИ РУКИ И БОРДА */
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
-    padding: 15px 20px; 
-    margin-bottom: 15px; 
+    padding: 15px 20px;
+    margin-bottom: 15px;
     cursor: pointer;
     transition: all 0.3s;
     border: 2px solid;
     position: relative;
-    min-height: 200px; 
+    min-height: 200px;
     display: flex;
     flex-direction: column;
+    flex: 1; /* Равномерное распределение */
 }
         
 .hand-section {
@@ -212,20 +211,14 @@ h1 {
     box-shadow: 0 0 25px rgba(255, 95, 210, 0.4);
 }
         
-/* УБРАНО: подскакивание при наведении */
-/* .hand-section:hover, .board-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-} */
-        
 .section-title {
-    margin-bottom: 5px;
-    font-size: 1.3rem;
+    margin-bottom: 3px;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
-    height: 30px;
+    height: 28px;
 }
         
 .hand-section .section-title {
@@ -241,13 +234,13 @@ h1 {
     color: var(--text-medium);
     font-size: 0.9rem;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     height: 20px;
     flex-shrink: 0;
     line-height: 20px;
 }
 
-/* КОНТЕЙНЕР ДЛЯ КАРТ - ФИКСИРОВАННАЯ ПОЗИЦИЯ */
+/* КОНТЕЙНЕР ДЛЯ КАРТ */
 .section-content {
     flex-grow: 1;
     display: flex;
@@ -333,7 +326,7 @@ h1 {
     text-align: center;
     display: none;
     position: absolute;
-    bottom: 10px;
+    bottom: 5px;
     left: 20px;
     right: 20px;
     height: 20px;
@@ -576,7 +569,7 @@ h1 {
         
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--neon-green), var(--neon-teal));
+    background: linear-gradient(90deg, var(--neon-green), var(--neon-teal);
     width: 0%;
     transition: width 0.3s;
 }
@@ -706,8 +699,9 @@ h1 {
     }
     
     .hand-section, .board-section {
-        min-height: 220px;
-        padding: 15px;
+        min-height: 180px;
+        padding: 12px;
+        margin-bottom: 10px;
     }
     
     .card-slot {
@@ -809,7 +803,8 @@ h1 {
     }
     
     .hand-section, .board-section {
-        min-height: 200px;
+        min-height: 160px;
+        padding: 10px;
     }
     
     .card-slot {
@@ -855,4 +850,3 @@ h1 {
         font-size: 1rem;
     }
 }
-
