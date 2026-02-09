@@ -881,6 +881,34 @@ async function calculateEquity() {
     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
     document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
     document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
+
+    // ... в конце calculateEquity(), после этого:
+document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
+document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
+document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
+
+// ← ДОБАВЬ ЭТО ЗДЕСЬ ↓
+
+// Однократное моргание результатов
+const resultCards = document.querySelectorAll('.result-card');
+
+// Убираем старый класс если был
+resultCards.forEach(card => card.classList.remove('fresh-result'));
+
+// Даем браузеру время на отрисовку новых значений
+setTimeout(() => {
+    resultCards.forEach(card => card.classList.add('fresh-result'));
+    
+    // Убираем класс через 1 секунду (после окончания анимации)
+    setTimeout(() => {
+        resultCards.forEach(card => card.classList.remove('fresh-result'));
+    }, 1000);
+}, 50);
+
+// ← ДО ЭТОГО ↑
+
+isCalculating = false;
+updateStatus();
     
     isCalculating = false;
     updateStatus();
@@ -920,6 +948,7 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
 
 
 
