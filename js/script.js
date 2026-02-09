@@ -870,17 +870,50 @@ async function calculateEquity() {
     document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
     document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
 
-    const resultCards = document.querySelectorAll('.result-card');
-
-    resultCards.forEach(card => card.classList.remove('fresh-result'));
-    resultCards.forEach(card => card.classList.add('fresh-result'));
-
+    // Моргание панели результатов
+    const resultsPanel = document.querySelector('.results-panel');
+    resultsPanel.classList.remove('fresh-result');
+    resultsPanel.classList.add('fresh-result');
+    
     setTimeout(() => {
-        resultCards.forEach(card => card.classList.remove('fresh-result'));
-    }, 1000);
+        resultsPanel.classList.remove('fresh-result');
+    }, 500);
 
     isCalculating = false;
     updateStatus();
+}
+
+function clearAll() {
+    // Анимация кнопки очистки
+    const clearBtn = document.getElementById('clearAllBtn');
+    clearBtn.classList.add('clicked');
+    setTimeout(() => {
+        clearBtn.classList.remove('clicked');
+    }, 300);
+    
+    // Очистка карт
+    selectedCards.clear();
+    usedCards.clear();
+    updateCardDisplay();
+    
+    // Сброс результатов
+    document.getElementById('resultHero').textContent = '—';
+    document.getElementById('resultOpponent').textContent = '—';
+    document.getElementById('resultTie').textContent = '—';
+    
+    // Моргание панели результатов
+    const resultsPanel = document.querySelector('.results-panel');
+    resultsPanel.classList.remove('fresh-result');
+    resultsPanel.classList.add('fresh-result');
+    
+    setTimeout(() => {
+        resultsPanel.classList.remove('fresh-result');
+    }, 500);
+    
+    updateStatus();
+    checkBoardValidity();
+    checkHandValidity();
+    selectHandBlock();
 }
 
 window.getHandCardsCount = getHandCardsCount;
