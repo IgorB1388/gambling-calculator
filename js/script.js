@@ -847,42 +847,55 @@ async function calculateEquity() {
         }
     }
     
-    // ПРАВИЛЬНЫЙ РАСЧЕТ С СУММОЙ 100%
-    // Equity героя = (победы + 1/2 ничьих) / общее количество раздач
-    // Equity оппонента = 100% - equity героя
-    // Процент ничьих = ничьи / общее количество раздач
-    
+    // ПРАВИЛЬНЫЙ РАСЧЕТ: ВСЕ ТРИ ПРОЦЕНТА В СУММЕ 100%
+    // 1. Считаем доли от общего количества раздач
     const totalHands = SIMULATIONS;
+    const heroShare = heroWins / totalHands;
+    const oppShare = opponentWins / totalHands;
+    const tieShare = ties / totalHands;
     
-    // Equity героя в процентах
-    const heroEquityPercent = (heroWins / totalHands) * 100;
-    const tiePercent = (ties / totalHands) * 100;
+    // 2. Конвертируем в проценты
+    let heroPercent = heroShare * 100;
+    let oppPercent = oppShare * 100;
+    let tiePercent = tieShare * 100;
     
-    // Equity оппонента
-    const oppEquityPercent = 100 - heroEquityPercent;
+    // 3. Округляем до одного знака
+    heroPercent = Math.round(heroPercent * 10) / 10;
+    oppPercent = Math.round(oppPercent * 10) / 10;
+    tiePercent = Math.round(tiePercent * 10) / 10;
     
-    // Округляем до одного знака
-    let heroRounded = Math.round(heroEquityPercent * 10) / 10;
-    let oppRounded = Math.round(oppEquityPercent * 10) / 10;
-    let tieRounded = Math.round(tiePercent * 10) / 10;
+    // 4. Гарантируем сумму 100%
+    let sum = heroPercent + oppPercent + tiePercent;
+    let diff = 100 - sum;
     
-    // Гарантируем, что hero + opp = 100%
-    const equitySum = heroRounded + oppRounded;
-    if (Math.abs(equitySum - 100) > 0.05) {
-        // Просто делаем opp = 100 - hero
-        oppRounded = 100 - heroRounded;
-        oppRounded = Math.round(oppRounded * 10) / 10;
+    // Корректируем самый большой процент
+    if (Math.abs(diff) > 0.05) {
+        if (heroPercent >= oppPercent && heroPercent >= tiePercent) {
+            heroPercent += diff;
+        } else if (oppPercent >= heroPercent && oppPercent >= tiePercent) {
+            oppPercent += diff;
+        } else {
+            tiePercent += diff;
+        }
     }
     
-    // Проверяем на NaN и бесконечность
-    if (!isFinite(heroRounded) || isNaN(heroRounded)) heroRounded = 0;
-    if (!isFinite(oppRounded) || isNaN(oppRounded)) oppRounded = 0;
-    if (!isFinite(tieRounded) || isNaN(tieRounded)) tieRounded = 0;
+    // 5. Проверяем на NaN
+    if (!isFinite(heroPercent) || isNaN(heroPercent)) heroPercent = 0;
+    if (!isFinite(oppPercent) || isNaN(oppPercent)) oppPercent = 0;
+    if (!isFinite(tiePercent) || isNaN(tiePercent)) tiePercent = 0;
     
-    // Выводим результаты
-    document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
+    // 6. Финальная проверка суммы
+    sum = heroPercent + oppPercent + tiePercent;
+    if (Math.abs(sum - 100) > 0.1) {
+        // Если все еще не 100%, делаем простую коррекцию
+        const finalDiff = 100 - sum;
+        heroPercent += finalDiff;
+    }
+    
+    // 7. Выводим
+    document.getElementById('resultHero').textContent = heroPercent.toFixed(1) + '%';
+    document.getElementById('resultOpponent').textContent = oppPercent.toFixed(1) + '%';
+    document.getElementById('resultTie').textContent = tiePercent.toFixed(1) + '%';
     
     isCalculating = false;
     updateStatus();
@@ -922,3 +935,4 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
