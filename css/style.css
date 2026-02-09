@@ -605,10 +605,70 @@ h1 {
     line-height: 1.3;
 }
 
-/* УДАЛЕНЫ СТИЛИ ДЛЯ .current-selection */
+/* ============================================== */
+/* ИНДИКАТОР АКТИВНОГО БЛОКА (для всех языков) */
+/* ============================================== */
+.section-title {
+    position: relative;
+    padding-left: 20px;
+}
+
+.section-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: transparent;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 transparent;
+}
+
+.hand-section.active .section-title::before {
+    background-color: var(--neon-teal);
+    box-shadow: 0 0 10px var(--neon-teal), 0 0 20px rgba(0, 240, 255, 0.3);
+    opacity: 1;
+    animation: pulse-active 2s infinite;
+}
+
+.board-section.active .section-title::before {
+    background-color: var(--neon-pink);
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 20px rgba(255, 95, 210, 0.3);
+    opacity: 1;
+    animation: pulse-active 2s infinite;
+}
+
+@keyframes pulse-active {
+    0%, 100% { 
+        transform: translateY(-50%) scale(1); 
+        box-shadow: 0 0 10px currentColor, 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    50% { 
+        transform: translateY(-50%) scale(1.2); 
+        box-shadow: 0 0 15px currentColor, 0 0 30px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Дополнительная подсветка для активного блока */
+.hand-section.active {
+    border-width: 2.5px;
+}
+
+.board-section.active {
+    border-width: 2.5px;
+}
 
 /* Для мобилок */
 @media (max-width: 768px) {
+    .section-title::before {
+        width: 10px;
+        height: 10px;
+    }
+    
     .language-switcher {
         position: relative;
         top: 0;
@@ -687,7 +747,7 @@ h1 {
     }
     
     .result-percent {
-        font-size: 2.8rem; /* Адаптирован для мобилок */
+        font-size: 2.8rem;
     }
     
     .results-grid {
@@ -696,7 +756,7 @@ h1 {
     }
     
     .result-card {
-        min-height: 140px; /* Адаптировано для мобилок */
+        min-height: 140px;
         padding: 15px;
     }
     
@@ -713,6 +773,11 @@ h1 {
 
 /* Для очень маленьких экранов */
 @media (max-width: 480px) {
+    .section-title::before {
+        width: 8px;
+        height: 8px;
+    }
+    
     .language-switcher {
         gap: 4px;
         padding: 5px 6px;
