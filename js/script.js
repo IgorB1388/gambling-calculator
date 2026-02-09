@@ -755,10 +755,9 @@ async function calculateEquity() {
     
     const SIMULATIONS = 25000;
     
-    // СЧИТАЕМ СТАТИСТИКУ ПРАВИЛЬНО
-    let heroTotal = 0;      // Суммарные "очки" героя (1 за победу, доля за ничью)
-    let oppTotal = 0;       // Суммарные "очки" оппонентов
-    let tieHands = 0;       // Количество раздач с ничьей
+    let heroTotal = 0;
+    let oppTotal = 0;
+    let tieHands = 0;
     
     const createOptimizedDeck = () => {
         const suits = ['s','h','c','d'];
@@ -830,103 +829,58 @@ async function calculateEquity() {
             const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
             if (score > bestOpponentScore) {
                 bestOpponentScore = score;
-                tyingOpponents = 1; // Сброс при новом лучшем счете
+                tyingOpponents = 1;
             } else if (score === bestOpponentScore) {
                 tyingOpponents++;
             }
         }
-        
-        // ПРАВИЛЬНЫЙ ПОДСЧЕТ
+           
         if (heroScore > bestOpponentScore) {
-            // Герой выиграл - получает 1 очко
             heroTotal += 1;
         } else if (heroScore < bestOpponentScore) {
-            // Оппоненты выиграли
-            // Если несколько оппонентов имеют одинаковый лучший счет, они делят 1 очко
             oppTotal += 1;
         } else {
-            // Ничья - делим банк между всеми участниками ничьей
             tieHands += 1;
-            const totalPlayersInTie = tyingOpponents + 1; // герой + оппоненты с таким же счетом
+            const totalPlayersInTie = tyingOpponents + 1;
             heroTotal += 1 / totalPlayersInTie;
             oppTotal += tyingOpponents / totalPlayersInTie;
         }
     }
     
-    // РАСЧЕТ ПРОЦЕНТОВ ПРАВИЛЬНО
     const heroPercent = (heroTotal / SIMULATIONS) * 100;
     const oppPercent = (oppTotal / SIMULATIONS) * 100;
     const tiePercent = (tieHands / SIMULATIONS) * 100;
     
-    // Округляем
     let heroRounded = Math.round(heroPercent * 10) / 10;
     let oppRounded = Math.round(oppPercent * 10) / 10;
     let tieRounded = Math.round(tiePercent * 10) / 10;
     
-    // Проверяем сумму
     let sum = heroRounded + oppRounded + tieRounded;
     let diff = 100 - sum;
     
-    // Корректируем если нужно (просто добавляем разницу к герою)
     if (Math.abs(diff) > 0.05) {
         heroRounded += diff;
     }
     
-    // Проверяем на NaN
     if (!isFinite(heroRounded) || isNaN(heroRounded)) heroRounded = 0;
     if (!isFinite(oppRounded) || isNaN(oppRounded)) oppRounded = 0;
     if (!isFinite(tieRounded) || isNaN(tieRounded)) tieRounded = 0;
     
-    // Финальная проверка и вывод
     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
     document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
     document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
 
-    // ... в конце calculateEquity(), после этого:
-document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
-document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
-document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
+    const resultCards = document.querySelectorAll('.result-card');
 
-// ← ДОБАВЬ ЭТО ЗДЕСЬ ↓
-
-// Однократное моргание результатов
-const resultCards = document.querySelectorAll('.result-card');
-
-// Убираем старый класс если был
-resultCards.forEach(card => card.classList.remove('fresh-result'));
-
-// Даем браузеру время на отрисовку новых значений
-setTimeout(() => {
+    resultCards.forEach(card => card.classList.remove('fresh-result'));
     resultCards.forEach(card => card.classList.add('fresh-result'));
-    
-    // Убираем класс через 1 секунду (после окончания анимации)
+
     setTimeout(() => {
         resultCards.forEach(card => card.classList.remove('fresh-result'));
     }, 1000);
-}, 50);
 
-// ← ДО ЭТОГО ↑
-
-isCalculating = false;
-updateStatus();
-    
     isCalculating = false;
     updateStatus();
-}
-
-function clearAll() {
-    selectedCards.clear();
-    usedCards.clear();
-    updateCardDisplay();
-    
-    document.getElementById('resultHero').textContent = '—';
-    document.getElementById('resultOpponent').textContent = '—';
-    document.getElementById('resultTie').textContent = '—';
-    
-    updateStatus();
-    checkBoardValidity();
-    checkHandValidity();
-    selectHandBlock();
 }
 
 window.getHandCardsCount = getHandCardsCount;
@@ -948,7 +902,3 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
-
-
-
-
