@@ -554,6 +554,10 @@ function handleCardClick(cardCode) {
         if (handCardsCount < 2) {
             addCardToHand(cardCode);
         } else {
+            // Ручка заполнена, переключаемся на борд если есть свободные слоты
+            if (getBoardCardsCount() < 5) {
+                selectBoardBlock();
+            }
             addCardToBoard(cardCode);
         }
     } else {
@@ -561,6 +565,10 @@ function handleCardClick(cardCode) {
         if (boardCardsCount < 5) {
             addCardToBoard(cardCode);
         } else {
+            // Борд заполнен, переключаемся на руку если есть свободные слоты
+            if (getHandCardsCount() < 2) {
+                selectHandBlock();
+            }
             addCardToHand(cardCode);
         }
     }
@@ -576,6 +584,10 @@ function getBoardCardsCount() {
 
 function addCardToHand(cardCode) {
     if (getHandCardsCount() >= 2) {
+        // Если рука заполнена, переключаемся на борд если есть свободные слоты
+        if (getBoardCardsCount() < 5) {
+            selectBoardBlock();
+        }
         addCardToBoard(cardCode);
         return;
     }
@@ -584,6 +596,12 @@ function addCardToHand(cardCode) {
         const slot = `hero-${i}`;
         if (!selectedCards.has(slot)) {
             addCardToSlot(cardCode, slot);
+            
+            // Проверяем, заполнилась ли рука после добавления
+            if (getHandCardsCount() >= 2 && getBoardCardsCount() < 5) {
+                // Ручка заполнена, борд не заполнен - переключаемся на борд
+                selectBoardBlock();
+            }
             return;
         }
     }
@@ -591,6 +609,10 @@ function addCardToHand(cardCode) {
 
 function addCardToBoard(cardCode) {
     if (getBoardCardsCount() >= 5) {
+        // Если борд заполнен, переключаемся на руку если есть свободные слоты
+        if (getHandCardsCount() < 2) {
+            selectHandBlock();
+        }
         addCardToHand(cardCode);
         return;
     }
@@ -599,6 +621,12 @@ function addCardToBoard(cardCode) {
         const slot = `board-${i}`;
         if (!selectedCards.has(slot)) {
             addCardToSlot(cardCode, slot);
+            
+            // Проверяем, заполнился ли борд после добавления
+            if (getBoardCardsCount() >= 5 && getHandCardsCount() < 2) {
+                // Борд заполнен, рука не заполнена - переключаемся на руку
+                selectHandBlock();
+            }
             return;
         }
     }
@@ -733,36 +761,57 @@ async function calculateEquity() {
     
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
+    document.getElementById('calculateBtn').textContent = 'Calculating...';
     
     const SIMULATIONS = 25000;
     let heroWins = 0, opponentWins = 0, ties = 0;
     
-    const createInitialDeck = () => {
+    // Оптимизированное создание колоды
+    const createOptimizedDeck = () => {
         const suits = ['s','h','c','d'];
         const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-        const deck = [];
-        suits.forEach(suit => values.forEach(value => {
-            deck.push({
-                code: value + suit,
-                value: value,
-                suit: suit==='h'?'♥':suit==='d'?'♦':suit==='s'?'♠':'♣',
-                suitCode: suit,
-                rank: HandEvaluator.ranks[value]
-            });
-        }));
+        const deck = new Array(52);
+        let index = 0;
+        
+        for (let i = 0; i < values.length; i++) {
+            for (let j = 0; j < suits.length; j++) {
+                const value = values[i];
+                const suit = suits[j];
+                deck[index++] = {
+                    code: value + suit,
+                    value: value,
+                    suit: suit==='h'?'♥':suit==='d'?'♦':suit==='s'?'♠':'♣',
+                    suitCode: suit,
+                    rank: HandEvaluator.ranks[value]
+                };
+            }
+        }
         return deck;
     };
     
-    const initialDeck = createInitialDeck();
+    const initialDeck = createOptimizedDeck();
+    
+    // Оптимизация: создаем Set использованных карт один раз
+    const usedCardCodes = new Set(Array.from(usedCards));
+    
+    // Оптимизация: предварительно рассчитываем нужные данные
+    const neededBoardCards = 5 - boardCards.length;
+    const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
     
     for (let i = 0; i < SIMULATIONS; i++) {
-        const availableDeck = initialDeck.filter(card => !usedCards.has(card.code));
+        // Фильтруем доступные карты
+        const availableDeck = [];
+        for (const card of initialDeck) {
+            if (!usedCardCodes.has(card.code)) {
+                availableDeck.push(card);
+            }
+        }
         
-        const neededCards = boardCards.length + opponentsCount * 2 + (5 - boardCards.length);
-        if (availableDeck.length < neededCards) {
+        if (availableDeck.length < totalCardsNeeded) {
             continue;
         }
         
+        // Быстрая перетасовка Фишера-Йетса
         const shuffled = [...availableDeck];
         for (let j = shuffled.length - 1; j > 0; j--) {
             const k = Math.floor(Math.random() * (j + 1));
@@ -770,8 +819,6 @@ async function calculateEquity() {
         }
         
         const fullBoard = [...boardCards];
-        const neededBoardCards = 5 - boardCards.length;
-        
         for (let j = 0; j < neededBoardCards; j++) {
             fullBoard.push(shuffled[j]);
         }
@@ -780,90 +827,129 @@ async function calculateEquity() {
         let cardIndex = neededBoardCards;
         
         for (let opp = 0; opp < opponentsCount; opp++) {
-            if (cardIndex + 1 >= shuffled.length) {
-                break;
-            }
-            
-            opponentHands.push([
-                shuffled[cardIndex],
-                shuffled[cardIndex + 1]
-            ]);
+            if (cardIndex + 1 >= shuffled.length) break;
+            opponentHands.push([shuffled[cardIndex], shuffled[cardIndex + 1]]);
             cardIndex += 2;
         }
         
         if (opponentHands.length !== opponentsCount) continue;
         
+        // Оптимизация: кэшируем оценку борда
         const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
         
         let bestOpponentScore = -1;
-        let winningOpponents = 0;
         
         for (const hand of opponentHands) {
             const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
             if (score > bestOpponentScore) {
                 bestOpponentScore = score;
-                winningOpponents = 1;
-            } else if (score === bestOpponentScore) {
-                winningOpponents++;
             }
         }
         
-        // ИСПРАВЛЕННАЯ ЛОГИКА ПОДСЧЕТА
+        // ИСПРАВЛЕННАЯ ЛОГИКА ПОДСЧЕТА С УЧЕТОМ НИЧЬИ
         if (heroScore > bestOpponentScore) {
             heroWins += 1;
         } else if (heroScore < bestOpponentScore) {
             opponentWins += 1;
         } else {
-            const tyingOpponents = opponentHands.filter(hand => 
-                HandEvaluator.evaluate([...hand, ...fullBoard]) === heroScore
-            ).length;
-            const totalPlayersInTie = tyingOpponents + 1;
+            // Считаем только если действительно ничья
+            let tyingOpponents = 0;
+            for (const hand of opponentHands) {
+                if (HandEvaluator.evaluate([...hand, ...fullBoard]) === heroScore) {
+                    tyingOpponents++;
+                }
+            }
             
+            const totalPlayersInTie = tyingOpponents + 1;
             heroWins += 1 / totalPlayersInTie;
             opponentWins += tyingOpponents / totalPlayersInTie;
             ties += 1;
         }
     }
     
-    // ПРАВИЛЬНЫЙ РАСЧЕТ ПРОЦЕНТОВ
+    // УЛУЧШЕННЫЙ РАСЧЕТ С ГАРАНТИЕЙ 100% И КОРРЕКТНЫМ ОКРУГЛЕНИЕМ
     const totalEquity = heroWins + opponentWins;
     
-    // 1. Процент ничьих раздач (не зависит от equity)
-    const tiePercentOfHands = (ties / SIMULATIONS) * 100;
-    const tieRounded = Math.round(tiePercentOfHands * 10) / 10;
+    // Рассчитываем точные значения
+    const heroExact = totalEquity > 0 ? (heroWins / totalEquity) * 100 : 0;
+    const oppExact = totalEquity > 0 ? (opponentWins / totalEquity) * 100 : 0;
+    const tieExact = (ties / SIMULATIONS) * 100;
     
-    // 2. Equity (процент банка) - должно суммироваться до 100%
-    let heroEquity = 0;
-    let oppEquity = 0;
+    // Округляем с умным распределением остатка
+    const formatWithExactSum = (hExact, oExact, tExact) => {
+        // Округляем до одного знака
+        let heroRounded = Math.round(hExact * 10) / 10;
+        let oppRounded = Math.round(oExact * 10) / 10;
+        let tieRounded = Math.round(tExact * 10) / 10;
+        
+        // Проверяем сумму equity (только герой + оппонент = 100%)
+        const equitySum = heroRounded + oppRounded;
+        const equityDiff = 100 - equitySum;
+        
+        // Корректируем с минимальным изменением
+        if (Math.abs(equityDiff) > 0.05) {
+            // Определяем, к какому значению лучше добавить/убавить
+            const heroDecimal = hExact - Math.floor(hExact * 10) / 10;
+            const oppDecimal = oExact - Math.floor(oExact * 10) / 10;
+            
+            if (equityDiff > 0) {
+                // Нужно добавить
+                if (heroDecimal >= oppDecimal) {
+                    heroRounded += equityDiff;
+                } else {
+                    oppRounded += equityDiff;
+                }
+            } else {
+                // Нужно убавить
+                if (heroDecimal <= oppDecimal) {
+                    heroRounded += equityDiff;
+                } else {
+                    oppRounded += equityDiff;
+                }
+            }
+        }
+        
+        return {
+            hero: heroRounded.toFixed(1) + '%',
+            opp: oppRounded.toFixed(1) + '%',
+            tie: tieRounded.toFixed(1) + '%'
+        };
+    };
     
-    if (totalEquity > 0) {
-        heroEquity = (heroWins / totalEquity) * 100;
-        oppEquity = (opponentWins / totalEquity) * 100;
+    const results = formatWithExactSum(heroExact, oppExact, tieExact);
+    
+    // Проверка на NaN и бесконечность
+    const heroVal = parseFloat(results.hero);
+    const oppVal = parseFloat(results.opp);
+    const tieVal = parseFloat(results.tie);
+    
+    if (!isFinite(heroVal) || isNaN(heroVal)) {
+        document.getElementById('resultHero').textContent = '0.0%';
+    } else {
+        document.getElementById('resultHero').textContent = results.hero;
     }
     
-    // Округляем equity до одного знака
-    heroEquity = Math.round(heroEquity * 10) / 10;
-    oppEquity = Math.round(oppEquity * 10) / 10;
+    if (!isFinite(oppVal) || isNaN(oppVal)) {
+        document.getElementById('resultOpponent').textContent = '0.0%';
+    } else {
+        document.getElementById('resultOpponent').textContent = results.opp;
+    }
     
-    // Гарантируем, что equity суммируется до 100%
-    const equitySum = heroEquity + oppEquity;
-    const equityDiff = 100 - equitySum;
+    if (!isFinite(tieVal) || isNaN(tieVal)) {
+        document.getElementById('resultTie').textContent = '0.0%';
+    } else {
+        document.getElementById('resultTie').textContent = results.tie;
+    }
     
-    // Корректируем equity героя (или оппонента, если нужно)
-    heroEquity += equityDiff;
-    
-    // Выводим результаты
-    document.getElementById('resultHero').textContent = heroEquity.toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = oppEquity.toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
-    
-    // Проверка в консоли
-    console.log('Equity сумма:', (heroEquity + oppEquity).toFixed(10) + '%');
-    console.log('Ничьи раздач:', tieRounded.toFixed(1) + '%');
+    // Проверка в консоли (можно убрать в продакшене)
+    console.log('Equity сумма:', (heroVal + oppVal).toFixed(10), 'ожидается: 100.0');
+    console.log('Герой:', results.hero, 'Оппонент:', results.opp, 'Ничьи:', results.tie);
     
     isCalculating = false;
+    document.getElementById('calculateBtn').textContent = 'Calculate Equity';
     updateStatus();
 }
+
 function clearAll() {
     selectedCards.clear();
     usedCards.clear();
@@ -898,9 +984,3 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
-
-
-
-
-
-
