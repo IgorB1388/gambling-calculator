@@ -5,7 +5,7 @@
     "navPoker": "Calculadora de póker",
     "navRoulette": "Analizador de ruleta",
     "navArbs": "Escáner de arbitraje",
-    "navFaq": "Preguntas frecuentes",
+    "navFaq": "FAQ",
     
     "heroTitle": "GTA CASINO TOOLS",
     "heroSubtitle": "Un conjunto de herramientas profesionales para análisis de juegos de azar en estilo GTA",
@@ -81,4 +81,5 @@
     "faqQuestion4": "¿Está el sitio optimizado para dispositivos móviles?",
     "faqContact": "¿No encontraste respuesta a tu pregunta?"
 }
+
 
