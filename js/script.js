@@ -173,6 +173,7 @@ const selectedCards = new Map();
 const usedCards = new Set();
 let opponentsCount = 1;
 let isCalculating = false;
+let hasCalculatedResults = false; // Новый флаг
 
 let currentDragSource = null;
 let currentDragCard = null;
@@ -489,6 +490,9 @@ function moveCardBetweenSlots(fromSlotId, toSlotId) {
     if (!selectedCards.has(fromSlotId)) return;
     const card = selectedCards.get(fromSlotId);
     
+    // Сбрасываем результаты перед изменением карт
+    resetResults();
+    
     if (selectedCards.has(toSlotId)) {
         const tempCard = selectedCards.get(toSlotId);
         selectedCards.set(toSlotId, card);
@@ -640,6 +644,9 @@ function addCardToSlot(cardCode, slotId) {
     
     activateBlockBySlotId(slotId);
     
+    // Сбрасываем результаты при добавлении новой карты
+    resetResults();
+    
     updateCardDisplay();
     updateStatus();
     checkBoardValidity();
@@ -653,6 +660,9 @@ function removeCardFromSlot(slotId) {
         const card = selectedCards.get(slotId);
         usedCards.delete(card.code);
         selectedCards.delete(slotId);
+        
+        // Сбрасываем результаты при удалении карты
+        resetResults();
         
         updateCardDisplay();
         updateStatus();
@@ -719,6 +729,9 @@ function setOpponents(count) {
         const isActive = parseInt(pill.dataset.opponents) === count;
         pill.classList.toggle('active', isActive);
     });
+    
+    // Сбрасываем результаты при изменении количества оппонентов
+    resetResults();
 }
 
 function checkAndSwitchActiveBlock() {
@@ -733,6 +746,16 @@ function checkAndSwitchActiveBlock() {
     if (activeBlock === 'board' && boardCardsCount >= 5 && handCardsCount < 2) {
         selectHandBlock();
         return;
+    }
+}
+
+// Функция сброса результатов без анимации
+function resetResults() {
+    if (hasCalculatedResults) {
+        document.getElementById('resultHero').textContent = '—';
+        document.getElementById('resultOpponent').textContent = '—';
+        document.getElementById('resultTie').textContent = '—';
+        hasCalculatedResults = false;
     }
 }
 
@@ -866,7 +889,7 @@ async function calculateEquity() {
     if (!isFinite(oppRounded) || isNaN(oppRounded)) oppRounded = 0;
     if (!isFinite(tieRounded) || isNaN(tieRounded)) tieRounded = 0;
     
-     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
+    document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
     document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
     document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
 
@@ -880,6 +903,8 @@ async function calculateEquity() {
     // Принудительный reflow для сброса анимации
     void resultsPanel.offsetWidth;
     resultsPanel.classList.add('fresh-result');
+    
+    hasCalculatedResults = true;
     
     // Убираем класс анимации процентов после завершения
     setTimeout(() => {
@@ -904,19 +929,11 @@ function clearAll() {
     usedCards.clear();
     updateCardDisplay();
     
-    // Сброс результатов
+    // Сброс результатов БЕЗ анимации
     document.getElementById('resultHero').textContent = '—';
     document.getElementById('resultOpponent').textContent = '—';
     document.getElementById('resultTie').textContent = '—';
-    
-    // Моргание панели результатов
-    const resultsPanel = document.querySelector('.results-panel');
-    resultsPanel.classList.remove('fresh-result');
-    resultsPanel.classList.add('fresh-result');
-    
-    setTimeout(() => {
-        resultsPanel.classList.remove('fresh-result');
-    }, 500);
+    hasCalculatedResults = false;
     
     updateStatus();
     checkBoardValidity();
@@ -943,4 +960,3 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
-
