@@ -80,6 +80,7 @@ h1 {
     border: 2px solid var(--neon-purple);
     backdrop-filter: blur(10px);
     z-index: 100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .lang-btn {
@@ -87,22 +88,21 @@ h1 {
     border: 2px solid transparent;
     border-radius: 8px;
     padding: 0;
-    width: 50px;
-    height: 35px;
-    color: var(--text-light);
-    font-weight: bold;
+    width: 44px;
+    height: 32px;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
     position: relative;
+    overflow: hidden;
 }
 
 .lang-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: var(--neon-yellow);
+    transform: translateY(-2px);
 }
 
 .lang-btn.active {
@@ -111,6 +111,16 @@ h1 {
     box-shadow: 0 0 15px var(--neon-purple);
 }
 
+/* Флаги PNG */
+.lang-flag {
+    width: 28px;
+    height: 21px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+/* Подсказки при наведении */
 .lang-btn::after {
     content: attr(title);
     position: absolute;
@@ -134,15 +144,6 @@ h1 {
 .lang-btn:hover::after {
     opacity: 1;
     visibility: visible;
-}
-
-/* Стили для флагов-картинок */
-.lang-flag {
-    width: 24px;
-    height: 18px;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
 }
         
 .subtitle {
@@ -168,28 +169,27 @@ h1 {
     border: 2px solid var(--neon-teal);
     box-shadow: var(--shadow);
 }
-        
-.panel-title {
-    font-size: 1.5rem;
-    color: var(--neon-teal);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid rgba(0, 204, 255, 0.3);
+
+/* Первая панель (рука+борд) */
+.panel:first-child {
+    display: flex;
+    flex-direction: column;
 }
         
 /* ФИКСИРОВАННЫЕ БЛОКИ РУКИ И БОРДА */
 .hand-section, .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
     cursor: pointer;
     transition: all 0.3s;
     border: 2px solid;
     position: relative;
-    height: 260px; /* ФИКСИРОВАННАЯ высота */
+    min-height: 200px;
     display: flex;
     flex-direction: column;
+    flex: 1; /* Равномерное распределение */
 }
         
 .hand-section {
@@ -211,19 +211,15 @@ h1 {
     box-shadow: 0 0 25px rgba(255, 95, 210, 0.4);
 }
         
-.hand-section:hover, .board-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-        
 .section-title {
-    margin-bottom: 5px;
-    font-size: 1.3rem;
+    margin-bottom: 3px;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
-    height: 30px;
+    height: 28px;
+    position: relative; /* Для красного индикатора */
 }
         
 .hand-section .section-title {
@@ -239,13 +235,13 @@ h1 {
     color: var(--text-medium);
     font-size: 0.9rem;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     height: 20px;
     flex-shrink: 0;
     line-height: 20px;
 }
 
-/* КОНТЕЙНЕР ДЛЯ КАРТ - ФИКСИРОВАННАЯ ПОЗИЦИЯ */
+/* КОНТЕЙНЕР ДЛЯ КАРТ */
 .section-content {
     flex-grow: 1;
     display: flex;
@@ -331,7 +327,7 @@ h1 {
     text-align: center;
     display: none;
     position: absolute;
-    bottom: 10px;
+    bottom: 5px;
     left: 20px;
     right: 20px;
     height: 20px;
@@ -343,7 +339,7 @@ h1 {
     background: var(--bg-medium);
     padding: 15px;
     border-radius: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     border: 2px solid var(--neon-purple);
 }
         
@@ -474,6 +470,8 @@ h1 {
     cursor: pointer;
     transition: all 0.3s;
     min-width: 180px;
+    position: relative;
+    overflow: hidden;
 }
         
 .btn-primary {
@@ -493,6 +491,11 @@ h1 {
     box-shadow: none;
 }
         
+.btn-primary:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+        
 .btn-secondary {
     background: rgba(0, 204, 255, 0.1);
     color: var(--neon-teal);
@@ -503,18 +506,55 @@ h1 {
     background: var(--neon-teal);
     color: white;
 }
+
+/* АНИМАЦИЯ КНОПОК - ОДИНАКОВАЯ ДЛЯ ВСЕХ */
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn.clicked {
+    animation: button-pulse 0.3s ease-in-out;
+}
+
+@keyframes button-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* КНОПКА ОЧИСТКИ - такой же эффект как у РАССЧИТАТЬ */
+#clearAllBtn:active {
+    transform: scale(0.95);
+}
+
+#clearAllBtn.clicked {
+    animation: button-pulse 0.3s ease-in-out;
+}
         
 /* === ПАНЕЛЬ РЕЗУЛЬТАТОВ (ВСЕГДА ВИДИМА) === */
 .results-panel {
     margin-top: 30px;
-    display: block !important; /* Всегда видима */
+    display: block !important;
+    position: relative;
+    border: 2px solid var(--neon-teal);
+    border-radius: 15px;
+    padding: 25px;
+    background: var(--panel-bg);
+    box-shadow: var(--shadow);
 }
         
 .results-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
         
 .result-card {
@@ -524,6 +564,11 @@ h1 {
     text-align: center;
     border: 2px solid;
     box-shadow: var(--shadow);
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
 }
         
 .result-card:nth-child(1) { border-color: var(--neon-teal); }
@@ -531,25 +576,19 @@ h1 {
 .result-card:nth-child(3) { border-color: var(--neon-blue); }
         
 .result-percent {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: bold;
-    margin: 10px 0;
-    min-height: 70px;
+    margin: 15px 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-grow: 1;
+    transition: color 0.1s ease-out;
 }
         
 .result-card:nth-child(1) .result-percent { color: var(--neon-teal); }
 .result-card:nth-child(2) .result-percent { color: var(--neon-pink); }
 .result-card:nth-child(3) .result-percent { color: var(--neon-blue); }
-        
-.current-selection {
-    text-align: center;
-    margin-bottom: 15px;
-    color: var(--neon-yellow);
-    font-size: 1rem;
-}
         
 .drop-hint {
     color: var(--neon-green);
@@ -607,8 +646,120 @@ h1 {
     line-height: 1.3;
 }
 
-/* Для мобилок */
+/* ============================================== */
+/* ИНДИКАТОР АКТИВНОГО БЛОКА (для всех языков) */
+/* ============================================== */
+/* .section-title уже имеет position: relative выше */
+
+.section-title::before {
+    content: "";
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: transparent;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 transparent;
+    border: 2px solid transparent;
+    z-index: 5;
+}
+
+.hand-section.active .section-title::before,
+.board-section.active .section-title::before {
+    background-color: #ff3366;
+    box-shadow: 0 0 10px #ff3366, 0 0 20px rgba(255, 51, 102, 0.5);
+    border-color: rgba(255, 255, 255, 0.9);
+    opacity: 1;
+}
+
+/* Подсветка при drag-over (только если есть свободные места) - ОДИНАКОВАЯ ТЕНЬ */
+.hand-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--neon-teal) !important;
+    box-shadow: 0 0 20px var(--neon-teal), 0 0 20px rgba(0, 240, 255, 0.5) !important;
+}
+
+.board-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--neon-pink) !important;
+    box-shadow: 0 0 20px var(--neon-pink), 0 0 20px rgba(255, 95, 210, 0.5) !important;
+}
+
+/* Колода подсвечивается при drag-over карты из слота */
+#deck.drag-over:not(.drag-over-no-space) {
+    border-color: var(--neon-purple) !important;
+    box-shadow: 0 0 20px var(--neon-purple), 0 0 20px rgba(179, 107, 255, 0.5) !important;
+}
+
+/* ============================================== */
+/* АНИМАЦИЯ ПАНЕЛИ РЕЗУЛЬТАТОВ - ТОЛЬКО ДЛЯ РАСЧЕТА */
+/* ============================================== */
+@keyframes quick-glow {
+    0% {
+        border-color: var(--neon-teal);
+        box-shadow: var(--shadow);
+    }
+    50% {
+        border-color: var(--neon-green);
+        box-shadow: 
+            var(--shadow),
+            0 0 25px var(--neon-green),
+            0 0 40px rgba(46, 255, 199, 0.8);
+    }
+    100% {
+        border-color: var(--neon-teal);
+        box-shadow: var(--shadow);
+    }
+}
+
+.results-panel.fresh-result {
+    animation: quick-glow 0.25s ease-in-out;
+}
+
+/* ============================================== */
+/* ДОПОЛНИТЕЛЬНЫЕ АНИМАЦИИ ДЛЯ КНОПОК */
+/* ============================================== */
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+.btn:active::after {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
+}
+
+/* ============================================== */
+/* АДАПТИВНОСТЬ */
+/* ============================================== */
 @media (max-width: 768px) {
+    .section-title::before {
+        width: 12px;
+        height: 12px;
+        right: -4px;
+        top: -4px;
+    }
+    
     .language-switcher {
         position: relative;
         top: 0;
@@ -619,19 +770,18 @@ h1 {
     }
     
     .lang-btn {
-        width: 45px;
-        height: 32px;
-        font-size: 1.8rem;
+        width: 40px;
+        height: 30px;
+    }
+    
+    .lang-flag {
+        width: 24px;
+        height: 18px;
     }
     
     .lang-btn::after {
         font-size: 0.7rem;
         bottom: -25px;
-    }
-    
-    .lang-flag {
-        width: 20px;
-        height: 15px;
     }
     
     h1 {
@@ -644,8 +794,9 @@ h1 {
     }
     
     .hand-section, .board-section {
-        height: 240px;
-        padding: 15px;
+        min-height: 180px;
+        padding: 12px;
+        margin-bottom: 10px;
     }
     
     .card-slot {
@@ -688,12 +839,17 @@ h1 {
     }
     
     .result-percent {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
     }
     
     .results-grid {
         grid-template-columns: 1fr;
         gap: 15px;
+    }
+    
+    .result-card {
+        min-height: 140px;
+        padding: 15px;
     }
     
     .opponent-pill {
@@ -709,15 +865,26 @@ h1 {
 
 /* Для очень маленьких экранов */
 @media (max-width: 480px) {
+    .section-title::before {
+        width: 10px;
+        height: 10px;
+        right: -3px;
+        top: -3px;
+    }
+    
     .language-switcher {
         gap: 4px;
         padding: 5px 6px;
     }
     
     .lang-btn {
-        width: 40px;
-        height: 28px;
-        font-size: 1.6rem;
+        width: 36px;
+        height: 27px;
+    }
+    
+    .lang-flag {
+        width: 22px;
+        height: 16px;
     }
     
     .lang-btn::after {
@@ -726,17 +893,13 @@ h1 {
         padding: 3px 6px;
     }
     
-    .lang-flag {
-        width: 18px;
-        height: 14px;
-    }
-    
     .panel {
         padding: 15px;
     }
     
     .hand-section, .board-section {
-        height: 220px;
+        min-height: 160px;
+        padding: 10px;
     }
     
     .card-slot {
@@ -761,7 +924,11 @@ h1 {
     }
     
     .result-percent {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
+    }
+    
+    .result-card {
+        min-height: 130px;
     }
     
     .deck-grid {
@@ -778,4 +945,3 @@ h1 {
         font-size: 1rem;
     }
 }
-
