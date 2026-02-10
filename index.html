@@ -6,9 +6,12 @@
     <title data-i18n="siteTitle">GTA Casino Tools - Анализ азартных игр</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Главный контейнер -->
     <div class="site-container">
+        <!-- Хедер с меню -->
         <header class="site-header">
             <div class="header-content">
                 <div class="logo">
@@ -21,6 +24,7 @@
                     </div>
                 </div>
                 
+                <!-- Основная навигация -->
                 <nav class="main-nav">
                     <ul class="nav-list">
                         <li><a href="index.html" class="nav-link active" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
@@ -46,12 +50,29 @@
             </div>
         </header>
 
+        <!-- Основное содержимое -->
         <main class="main-content">
             <div class="hero-section">
                 <h1 class="hero-title" data-i18n="heroTitle">GTA CASINO TOOLS</h1>
                 <p class="hero-subtitle" data-i18n="heroSubtitle">Набор профессиональных инструментов для анализа азартных игр в стиле GTA</p>
+                
+                <div class="hero-features">
+                    <div class="feature">
+                        <i class="fas fa-bolt"></i>
+                        <span>Мгновенные расчеты</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-palette"></i>
+                        <span>Стиль GTA</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-globe"></i>
+                        <span>Мультиязычность</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- Карточки инструментов -->
             <div class="tools-grid">
                 <a href="poker.html" class="tool-card tool-card-poker">
                     <div class="tool-icon">
@@ -59,6 +80,10 @@
                     </div>
                     <h3 data-i18n="toolPokerTitle">Покер-калькулятор</h3>
                     <p data-i18n="toolPokerDesc">Расчет шансов победы в покере на основе вашей руки и карт на столе</p>
+                    <div class="tool-stats">
+                        <span><i class="fas fa-users"></i> До 9 оппонентов</span>
+                        <span><i class="fas fa-bolt"></i> 25,000 симуляций</span>
+                    </div>
                 </a>
 
                 <a href="roulette.html" class="tool-card tool-card-roulette">
@@ -67,6 +92,10 @@
                     </div>
                     <h3 data-i18n="toolRouletteTitle">Анализатор рулетки</h3>
                     <p data-i18n="toolRouletteDesc">Анализ статистики рулетки в стиле GTA San Andreas</p>
+                    <div class="tool-stats">
+                        <span><i class="fas fa-chart-bar"></i> Статистика</span>
+                        <span><i class="fas fa-history"></i> История</span>
+                    </div>
                 </a>
 
                 <a href="arbs.html" class="tool-card tool-card-arbs">
@@ -75,9 +104,14 @@
                     </div>
                     <h3 data-i18n="toolArbsTitle">Анализатор вилок</h3>
                     <p data-i18n="toolArbsDesc">Поиск арбитражных ситуаций между букмекерами</p>
+                    <div class="tool-stats">
+                        <span><i class="fas fa-percentage"></i> Доходность</span>
+                        <span><i class="fas fa-shield-alt"></i> Безопасность</span>
+                    </div>
                 </a>
             </div>
 
+            <!-- Информационный блок -->
             <div class="info-section">
                 <h2 data-i18n="infoTitle">Что это за сайт?</h2>
                 <p data-i18n="infoDesc1">Это набор инструментов для анализа азартных игр, созданный в стилистике вселенной Grand Theft Auto.</p>
@@ -85,14 +119,14 @@
             </div>
         </main>
 
+        <!-- Футер -->
         <footer class="site-footer">
             <p data-i18n="footerText">GTA Casino Tools © 2024 | Создано для любителей азартных игр</p>
+            <p class="footer-note">Используйте ответственно. Играйте в меру.</p>
         </footer>
     </div>
 
-    <!-- Обязательно подключаем Font Awesome для иконок -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <!-- Наши скрипты -->
+    <!-- Скрипты -->
     <script src="js/language.js"></script>
     <script src="js/main.js"></script>
 </body>
