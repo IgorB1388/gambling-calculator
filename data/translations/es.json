@@ -77,9 +77,11 @@
     "faqQuestion1": "¿Para quién es este sitio?",
     "faqAnswer1": "GTA Casino Tools está diseñado para personas interesadas en los juegos de azar desde una perspectiva analítica.",
     "faqQuestion2": "¿Cómo funciona la calculadora de póker?",
+    "faqAnswer2": "La calculadora de póker utiliza el método Monte Carlo para simular 25,000 repartos aleatorios y calcular la probabilidad de que tu mano gane contra el número especificado de oponentes.",
     "faqQuestion3": "¿En qué idiomas está disponible el sitio?",
+    "faqAnswer3": "El sitio admite tres idiomas: ruso, inglés y español. El cambio de idioma está disponible en la esquina superior derecha de cada página.",
     "faqQuestion4": "¿Está el sitio optimizado para dispositivos móviles?",
-    "faqContact": "¿No encontraste respuesta a tu pregunta?"
+    "faqAnswer4": "Sí, todas las herramientas están completamente adaptadas para su uso en teléfonos inteligentes y tabletas.",
+    "faqContact": "¿No encontraste respuesta a tu pregunta?",
+    "faqContactAnswer": "Si tiene otras preguntas o sugerencias para mejorar las herramientas, comuníquese con nosotros a través del repositorio GitHub del proyecto."
 }
-
-
