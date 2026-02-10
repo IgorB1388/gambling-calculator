@@ -77,7 +77,11 @@
     "faqQuestion1": "Who is this site for?",
     "faqAnswer1": "GTA Casino Tools is designed for people interested in gambling from an analytical perspective.",
     "faqQuestion2": "How does the poker calculator work?",
+    "faqAnswer2": "The poker calculator uses the Monte Carlo method to simulate 25,000 random deals and calculate the probability of your hand winning against the specified number of opponents.",
     "faqQuestion3": "In which languages is the site available?",
+    "faqAnswer3": "The site supports three languages: Russian, English, and Spanish. Language switching is available in the upper right corner of each page.",
     "faqQuestion4": "Is the site optimized for mobile devices?",
-    "faqContact": "Didn't find an answer to your question?"
+    "faqAnswer4": "Yes, all tools are fully adapted for use on smartphones and tablets.",
+    "faqContact": "Didn't find an answer to your question?",
+    "faqContactAnswer": "If you have other questions or suggestions for improving the tools, please contact us through the project's GitHub repository."
 }
