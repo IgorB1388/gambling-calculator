@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Покер-калькулятор | GTA Casino Tools</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="poker.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
+</head>
+<body>
+    <!-- Главный контейнер -->
+    <div class="site-container">
+        <!-- Хедер с меню -->
+        <header class="site-header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-dice"></i>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-main">GTA CASINO</span>
+                        <span class="logo-sub">TOOLS</span>
+                    </div>
+                </div>
+                
+                <!-- Основная навигация -->
+                <nav class="main-nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="poker.html" class="nav-link active"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
+                        <li><a href="roulette.html" class="nav-link"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
+                        <li><a href="arbs.html" class="nav-link"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
+                        <li><a href="faq.html" class="nav-link"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Переключатель языка -->
+                <div class="language-switcher-header">
+                    <div class="lang-btn" data-lang="ru" title="Русский">
+                        <img src="images/flags/ru.png" alt="RU" class="lang-flag">
+                    </div>
+                    <div class="lang-btn" data-lang="en" title="English">
+                        <img src="images/flags/en.png" alt="EN" class="lang-flag">
+                    </div>
+                    <div class="lang-btn" data-lang="es" title="Español">
+                        <img src="images/flags/es.png" alt="ES" class="lang-flag">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основной контейнер калькулятора (старый контент) -->
+        <div class="container">
+            <!-- ТВОЙ СУЩЕСТВУЮЩИЙ КОНТЕНТ КАЛЬКУЛЯТОРА -->
+            <!-- Копируешь сюда весь контент из твоего текущего poker.html -->
+            <!-- Но без DOCTYPE, html, head, body - только внутренний контент -->
+            
+            <div class="header">
+                <div class="header-suits">
+                    <span>♠</span>
+                    <span>♥</span>
+                    <span>♣</span>
+                    <span>♦</span>
+                </div>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="ru" title="Русский">
+                        <img src="images/flags/ru.png" alt="RU" class="lang-flag">
+                    </button>
+                    <button class="lang-btn" data-lang="en" title="English">
+                        <img src="images/flags/en.png" alt="EN" class="lang-flag">
+                    </button>
+                    <button class="lang-btn" data-lang="es" title="Español">
+                        <img src="images/flags/es.png" alt="ES" class="lang-flag">
+                    </button>
+                </div>
+                
+                <h1 data-i18n="title">POKER CALCULATOR</h1>
+            </div>
+            
+            <!-- ... остальной контент калькулятора ... -->
+            <!-- Копируешь ВЕСЬ контент из своего poker.html начиная с <div class="container"> -->
+            
+        </div>
+
+        <!-- Футер -->
+        <footer class="site-footer">
+            <p>GTA Casino Tools © 2024 | Покер-калькулятор</p>
+        </footer>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="js/translation.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/poker.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Дополнительная инициализация для покера
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация языковой системы
+            if (window.initLanguageSystem) {
+                initLanguageSystem();
+            }
+        });
+    </script>
+</body>
+</html>
