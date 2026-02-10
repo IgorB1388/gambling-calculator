@@ -9,9 +9,8 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="gta4-theme">
+<body>
     <div class="site-container">
-        <!-- Хедер с меню -->
         <header class="site-header">
             <div class="header-content">
                 <div class="logo">
@@ -24,7 +23,6 @@
                     </div>
                 </div>
                 
-                <!-- Основная навигация -->
                 <nav class="main-nav">
                     <ul class="nav-list">
                         <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
@@ -35,7 +33,6 @@
                     </ul>
                 </nav>
                 
-                <!-- Переключатель языка -->
                 <div class="language-switcher-header">
                     <div class="lang-btn" data-lang="ru" title="Русский">
                         <img src="images/flags/ru.png" alt="RU" class="lang-flag">
@@ -50,123 +47,26 @@
             </div>
         </header>
 
-        <!-- Основное содержимое -->
-        <main class="arbs-main">
-            <div class="gta4-header">
-                <div class="liberty-city-badge">
-                    <span>LIBERTY</span>
-                    <span>CITY</span>
-                    <div class="badge-sub">FINANCIAL DISTRICT</div>
-                </div>
-                
-                <h1 class="gta4-title">
-                    <i class="fas fa-search-dollar"></i>
-                    <span data-i18n="arbsTitle">ARBITRAGE SCANNER</span>
-                </h1>
-                <p class="gta4-subtitle" data-i18n="arbsSubtitle">Wall Street meets Las Vegas</p>
+        <main class="main-content">
+            <div class="page-header">
+                <h1 data-i18n="arbsTitle">ARBITRAGE SCANNER</h1>
+                <p data-i18n="arbsSubtitle">Wall Street meets Las Vegas</p>
             </div>
 
-            <div class="gta4-coming-soon">
-                <div class="nyc-skyline">
-                    <div class="building"></div>
-                    <div class="building"></div>
-                    <div class="building"></div>
-                    <div class="dollar-sign">$</div>
+            <div class="coming-soon">
+                <div class="coming-soon-icon">
+                    <i class="fas fa-search-dollar"></i>
                 </div>
-                
-                <div class="gta4-content">
-                    <div class="coming-soon-label">
-                        <span class="blinking-text" data-i18n="arbsComingSoon">COMING SOON</span>
-                        <div class="pulse-dot"></div>
-                    </div>
-                    
-                    <h2><i class="fas fa-bullseye"></i> <span data-i18n="arbsComingSoon">COMING SOON</span></h2>
-                    <p class="gta4-description" data-i18n="arbsDescription">Advanced financial tool for guaranteed profit opportunities across multiple bookmakers</p>
-                    
-                    <div class="gta4-features">
-                        <div class="gta4-feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-percentage"></i>
-                            </div>
-                            <h3 data-i18n="arbsROI">ROI Calculator</h3>
-                            <p>Real-time return on investment analysis</p>
-                            <span class="feature-tag">+2.5% - 8.3%</span>
-                        </div>
-                        
-                        <div class="gta4-feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <h3 data-i18n="arbsRisk">Risk Management</h3>
-                            <p>Optimal bankroll distribution</p>
-                            <span class="feature-tag">SAFE BETS</span>
-                        </div>
-                        
-                        <div class="gta4-feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <h3 data-i18n="arbsLive">Live Updates</h3>
-                            <p>Real-time odds monitoring</p>
-                            <span class="feature-tag">0.5s DELAY</span>
-                        </div>
-                    </div>
-                    
-                    <div class="gta4-stats">
-                        <div class="stat">
-                            <div class="stat-value">24/7</div>
-                            <div class="stat-label">Monitoring</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">50+</div>
-                            <div class="stat-label">Bookmakers</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">99.8%</div>
-                            <div class="stat-label">Accuracy</div>
-                        </div>
-                    </div>
-                    
-                    <div class="gta4-info-panel">
-                        <h4><i class="fas fa-info-circle"></i> HOW ARBITRAGE WORKS</h4>
-                        <p>Arbitrage betting involves placing bets on all possible outcomes of an event at odds that guarantee profit regardless of the result. Our scanner identifies these opportunities across multiple bookmakers.</p>
-                        
-                        <div class="example-box">
-                            <div class="example-header">
-                                <span class="example-title">Example Arbitrage</span>
-                                <span class="example-profit">+4.2% ROI</span>
-                            </div>
-                            <div class="example-content">
-                                <div class="bookmaker">
-                                    <span class="bookmaker-name">BOOKIE A</span>
-                                    <span class="bookmaker-odds">2.15</span>
-                                    <span class="outcome">Team 1 Win</span>
-                                </div>
-                                <div class="bookmaker">
-                                    <span class="bookmaker-name">BOOKIE B</span>
-                                    <span class="bookmaker-odds">2.05</span>
-                                    <span class="outcome">Team 2 Win</span>
-                                </div>
-                                <div class="bookmaker">
-                                    <span class="bookmaker-name">BOOKIE C</span>
-                                    <span class="bookmaker-odds">4.50</span>
-                                    <span class="outcome">Draw</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h2 data-i18n="arbsComingSoon">COMING SOON</h2>
+                <p data-i18n="arbsDescription">Advanced financial tool for guaranteed profit opportunities across multiple bookmakers</p>
             </div>
         </main>
 
-        <!-- Футер -->
         <footer class="site-footer">
-            <p data-i18n="footerText">GTA Casino Tools © 2024 | Анализатор вилок (Liberty City Edition)</p>
-            <p class="footer-note">Инструмент предназначен для образовательных целей. Ответственность за использование лежит на пользователе.</p>
+            <p data-i18n="footerText">GTA Casino Tools © 2024 | Анализатор вилок</p>
         </footer>
     </div>
 
-    <!-- Скрипты -->
     <script src="js/language.js"></script>
     <script src="js/main.js"></script>
 </body>
