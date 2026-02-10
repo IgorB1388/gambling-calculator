@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ | GTA Casino Tools</title>
+    <title data-i18n="siteTitle">FAQ | GTA Casino Tools</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="site-container">
@@ -25,11 +26,11 @@
                 <!-- Основная навигация -->
                 <nav class="main-nav">
                     <ul class="nav-list">
-                        <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Главная</a></li>
-                        <li><a href="poker.html" class="nav-link"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
-                        <li><a href="roulette.html" class="nav-link"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
-                        <li><a href="arbs.html" class="nav-link"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
-                        <li><a href="faq.html" class="nav-link active"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="poker.html" class="nav-link" data-i18n="navPoker"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
+                        <li><a href="roulette.html" class="nav-link" data-i18n="navRoulette"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
+                        <li><a href="arbs.html" class="nav-link" data-i18n="navArbs"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
+                        <li><a href="faq.html" class="nav-link active" data-i18n="navFaq"><i class="fas fa-question-circle"></i> FAQ</a></li>
                     </ul>
                 </nav>
                 
@@ -51,21 +52,21 @@
         <!-- Основное содержимое -->
         <main class="faq-main">
             <div class="faq-header">
-                <h1><i class="fas fa-question-circle"></i> ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h1>
-                <p>Ответы на популярные вопросы о GTA Casino Tools</p>
+                <h1><i class="fas fa-question-circle"></i> <span data-i18n="faqTitle">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</span></h1>
+                <p data-i18n="faqSubtitle">Ответы на популярные вопросы о GTA Casino Tools</p>
             </div>
 
             <div class="faq-container">
                 <!-- Основной вопрос -->
-                <div class="faq-item faq-item-main">
+                <div class="faq-item faq-item-main active">
                     <div class="faq-question">
-                        <h3><i class="fas fa-users"></i> Для кого предназначен этот сайт?</h3>
+                        <h3><i class="fas fa-users"></i> <span data-i18n="faqQuestion1">Для кого предназначен этот сайт?</span></h3>
                         <button class="faq-toggle">
-                            <i class="fas fa-chevron-down"></i>
+                            <i class="fas fa-chevron-up"></i>
                         </button>
                     </div>
                     <div class="faq-answer">
-                        <p>GTA Casino Tools предназначен для людей, которые интересуются азартными играми с аналитической точки зрения. Наш сайт помогает:</p>
+                        <p data-i18n="faqAnswer1">GTA Casino Tools предназначен для людей, которые интересуются азартными играми с аналитической точки зрения.</p>
                         
                         <ul class="faq-list">
                             <li><i class="fas fa-chart-pie"></i> <strong>Игрокам в покер</strong> — рассчитывать шансы победы в различных ситуациях</li>
@@ -81,10 +82,10 @@
                     </div>
                 </div>
 
-                <!-- Дополнительные вопросы (заглушки) -->
+                <!-- Дополнительные вопросы -->
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3><i class="fas fa-calculator"></i> Как работает покер-калькулятор?</h3>
+                        <h3><i class="fas fa-calculator"></i> <span data-i18n="faqQuestion2">Как работает покер-калькулятор?</span></h3>
                         <button class="faq-toggle">
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -96,7 +97,7 @@
 
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3><i class="fas fa-language"></i> На каких языках доступен сайт?</h3>
+                        <h3><i class="fas fa-language"></i> <span data-i18n="faqQuestion3">На каких языках доступен сайт?</span></h3>
                         <button class="faq-toggle">
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -108,7 +109,7 @@
 
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3><i class="fas fa-mobile-alt"></i> Адаптирован ли сайт для мобильных устройств?</h3>
+                        <h3><i class="fas fa-mobile-alt"></i> <span data-i18n="faqQuestion4">Адаптирован ли сайт для мобильных устройств?</span></h3>
                         <button class="faq-toggle">
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -121,21 +122,22 @@
 
             <!-- Связь -->
             <div class="faq-contact">
-                <h3><i class="fas fa-envelope"></i> Не нашли ответ на свой вопрос?</h3>
+                <h3><i class="fas fa-envelope"></i> <span data-i18n="faqContact">Не нашли ответ на свой вопрос?</span></h3>
                 <p>Если у вас есть другие вопросы или предложения по улучшению инструментов, свяжитесь с нами через репозиторий GitHub проекта.</p>
             </div>
         </main>
 
         <!-- Футер -->
         <footer class="site-footer">
-            <p>GTA Casino Tools © 2024 | FAQ</p>
+            <p data-i18n="footerText">GTA Casino Tools © 2024 | FAQ</p>
             <p class="footer-note">Ответственность за использование инструментов лежит на пользователе.</p>
         </footer>
     </div>
 
     <!-- Скрипты -->
-    <script src="js/main.js"></script>
     <script src="js/language.js"></script>
+    <script src="js/main.js"></script>
+    
     <script>
         // FAQ аккордеон
         document.addEventListener('DOMContentLoaded', function() {
@@ -146,6 +148,17 @@
                     const faqItem = this.closest('.faq-item');
                     const answer = faqItem.querySelector('.faq-answer');
                     
+                    // Закрываем все остальные
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        if (item !== faqItem) {
+                            item.classList.remove('active');
+                            const otherAnswer = item.querySelector('.faq-answer');
+                            otherAnswer.style.maxHeight = '0';
+                            item.querySelector('.faq-toggle').innerHTML = '<i class="fas fa-chevron-down"></i>';
+                        }
+                    });
+                    
+                    // Переключаем текущий
                     faqItem.classList.toggle('active');
                     
                     if (faqItem.classList.contains('active')) {
@@ -161,10 +174,8 @@
             // Открываем первый вопрос по умолчанию
             const firstFaq = document.querySelector('.faq-item-main');
             if (firstFaq) {
-                firstFaq.classList.add('active');
                 const firstAnswer = firstFaq.querySelector('.faq-answer');
                 firstAnswer.style.maxHeight = firstAnswer.scrollHeight + 'px';
-                firstFaq.querySelector('.faq-toggle').innerHTML = '<i class="fas fa-chevron-up"></i>';
             }
         });
     </script>
