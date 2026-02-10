@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анализатор вилок | GTA Casino Tools</title>
+    <title data-i18n="siteTitle">Анализатор вилок | GTA Casino Tools</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="arbs.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="gta4-theme">
     <div class="site-container">
         <!-- Хедер с меню -->
         <header class="site-header">
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon">
-                        <i class="fas fa-dice"></i>
+                        <i class="fas fa-chart-line"></i>
                     </div>
                     <div class="logo-text">
                         <span class="logo-main">GTA CASINO</span>
@@ -26,11 +27,11 @@
                 <!-- Основная навигация -->
                 <nav class="main-nav">
                     <ul class="nav-list">
-                        <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Главная</a></li>
-                        <li><a href="poker.html" class="nav-link"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
-                        <li><a href="roulette.html" class="nav-link"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
-                        <li><a href="arbs.html" class="nav-link active"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
-                        <li><a href="faq.html" class="nav-link"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="poker.html" class="nav-link" data-i18n="navPoker"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
+                        <li><a href="roulette.html" class="nav-link" data-i18n="navRoulette"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
+                        <li><a href="arbs.html" class="nav-link active" data-i18n="navArbs"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
+                        <li><a href="faq.html" class="nav-link" data-i18n="navFaq"><i class="fas fa-question-circle"></i> FAQ</a></li>
                     </ul>
                 </nav>
                 
@@ -51,46 +52,108 @@
 
         <!-- Основное содержимое -->
         <main class="arbs-main">
-            <div class="arbs-header">
-                <h1><i class="fas fa-chart-line"></i> АНАЛИЗАТОР ВИЛОК</h1>
-                <p>Поиск арбитражных ситуаций между букмекерами</p>
+            <div class="gta4-header">
+                <div class="liberty-city-badge">
+                    <span>LIBERTY</span>
+                    <span>CITY</span>
+                    <div class="badge-sub">FINANCIAL DISTRICT</div>
+                </div>
+                
+                <h1 class="gta4-title">
+                    <i class="fas fa-search-dollar"></i>
+                    <span data-i18n="arbsTitle">ARBITRAGE SCANNER</span>
+                </h1>
+                <p class="gta4-subtitle" data-i18n="arbsSubtitle">Wall Street meets Las Vegas</p>
             </div>
 
-            <div class="arbs-coming-soon">
-                <div class="arbs-icon">
-                    <i class="fas fa-search-dollar"></i>
+            <div class="gta4-coming-soon">
+                <div class="nyc-skyline">
+                    <div class="building"></div>
+                    <div class="building"></div>
+                    <div class="building"></div>
+                    <div class="dollar-sign">$</div>
                 </div>
                 
-                <h2>Скоро в разработке</h2>
-                
-                <div class="arbs-features">
-                    <div class="feature-card">
-                        <i class="fas fa-percentage"></i>
-                        <h3>Расчет доходности</h3>
-                        <p>Автоматический расчет ROI для каждой вилки</p>
+                <div class="gta4-content">
+                    <div class="coming-soon-label">
+                        <span class="blinking-text" data-i18n="arbsComingSoon">COMING SOON</span>
+                        <div class="pulse-dot"></div>
                     </div>
                     
-                    <div class="feature-card">
-                        <i class="fas fa-shield-alt"></i>
-                        <h3>Безопасные ставки</h3>
-                        <p>Рекомендации по распределению банка</p>
+                    <h2><i class="fas fa-bullseye"></i> <span data-i18n="arbsComingSoon">COMING SOON</span></h2>
+                    <p class="gta4-description" data-i18n="arbsDescription">Advanced financial tool for guaranteed profit opportunities across multiple bookmakers</p>
+                    
+                    <div class="gta4-features">
+                        <div class="gta4-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <h3 data-i18n="arbsROI">ROI Calculator</h3>
+                            <p>Real-time return on investment analysis</p>
+                            <span class="feature-tag">+2.5% - 8.3%</span>
+                        </div>
+                        
+                        <div class="gta4-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 data-i18n="arbsRisk">Risk Management</h3>
+                            <p>Optimal bankroll distribution</p>
+                            <span class="feature-tag">SAFE BETS</span>
+                        </div>
+                        
+                        <div class="gta4-feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 data-i18n="arbsLive">Live Updates</h3>
+                            <p>Real-time odds monitoring</p>
+                            <span class="feature-tag">0.5s DELAY</span>
+                        </div>
                     </div>
                     
-                    <div class="feature-card">
-                        <i class="fas fa-bolt"></i>
-                        <h3>Мгновенное обновление</h3>
-                        <p>Котировки в реальном времени</p>
+                    <div class="gta4-stats">
+                        <div class="stat">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Monitoring</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">50+</div>
+                            <div class="stat-label">Bookmakers</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">99.8%</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="arbs-info">
-                    <p><strong>Анализатор вилок</strong> — инструмент для поиска арбитражных ситуаций (вилок), когда разница в коэффициентах у разных букмекеров позволяет сделать гарантированную прибыль независимо от исхода события.</p>
                     
-                    <div class="arbs-example">
-                        <h4><i class="fas fa-lightbulb"></i> Пример вилки:</h4>
-                        <p>Букмекер A: победа команды 1 — 2.10<br>
-                        Букмекер B: победа команды 2 — 2.10<br>
-                        <strong>Доходность: 5%</strong></p>
+                    <div class="gta4-info-panel">
+                        <h4><i class="fas fa-info-circle"></i> HOW ARBITRAGE WORKS</h4>
+                        <p>Arbitrage betting involves placing bets on all possible outcomes of an event at odds that guarantee profit regardless of the result. Our scanner identifies these opportunities across multiple bookmakers.</p>
+                        
+                        <div class="example-box">
+                            <div class="example-header">
+                                <span class="example-title">Example Arbitrage</span>
+                                <span class="example-profit">+4.2% ROI</span>
+                            </div>
+                            <div class="example-content">
+                                <div class="bookmaker">
+                                    <span class="bookmaker-name">BOOKIE A</span>
+                                    <span class="bookmaker-odds">2.15</span>
+                                    <span class="outcome">Team 1 Win</span>
+                                </div>
+                                <div class="bookmaker">
+                                    <span class="bookmaker-name">BOOKIE B</span>
+                                    <span class="bookmaker-odds">2.05</span>
+                                    <span class="outcome">Team 2 Win</span>
+                                </div>
+                                <div class="bookmaker">
+                                    <span class="bookmaker-name">BOOKIE C</span>
+                                    <span class="bookmaker-odds">4.50</span>
+                                    <span class="outcome">Draw</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,13 +161,13 @@
 
         <!-- Футер -->
         <footer class="site-footer">
-            <p>GTA Casino Tools © 2024 | Анализатор вилок</p>
+            <p data-i18n="footerText">GTA Casino Tools © 2024 | Анализатор вилок (Liberty City Edition)</p>
             <p class="footer-note">Инструмент предназначен для образовательных целей. Ответственность за использование лежит на пользователе.</p>
         </footer>
     </div>
 
     <!-- Скрипты -->
-    <script src="js/main.js"></script>
     <script src="js/language.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
