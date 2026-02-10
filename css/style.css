@@ -583,6 +583,7 @@ h1 {
     align-items: center;
     justify-content: center;
     flex-grow: 1;
+    transition: color 0.1s ease-out;
 }
         
 .result-card:nth-child(1) .result-percent { color: var(--neon-teal); }
@@ -692,9 +693,9 @@ h1 {
 }
 
 /* ============================================== */
-/* АНИМАЦИЯ ПАНЕЛИ РЕЗУЛЬТАТОВ - ОДИН БЫСТРЫЙ МОРГ */
+/* АНИМАЦИЯ ПАНЕЛИ РЕЗУЛЬТАТОВ - ОЧЕНЬ БЫСТРЫЙ МОРГ */
 /* ============================================== */
-@keyframes single-quick-glow {
+@keyframes instant-quick-glow {
     0% {
         border-color: var(--neon-teal);
         box-shadow: var(--shadow);
@@ -704,7 +705,7 @@ h1 {
         box-shadow: 
             var(--shadow),
             0 0 25px var(--neon-green),
-            0 0 40px rgba(46, 255, 199, 0.6);
+            0 0 40px rgba(46, 255, 199, 0.8);
     }
     100% {
         border-color: var(--neon-teal);
@@ -713,7 +714,24 @@ h1 {
 }
 
 .results-panel.fresh-result {
-    animation: single-quick-glow 0.4s ease-in-out;
+    animation: instant-quick-glow 0.25s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+/* Анимация для процентов - они появляются мгновенно */
+.result-percent.updated {
+    animation: text-pop 0.15s ease-out;
+}
+
+@keyframes text-pop {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* ============================================== */
