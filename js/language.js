@@ -1,29 +1,55 @@
 // language.js - Загрузка переводов из JSON файлов (1 JSON на язык)
 
 let currentLanguage = 'ru';
-let translations = {}; // Загруженные переводы
+let translations = {};
 
-// Загружает переводы для выбранного языка
+// Минимальные fallback переводы (на случай если JSON не загрузятся)
+const fallbackTranslations = {
+    ru: { siteTitle: "GTA Casino Tools", navHome: "Главная", navPoker: "Покер" },
+    en: { siteTitle: "GTA Casino Tools", navHome: "Home", navPoker: "Poker" },
+    es: { siteTitle: "GTA Casino Tools", navHome: "Inicio", navPoker: "Póker" }
+};
+
+// Загружает переводы для языка
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`data/translations/${lang}.json`);
-        if (!response.ok) throw new Error('Translation file not found');
-        
         translations = await response.json();
-        applyCurrentLanguage();
-        
     } catch (error) {
-        console.error(`Ошибка загрузки переводов (${lang}):`, error);
-        
-        // Fallback: пробуем английский
-        if (lang !== 'en') {
-            console.log('Пробуем загрузить английские переводы...');
-            await loadTranslations('en');
-        }
+        console.warn(`Переводы ${lang}.json не загружены, используем fallback`, error);
+        translations = fallbackTranslations[lang] || fallbackTranslations.en;
     }
+    
+    applyCurrentLanguage();
 }
 
-// Основная функция смены языка
+// Применяет переводы
+function applyCurrentLanguage() {
+    if (!translations) return;
+    
+    // Title страницы
+    if (translations.siteTitle) {
+        document.title = translations.siteTitle;
+    }
+    
+    // Все элементы с data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[key]) {
+            element.textContent = translations[key];
+        }
+    });
+}
+
+// Обновляет переключатель языка
+function updateLanguageSwitcher(lang) {
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        const btnLang = btn.getAttribute('data-lang');
+        btn.classList.toggle('active', btnLang === lang);
+    });
+}
+
+// Смена языка
 async function changeLanguage(lang) {
     if (currentLanguage === lang) return;
     
@@ -31,93 +57,32 @@ async function changeLanguage(lang) {
     localStorage.setItem('poker-calc-language', lang);
     document.documentElement.lang = lang;
     
-    // Обновляем переключатель СРАЗУ
     updateLanguageSwitcher(lang);
-    
-    // Загружаем и применяем новые переводы
     await loadTranslations(lang);
 }
 
-// Применяет текущий язык ко всем элементам
-function applyCurrentLanguage() {
-    if (!translations) return;
-    
-    // Обновляем title страницы
-    document.title = translations.siteTitle || document.title;
-    
-    // Обновляем все элементы с data-i18n
-    const elements = document.querySelectorAll('[data-i18n]');
-    elements.forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        const translation = translations[key];
-        
-        if (translation) {
-            applyTranslationToElement(element, translation);
-        }
-    });
-}
-
-// Применяет перевод к конкретному элементу
-function applyTranslationToElement(element, translation) {
-    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-        if (element.hasAttribute('placeholder')) {
-            element.placeholder = translation;
-        }
-        if (element.hasAttribute('title')) {
-            element.title = translation;
-        }
-        if (element.hasAttribute('value') && element.type !== 'submit' && element.type !== 'button') {
-            element.value = translation;
-        }
-    } else if (element.tagName === 'IMG') {
-        if (element.hasAttribute('alt')) {
-            element.alt = translation;
-        }
-    } else {
-        element.textContent = translation;
-    }
-}
-
-// Обновляет переключатель языка
-function updateLanguageSwitcher(activeLang) {
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        const lang = btn.getAttribute('data-lang');
-        if (lang === activeLang) {
-            btn.classList.add('active');
-            btn.classList.remove('inactive');
-        } else {
-            btn.classList.remove('active');
-            btn.classList.add('inactive');
-        }
-    });
-}
-
-// Инициализация языковой системы
+// Инициализация
 async function initLanguageSystem() {
-    // 1. Проверяем сохраненный язык
     const savedLang = localStorage.getItem('poker-calc-language');
-    if (savedLang) {
-        currentLanguage = savedLang;
-    }
+    if (savedLang) currentLanguage = savedLang;
     
-    // 2. Устанавливаем атрибут lang
     document.documentElement.lang = currentLanguage;
+    updateLanguageSwitcher(currentLanguage);
     
-    // 3. Загружаем переводы
     await loadTranslations(currentLanguage);
     
-    // 4. Добавляем обработчики на кнопки языка
+    // Обработчики кнопок
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', () => {
             const lang = btn.getAttribute('data-lang');
-            await changeLanguage(lang);
+            changeLanguage(lang);
         });
     });
 }
 
-// Запускаем инициализацию
+// Запуск
 document.addEventListener('DOMContentLoaded', initLanguageSystem);
 
-// Экспортируем функции
+// Экспорт
 window.changeLanguage = changeLanguage;
 window.getCurrentLanguage = () => currentLanguage;
