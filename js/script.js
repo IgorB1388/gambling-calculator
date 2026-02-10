@@ -866,18 +866,26 @@ async function calculateEquity() {
     if (!isFinite(oppRounded) || isNaN(oppRounded)) oppRounded = 0;
     if (!isFinite(tieRounded) || isNaN(tieRounded)) tieRounded = 0;
     
-    document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
+     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
     document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
     document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
 
-    // Моргание панели результатов
+    // Добавляем классы для анимации процентов
+    const resultPercents = document.querySelectorAll('.result-percent');
+    resultPercents.forEach(p => p.classList.add('updated'));
+    
+    // Моргание панели результатов - СРАЗУ
     const resultsPanel = document.querySelector('.results-panel');
     resultsPanel.classList.remove('fresh-result');
+    // Принудительный reflow для сброса анимации
+    void resultsPanel.offsetWidth;
     resultsPanel.classList.add('fresh-result');
     
+    // Убираем класс анимации процентов после завершения
     setTimeout(() => {
+        resultPercents.forEach(p => p.classList.remove('updated'));
         resultsPanel.classList.remove('fresh-result');
-    }, 500);
+    }, 300);
 
     isCalculating = false;
     updateStatus();
@@ -935,3 +943,4 @@ document.addEventListener('keydown', e => {
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
 });
+
