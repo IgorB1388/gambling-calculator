@@ -1,5 +1,5 @@
-/* styles.css - ОБЩИЕ СТИЛИ ДЛЯ ГЛАВНОЙ, FAQ И ОСНОВНОГО САЙТА */
-/* Отличный от покера неоновый стиль */
+/* styles.css - ОБЩИЕ СТИЛИ ДЛЯ ВСЕХ СТРАНИЦ (кроме покера, рулетки, арбов) */
+/* Основной стиль для index.html, FAQ и общих элементов */
 
 * { 
     margin: 0; 
@@ -9,7 +9,7 @@
 }
 
 :root {
-    /* === УНИКАЛЬНЫЕ NEON ЦВЕТА (отличные от покера) === */
+    /* === УНИКАЛЬНЫЕ NEON ЦВЕТА (для главной и FAQ) === */
     --neon-electric-blue: #0066ff;
     --neon-laser-green:   #00ff99;
     --neon-hot-pink:      #ff3399;
@@ -35,7 +35,8 @@
     --grid-color:      rgba(0, 102, 255, 0.1);
 }
 
-body {
+/* ОБЩИЕ СТИЛИ ТЕЛА (переопределяются в poker.css, roulette.css, arbs.css) */
+body:not(.roulette-page):not(.poker-page):not(.arbs-page) {
     background: 
         linear-gradient(135deg, var(--bg-deep-space) 0%, #000822 100%),
         radial-gradient(circle at 20% 80%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
@@ -47,8 +48,8 @@ body {
     overflow-x: hidden;
 }
 
-/* Космическая сетка на фоне */
-body::before {
+/* Космическая сетка на фоне (только для главной и FAQ) */
+body:not(.roulette-page):not(.poker-page):not(.arbs-page)::before {
     content: '';
     position: fixed;
     top: 0;
@@ -64,6 +65,7 @@ body::before {
     z-index: -1;
 }
 
+/* ОБЩИЙ КОНТЕЙНЕР */
 .site-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -73,7 +75,7 @@ body::before {
     flex-direction: column;
 }
 
-/* ========== ШАПКА С МЕНЮ (Кибер-стиль) ========== */
+/* ========== ОБЩАЯ ШАПКА (для всех страниц) ========== */
 .site-header {
     background: rgba(26, 31, 58, 0.9);
     border-radius: 20px;
@@ -90,6 +92,7 @@ body::before {
     border-image: linear-gradient(45deg, var(--neon-electric-blue), var(--neon-galaxy)) 1;
 }
 
+/* Сканирующая линия (для всех страниц) */
 .site-header::before {
     content: '';
     position: absolute;
@@ -112,6 +115,7 @@ body::before {
     100% { left: 100%; }
 }
 
+/* Содержимое шапки */
 .header-content {
     display: flex;
     align-items: center;
@@ -120,7 +124,7 @@ body::before {
     gap: 25px;
 }
 
-/* ЛОГОТИП (Голографический) */
+/* ЛОГОТИП */
 .logo {
     display: flex;
     align-items: center;
@@ -196,7 +200,7 @@ body::before {
     text-transform: uppercase;
 }
 
-/* ОСНОВНАЯ НАВИГАЦИЯ (Кибер-кнопки) */
+/* ОСНОВНАЯ НАВИГАЦИЯ */
 .main-nav {
     flex-grow: 1;
     display: flex;
@@ -279,7 +283,7 @@ body::before {
     filter: drop-shadow(0 0 5px var(--neon-laser-green));
 }
 
-/* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА (Кибер-терминал) */
+/* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА */
 .language-switcher-header {
     display: flex;
     gap: 8px;
@@ -363,7 +367,8 @@ body::before {
     margin-bottom: 40px;
 }
 
-.page-header {
+/* ОБЩИЙ PAGE-HEADER (используется в index.html, FAQ) */
+.page-header:not(.roulette-header) {
     text-align: center;
     margin-bottom: 50px;
     padding: 40px;
@@ -378,7 +383,7 @@ body::before {
     backdrop-filter: blur(10px);
 }
 
-.page-header::before {
+.page-header:not(.roulette-header)::before {
     content: '';
     position: absolute;
     top: 0;
@@ -391,7 +396,7 @@ body::before {
     z-index: 0;
 }
 
-.page-header h1 {
+.page-header:not(.roulette-header) h1 {
     font-size: 3rem;
     background: linear-gradient(45deg, var(--neon-sunset), var(--neon-hot-pink));
     -webkit-background-clip: text;
@@ -403,7 +408,7 @@ body::before {
     letter-spacing: 1px;
 }
 
-.page-header p {
+.page-header:not(.roulette-header) p {
     color: var(--neon-cyber);
     font-size: 1.3rem;
     position: relative;
@@ -413,7 +418,7 @@ body::before {
     font-weight: 500;
 }
 
-/* КАРТОЧКИ ИНСТРУМЕНТОВ (для главной) */
+/* КАРТОЧКИ ИНСТРУМЕНТОВ (только для главной) */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -548,7 +553,7 @@ body::before {
     font-size: 1.05rem;
 }
 
-/* ИНФО СЕКЦИЯ */
+/* ИНФО СЕКЦИЯ (только для главной) */
 .info-section {
     background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(42, 47, 74, 0.9));
     border-radius: 25px;
@@ -594,8 +599,8 @@ body::before {
     font-size: 1.1rem;
 }
 
-/* COMING SOON (для рулетки и вилок) */
-.coming-soon {
+/* ОБЩИЙ COMING SOON (для arbs.html) */
+.coming-soon:not(.coming-soon-sa) {
     background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(42, 47, 74, 0.95));
     border-radius: 25px;
     padding: 60px 40px;
@@ -607,7 +612,7 @@ body::before {
     backdrop-filter: blur(10px);
 }
 
-.coming-soon::before {
+.coming-soon:not(.coming-soon-sa)::before {
     content: '';
     position: absolute;
     top: 0;
@@ -625,7 +630,7 @@ body::before {
     50% { opacity: 1; }
 }
 
-.coming-soon-icon {
+.coming-soon-icon:not(.coming-soon-icon-sa) {
     font-size: 5rem;
     color: var(--neon-galaxy);
     margin-bottom: 30px;
@@ -640,7 +645,7 @@ body::before {
     50% { transform: translateY(-10px); }
 }
 
-.coming-soon h2 {
+.coming-soon:not(.coming-soon-sa) h2 {
     color: var(--neon-galaxy);
     margin-bottom: 20px;
     font-size: 2.5rem;
@@ -650,7 +655,7 @@ body::before {
     letter-spacing: 2px;
 }
 
-.coming-soon p {
+.coming-soon:not(.coming-soon-sa) p {
     color: var(--text-moonlight);
     font-size: 1.3rem;
     max-width: 700px;
@@ -660,7 +665,7 @@ body::before {
     line-height: 1.6;
 }
 
-/* FAQ */
+/* FAQ (только для faq.html) */
 .faq-container {
     background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(42, 47, 74, 0.95));
     border-radius: 25px;
@@ -769,7 +774,7 @@ body::before {
     line-height: 1.6;
 }
 
-/* ФУТЕР */
+/* ФУТЕР (для всех страниц) */
 .site-footer {
     background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(42, 47, 74, 0.95));
     border-radius: 20px;
@@ -824,7 +829,7 @@ body::before {
         max-width: 1000px;
     }
     
-    .page-header h1 {
+    .page-header:not(.roulette-header) h1 {
         font-size: 2.5rem;
     }
     
@@ -861,16 +866,16 @@ body::before {
         padding: 15px;
     }
     
-    .page-header {
+    .page-header:not(.roulette-header) {
         padding: 30px 20px;
         margin-bottom: 30px;
     }
     
-    .page-header h1 {
+    .page-header:not(.roulette-header) h1 {
         font-size: 2rem;
     }
     
-    .page-header p {
+    .page-header:not(.roulette-header) p {
         font-size: 1.1rem;
     }
     
@@ -913,16 +918,16 @@ body::before {
     
     .info-section,
     .faq-container,
-    .coming-soon {
+    .coming-soon:not(.coming-soon-sa) {
         padding: 25px 20px;
         border-radius: 20px;
     }
     
-    .coming-soon-icon {
+    .coming-soon-icon:not(.coming-soon-icon-sa) {
         font-size: 4rem;
     }
     
-    .coming-soon h2 {
+    .coming-soon:not(.coming-soon-sa) h2 {
         font-size: 2rem;
     }
 }
@@ -939,19 +944,19 @@ body::before {
         justify-content: flex-start;
     }
     
-    .page-header {
+    .page-header:not(.roulette-header) {
         padding: 25px 15px;
     }
     
-    .page-header h1 {
+    .page-header:not(.roulette-header) h1 {
         font-size: 1.8rem;
     }
     
-    .coming-soon {
+    .coming-soon:not(.coming-soon-sa) {
         padding: 30px 15px;
     }
     
-    .coming-soon-icon {
+    .coming-soon-icon:not(.coming-soon-icon-sa) {
         font-size: 3.5rem;
     }
     
