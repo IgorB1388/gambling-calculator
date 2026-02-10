@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="siteTitle">Покер-калькулятор | GTA Casino Tools</title>
+    <title data-i18n="siteTitle"></title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="poker.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
@@ -25,11 +25,11 @@
                 
                 <nav class="main-nav">
                     <ul class="nav-list">
-                        <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
-                        <li><a href="poker.html" class="nav-link active" data-i18n="navPoker"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
-                        <li><a href="roulette.html" class="nav-link" data-i18n="navRoulette"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
-                        <li><a href="arbs.html" class="nav-link" data-i18n="navArbs"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
-                        <li><a href="faq.html" class="nav-link" data-i18n="navFaq"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i></a></li>
+                        <li><a href="poker.html" class="nav-link active" data-i18n="navPoker"><i class="fas fa-club"></i></a></li>
+                        <li><a href="roulette.html" class="nav-link" data-i18n="navRoulette"><i class="fas fa-dice"></i></a></li>
+                        <li><a href="arbs.html" class="nav-link" data-i18n="navArbs"><i class="fas fa-chart-line"></i></a></li>
+                        <li><a href="faq.html" class="nav-link" data-i18n="navFaq"><i class="fas fa-question-circle"></i></a></li>
                     </ul>
                 </nav>
                 
@@ -48,7 +48,7 @@
         </header>
 
         <!-- Калькулятор покера -->
-        <div class="poker-container">
+        <div class="poker-calculator-wrapper">
             <div class="header">
                 <div class="header-suits">
                     <span>♠</span>
@@ -69,26 +69,26 @@
                     </button>
                 </div>
                 
-                <h1 data-i18n="title">ПОКЕРНЫЙ КАЛЬКУЛЯТОР</h1>
+                <h1 data-i18n="title"></h1>
             </div>
             
             <div class="main-area">
                 <div class="panel">
-                    <div class="panel-title" data-i18n="panelHandBoard">ВАША РУКА И БОРД</div>
+                    <div class="panel-title" data-i18n="panelHandBoard"></div>
                     
                     <div class="hand-section" id="handSection">
-                        <div class="section-title" data-i18n="yourHand">ВАША РУКА</div>
-                        <div class="hand-subtitle" data-i18n="handSubtitle">2 карты</div>
+                        <div class="section-title" data-i18n="yourHand"></div>
+                        <div class="hand-subtitle" data-i18n="handSubtitle"></div>
                         <div class="cards-row">
                             <div class="card-slot" data-slot="hero-1">+</div>
                             <div class="card-slot" data-slot="hero-2">+</div>
                         </div>
-                        <div class="warning" data-i18n="handWarning">⚠️ В руке должно быть 2 карты</div>
+                        <div class="warning" data-i18n="handWarning"></div>
                     </div>
                     
                     <div class="board-section" id="boardSection">
-                        <div class="section-title" data-i18n="board">БОРД</div>
-                        <div class="board-subtitle" data-i18n="boardSubtitle">0, 3, 4 или 5 карт</div>
+                        <div class="section-title" data-i18n="board"></div>
+                        <div class="board-subtitle" data-i18n="boardSubtitle"></div>
                         <div class="cards-row">
                             <div class="card-slot" data-slot="board-1">+</div>
                             <div class="card-slot" data-slot="board-2">+</div>
@@ -96,15 +96,15 @@
                             <div class="card-slot" data-slot="board-4">+</div>
                             <div class="card-slot" data-slot="board-5">+</div>
                         </div>
-                        <div class="warning" data-i18n="boardWarning">⚠️ На борде должно быть 0, 3, 4 или 5 карт</div>
+                        <div class="warning" data-i18n="boardWarning"></div>
                     </div>
                 </div>
                 
                 <div class="panel">
-                    <div class="panel-title" data-i18n="panelSettings">НАСТРОЙКИ</div>
+                    <div class="panel-title" data-i18n="panelSettings"></div>
                     
                     <div class="opponents-control">
-                        <div class="opponents-label" data-i18n="opponentsLabel">КОЛИЧЕСТВО ОППОНЕНТОВ:</div>
+                        <div class="opponents-label" data-i18n="opponentsLabel"></div>
                         <div class="opponent-pills">
                             <button class="opponent-pill active">1</button>
                             <button class="opponent-pill">2</button>
@@ -118,47 +118,45 @@
                         </div>
                     </div>
                     
-                    <div class="panel-title" data-i18n="panelChooseCards">ВЫБЕРИТЕ КАРТЫ</div>
+                    <div class="panel-title" data-i18n="panelChooseCards"></div>
                     
                     <div class="deck-grid" id="deck">
                         <!-- Карты будут сгенерированы JavaScript -->
                     </div>
                     
-                    <div class="drop-hint" data-i18n="dropHint">
-                        Кликните на карту для выбора или перетаскивайте между слотами
-                    </div>
+                    <div class="drop-hint" data-i18n="dropHint"></div>
                     
                     <div class="controls">
-                        <button class="btn btn-primary" data-i18n="calculateBtn">РАССЧИТАТЬ</button>
-                        <button class="btn btn-secondary" data-i18n="clearBtn">ОЧИСТИТЬ</button>
+                        <button class="btn btn-primary" id="calculateBtn" data-i18n="calculateBtn"></button>
+                        <button class="btn btn-secondary" id="clearAllBtn" data-i18n="clearBtn"></button>
                     </div>
                 </div>
             </div>
             
             <div class="results-panel">
-                <div class="panel-title" data-i18n="panelResults">РЕЗУЛЬТАТЫ</div>
+                <div class="panel-title" data-i18n="panelResults"></div>
                 
                 <div class="results-grid">
                     <div class="result-card">
-                        <div data-i18n="yourHandResult">ВАША РУКА</div>
-                        <div class="result-percent">—</div>
+                        <div data-i18n="yourHandResult"></div>
+                        <div class="result-percent" id="resultHero">—</div>
                     </div>
                     
                     <div class="result-card">
-                        <div data-i18n="opponentsResult">ОППОНЕНТЫ</div>
-                        <div class="result-percent">—</div>
+                        <div data-i18n="opponentsResult"></div>
+                        <div class="result-percent" id="resultOpponent">—</div>
                     </div>
                     
                     <div class="result-card">
-                        <div data-i18n="tieResult">НИЧЬЯ</div>
-                        <div class="result-percent">—</div>
+                        <div data-i18n="tieResult"></div>
+                        <div class="result-percent" id="resultTie">—</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <footer class="site-footer">
-            <p data-i18n="footerText">GTA Casino Tools © 2024 | Покер-калькулятор</p>
+            <p data-i18n="footerText"></p>
         </footer>
     </div>
 
