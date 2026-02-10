@@ -10,9 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Главный контейнер -->
     <div class="site-container">
-        <!-- Хедер с меню -->
         <header class="site-header">
             <div class="header-content">
                 <div class="logo">
@@ -25,7 +23,6 @@
                     </div>
                 </div>
                 
-                <!-- Основная навигация -->
                 <nav class="main-nav">
                     <ul class="nav-list">
                         <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
@@ -36,7 +33,6 @@
                     </ul>
                 </nav>
                 
-                <!-- Переключатель языка -->
                 <div class="language-switcher-header">
                     <div class="lang-btn" data-lang="ru" title="Русский">
                         <img src="images/flags/ru.png" alt="RU" class="lang-flag">
@@ -51,7 +47,7 @@
             </div>
         </header>
 
-        <!-- Внутренний контейнер для калькулятора -->
+        <!-- Калькулятор покера -->
         <div class="poker-container">
             <div class="header">
                 <div class="header-suits">
@@ -61,7 +57,6 @@
                     <span>♦</span>
                 </div>
                 
-                <!-- Локальный переключатель языка для калькулятора -->
                 <div class="language-switcher">
                     <button class="lang-btn" data-lang="ru" title="Русский">
                         <img src="images/flags/ru.png" alt="RU" class="lang-flag">
@@ -74,7 +69,7 @@
                     </button>
                 </div>
                 
-                <h1 data-i18n="title">POKER CALCULATOR</h1>
+                <h1 data-i18n="title">ПОКЕРНЫЙ КАЛЬКУЛЯТОР</h1>
             </div>
             
             <div class="main-area">
@@ -82,52 +77,48 @@
                     <div class="panel-title" data-i18n="panelHandBoard">ВАША РУКА И БОРД</div>
                     
                     <div class="hand-section" id="handSection">
-                        <div class="section-title" id="handTitle" data-i18n="yourHand">⭐ ВАША РУКА</div>
+                        <div class="section-title" data-i18n="yourHand">ВАША РУКА</div>
                         <div class="hand-subtitle" data-i18n="handSubtitle">2 карты</div>
-                        <div class="section-content">
-                            <div class="cards-row">
-                                <div class="card-slot" data-slot="hero-1"><div class="slot-empty">+</div></div>
-                                <div class="card-slot" data-slot="hero-2"><div class="slot-empty">+</div></div>
-                            </div>
+                        <div class="cards-row">
+                            <div class="card-slot" data-slot="hero-1">+</div>
+                            <div class="card-slot" data-slot="hero-2">+</div>
                         </div>
-                        <div class="warning" id="handWarning" data-i18n="handWarning">⚠️ В руке должно быть 2 карты</div>
+                        <div class="warning" data-i18n="handWarning">⚠️ В руке должно быть 2 карты</div>
                     </div>
                     
                     <div class="board-section" id="boardSection">
-                        <div class="section-title" id="boardTitle" data-i18n="board">🎴 БОРД</div>
+                        <div class="section-title" data-i18n="board">БОРД</div>
                         <div class="board-subtitle" data-i18n="boardSubtitle">0, 3, 4 или 5 карт</div>
-                        <div class="section-content">
-                            <div class="cards-row">
-                                <div class="card-slot" data-slot="board-1"><div class="slot-empty">+</div></div>
-                                <div class="card-slot" data-slot="board-2"><div class="slot-empty">+</div></div>
-                                <div class="card-slot" data-slot="board-3"><div class="slot-empty">+</div></div>
-                                <div class="card-slot" data-slot="board-4"><div class="slot-empty">+</div></div>
-                                <div class="card-slot" data-slot="board-5"><div class="slot-empty">+</div></div>
-                            </div>
+                        <div class="cards-row">
+                            <div class="card-slot" data-slot="board-1">+</div>
+                            <div class="card-slot" data-slot="board-2">+</div>
+                            <div class="card-slot" data-slot="board-3">+</div>
+                            <div class="card-slot" data-slot="board-4">+</div>
+                            <div class="card-slot" data-slot="board-5">+</div>
                         </div>
-                        <div class="warning" id="boardWarning" data-i18n="boardWarning">⚠️ На борде должно быть 0, 3, 4 или 5 карт</div>
+                        <div class="warning" data-i18n="boardWarning">⚠️ На борде должно быть 0, 3, 4 или 5 карт</div>
                     </div>
                 </div>
                 
                 <div class="panel">
-                    <div class="panel-title" data-i18n="panelSettings">⚙️ НАСТРОЙКИ</div>
+                    <div class="panel-title" data-i18n="panelSettings">НАСТРОЙКИ</div>
                     
                     <div class="opponents-control">
                         <div class="opponents-label" data-i18n="opponentsLabel">КОЛИЧЕСТВО ОППОНЕНТОВ:</div>
-                        <div class="opponent-pills" id="opponentPills">
-                            <button class="opponent-pill active" data-opponents="1">1</button>
-                            <button class="opponent-pill" data-opponents="2">2</button>
-                            <button class="opponent-pill" data-opponents="3">3</button>
-                            <button class="opponent-pill" data-opponents="4">4</button>
-                            <button class="opponent-pill" data-opponents="5">5</button>
-                            <button class="opponent-pill" data-opponents="6">6</button>
-                            <button class="opponent-pill" data-opponents="7">7</button>
-                            <button class="opponent-pill" data-opponents="8">8</button>
-                            <button class="opponent-pill" data-opponents="9">9</button>
+                        <div class="opponent-pills">
+                            <button class="opponent-pill active">1</button>
+                            <button class="opponent-pill">2</button>
+                            <button class="opponent-pill">3</button>
+                            <button class="opponent-pill">4</button>
+                            <button class="opponent-pill">5</button>
+                            <button class="opponent-pill">6</button>
+                            <button class="opponent-pill">7</button>
+                            <button class="opponent-pill">8</button>
+                            <button class="opponent-pill">9</button>
                         </div>
                     </div>
                     
-                    <div class="panel-title" style="margin-top: 25px;" data-i18n="panelChooseCards">🃏 ВЫБЕРИТЕ КАРТЫ</div>
+                    <div class="panel-title" data-i18n="panelChooseCards">ВЫБЕРИТЕ КАРТЫ</div>
                     
                     <div class="deck-grid" id="deck">
                         <!-- Карты будут сгенерированы JavaScript -->
@@ -138,88 +129,41 @@
                     </div>
                     
                     <div class="controls">
-                        <button class="btn btn-primary" id="calculateBtn" data-i18n="calculateBtn">🎯 РАССЧИТАТЬ</button>
-                        <button class="btn btn-secondary" id="clearAllBtn" data-i18n="clearBtn">🗑️ ОЧИСТИТЬ</button>
+                        <button class="btn btn-primary" data-i18n="calculateBtn">РАССЧИТАТЬ</button>
+                        <button class="btn btn-secondary" data-i18n="clearBtn">ОЧИСТИТЬ</button>
                     </div>
                 </div>
             </div>
             
-            <div class="results-panel panel" id="resultsPanel">
-                <div class="panel-title" data-i18n="panelResults">📊 РЕЗУЛЬТАТЫ</div>
+            <div class="results-panel">
+                <div class="panel-title" data-i18n="panelResults">РЕЗУЛЬТАТЫ</div>
                 
                 <div class="results-grid">
                     <div class="result-card">
-                        <div style="color: var(--neon-teal); font-size: 1.1rem;" data-i18n="yourHandResult">
-                            ВАША РУКА
-                        </div>
-                        <div class="result-percent" id="resultHero">—</div>
+                        <div data-i18n="yourHandResult">ВАША РУКА</div>
+                        <div class="result-percent">—</div>
                     </div>
                     
                     <div class="result-card">
-                        <div style="color: var(--neon-pink); font-size: 1.1rem;" data-i18n="opponentsResult">
-                            ОППОНЕНТЫ
-                        </div>
-                        <div class="result-percent" id="resultOpponent">—</div>
+                        <div data-i18n="opponentsResult">ОППОНЕНТЫ</div>
+                        <div class="result-percent">—</div>
                     </div>
                     
                     <div class="result-card">
-                        <div style="color: var(--neon-blue); font-size: 1.1rem;" data-i18n="tieResult">
-                            НИЧЬЯ
-                        </div>
-                        <div class="result-percent" id="resultTie">—</div>
+                        <div data-i18n="tieResult">НИЧЬЯ</div>
+                        <div class="result-percent">—</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Футер -->
         <footer class="site-footer">
             <p data-i18n="footerText">GTA Casino Tools © 2024 | Покер-калькулятор</p>
         </footer>
     </div>
 
-    <!-- Скрипты -->
     <script src="js/language.js"></script>
     <script src="js/main.js"></script>
     <script src="js/poker.js"></script>
-    
-    <script>
-        // Синхронизация переключателей языка
-        document.addEventListener('DOMContentLoaded', function() {
-            const headerSwitchers = document.querySelectorAll('.language-switcher-header .lang-btn');
-            const pokerSwitchers = document.querySelectorAll('.language-switcher .lang-btn');
-            
-            function syncLanguageSwitchers(lang) {
-                // Обновляем оба переключателя
-                headerSwitchers.forEach(btn => {
-                    const btnLang = btn.getAttribute('data-lang');
-                    btn.classList.toggle('active', btnLang === lang);
-                });
-                
-                pokerSwitchers.forEach(btn => {
-                    const btnLang = btn.getAttribute('data-lang');
-                    btn.classList.toggle('active', btnLang === lang);
-                });
-            }
-            
-            // Обработчики для локального переключателя
-            pokerSwitchers.forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const lang = btn.getAttribute('data-lang');
-                    await changeLanguage(lang);
-                    syncLanguageSwitchers(lang);
-                });
-            });
-            
-            // Обработчики для header переключателя
-            headerSwitchers.forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const lang = btn.getAttribute('data-lang');
-                    await changeLanguage(lang);
-                    syncLanguageSwitchers(lang);
-                });
-            });
-        });
-    </script>
 </body>
 </html>
