@@ -1,15 +1,12 @@
 {
-    // === ОБЩИЕ (для всех страниц) ===
     "siteTitle": "GTA Casino Tools - Анализ азартных игр",
     
-    // Навигация
     "navHome": "Главная",
     "navPoker": "Покер-калькулятор",
     "navRoulette": "Анализатор рулетки",
     "navArbs": "Анализатор вилок",
     "navFaq": "FAQ",
     
-    // Главная страница
     "heroTitle": "GTA CASINO TOOLS",
     "heroSubtitle": "Набор профессиональных инструментов для анализа азартных игр в стиле GTA",
     
@@ -28,46 +25,59 @@
     
     "footerText": "GTA Casino Tools © 2024 | Создано для любителей азартных игр",
     
-    // === ПОКЕР-КАЛЬКУЛЯТОР ===
-    "pokerTitle": "ПОКЕРНЫЙ КАЛЬКУЛЯТОР",
-    
+    "title": "ПОКЕРНЫЙ КАЛЬКУЛЯТОР",
     "panelHandBoard": "ВАША РУКА И БОРД",
     "yourHand": "⭐ ВАША РУКА",
     "handSubtitle": "2 карты",
     "handWarning": "⚠️ В руке должно быть 2 карты",
-    
     "board": "🎴 БОРД",
     "boardSubtitle": "0, 3, 4 или 5 карт",
     "boardWarning": "⚠️ На борде должно быть 0, 3, 4 или 5 карт",
-    
     "panelSettings": "⚙️ НАСТРОЙКИ",
     "opponentsLabel": "КОЛИЧЕСТВО ОППОНЕНТОВ:",
-    
     "panelChooseCards": "🃏 ВЫБЕРИТЕ КАРТЫ",
     "dropHint": "Кликните на карту для выбора или перетаскивайте между слотами",
-    
     "calculateBtn": "🎯 РАССЧИТАТЬ",
     "clearBtn": "🗑️ ОЧИСТИТЬ",
-    
     "panelResults": "📊 РЕЗУЛЬТАТЫ",
     "yourHandResult": "ВАША РУКА",
     "opponentsResult": "ОППОНЕНТЫ",
     "tieResult": "НИЧЬЯ",
+    "preflop": "Префлоп",
+    "highCard": "Старшая карта",
+    "pair": "Пара",
+    "twoPair": "Две пары",
+    "threeOfAKind": "Сет",
+    "straight": "Стрит",
+    "flush": "Флеш",
+    "fullHouse": "Фулл-хаус",
+    "fourOfAKind": "Каре",
+    "straightFlush": "Стрит-флеш",
+    "royalFlush": "Роял-флеш",
+    "unknownCombo": "Неизвестная комбинация",
     
-    // === РУЛЕТКА (GTA San Andreas) ===
     "rouletteTitle": "АНАЛИЗАТОР РУЛЕТКИ",
     "rouletteSubtitle": "GTA San Andreas Edition",
     "rouletteComingSoon": "В РАЗРАБОТКЕ",
-    "rouletteComingDesc": "Анализатор рулетки в стиле GTA San Angeles скоро будет доступен!",
+    "rouletteComingDesc": "Анализатор рулетки в стиле GTA San Andreas скоро будет доступен!",
+    "rouletteFeature1": "Статистика в реальном времени",
+    "rouletteFeature2": "История вращений",
+    "rouletteFeature3": "Популярные системы ставок",
     
-    // === ВИЛКИ (GTA IV) ===
     "arbsTitle": "ARBITRAGE SCANNER",
     "arbsSubtitle": "Wall Street meets Las Vegas",
     "arbsComingSoon": "COMING SOON",
     "arbsDescription": "Advanced financial tool for guaranteed profit opportunities across multiple bookmakers",
+    "arbsROI": "ROI Calculator",
+    "arbsRisk": "Risk Management",
+    "arbsLive": "Live Updates",
     
-    // === FAQ ===
     "faqTitle": "ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ",
     "faqSubtitle": "Ответы на популярные вопросы о GTA Casino Tools",
-    "faqQuestion1": "Для кого предназначен этот сайт?"
+    "faqQuestion1": "Для кого предназначен этот сайт?",
+    "faqAnswer1": "GTA Casino Tools предназначен для людей, которые интересуются азартными играми с аналитической точки зрения.",
+    "faqQuestion2": "Как работает покер-калькулятор?",
+    "faqQuestion3": "На каких языках доступен сайт?",
+    "faqQuestion4": "Адаптирован ли сайт для мобильных устройств?",
+    "faqContact": "Не нашли ответ на свой вопрос?"
 }
