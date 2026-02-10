@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анализатор рулетки | GTA Casino Tools</title>
+    <title data-i18n="siteTitle">Анализатор рулетки | GTA Casino Tools</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="roulette.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <!-- Главный контейнер -->
+<body class="sa-theme">
     <div class="site-container">
         <!-- Хедер с меню -->
         <header class="site-header">
@@ -27,11 +27,11 @@
                 <!-- Основная навигация -->
                 <nav class="main-nav">
                     <ul class="nav-list">
-                        <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Главная</a></li>
-                        <li><a href="poker.html" class="nav-link"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
-                        <li><a href="roulette.html" class="nav-link active"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
-                        <li><a href="arbs.html" class="nav-link"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
-                        <li><a href="faq.html" class="nav-link"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                        <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="poker.html" class="nav-link" data-i18n="navPoker"><i class="fas fa-club"></i> Покер-калькулятор</a></li>
+                        <li><a href="roulette.html" class="nav-link active" data-i18n="navRoulette"><i class="fas fa-dice"></i> Анализатор рулетки</a></li>
+                        <li><a href="arbs.html" class="nav-link" data-i18n="navArbs"><i class="fas fa-chart-line"></i> Анализатор вилок</a></li>
+                        <li><a href="faq.html" class="nav-link" data-i18n="navFaq"><i class="fas fa-question-circle"></i> FAQ</a></li>
                     </ul>
                 </nav>
                 
@@ -53,16 +53,16 @@
         <!-- Основное содержимое -->
         <main class="roulette-main">
             <div class="roulette-header">
-                <h1 class="roulette-title">
-                    <i class="fas fa-dice"></i>
-                    АНАЛИЗАТОР РУЛЕТКИ
-                </h1>
-                <p class="roulette-subtitle">GTA San Andreas Edition</p>
-                
-                <div class="sa-theme-badge">
+                <div class="sa-badge">
                     <span>LOS SANTOS</span>
                     <span>CASINO</span>
                 </div>
+                
+                <h1 class="roulette-title">
+                    <i class="fas fa-dice"></i>
+                    <span data-i18n="rouletteTitle">АНАЛИЗАТОР РУЛЕТКИ</span>
+                </h1>
+                <p class="roulette-subtitle" data-i18n="rouletteSubtitle">GTA San Andreas Edition</p>
             </div>
 
             <div class="coming-soon-container">
@@ -79,24 +79,52 @@
                 </div>
                 
                 <div class="coming-soon-content">
-                    <h2><i class="fas fa-tools"></i> В РАЗРАБОТКЕ</h2>
-                    <p>Анализатор рулетки в стиле GTA San Angeles скоро будет доступен!</p>
+                    <div class="coming-soon-label">
+                        <span class="blinking-text" data-i18n="rouletteComingSoon">В РАЗРАБОТКЕ</span>
+                        <div class="pulse-dot"></div>
+                    </div>
+                    
+                    <h2><i class="fas fa-tools"></i> <span data-i18n="rouletteComingSoon">В РАЗРАБОТКЕ</span></h2>
+                    <p class="sa-description" data-i18n="rouletteComingDesc">Анализатор рулетки в стиле GTA San Andreas скоро будет доступен!</p>
                     
                     <div class="sa-features">
                         <div class="sa-feature">
-                            <i class="fas fa-chart-line"></i>
-                            <h3>Статистика в реальном времени</h3>
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 data-i18n="rouletteFeature1">Статистика в реальном времени</h3>
                             <p>Анализ горячих и холодных чисел</p>
                         </div>
+                        
                         <div class="sa-feature">
-                            <i class="fas fa-history"></i>
-                            <h3>История вращений</h3>
+                            <div class="feature-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <h3 data-i18n="rouletteFeature2">История вращений</h3>
                             <p>Отслеживание последних результатов</p>
                         </div>
+                        
                         <div class="sa-feature">
-                            <i class="fas fa-bullseye"></i>
-                            <h3>Стратегии</h3>
-                            <p>Популярные системы ставок</p>
+                            <div class="feature-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <h3 data-i18n="rouletteFeature3">Популярные системы ставок</h3>
+                            <p>Мартингейл, Д'Аламбер и другие</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sa-stats">
+                        <div class="stat">
+                            <div class="stat-value">37</div>
+                            <div class="stat-label">Чисел</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">2.7%</div>
+                            <div class="stat-label">Преимущество</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">∞</div>
+                            <div class="stat-label">Симуляций</div>
                         </div>
                     </div>
                     
@@ -110,13 +138,13 @@
 
         <!-- Футер -->
         <footer class="site-footer">
-            <p>GTA Casino Tools © 2024 | Анализатор рулетки (San Andreas Edition)</p>
+            <p data-i18n="footerText">GTA Casino Tools © 2024 | Анализатор рулетки (San Andreas Edition)</p>
             <p class="footer-note">Все внутриигровые казино вымышлены. Играйте ответственно.</p>
         </footer>
     </div>
 
     <!-- Скрипты -->
-    <script src="js/main.js"></script>
     <script src="js/language.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
