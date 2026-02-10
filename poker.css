@@ -1,42 +1,45 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        
-:root {
-    /* === NEON ACCENTS (GTA Vice City) === */
+/* poker.css - ТОЧНЫЙ СТИЛЬ КАЛЬКУЛЯТОРА КАК БЫЛ */
+
+/* === ВАЖНО: убираем глобальные стили которые уже есть в styles.css === */
+/* УБРАТЬ: * {...} */
+/* УБРАТЬ: body {...} */
+/* УБРАТЬ: :root {...} (используем общие переменные из styles.css) */
+
+/* === ОБЕРТКА ДЛЯ КАЛЬКУЛЯТОРА === */
+.poker-calculator-wrapper {
+    /* Используем общие переменные из styles.css */
     --neon-teal:   #00f0ff;
     --neon-pink:   #ff5fd2;
     --neon-blue:   #6aa8ff;
     --neon-purple: #b36bff;
     --neon-yellow: #ffd966;
     --neon-green:  #2effc7;
-
-    /* === BACKGROUNDS === */
+    
     --bg-dark:   #2a2f4a;
     --bg-medium: #3a3f5a;
     --bg-light:  #4a4f6a;
     --panel-bg:  #353a55;
-
-    /* === TEXT === */
+    
     --text-light:  #ffffff;
     --text-medium: #ccccff;
-
-    /* === BORDERS & SHADOWS === */
+    
     --border-color: rgba(255, 255, 255, 0.15);
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
-body {
+.poker-calculator-wrapper {
     background: linear-gradient(180deg, #3a3f5a 0%, #2a2f4a 100%);
     min-height: 100vh;
     color: var(--text-light);
     padding: 20px;
 }
         
-.container { 
+.poker-calculator-wrapper .container { 
     max-width: 1400px; 
     margin: 0 auto;
 }
         
-.header {
+.poker-calculator-wrapper .header {
     text-align: center;
     margin-bottom: 40px;
     padding: 25px;
@@ -47,17 +50,17 @@ body {
     position: relative;
 }
         
-.header-suits {
+.poker-calculator-wrapper .header-suits {
     font-size: 2.8rem;
     margin-bottom: 10px;
 }
         
-.header-suits span:nth-child(1),
-.header-suits span:nth-child(3) { color: #000000; }
-.header-suits span:nth-child(2),
-.header-suits span:nth-child(4) { color: #ff3366; }
+.poker-calculator-wrapper .header-suits span:nth-child(1),
+.poker-calculator-wrapper .header-suits span:nth-child(3) { color: #000000; }
+.poker-calculator-wrapper .header-suits span:nth-child(2),
+.poker-calculator-wrapper .header-suits span:nth-child(4) { color: #ff3366; }
         
-h1 {
+.poker-calculator-wrapper h1 {
     font-size: 2.8rem;
     background: linear-gradient(45deg, var(--neon-teal), var(--neon-pink));
     -webkit-background-clip: text;
@@ -66,7 +69,7 @@ h1 {
 }
 
 /* === ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА === */
-.language-switcher {
+.poker-calculator-wrapper .language-switcher {
     display: flex;
     justify-content: center;
     gap: 5px;
@@ -83,7 +86,7 @@ h1 {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.lang-btn {
+.poker-calculator-wrapper .lang-btn {
     background: transparent;
     border: 2px solid transparent;
     border-radius: 8px;
@@ -99,20 +102,20 @@ h1 {
     overflow: hidden;
 }
 
-.lang-btn:hover {
+.poker-calculator-wrapper .lang-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: var(--neon-yellow);
     transform: translateY(-2px);
 }
 
-.lang-btn.active {
+.poker-calculator-wrapper .lang-btn.active {
     background: rgba(255, 255, 255, 0.25);
     border-color: var(--neon-purple);
     box-shadow: 0 0 15px var(--neon-purple);
 }
 
 /* Флаги PNG */
-.lang-flag {
+.poker-calculator-wrapper .lang-flag {
     width: 28px;
     height: 21px;
     object-fit: cover;
@@ -121,7 +124,7 @@ h1 {
 }
 
 /* Подсказки при наведении */
-.lang-btn::after {
+.poker-calculator-wrapper .lang-btn::after {
     content: attr(title);
     position: absolute;
     bottom: -30px;
@@ -141,17 +144,17 @@ h1 {
     border: 1px solid var(--neon-purple);
 }
 
-.lang-btn:hover::after {
+.poker-calculator-wrapper .lang-btn:hover::after {
     opacity: 1;
     visibility: visible;
 }
         
-.subtitle {
+.poker-calculator-wrapper .subtitle {
     color: var(--text-medium);
     font-size: 1.1rem;
 }
         
-.main-area {
+.poker-calculator-wrapper .main-area {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     gap: 30px;
@@ -159,10 +162,10 @@ h1 {
 }
         
 @media (max-width: 1100px) {
-    .main-area { grid-template-columns: 1fr; }
+    .poker-calculator-wrapper .main-area { grid-template-columns: 1fr; }
 }
         
-.panel {
+.poker-calculator-wrapper .panel {
     background: var(--panel-bg);
     border-radius: 15px;
     padding: 25px;
@@ -171,13 +174,14 @@ h1 {
 }
 
 /* Первая панель (рука+борд) */
-.panel:first-child {
+.poker-calculator-wrapper .panel:first-child {
     display: flex;
     flex-direction: column;
 }
         
 /* ФИКСИРОВАННЫЕ БЛОКИ РУКИ И БОРДА */
-.hand-section, .board-section {
+.poker-calculator-wrapper .hand-section, 
+.poker-calculator-wrapper .board-section {
     background: var(--bg-medium);
     border-radius: 12px;
     padding: 15px 20px;
@@ -189,29 +193,29 @@ h1 {
     min-height: 200px;
     display: flex;
     flex-direction: column;
-    flex: 1; /* Равномерное распределение */
+    flex: 1;
 }
         
-.hand-section {
+.poker-calculator-wrapper .hand-section {
     border-color: var(--neon-teal);
 }
         
-.board-section {
+.poker-calculator-wrapper .board-section {
     border-color: var(--neon-pink);
 }
         
 /* ФИКС: активная секция подсвечивается своим цветом */
-.hand-section.active {
+.poker-calculator-wrapper .hand-section.active {
     border-color: var(--neon-teal);
     box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
 }
         
-.board-section.active {
+.poker-calculator-wrapper .board-section.active {
     border-color: var(--neon-pink);
     box-shadow: 0 0 25px rgba(255, 95, 210, 0.4);
 }
         
-.section-title {
+.poker-calculator-wrapper .section-title {
     margin-bottom: 3px;
     font-size: 1.2rem;
     display: flex;
@@ -219,19 +223,19 @@ h1 {
     gap: 10px;
     flex-shrink: 0;
     height: 28px;
-    position: relative; /* Для красного индикатора */
+    position: relative;
 }
         
-.hand-section .section-title {
+.poker-calculator-wrapper .hand-section .section-title {
     color: var(--neon-teal);
 }
         
-.board-section .section-title {
+.poker-calculator-wrapper .board-section .section-title {
     color: var(--neon-pink);
 }
         
-.board-subtitle,
-.hand-subtitle {
+.poker-calculator-wrapper .board-subtitle,
+.poker-calculator-wrapper .hand-subtitle {
     color: var(--text-medium);
     font-size: 0.9rem;
     text-align: center;
@@ -242,7 +246,7 @@ h1 {
 }
 
 /* КОНТЕЙНЕР ДЛЯ КАРТ */
-.section-content {
+.poker-calculator-wrapper .section-content {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -250,7 +254,7 @@ h1 {
     position: relative;
 }
         
-.cards-row {
+.poker-calculator-wrapper .cards-row {
     display: flex;
     gap: 15px;
     align-items: center;
@@ -260,7 +264,7 @@ h1 {
     position: relative;
 }
         
-.card-slot {
+.poker-calculator-wrapper .card-slot {
     width: 80px;
     height: 115px;
     background: rgba(255, 255, 255, 0.08);
@@ -276,14 +280,14 @@ h1 {
     cursor: pointer;
 }
         
-.card-slot.drag-over {
+.poker-calculator-wrapper .card-slot.drag-over {
     border-color: var(--neon-yellow);
     background: rgba(255, 204, 0, 0.1);
     transform: scale(1.05);
     box-shadow: 0 0 15px var(--neon-yellow);
 }
         
-.real-card {
+.poker-calculator-wrapper .real-card {
     background: white;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);
@@ -299,16 +303,16 @@ h1 {
     justify-content: center;
 }
         
-.real-card:hover {
+.poker-calculator-wrapper .real-card:hover {
     transform: translateY(-3px) scale(1.03);
     box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     z-index: 10;
 }
         
-.real-card.red { color: #ff3366; }
-.real-card.black { color: #000000; }
+.poker-calculator-wrapper .real-card.red { color: #ff3366; }
+.poker-calculator-wrapper .real-card.black { color: #000000; }
         
-.card-content {
+.poker-calculator-wrapper .card-content {
     font-size: 2.5rem;
     font-weight: bold;
     text-align: center;
@@ -321,7 +325,7 @@ h1 {
 }
         
 /* АБСОЛЮТНО ПОЗИЦИОНИРОВАННЫЕ ПРЕДУПРЕЖДЕНИЯ */
-.warning {
+.poker-calculator-wrapper .warning {
     color: #ff9966;
     font-size: 0.9rem;
     text-align: center;
@@ -335,7 +339,7 @@ h1 {
     z-index: 2;
 }
         
-.opponents-control {
+.poker-calculator-wrapper .opponents-control {
     background: var(--bg-medium);
     padding: 15px;
     border-radius: 10px;
@@ -343,7 +347,7 @@ h1 {
     border: 2px solid var(--neon-purple);
 }
         
-.opponents-label {
+.poker-calculator-wrapper .opponents-label {
     color: var(--neon-yellow);
     font-weight: bold;
     margin-bottom: 10px;
@@ -351,14 +355,14 @@ h1 {
     font-size: 1.1rem;
 }
         
-.opponent-pills {
+.poker-calculator-wrapper .opponent-pills {
     display: flex;
     justify-content: center;
     gap: 8px;
     flex-wrap: wrap;
 }
         
-.opponent-pill {
+.poker-calculator-wrapper .opponent-pill {
     width: 45px;
     height: 45px;
     border-radius: 50%;
@@ -374,19 +378,19 @@ h1 {
     justify-content: center;
 }
         
-.opponent-pill:hover {
+.poker-calculator-wrapper .opponent-pill:hover {
     transform: scale(1.1);
     background: rgba(102, 153, 255, 0.3);
 }
         
-.opponent-pill.active {
+.poker-calculator-wrapper .opponent-pill.active {
     background: var(--neon-blue);
     color: white;
     border-color: var(--neon-blue);
     box-shadow: 0 0 15px var(--neon-blue);
 }
         
-.deck-grid {
+.poker-calculator-wrapper .deck-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
     gap: 6px;
@@ -397,7 +401,7 @@ h1 {
     border: 2px solid var(--neon-purple);
 }
         
-.deck-card {
+.poker-calculator-wrapper .deck-card {
     aspect-ratio: 2/3;
     background: #f0f0f0;
     border-radius: 6px;
@@ -414,30 +418,30 @@ h1 {
     overflow: hidden;
 }
         
-.deck-card:hover {
+.poker-calculator-wrapper .deck-card:hover {
     transform: scale(1.1);
     border-color: var(--neon-yellow);
     box-shadow: 0 0 10px var(--neon-yellow);
     z-index: 10;
 }
         
-.deck-card.selected {
+.poker-calculator-wrapper .deck-card.selected {
     background: var(--bg-medium);
     border-color: rgba(255, 255, 255, 0.1);
     cursor: default;
 }
         
-.deck-card.selected:hover {
+.poker-calculator-wrapper .deck-card.selected:hover {
     transform: none;
     border-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
         
-.deck-card.selected .card-face {
+.poker-calculator-wrapper .deck-card.selected .card-face {
     display: none;
 }
         
-.deck-card.selected::after {
+.poker-calculator-wrapper .deck-card.selected::after {
     content: "✕";
     font-size: 1.8rem;
     color: rgba(255, 255, 255, 0.3);
@@ -447,13 +451,13 @@ h1 {
     transform: translate(-50%, -50%);
 }
         
-.deck-card.red { color: #ff5555; }
-.deck-card.black { color: #000000; }
+.poker-calculator-wrapper .deck-card.red { color: #ff5555; }
+.poker-calculator-wrapper .deck-card.black { color: #000000; }
         
-.card-value { font-size: 1.2rem; margin-bottom: 3px; }
-.card-suit-large { font-size: 1.6rem; margin-top: 3px; }
+.poker-calculator-wrapper .card-value { font-size: 1.2rem; margin-bottom: 3px; }
+.poker-calculator-wrapper .card-suit-large { font-size: 1.6rem; margin-top: 3px; }
         
-.controls {
+.poker-calculator-wrapper .controls {
     display: flex;
     gap: 15px;
     margin-top: 25px;
@@ -461,7 +465,7 @@ h1 {
     flex-wrap: wrap;
 }
         
-.btn {
+.poker-calculator-wrapper .btn {
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
@@ -474,45 +478,45 @@ h1 {
     overflow: hidden;
 }
         
-.btn-primary {
+.poker-calculator-wrapper .btn-primary {
     background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
     color: white;
 }
         
-.btn-primary:hover {
+.poker-calculator-wrapper .btn-primary:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(255, 102, 204, 0.4);
 }
         
-.btn-primary:disabled {
+.poker-calculator-wrapper .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
         
-.btn-primary:disabled:hover {
+.poker-calculator-wrapper .btn-primary:disabled:hover {
     transform: none;
     box-shadow: none;
 }
         
-.btn-secondary {
+.poker-calculator-wrapper .btn-secondary {
     background: rgba(0, 204, 255, 0.1);
     color: var(--neon-teal);
     border: 2px solid var(--neon-teal);
 }
         
-.btn-secondary:hover {
+.poker-calculator-wrapper .btn-secondary:hover {
     background: var(--neon-teal);
     color: white;
 }
 
-/* АНИМАЦИЯ КНОПОК - ОДИНАКОВАЯ ДЛЯ ВСЕХ */
-.btn:active {
+/* АНИМАЦИЯ КНОПОК */
+.poker-calculator-wrapper .btn:active {
     transform: scale(0.95);
 }
 
-.btn.clicked {
+.poker-calculator-wrapper .btn.clicked {
     animation: button-pulse 0.3s ease-in-out;
 }
 
@@ -529,17 +533,16 @@ h1 {
     }
 }
 
-/* КНОПКА ОЧИСТКИ - такой же эффект как у РАССЧИТАТЬ */
-#clearAllBtn:active {
+.poker-calculator-wrapper #clearAllBtn:active {
     transform: scale(0.95);
 }
 
-#clearAllBtn.clicked {
+.poker-calculator-wrapper #clearAllBtn.clicked {
     animation: button-pulse 0.3s ease-in-out;
 }
         
-/* === ПАНЕЛЬ РЕЗУЛЬТАТОВ (ВСЕГДА ВИДИМА) === */
-.results-panel {
+/* === ПАНЕЛЬ РЕЗУЛЬТАТОВ === */
+.poker-calculator-wrapper .results-panel {
     margin-top: 30px;
     display: block !important;
     position: relative;
@@ -550,14 +553,14 @@ h1 {
     box-shadow: var(--shadow);
 }
         
-.results-grid {
+.poker-calculator-wrapper .results-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin-bottom: 10px;
 }
         
-.result-card {
+.poker-calculator-wrapper .result-card {
     background: var(--bg-medium);
     border-radius: 12px;
     padding: 20px;
@@ -571,11 +574,11 @@ h1 {
     position: relative;
 }
         
-.result-card:nth-child(1) { border-color: var(--neon-teal); }
-.result-card:nth-child(2) { border-color: var(--neon-pink); }
-.result-card:nth-child(3) { border-color: var(--neon-blue); }
+.poker-calculator-wrapper .result-card:nth-child(1) { border-color: var(--neon-teal); }
+.poker-calculator-wrapper .result-card:nth-child(2) { border-color: var(--neon-pink); }
+.poker-calculator-wrapper .result-card:nth-child(3) { border-color: var(--neon-blue); }
         
-.result-percent {
+.poker-calculator-wrapper .result-percent {
     font-size: 3.5rem;
     font-weight: bold;
     margin: 15px 0;
@@ -586,18 +589,18 @@ h1 {
     transition: color 0.1s ease-out;
 }
         
-.result-card:nth-child(1) .result-percent { color: var(--neon-teal); }
-.result-card:nth-child(2) .result-percent { color: var(--neon-pink); }
-.result-card:nth-child(3) .result-percent { color: var(--neon-blue); }
+.poker-calculator-wrapper .result-card:nth-child(1) .result-percent { color: var(--neon-teal); }
+.poker-calculator-wrapper .result-card:nth-child(2) .result-percent { color: var(--neon-pink); }
+.poker-calculator-wrapper .result-card:nth-child(3) .result-percent { color: var(--neon-blue); }
         
-.drop-hint {
+.poker-calculator-wrapper .drop-hint {
     color: var(--neon-green);
     font-size: 0.9rem;
     text-align: center;
     margin-top: 5px;
 }
         
-.progress-container {
+.poker-calculator-wrapper .progress-container {
     margin-top: 20px;
     background: var(--bg-medium);
     padding: 10px 15px;
@@ -606,7 +609,7 @@ h1 {
     display: block;
 }
         
-.progress-bar {
+.poker-calculator-wrapper .progress-bar {
     height: 20px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
@@ -614,14 +617,14 @@ h1 {
     margin-top: 10px;
 }
         
-.progress-fill {
+.poker-calculator-wrapper .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--neon-green), var(--neon-teal));
     width: 0%;
     transition: width 0.3s;
 }
         
-.card-face {
+.poker-calculator-wrapper .card-face {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -630,12 +633,12 @@ h1 {
     height: 100%;
 }
         
-.slot-empty {
+.poker-calculator-wrapper .slot-empty {
     font-size: 2.5rem;
     color: rgba(255, 255, 255, 0.4);
 }
 
-.hand-description {
+.poker-calculator-wrapper .hand-description {
     color: var(--text-medium);
     font-size: 0.95rem;
     min-height: 40px;
@@ -646,12 +649,8 @@ h1 {
     line-height: 1.3;
 }
 
-/* ============================================== */
-/* ИНДИКАТОР АКТИВНОГО БЛОКА (для всех языков) */
-/* ============================================== */
-/* .section-title уже имеет position: relative выше */
-
-.section-title::before {
+/* ИНДИКАТОР АКТИВНОГО БЛОКА */
+.poker-calculator-wrapper .section-title::before {
     content: "";
     position: absolute;
     right: -5px;
@@ -667,34 +666,31 @@ h1 {
     z-index: 5;
 }
 
-.hand-section.active .section-title::before,
-.board-section.active .section-title::before {
+.poker-calculator-wrapper .hand-section.active .section-title::before,
+.poker-calculator-wrapper .board-section.active .section-title::before {
     background-color: #ff3366;
     box-shadow: 0 0 10px #ff3366, 0 0 20px rgba(255, 51, 102, 0.5);
     border-color: rgba(255, 255, 255, 0.9);
     opacity: 1;
 }
 
-/* Подсветка при drag-over (только если есть свободные места) - ОДИНАКОВАЯ ТЕНЬ */
-.hand-section.drag-over:not(.drag-over-no-space) {
+/* Подсветка при drag-over */
+.poker-calculator-wrapper .hand-section.drag-over:not(.drag-over-no-space) {
     border-color: var(--neon-teal) !important;
     box-shadow: 0 0 20px var(--neon-teal), 0 0 20px rgba(0, 240, 255, 0.5) !important;
 }
 
-.board-section.drag-over:not(.drag-over-no-space) {
+.poker-calculator-wrapper .board-section.drag-over:not(.drag-over-no-space) {
     border-color: var(--neon-pink) !important;
     box-shadow: 0 0 20px var(--neon-pink), 0 0 20px rgba(255, 95, 210, 0.5) !important;
 }
 
-/* Колода подсвечивается при drag-over карты из слота */
-#deck.drag-over:not(.drag-over-no-space) {
+.poker-calculator-wrapper #deck.drag-over:not(.drag-over-no-space) {
     border-color: var(--neon-purple) !important;
     box-shadow: 0 0 20px var(--neon-purple), 0 0 20px rgba(179, 107, 255, 0.5) !important;
 }
 
-/* ============================================== */
-/* АНИМАЦИЯ ПАНЕЛИ РЕЗУЛЬТАТОВ - ТОЛЬКО ДЛЯ РАСЧЕТА */
-/* ============================================== */
+/* АНИМАЦИЯ ПАНЕЛИ РЕЗУЛЬТАТОВ */
 @keyframes quick-glow {
     0% {
         border-color: var(--neon-teal);
@@ -713,14 +709,12 @@ h1 {
     }
 }
 
-.results-panel.fresh-result {
+.poker-calculator-wrapper .results-panel.fresh-result {
     animation: quick-glow 0.25s ease-in-out;
 }
 
-/* ============================================== */
 /* ДОПОЛНИТЕЛЬНЫЕ АНИМАЦИИ ДЛЯ КНОПОК */
-/* ============================================== */
-.btn::after {
+.poker-calculator-wrapper .btn::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -734,7 +728,7 @@ h1 {
     transform-origin: 50% 50%;
 }
 
-.btn:active::after {
+.poker-calculator-wrapper .btn:active::after {
     animation: ripple 0.6s ease-out;
 }
 
@@ -749,18 +743,16 @@ h1 {
     }
 }
 
-/* ============================================== */
 /* АДАПТИВНОСТЬ */
-/* ============================================== */
 @media (max-width: 768px) {
-    .section-title::before {
+    .poker-calculator-wrapper .section-title::before {
         width: 12px;
         height: 12px;
         right: -4px;
         top: -4px;
     }
     
-    .language-switcher {
+    .poker-calculator-wrapper .language-switcher {
         position: relative;
         top: 0;
         right: 0;
@@ -769,177 +761,179 @@ h1 {
         background: rgba(0, 0, 0, 0.3);
     }
     
-    .lang-btn {
+    .poker-calculator-wrapper .lang-btn {
         width: 40px;
         height: 30px;
     }
     
-    .lang-flag {
+    .poker-calculator-wrapper .lang-flag {
         width: 24px;
         height: 18px;
     }
     
-    .lang-btn::after {
+    .poker-calculator-wrapper .lang-btn::after {
         font-size: 0.7rem;
         bottom: -25px;
     }
     
-    h1 {
+    .poker-calculator-wrapper h1 {
         font-size: 2.2rem;
         margin-top: 10px;
     }
     
-    .panel {
+    .poker-calculator-wrapper .panel {
         padding: 20px 15px;
     }
     
-    .hand-section, .board-section {
+    .poker-calculator-wrapper .hand-section, 
+    .poker-calculator-wrapper .board-section {
         min-height: 180px;
         padding: 12px;
         margin-bottom: 10px;
     }
     
-    .card-slot {
+    .poker-calculator-wrapper .card-slot {
         width: 70px;
         height: 100px;
         font-size: 2rem;
     }
     
-    .real-card {
+    .poker-calculator-wrapper .real-card {
         width: 70px;
         height: 100px;
     }
     
-    .card-content {
+    .poker-calculator-wrapper .card-content {
         font-size: 2rem;
     }
     
-    .deck-grid {
+    .poker-calculator-wrapper .deck-grid {
         grid-template-columns: repeat(7, 1fr);
         gap: 4px;
         padding: 10px;
     }
     
-    .deck-card {
+    .poker-calculator-wrapper .deck-card {
         aspect-ratio: 3/4;
     }
     
-    .card-value {
+    .poker-calculator-wrapper .card-value {
         font-size: 1rem;
     }
     
-    .card-suit-large {
+    .poker-calculator-wrapper .card-suit-large {
         font-size: 1.3rem;
     }
     
-    .btn {
+    .poker-calculator-wrapper .btn {
         min-width: 150px;
         padding: 10px 20px;
         font-size: 1rem;
     }
     
-    .result-percent {
+    .poker-calculator-wrapper .result-percent {
         font-size: 2.8rem;
     }
     
-    .results-grid {
+    .poker-calculator-wrapper .results-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
     
-    .result-card {
+    .poker-calculator-wrapper .result-card {
         min-height: 140px;
         padding: 15px;
     }
     
-    .opponent-pill {
+    .poker-calculator-wrapper .opponent-pill {
         width: 40px;
         height: 40px;
         font-size: 1.1rem;
     }
     
-    .controls {
+    .poker-calculator-wrapper .controls {
         gap: 10px;
     }
 }
 
 /* Для очень маленьких экранов */
 @media (max-width: 480px) {
-    .section-title::before {
+    .poker-calculator-wrapper .section-title::before {
         width: 10px;
         height: 10px;
         right: -3px;
         top: -3px;
     }
     
-    .language-switcher {
+    .poker-calculator-wrapper .language-switcher {
         gap: 4px;
         padding: 5px 6px;
     }
     
-    .lang-btn {
+    .poker-calculator-wrapper .lang-btn {
         width: 36px;
         height: 27px;
     }
     
-    .lang-flag {
+    .poker-calculator-wrapper .lang-flag {
         width: 22px;
         height: 16px;
     }
     
-    .lang-btn::after {
+    .poker-calculator-wrapper .lang-btn::after {
         font-size: 0.6rem;
         bottom: -22px;
         padding: 3px 6px;
     }
     
-    .panel {
+    .poker-calculator-wrapper .panel {
         padding: 15px;
     }
     
-    .hand-section, .board-section {
+    .poker-calculator-wrapper .hand-section, 
+    .poker-calculator-wrapper .board-section {
         min-height: 160px;
         padding: 10px;
     }
     
-    .card-slot {
+    .poker-calculator-wrapper .card-slot {
         width: 60px;
         height: 85px;
         font-size: 1.8rem;
     }
     
-    .real-card {
+    .poker-calculator-wrapper .real-card {
         width: 60px;
         height: 85px;
     }
     
-    .card-content {
+    .poker-calculator-wrapper .card-content {
         font-size: 1.8rem;
     }
     
-    .btn {
+    .poker-calculator-wrapper .btn {
         min-width: 130px;
         padding: 8px 15px;
         font-size: 0.9rem;
     }
     
-    .result-percent {
+    .poker-calculator-wrapper .result-percent {
         font-size: 2.5rem;
     }
     
-    .result-card {
+    .poker-calculator-wrapper .result-card {
         min-height: 130px;
     }
     
-    .deck-grid {
+    .poker-calculator-wrapper .deck-grid {
         grid-template-columns: repeat(4, 1fr);
     }
     
-    .opponent-pills {
+    .poker-calculator-wrapper .opponent-pills {
         gap: 5px;
     }
     
-    .opponent-pill {
+    .poker-calculator-wrapper .opponent-pill {
         width: 35px;
         height: 35px;
         font-size: 1rem;
