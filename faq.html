@@ -10,7 +10,6 @@
 </head>
 <body>
     <div class="site-container">
-        <!-- Хедер с меню -->
         <header class="site-header">
             <div class="header-content">
                 <div class="logo">
@@ -23,7 +22,6 @@
                     </div>
                 </div>
                 
-                <!-- Основная навигация -->
                 <nav class="main-nav">
                     <ul class="nav-list">
                         <li><a href="index.html" class="nav-link" data-i18n="navHome"><i class="fas fa-home"></i> Главная</a></li>
@@ -34,7 +32,6 @@
                     </ul>
                 </nav>
                 
-                <!-- Переключатель языка -->
                 <div class="language-switcher-header">
                     <div class="lang-btn" data-lang="ru" title="Русский">
                         <img src="images/flags/ru.png" alt="RU" class="lang-flag">
@@ -49,135 +46,46 @@
             </div>
         </header>
 
-        <!-- Основное содержимое -->
-        <main class="faq-main">
-            <div class="faq-header">
-                <h1><i class="fas fa-question-circle"></i> <span data-i18n="faqTitle">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</span></h1>
+        <main class="main-content">
+            <div class="page-header">
+                <h1 data-i18n="faqTitle">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h1>
                 <p data-i18n="faqSubtitle">Ответы на популярные вопросы о GTA Casino Tools</p>
             </div>
 
             <div class="faq-container">
-                <!-- Основной вопрос -->
-                <div class="faq-item faq-item-main active">
-                    <div class="faq-question">
-                        <h3><i class="fas fa-users"></i> <span data-i18n="faqQuestion1">Для кого предназначен этот сайт?</span></h3>
-                        <button class="faq-toggle">
-                            <i class="fas fa-chevron-up"></i>
-                        </button>
-                    </div>
-                    <div class="faq-answer">
-                        <p data-i18n="faqAnswer1">GTA Casino Tools предназначен для людей, которые интересуются азартными играми с аналитической точки зрения.</p>
-                        
-                        <ul class="faq-list">
-                            <li><i class="fas fa-chart-pie"></i> <strong>Игрокам в покер</strong> — рассчитывать шансы победы в различных ситуациях</li>
-                            <li><i class="fas fa-dice"></i> <strong>Любителям рулетки</strong> — анализировать статистику и паттерны</li>
-                            <li><i class="fas fa-search-dollar"></i> <strong>Арбитражным трейдерам</strong> — находить выгодные вилки</li>
-                            <li><i class="fas fa-graduation-cap"></i> <strong>Студентам и исследователям</strong> — изучать теорию вероятностей</li>
-                        </ul>
-                        
-                        <div class="faq-note">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <p><strong>Важно:</strong> Все инструменты предоставляются в образовательных целях. Мы не призываем к азартным играм и рекомендуем ответственный подход.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Дополнительные вопросы -->
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3><i class="fas fa-calculator"></i> <span data-i18n="faqQuestion2">Как работает покер-калькулятор?</span></h3>
-                        <button class="faq-toggle">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Покер-калькулятор использует метод Монте-Карло для симуляции 25,000 случайных раздач и расчета вероятности победы вашей руки против указанного количества оппонентов.</p>
-                    </div>
+                    <h3 data-i18n="faqQuestion1">Для кого предназначен этот сайт?</h3>
+                    <p data-i18n="faqAnswer1">GTA Casino Tools предназначен для людей, которые интересуются азартными играми с аналитической точки зрения.</p>
                 </div>
 
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3><i class="fas fa-language"></i> <span data-i18n="faqQuestion3">На каких языках доступен сайт?</span></h3>
-                        <button class="faq-toggle">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Сайт поддерживает три языка: русский, английский и испанский. Переключение языка доступно в правом верхнем углу каждой страницы.</p>
-                    </div>
+                    <h3 data-i18n="faqQuestion2">Как работает покер-калькулятор?</h3>
+                    <p>Покер-калькулятор использует метод Монте-Карло для симуляции 25,000 случайных раздач и расчета вероятности победы вашей руки против указанного количества оппонентов.</p>
                 </div>
 
                 <div class="faq-item">
-                    <div class="faq-question">
-                        <h3><i class="fas fa-mobile-alt"></i> <span data-i18n="faqQuestion4">Адаптирован ли сайт для мобильных устройств?</span></h3>
-                        <button class="faq-toggle">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Да, все инструменты полностью адаптированы для использования на смартфонах и планшетах.</p>
-                    </div>
+                    <h3 data-i18n="faqQuestion3">На каких языках доступен сайт?</h3>
+                    <p>Сайт поддерживает три языка: русский, английский и испанский. Переключение языка доступно в правом верхнем углу каждой страницы.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 data-i18n="faqQuestion4">Адаптирован ли сайт для мобильных устройств?</h3>
+                    <p>Да, все инструменты полностью адаптированы для использования на смартфонах и планшетах.</p>
                 </div>
             </div>
 
-            <!-- Связь -->
             <div class="faq-contact">
-                <h3><i class="fas fa-envelope"></i> <span data-i18n="faqContact">Не нашли ответ на свой вопрос?</span></h3>
+                <h3 data-i18n="faqContact">Не нашли ответ на свой вопрос?</h3>
                 <p>Если у вас есть другие вопросы или предложения по улучшению инструментов, свяжитесь с нами через репозиторий GitHub проекта.</p>
             </div>
         </main>
 
-        <!-- Футер -->
         <footer class="site-footer">
             <p data-i18n="footerText">GTA Casino Tools © 2024 | FAQ</p>
-            <p class="footer-note">Ответственность за использование инструментов лежит на пользователе.</p>
         </footer>
     </div>
 
-    <!-- Скрипты -->
     <script src="js/language.js"></script>
     <script src="js/main.js"></script>
-    
-    <script>
-        // FAQ аккордеон
-        document.addEventListener('DOMContentLoaded', function() {
-            const faqToggles = document.querySelectorAll('.faq-toggle');
-            
-            faqToggles.forEach(toggle => {
-                toggle.addEventListener('click', function() {
-                    const faqItem = this.closest('.faq-item');
-                    const answer = faqItem.querySelector('.faq-answer');
-                    
-                    // Закрываем все остальные
-                    document.querySelectorAll('.faq-item').forEach(item => {
-                        if (item !== faqItem) {
-                            item.classList.remove('active');
-                            const otherAnswer = item.querySelector('.faq-answer');
-                            otherAnswer.style.maxHeight = '0';
-                            item.querySelector('.faq-toggle').innerHTML = '<i class="fas fa-chevron-down"></i>';
-                        }
-                    });
-                    
-                    // Переключаем текущий
-                    faqItem.classList.toggle('active');
-                    
-                    if (faqItem.classList.contains('active')) {
-                        answer.style.maxHeight = answer.scrollHeight + 'px';
-                        this.innerHTML = '<i class="fas fa-chevron-up"></i>';
-                    } else {
-                        answer.style.maxHeight = '0';
-                        this.innerHTML = '<i class="fas fa-chevron-down"></i>';
-                    }
-                });
-            });
-            
-            // Открываем первый вопрос по умолчанию
-            const firstFaq = document.querySelector('.faq-item-main');
-            if (firstFaq) {
-                const firstAnswer = firstFaq.querySelector('.faq-answer');
-                firstAnswer.style.maxHeight = firstAnswer.scrollHeight + 'px';
-            }
-        });
-    </script>
 </body>
 </html>
