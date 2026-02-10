@@ -693,9 +693,9 @@ h1 {
 }
 
 /* ============================================== */
-/* АНИМАЦИЯ ПАНЕЛИ РЕЗУЛЬТАТОВ - ОЧЕНЬ БЫСТРЫЙ МОРГ */
+/* АНИМАЦИЯ ПАНЕЛИ РЕЗУЛЬТАТОВ - ТОЛЬКО ДЛЯ РАСЧЕТА */
 /* ============================================== */
-@keyframes instant-quick-glow {
+@keyframes quick-glow {
     0% {
         border-color: var(--neon-teal);
         box-shadow: var(--shadow);
@@ -714,24 +714,7 @@ h1 {
 }
 
 .results-panel.fresh-result {
-    animation: instant-quick-glow 0.25s ease-in-out;
-    animation-fill-mode: forwards;
-}
-
-/* Анимация для процентов - они появляются мгновенно */
-.result-percent.updated {
-    animation: text-pop 0.15s ease-out;
-}
-
-@keyframes text-pop {
-    0% {
-        transform: scale(0.95);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+    animation: quick-glow 0.25s ease-in-out;
 }
 
 /* ============================================== */
