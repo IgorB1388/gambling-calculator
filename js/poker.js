@@ -889,19 +889,25 @@ let sum = heroRounded + oppRounded + tieRounded;
 let diff = 100 - sum;
 
 if (Math.abs(diff) > 0.001) {
-    // Находим максимальное значение и корректируем его
+    // Находим максимальное значение
     const maxVal = Math.max(heroRounded, oppRounded, tieRounded);
+    let adjusted = false;
     
-    if (maxVal === heroRounded && heroRounded + diff >= 0) {
-        heroRounded = Math.round((heroRounded + diff) * 10) / 10;
-    } else if (maxVal === oppRounded && oppRounded + diff >= 0) {
-        oppRounded = Math.round((oppRounded + diff) * 10) / 10;
-    } else if (maxVal === tieRounded && tieRounded + diff >= 0) {
-        tieRounded = Math.round((tieRounded + diff) * 10) / 10;
-    } else {
-        // Если максимум нельзя корректировать, корректируем героя
-        heroRounded = Math.round((heroRounded + diff) * 10) / 10;
-        heroRounded = Math.max(0, heroRounded);
+    // Пробуем корректировать максимум (даже если он 0)
+    if (maxVal === heroRounded) {
+        heroRounded = Math.round(Math.max(0, heroRounded + diff) * 10) / 10;
+        adjusted = true;
+    } else if (maxVal === oppRounded) {
+        oppRounded = Math.round(Math.max(0, oppRounded + diff) * 10) / 10;
+        adjusted = true;
+    } else if (maxVal === tieRounded) {
+        tieRounded = Math.round(Math.max(0, tieRounded + diff) * 10) / 10;
+        adjusted = true;
+    }
+    
+    // Если не получилось скорректировать максимум
+    if (!adjusted) {
+        heroRounded = Math.round(Math.max(0, heroRounded + diff) * 10) / 10;
     }
 }
 
@@ -910,83 +916,13 @@ heroRounded = Math.max(0, heroRounded);
 oppRounded = Math.max(0, oppRounded);
 tieRounded = Math.max(0, tieRounded);
 
-// Финальная сумма
+// Финальная проверка суммы
 sum = heroRounded + oppRounded + tieRounded;
 if (Math.abs(100 - sum) > 0.1) {
-    // Если все еще не 100%, просто округляем героя
-    heroRounded = Math.round((heroRounded + (100 - sum)) * 10) / 10;
-    heroRounded = Math.max(0, heroRounded);
+    // Добавляем остаток к герою
+    heroRounded = Math.round(Math.max(0, heroRounded + (100 - sum)) * 10) / 10;
 }
 
 document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
 document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
 document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
-    // Добавляем классы для анимации процентов
-    const resultPercents = document.querySelectorAll('.result-percent');
-    resultPercents.forEach(p => p.classList.add('updated'));
-    
-    // Моргание панели результатов - СРАЗУ
-    const resultsPanel = document.querySelector('.results-panel');
-    resultsPanel.classList.remove('fresh-result');
-    // Принудительный reflow для сброса анимации
-    void resultsPanel.offsetWidth;
-    resultsPanel.classList.add('fresh-result');
-    
-    hasCalculatedResults = true;
-    
-    // Убираем класс анимации процентов после завершения
-    setTimeout(() => {
-        resultPercents.forEach(p => p.classList.remove('updated'));
-        resultsPanel.classList.remove('fresh-result');
-    }, 300);
-
-    isCalculating = false;
-    updateStatus();
-}
-
-function clearAll() {
-    // Анимация кнопки очистки
-    const clearBtn = document.getElementById('clearAllBtn');
-    clearBtn.classList.add('clicked');
-    setTimeout(() => {
-        clearBtn.classList.remove('clicked');
-    }, 300);
-    
-    // Очистка карт
-    selectedCards.clear();
-    usedCards.clear();
-    updateCardDisplay();
-    
-    // Сброс результатов БЕЗ анимации
-    document.getElementById('resultHero').textContent = '—';
-    document.getElementById('resultOpponent').textContent = '—';
-    document.getElementById('resultTie').textContent = '—';
-    hasCalculatedResults = false;
-    
-    updateStatus();
-    checkBoardValidity();
-    checkHandValidity();
-    selectHandBlock();
-}
-
-window.getHandCardsCount = getHandCardsCount;
-window.getBoardCardsCount = getBoardCardsCount;
-window.checkHandValidity = checkHandValidity;
-window.checkBoardValidity = checkBoardValidity;
-window.hasFreeSlotsInSection = hasFreeSlotsInSection;
-window.activateBlockBySlotId = activateBlockBySlotId;
-
-document.addEventListener('keydown', e => {
-    switch(e.key) {
-        case 'Escape': clearAll(); break;
-        case '1': selectHandBlock(); break;
-        case '2': selectBoardBlock(); break;
-        case 'Enter': case ' ':
-            if (!document.getElementById('calculateBtn').disabled) calculateEquity();
-            break;
-        default:
-            if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
-    }
-
-});
-
