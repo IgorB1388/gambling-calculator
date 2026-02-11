@@ -1,6 +1,3 @@
-/* base.css - ТЕМА "НЕОН" (старый покерный стиль) */
-/* ТОЛЬКО ЦВЕТА, ФОНЫ, ТЕНИ, ГРАДИЕНТЫ */
-
 :root {
     /* === NEON ACCENTS === */
     --neon-teal:   #00f0ff;
@@ -742,3 +739,4 @@ body {
 .results-panel.fresh-result {
     animation: quick-glow 0.25s ease-in-out;
 }
+
