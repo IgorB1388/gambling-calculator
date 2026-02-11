@@ -73,9 +73,7 @@ class ThemeManager {
     }
     
     updateBodyClass(theme) {
-        // Удаляем старые классы тем
         document.body.classList.remove(...this.themes);
-        // Добавляем новый класс
         document.body.classList.add(theme);
     }
     
@@ -90,12 +88,7 @@ class ThemeManager {
     
     addThemeSwitcherToHeader() {
         const header = document.querySelector('.header-content');
-        if (!header) {
-            console.log('Header not found, waiting...');
-            return;
-        }
-        
-        // Проверяем, нет ли уже переключателя
+        if (!header) return;
         if (document.querySelector('.theme-switcher')) return;
         
         const themeSwitcher = document.createElement('div');
@@ -115,57 +108,37 @@ class ThemeManager {
             </button>
         `;
         
-        // Вставляем после языкового переключателя
         const langSwitcher = document.querySelector('.language-switcher-header');
         if (langSwitcher) {
             langSwitcher.parentNode.insertBefore(themeSwitcher, langSwitcher.nextSibling);
         } else {
-            // Если нет языкового переключателя, добавляем в конец header
             header.appendChild(themeSwitcher);
         }
         
-        // Добавляем обработчики
         themeSwitcher.querySelectorAll('.theme-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                const theme = btn.dataset.theme;
-                this.loadThemeCSS(theme);
+                this.loadThemeCSS(btn.dataset.theme);
             });
         });
-        
-        console.log('Theme switcher added to header');
     }
     
     init() {
-        console.log('Initializing Theme Manager...');
-        
-        // Ждем полной загрузки DOM
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(() => {
-                    this.addThemeSwitcherToHeader();
-                    this.loadThemeCSS(this.currentTheme);
-                }, 100);
-            });
-        } else {
-            setTimeout(() => {
                 this.addThemeSwitcherToHeader();
                 this.loadThemeCSS(this.currentTheme);
-            }, 100);
+            });
+        } else {
+            this.addThemeSwitcherToHeader();
+            this.loadThemeCSS(this.currentTheme);
         }
         
-        // Наблюдатель для динамически добавляемого контента
-        const observer = new MutationObserver(() => {
-            this.addThemeSwitcherToHeader();
-        });
-        
-        observer.observe(document.body, { childList: true, subtree: true });
+        new MutationObserver(() => this.addThemeSwitcherToHeader())
+            .observe(document.body, { childList: true, subtree: true });
     }
 }
 
-// Единая точка инициализации
 const themeManager = new ThemeManager();
 themeManager.init();
 window.themeManager = themeManager;
-
-console.log('Theme Manager ready');
