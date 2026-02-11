@@ -1,14 +1,15 @@
-// theme-switcher.js - Система смены тем GTA Casino Tools
+// theme-switcher.js - Система смены тем
 
 class ThemeManager {
     constructor() {
-        this.themes = ['vice-city', 'san-andreas', 'gta4'];
+        this.themes = ['base', 'vice-city', 'san-andreas', 'gta4'];
         this.themeNames = {
+            'base': 'Неон (базовый)',
             'vice-city': 'Vice City',
             'san-andreas': 'San Andreas', 
             'gta4': 'GTA 4'
         };
-        this.currentTheme = this.getSavedTheme() || 'vice-city';
+        this.currentTheme = this.getSavedTheme() || 'base';
         this.themeLink = null;
     }
     
@@ -23,20 +24,25 @@ class ThemeManager {
     loadThemeCSS(theme) {
         console.log(`Загружаем тему: ${theme}`);
         
-        // Удаляем старую тему, если есть
+        // Удаляем старую тему, если есть (кроме base)
         const oldThemeLink = document.getElementById('theme-style');
-        if (oldThemeLink) {
+        if (oldThemeLink && theme !== 'base') {
             oldThemeLink.remove();
         }
         
-        // Создаем новую ссылку на CSS темы
-        const link = document.createElement('link');
-        link.id = 'theme-style';
-        link.rel = 'stylesheet';
-        link.href = `${theme}-theme.css`;
-        document.head.appendChild(link);
+        // Если выбрана базовая тема - не загружаем дополнительный CSS
+        if (theme === 'base') {
+            this.removeThemeCSS();
+        } else {
+            // Создаем новую ссылку на CSS темы
+            const link = document.createElement('link');
+            link.id = 'theme-style';
+            link.rel = 'stylesheet';
+            link.href = `${theme}-theme.css`;
+            document.head.appendChild(link);
+            this.themeLink = link;
+        }
         
-        this.themeLink = link;
         this.currentTheme = theme;
         this.saveTheme(theme);
         
@@ -50,6 +56,14 @@ class ThemeManager {
         document.dispatchEvent(new CustomEvent('themeChanged', {
             detail: { theme: theme }
         }));
+    }
+    
+    removeThemeCSS() {
+        const themeLink = document.getElementById('theme-style');
+        if (themeLink) {
+            themeLink.remove();
+        }
+        this.themeLink = null;
     }
     
     updateBodyClass(theme) {
@@ -79,7 +93,10 @@ class ThemeManager {
         const themeSwitcher = document.createElement('div');
         themeSwitcher.className = 'theme-switcher';
         themeSwitcher.innerHTML = `
-            <button class="theme-btn active" data-theme="vice-city" title="Vice City">
+            <button class="theme-btn active" data-theme="base" title="Неон (базовый)">
+                <i class="fas fa-star"></i>
+            </button>
+            <button class="theme-btn" data-theme="vice-city" title="Vice City">
                 <i class="fas fa-palette"></i>
             </button>
             <button class="theme-btn" data-theme="san-andreas" title="San Andreas">
@@ -95,7 +112,6 @@ class ThemeManager {
         if (langSwitcher) {
             langSwitcher.parentNode.insertBefore(themeSwitcher, langSwitcher.nextSibling);
         } else {
-            // Или в конец header-content
             header.appendChild(themeSwitcher);
         }
         
@@ -125,11 +141,10 @@ class ThemeManager {
     }
 }
 
-// Инициализация при загрузке
+// Инициализация
 document.addEventListener('DOMContentLoaded', () => {
     const themeManager = new ThemeManager();
     themeManager.init();
     window.themeManager = themeManager;
-    
-    console.log('Theme Manager initialized');
+    console.log('Theme Manager initialized with 4 themes');
 });
