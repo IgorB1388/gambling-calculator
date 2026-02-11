@@ -8,7 +8,7 @@
 }
 
 :root {
-    /* === NEON ACCENTS (как в старом покере) === */
+    /* === NEON ACCENTS === */
     --neon-teal:   #00f0ff;
     --neon-pink:   #ff5fd2;
     --neon-blue:   #6aa8ff;
@@ -26,17 +26,15 @@
     --text-light:  #ffffff;
     --text-medium: #ccccff;
     
-    /* === БАЗОВЫЕ ПЕРЕМЕННЫЕ (для системы тем) === */
+    /* === БАЗОВЫЕ ПЕРЕМЕННЫЕ === */
     --primary-color: var(--neon-teal);
     --secondary-color: var(--neon-pink);
     --accent-color: var(--neon-yellow);
     --success-color: var(--neon-green);
     --border-color: rgba(255, 255, 255, 0.15);
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    --glow-intensity: 0 0 25px;
 }
 
-/* === ОСНОВНЫЕ СТИЛИ ТЕЛА (как в старом покере) === */
 body {
     background: linear-gradient(180deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
     min-height: 100vh;
@@ -44,7 +42,7 @@ body {
     line-height: 1.6;
 }
 
-/* === ОБЩИЙ КОНТЕЙНЕР (новое для многостраничного сайта) === */
+/* === ОБЩИЙ КОНТЕЙНЕР === */
 .site-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -54,7 +52,7 @@ body {
     flex-direction: column;
 }
 
-/* === ШАПКА САЙТА (адаптированная из старого покера) === */
+/* === ШАПКА === */
 .site-header {
     background: var(--panel-bg);
     border-radius: 20px;
@@ -66,8 +64,8 @@ body {
     overflow: hidden;
 }
 
-/* Сканирующая линия (как в старом покере) */
-.site-header::before {
+/* Сканирующая линия (только для базовой темы) */
+body.base .site-header::before {
     content: '';
     position: absolute;
     top: 0;
@@ -88,7 +86,6 @@ body {
     100% { left: 100%; }
 }
 
-/* Содержимое шапки */
 .header-content {
     display: flex;
     align-items: center;
@@ -97,7 +94,7 @@ body {
     gap: 25px;
 }
 
-/* ЛОГОТИП (стиль как в старом покере) */
+/* === ЛОГОТИП === */
 .logo {
     display: flex;
     align-items: center;
@@ -116,7 +113,7 @@ body {
     font-size: 28px;
     color: white;
     box-shadow: 0 0 20px var(--neon-teal);
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    transition: all 0.6s;
 }
 
 .logo-icon:hover {
@@ -145,7 +142,7 @@ body {
     text-transform: uppercase;
 }
 
-/* ОСНОВНАЯ НАВИГАЦИЯ */
+/* === НАВИГАЦИЯ === */
 .main-nav {
     flex-grow: 1;
     display: flex;
@@ -161,7 +158,7 @@ body {
     padding: 10px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 15px;
-    border: 1px solid rgba(0, 102, 255, 0.3);
+    border: 1px solid rgba(0, 240, 255, 0.3);
 }
 
 .nav-link {
@@ -196,7 +193,7 @@ body {
     box-shadow: 0 0 20px var(--neon-teal);
 }
 
-/* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА */
+/* === ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА === */
 .language-switcher-header {
     display: flex;
     gap: 8px;
@@ -205,7 +202,6 @@ body {
     border-radius: 12px;
     border: 2px solid var(--neon-purple);
     backdrop-filter: blur(15px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(179, 107, 255, 0.3);
 }
 
 .lang-btn {
@@ -242,7 +238,7 @@ body {
     border-radius: 3px;
 }
 
-/* ПЕРЕКЛЮЧАТЕЛЬ ТЕМ (будет добавлен JS) */
+/* === ПЕРЕКЛЮЧАТЕЛЬ ТЕМ === */
 .theme-switcher {
     display: flex;
     gap: 10px;
@@ -278,13 +274,13 @@ body {
     box-shadow: 0 0 15px var(--neon-yellow);
 }
 
-/* ОСНОВНОЕ СОДЕРЖИМОЕ */
+/* === ОСНОВНОЕ СОДЕРЖИМОЕ === */
 .main-content {
     flex-grow: 1;
     margin-bottom: 40px;
 }
 
-/* ЗАГОЛОВКИ СТРАНИЦ */
+/* === ЗАГОЛОВКИ СТРАНИЦ === */
 .page-header {
     text-align: center;
     margin-bottom: 50px;
@@ -293,8 +289,6 @@ body {
     border-radius: 25px;
     border: 2px solid var(--neon-pink);
     box-shadow: var(--shadow), 0 0 40px rgba(255, 95, 210, 0.3);
-    position: relative;
-    overflow: hidden;
 }
 
 .page-header h1 {
@@ -303,7 +297,6 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 15px;
-    text-shadow: 0 0 20px rgba(255, 95, 210, 0.3);
 }
 
 .page-header p {
@@ -313,7 +306,7 @@ body {
     margin: 0 auto;
 }
 
-/* КАРТОЧКИ ИНСТРУМЕНТОВ (для главной) */
+/* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -360,7 +353,6 @@ body {
     transform: rotateY(180deg) scale(1.1);
 }
 
-/* Цвета для карточек */
 .tool-card[href*="poker.html"] {
     border-color: var(--neon-teal);
 }
@@ -397,7 +389,7 @@ body {
     flex-grow: 1;
 }
 
-/* ИНФО СЕКЦИЯ (главная) */
+/* === ИНФО СЕКЦИЯ === */
 .info-section {
     background: linear-gradient(135deg, rgba(42, 47, 74, 0.9), rgba(58, 63, 90, 0.9));
     border-radius: 25px;
@@ -419,7 +411,7 @@ body {
     font-size: 1.1rem;
 }
 
-/* FAQ (общие стили) */
+/* === FAQ === */
 .faq-container {
     background: linear-gradient(135deg, rgba(42, 47, 74, 0.95), rgba(58, 63, 90, 0.95));
     border-radius: 25px;
@@ -446,7 +438,7 @@ body {
     font-size: 1.1rem;
 }
 
-/* COMING SOON БЛОКИ */
+/* === COMING SOON === */
 .coming-soon-sa,
 .coming-soon-gta4 {
     background: linear-gradient(135deg, rgba(42, 47, 74, 0.95), rgba(58, 63, 90, 0.95));
@@ -470,10 +462,9 @@ body {
     font-size: 1.3rem;
     max-width: 700px;
     margin: 0 auto;
-    line-height: 1.6;
 }
 
-/* ФУТЕР */
+/* === ФУТЕР === */
 .site-footer {
     background: linear-gradient(135deg, rgba(42, 47, 74, 0.95), rgba(58, 63, 90, 0.95));
     border-radius: 20px;
@@ -488,84 +479,38 @@ body {
     font-size: 1.1rem;
 }
 
+/* === ОТКЛЮЧЕНИЕ ЧУЖИХ ЭФФЕКТОВ В БАЗОВОЙ ТЕМЕ === */
+body.base .site-header::after,
+body.base body::before,
+body.base body::after {
+    display: none !important;
+}
+
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 1024px) {
     .header-content {
         flex-direction: column;
         text-align: center;
     }
-    
-    .logo {
-        justify-content: center;
-    }
-    
-    .nav-list {
-        width: 100%;
-        justify-content: center;
-    }
+    .logo { justify-content: center; }
+    .nav-list { width: 100%; }
 }
 
 @media (max-width: 768px) {
-    .site-container {
-        padding: 15px;
-    }
-    
-    .page-header {
-        padding: 30px 20px;
-    }
-    
-    .page-header h1 {
-        font-size: 2rem;
-    }
-    
-    .tools-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
-    
-    .tool-card {
-        padding: 25px;
-        min-height: 250px;
-    }
-    
-    .tool-icon {
-        width: 75px;
-        height: 75px;
-        font-size: 30px;
-    }
-    
-    .nav-link {
-        padding: 10px 20px;
-        min-width: 100px;
-    }
-    
-    .info-section,
-    .faq-container,
-    .coming-soon-sa,
-    .coming-soon-gta4 {
-        padding: 25px 20px;
-    }
+    .site-container { padding: 15px; }
+    .page-header { padding: 30px 20px; }
+    .page-header h1 { font-size: 2rem; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .tool-card { padding: 25px; min-height: 250px; }
+    .tool-icon { width: 75px; height: 75px; font-size: 30px; }
+    .nav-link { padding: 10px 20px; min-width: 100px; }
 }
 
 @media (max-width: 480px) {
-    .nav-list {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .nav-link {
-        width: 200px;
-    }
-    
+    .nav-list { flex-direction: column; align-items: center; }
+    .nav-link { width: 200px; }
     .language-switcher-header,
-    .theme-switcher {
-        padding: 8px 10px;
-        gap: 6px;
-    }
-    
+    .theme-switcher { padding: 8px 10px; }
     .lang-btn,
-    .theme-btn {
-        width: 36px;
-        height: 36px;
-    }
+    .theme-btn { width: 36px; height: 36px; }
 }
