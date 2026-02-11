@@ -893,35 +893,50 @@ if (Math.abs(diff) > 0.001) {
     const maxVal = Math.max(heroRounded, oppRounded, tieRounded);
     let adjusted = false;
     
-    // Пробуем корректировать максимум (даже если он 0)
+    // Пробуем корректировать максимум
     if (maxVal === heroRounded) {
-        heroRounded = Math.round(Math.max(0, heroRounded + diff) * 10) / 10;
+        let newVal = heroRounded + diff;
+        newVal = Math.round(newVal * 10) / 10;
+        heroRounded = Math.max(0, newVal);
         adjusted = true;
     } else if (maxVal === oppRounded) {
-        oppRounded = Math.round(Math.max(0, oppRounded + diff) * 10) / 10;
+        let newVal = oppRounded + diff;
+        newVal = Math.round(newVal * 10) / 10;
+        oppRounded = Math.max(0, newVal);
         adjusted = true;
     } else if (maxVal === tieRounded) {
-        tieRounded = Math.round(Math.max(0, tieRounded + diff) * 10) / 10;
+        let newVal = tieRounded + diff;
+        newVal = Math.round(newVal * 10) / 10;
+        tieRounded = Math.max(0, newVal);
         adjusted = true;
     }
     
     // Если не получилось скорректировать максимум
     if (!adjusted) {
-        heroRounded = Math.round(Math.max(0, heroRounded + diff) * 10) / 10;
+        let newVal = heroRounded + diff;
+        newVal = Math.round(newVal * 10) / 10;
+        heroRounded = Math.max(0, newVal);
     }
 }
 
 // Финальная защита от отрицательных
-heroRounded = Math.max(0, heroRounded);
-oppRounded = Math.max(0, oppRounded);
-tieRounded = Math.max(0, tieRounded);
+heroRounded = Math.max(0, Math.round(heroRounded * 10) / 10);
+oppRounded = Math.max(0, Math.round(oppRounded * 10) / 10);
+tieRounded = Math.max(0, Math.round(tieRounded * 10) / 10);
 
 // Финальная проверка суммы
 sum = heroRounded + oppRounded + tieRounded;
 if (Math.abs(100 - sum) > 0.1) {
-    // Добавляем остаток к герою
-    heroRounded = Math.round(Math.max(0, heroRounded + (100 - sum)) * 10) / 10;
+    // Корректируем героя
+    let newVal = heroRounded + (100 - sum);
+    newVal = Math.round(newVal * 10) / 10;
+    heroRounded = Math.max(0, newVal);
 }
+
+// Финальное округление
+heroRounded = Math.round(heroRounded * 10) / 10;
+oppRounded = Math.round(oppRounded * 10) / 10;
+tieRounded = Math.round(tieRounded * 10) / 10;
 
 document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
 document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
