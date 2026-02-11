@@ -870,51 +870,52 @@ async function calculateEquity() {
         }
     }
     
-    const heroPercent = (heroTotal / SIMULATIONS) * 100;
+const heroPercent = (heroTotal / SIMULATIONS) * 100;
 const oppPercent = (oppTotal / SIMULATIONS) * 100;
 const tiePercent = (tieHands / SIMULATIONS) * 100;
 
+// Округляем до 1 знака
 let heroRounded = Math.round(heroPercent * 10) / 10;
 let oppRounded = Math.round(oppPercent * 10) / 10;
 let tieRounded = Math.round(tiePercent * 10) / 10;
 
-// Корректировка погрешности округления - распределяем между всеми
+// Защита от отрицательных значений
+heroRounded = Math.max(0, heroRounded);
+oppRounded = Math.max(0, oppRounded);
+tieRounded = Math.max(0, tieRounded);
+
+// Корректировка до 100%
 let sum = heroRounded + oppRounded + tieRounded;
 let diff = 100 - sum;
 
-if (Math.abs(diff) > 0.01) {
-    const total = heroRounded + oppRounded + tieRounded;
-    if (total > 0) {
-        heroRounded += diff * (heroRounded / total);
-        oppRounded += diff * (oppRounded / total);
-        tieRounded += diff * (tieRounded / total);
+if (Math.abs(diff) > 0.001) {
+    // Находим максимальное значение и корректируем его
+    const maxVal = Math.max(heroRounded, oppRounded, tieRounded);
+    
+    if (maxVal === heroRounded && heroRounded + diff >= 0) {
+        heroRounded = Math.round((heroRounded + diff) * 10) / 10;
+    } else if (maxVal === oppRounded && oppRounded + diff >= 0) {
+        oppRounded = Math.round((oppRounded + diff) * 10) / 10;
+    } else if (maxVal === tieRounded && tieRounded + diff >= 0) {
+        tieRounded = Math.round((tieRounded + diff) * 10) / 10;
     } else {
-        heroRounded += diff;
+        // Если максимум нельзя корректировать, корректируем героя
+        heroRounded = Math.round((heroRounded + diff) * 10) / 10;
+        heroRounded = Math.max(0, heroRounded);
     }
 }
 
-// Защита от отрицательных значений и NaN
-heroRounded = Math.max(0, isFinite(heroRounded) ? heroRounded : 0);
-oppRounded = Math.max(0, isFinite(oppRounded) ? oppRounded : 0);
-tieRounded = Math.max(0, isFinite(tieRounded) ? tieRounded : 0);
+// Финальная защита от отрицательных
+heroRounded = Math.max(0, heroRounded);
+oppRounded = Math.max(0, oppRounded);
+tieRounded = Math.max(0, tieRounded);
 
-// Финальное округление до 1 знака
-heroRounded = Math.round(heroRounded * 10) / 10;
-oppRounded = Math.round(oppRounded * 10) / 10;
-tieRounded = Math.round(tieRounded * 10) / 10;
-
-// Финальная проверка суммы
+// Финальная сумма
 sum = heroRounded + oppRounded + tieRounded;
 if (Math.abs(100 - sum) > 0.1) {
-    const maxVal = Math.max(heroRounded, oppRounded, tieRounded);
-    if (maxVal === heroRounded) heroRounded += (100 - sum);
-    else if (maxVal === oppRounded) oppRounded += (100 - sum);
-    else tieRounded += (100 - sum);
-    
-    // Финальное округление после корректировки
-    heroRounded = Math.round(heroRounded * 10) / 10;
-    oppRounded = Math.round(oppRounded * 10) / 10;
-    tieRounded = Math.round(tieRounded * 10) / 10;
+    // Если все еще не 100%, просто округляем героя
+    heroRounded = Math.round((heroRounded + (100 - sum)) * 10) / 10;
+    heroRounded = Math.max(0, heroRounded);
 }
 
 document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
@@ -988,3 +989,4 @@ document.addEventListener('keydown', e => {
     }
 
 });
+
