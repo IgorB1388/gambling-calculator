@@ -1,135 +1,225 @@
 /* color-classes.css - УНИВЕРСАЛЬНЫЕ КЛАССЫ ДЛЯ ВСЕХ СТРАНИЦ */
 /* ТОЛЬКО ЦВЕТА! НИКАКИХ РАЗМЕРОВ! */
 
+:root {
+    /* === ЦВЕТА ПО РОЛИ (НЕ ПО ВНЕШНЕМУ ВИДУ!) === */
+    --color-primary: #00f0ff;      /* главный цвет */
+    --color-secondary: #ff5fd2;    /* второстепенный */
+    --color-accent: #ffd966;       /* акцент */
+    --color-success: #2effc7;      /* успех */
+    --color-info: #6aa8ff;         /* информация */
+    --color-warning: #ff9966;      /* предупреждение */
+    --color-danger: #ff3366;       /* опасность/удаление */
+    --color-highlight: #b36bff;    /* подсветка */
+    
+    /* === ФОНЫ ПО РОЛИ === */
+    --bg-body: #2a2f4a;           /* основной фон страницы */
+    --bg-surface: #353a55;        /* поверхность (панели, карточки) */
+    --bg-elevated: #3a3f5a;       /* приподнятый элемент */
+    --bg-overlay: rgba(42, 47, 74, 0.9);    /* наложение */
+    --bg-overlay-light: rgba(42, 47, 74, 0.95); /* светлое наложение */
+    --bg-header: #353a55;         /* шапка */
+    --bg-card: rgba(42, 47, 74, 0.9);      /* карточки */
+    --bg-coming-soon: rgba(42, 47, 74, 0.95); /* coming soon */
+    --bg-section: #3a3f5a;        /* секция */
+    --bg-nav: rgba(0, 0, 0, 0.3); /* навигация */
+    
+    /* === ТЕКСТ ПО РОЛИ === */
+    --text-primary: #ffffff;      /* основной текст */
+    --text-secondary: #ccccff;    /* второстепенный текст */
+    --text-inverse: #000000;     /* текст на темном фоне */
+    --text-muted: rgba(255, 255, 255, 0.4); /* приглушенный текст */
+    --text-slot: rgba(255, 255, 255, 0.4); /* текст в слотах */
+    
+    /* === ГРАНИЦЫ ПО РОЛИ === */
+    --border-primary: #00f0ff;    /* основная граница */
+    --border-secondary: #ff5fd2;  /* второстепенная граница */
+    --border-accent: #ffd966;     /* акцентная граница */
+    --border-success: #2effc7;    /* граница успеха */
+    --border-info: #6aa8ff;       /* информационная граница */
+    --border-muted: rgba(255, 255, 255, 0.3); /* приглушенная граница */
+    --border-dark: rgba(0, 0, 0, 0.2); /* темная граница */
+    --border-dashed: rgba(255, 255, 255, 0.3); /* пунктирная */
+    
+    /* === ТЕНИ ПО РОЛИ === */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);    /* маленькая */
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);  /* средняя */
+    --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.5);  /* большая */
+    --glow-primary: 0 0 25px rgba(0, 240, 255, 0.4); /* свечение основное */
+    --glow-secondary: 0 0 25px rgba(255, 95, 210, 0.4); /* свечение второе */
+    --glow-accent: 0 0 25px rgba(255, 217, 102, 0.4); /* свечение акцент */
+}
+
 /* === ТЕКСТ === */
-.text-primary { color: var(--neon-teal); }
-.text-secondary { color: var(--neon-pink); }
-.text-accent { color: var(--neon-yellow); }
-.text-success { color: var(--neon-green); }
-.text-light { color: var(--text-light); }
-.text-medium { color: var(--text-medium); }
-.text-dark { color: var(--text-dark); }
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-accent { color: var(--color-accent); }
+.text-success { color: var(--color-success); }
+.text-info { color: var(--color-info); }
+.text-warning { color: var(--color-warning); }
+.text-danger { color: var(--color-danger); }
+.text-highlight { color: var(--color-highlight); }
+.text-light { color: var(--text-primary); }
+.text-medium { color: var(--text-secondary); }
+.text-dark { color: var(--text-inverse); }
+.text-muted { color: var(--text-muted); }
+.text-slot { color: var(--text-slot); }
+.text-win { color: var(--color-primary); }
+.text-opp { color: var(--color-secondary); }
+.text-tie { color: var(--color-info); }
 
 /* === ФОНЫ === */
-.bg-primary { background: var(--neon-teal); }
-.bg-secondary { background: var(--neon-pink); }
-.bg-accent { background: var(--neon-yellow); }
-.bg-success { background: var(--neon-green); }
-.bg-dark { background: var(--bg-dark); }
-.bg-medium { background: var(--bg-medium); }
-.bg-light { background: var(--bg-light); }
-.bg-panel { background: var(--bg-panel); }
+.bg-primary-solid { background: var(--color-primary); }
+.bg-secondary-solid { background: var(--color-secondary); }
+.bg-accent-solid { background: var(--color-accent); }
+.bg-success-solid { background: var(--color-success); }
+.bg-info-solid { background: var(--color-info); }
+.bg-warning-solid { background: var(--color-warning); }
+.bg-danger-solid { background: var(--color-danger); }
+.bg-highlight-solid { background: var(--color-highlight); }
+
 .bg-body { background: var(--bg-body); }
+.bg-surface { background: var(--bg-surface); }
+.bg-elevated { background: var(--bg-elevated); }
+.bg-overlay { background: var(--bg-overlay); }
+.bg-overlay-light { background: var(--bg-overlay-light); }
 .bg-header { background: var(--bg-header); }
 .bg-card { background: var(--bg-card); }
+.bg-coming-soon { background: var(--bg-coming-soon); }
+.bg-section { background: var(--bg-section); }
+.bg-nav { background: var(--bg-nav); }
+
+.bg-success-light { background: linear-gradient(135deg, rgba(46, 255, 199, 0.05), rgba(0, 240, 255, 0.05)); }
 
 /* === ГРАДИЕНТЫ === */
-.gradient-primary { background: linear-gradient(45deg, var(--neon-teal), var(--neon-purple)); }
-.gradient-secondary { background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple)); }
-.gradient-header { background: linear-gradient(135deg, var(--bg-header), var(--bg-panel)); }
-.gradient-card { background: linear-gradient(145deg, var(--bg-card), var(--bg-panel)); }
+.gradient-primary { 
+    background: linear-gradient(45deg, var(--color-primary), var(--color-highlight)); 
+}
+.gradient-secondary { 
+    background: linear-gradient(45deg, var(--color-secondary), var(--color-highlight)); 
+}
+.gradient-header { 
+    background: linear-gradient(135deg, var(--bg-header), var(--bg-surface)); 
+}
+.gradient-card { 
+    background: linear-gradient(145deg, var(--bg-card), var(--bg-surface)); 
+}
+.text-gradient {
+    background: linear-gradient(45deg, var(--color-secondary), var(--color-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 /* === ГРАНИЦЫ === */
-.border-primary { border-color: var(--neon-teal); }
-.border-secondary { border-color: var(--neon-pink); }
-.border-accent { border-color: var(--neon-yellow); }
-.border-success { border-color: var(--neon-green); }
+.border-primary { border-color: var(--border-primary); }
+.border-secondary { border-color: var(--border-secondary); }
+.border-accent { border-color: var(--border-accent); }
+.border-success { border-color: var(--border-success); }
+.border-info { border-color: var(--border-info); }
+.border-muted { border-color: var(--border-muted); }
+.border-dark { border-color: var(--border-dark); }
 .border-dashed { border-color: var(--border-dashed); }
 
 /* === ТЕНИ === */
-.shadow-default { box-shadow: var(--shadow); }
-.shadow-primary { box-shadow: var(--glow-primary); }
-.shadow-secondary { box-shadow: var(--glow-secondary); }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-default { box-shadow: var(--shadow-md); }
+.glow-primary { box-shadow: var(--glow-primary); }
+.glow-secondary { box-shadow: var(--glow-secondary); }
+.glow-accent { box-shadow: var(--glow-accent); }
 
 /* === КНОПКИ === */
-.btn-primary {
-    background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
-    color: white;
+.btn-primary-bg {
+    background: linear-gradient(45deg, var(--color-secondary), var(--color-highlight));
 }
-.btn-secondary {
-    background: rgba(0, 204, 255, 0.1);
-    color: var(--neon-teal);
-    border-color: var(--neon-teal);
-}
+.btn-primary-text { color: var(--text-primary); }
+.btn-secondary-bg { background: rgba(0, 240, 255, 0.1); }
+.btn-secondary-border { border-color: var(--color-primary); }
+.btn-secondary-text { color: var(--color-primary); }
 .btn-secondary:hover {
-    background: var(--neon-teal);
-    color: white;
+    background: var(--color-primary);
+    color: var(--text-primary);
 }
 
 /* === ЛОГОТИП === */
 .logo-gradient {
-    background: linear-gradient(135deg, var(--neon-teal), var(--neon-purple));
-    color: white;
-    box-shadow: 0 0 20px var(--neon-teal);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-highlight));
+    color: var(--text-primary);
+    box-shadow: 0 0 20px var(--color-primary);
 }
 .logo-text-gradient {
-    background: linear-gradient(45deg, var(--neon-green), var(--neon-teal));
+    background: linear-gradient(45deg, var(--color-success), var(--color-primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 /* === НАВИГАЦИЯ === */
-.nav-bg { background: rgba(0, 0, 0, 0.3); }
-.nav-link-bg { background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1)); }
+.nav-bg { background: var(--bg-nav); }
+.nav-link-bg { 
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1)); 
+}
 .nav-link-active {
-    background: linear-gradient(145deg, var(--neon-teal), var(--neon-purple));
-    border-color: var(--neon-green);
-    color: white;
+    background: linear-gradient(145deg, var(--color-primary), var(--color-highlight));
+    border-color: var(--color-success);
+    color: var(--text-primary);
 }
 
 /* === КАРТОЧКИ === */
 .card-bg { background: var(--bg-card); }
-.card-border { border-color: var(--neon-teal); }
-.card-icon-border { border-color: var(--neon-teal); }
-.card-icon-color { color: var(--neon-teal); }
+.card-border { border-color: var(--color-primary); }
+.card-icon-border { border-color: var(--color-primary); }
+.card-icon-color { color: var(--color-primary); }
 
 /* === FAQ === */
-.faq-border { border-color: var(--neon-green); }
-.faq-item-border { border-bottom-color: rgba(0, 255, 153, 0.2); }
-.faq-question { color: var(--neon-green); }
-.faq-answer { color: var(--text-medium); }
+.faq-border { border-color: var(--color-success); }
+.faq-item-border { border-bottom-color: rgba(46, 255, 199, 0.2); }
+.faq-question { color: var(--color-success); }
+.faq-answer { color: var(--text-secondary); }
 
 /* === ФУТЕР === */
-.footer-bg { background: var(--bg-panel); }
-.footer-border { border-top-color: var(--neon-teal); }
-.footer-text { color: var(--text-medium); }
+.footer-bg { background: var(--bg-surface); }
+.footer-border { border-top-color: var(--color-primary); }
+.footer-text { color: var(--text-secondary); }
 
-/* === ПОКЕР-СПЕЦИФИЧЕСКИЕ (оставляем, но делаем универсальными) === */
-.hand-border { border-color: var(--neon-teal); }
-.board-border { border-color: var(--neon-pink); }
-.hand-title { color: var(--neon-teal); }
-.board-title { color: var(--neon-pink); }
+/* === ПОКЕР-СПЕЦИФИЧЕСКИЕ === */
+.hand-border { border-color: var(--color-primary); }
+.board-border { border-color: var(--color-secondary); }
+.hand-title { color: var(--color-primary); }
+.board-title { color: var(--color-secondary); }
 .slot-bg { background: rgba(255, 255, 255, 0.08); }
-.slot-border { border-color: rgba(255, 255, 255, 0.3); }
-.opponent-border { border-color: var(--neon-blue); }
-.opponent-bg { background: rgba(102, 153, 255, 0.1); }
+.slot-border { border-color: var(--border-muted); }
+.opponent-border { border-color: var(--color-info); }
+.opponent-bg { background: rgba(106, 168, 255, 0.1); }
+.opponent-text { color: var(--color-info); }
 .opponent-active {
-    background: var(--neon-blue);
-    color: white;
-    border-color: var(--neon-blue);
+    background: var(--color-info);
+    color: var(--text-primary);
+    border-color: var(--color-info);
 }
-.deck-border { border-color: var(--neon-purple); }
-.result-win { color: var(--neon-teal); }
-.result-opp { color: var(--neon-pink); }
-.result-tie { color: var(--neon-blue); }
+.deck-bg { background: rgba(255, 255, 255, 0.05); }
+.deck-border { border-color: var(--color-highlight); }
+.result-win { color: var(--color-primary); }
+.result-opp { color: var(--color-secondary); }
+.result-tie { color: var(--color-info); }
 
-/* === DRAG-OVER (универсальные) === */
+/* === DRAG-OVER === */
 .drag-over-primary {
-    border-color: var(--neon-teal) !important;
-    box-shadow: 0 0 20px var(--neon-teal) !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 20px var(--color-primary) !important;
 }
 .drag-over-secondary {
-    border-color: var(--neon-pink) !important;
-    box-shadow: 0 0 20px var(--neon-pink) !important;
+    border-color: var(--color-secondary) !important;
+    box-shadow: 0 0 20px var(--color-secondary) !important;
 }
-.drag-over-accent {
-    border-color: var(--neon-purple) !important;
-    box-shadow: 0 0 20px var(--neon-purple) !important;
+.drag-over-highlight {
+    border-color: var(--color-highlight) !important;
+    box-shadow: 0 0 20px var(--color-highlight) !important;
 }
 
 /* === ИНДИКАТОР === */
 .active-dot {
-    background-color: #ff3366;
-    box-shadow: 0 0 10px #ff3366;
+    background-color: var(--color-danger);
+    box-shadow: 0 0 10px var(--color-danger);
     border-color: rgba(255, 255, 255, 0.9);
 }
