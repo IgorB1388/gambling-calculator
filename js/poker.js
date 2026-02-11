@@ -871,28 +871,55 @@ async function calculateEquity() {
     }
     
     const heroPercent = (heroTotal / SIMULATIONS) * 100;
-    const oppPercent = (oppTotal / SIMULATIONS) * 100;
-    const tiePercent = (tieHands / SIMULATIONS) * 100;
-    
-    let heroRounded = Math.round(heroPercent * 10) / 10;
-    let oppRounded = Math.round(oppPercent * 10) / 10;
-    let tieRounded = Math.round(tiePercent * 10) / 10;
-    
-    let sum = heroRounded + oppRounded + tieRounded;
-    let diff = 100 - sum;
-    
-    if (Math.abs(diff) > 0.05) {
+const oppPercent = (oppTotal / SIMULATIONS) * 100;
+const tiePercent = (tieHands / SIMULATIONS) * 100;
+
+let heroRounded = Math.round(heroPercent * 10) / 10;
+let oppRounded = Math.round(oppPercent * 10) / 10;
+let tieRounded = Math.round(tiePercent * 10) / 10;
+
+// Корректировка погрешности округления - распределяем между всеми
+let sum = heroRounded + oppRounded + tieRounded;
+let diff = 100 - sum;
+
+if (Math.abs(diff) > 0.01) {
+    const total = heroRounded + oppRounded + tieRounded;
+    if (total > 0) {
+        heroRounded += diff * (heroRounded / total);
+        oppRounded += diff * (oppRounded / total);
+        tieRounded += diff * (tieRounded / total);
+    } else {
         heroRounded += diff;
     }
-    
-    if (!isFinite(heroRounded) || isNaN(heroRounded)) heroRounded = 0;
-    if (!isFinite(oppRounded) || isNaN(oppRounded)) oppRounded = 0;
-    if (!isFinite(tieRounded) || isNaN(tieRounded)) tieRounded = 0;
-    
-    document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
+}
 
+// Защита от отрицательных значений и NaN
+heroRounded = Math.max(0, isFinite(heroRounded) ? heroRounded : 0);
+oppRounded = Math.max(0, isFinite(oppRounded) ? oppRounded : 0);
+tieRounded = Math.max(0, isFinite(tieRounded) ? tieRounded : 0);
+
+// Финальное округление до 1 знака
+heroRounded = Math.round(heroRounded * 10) / 10;
+oppRounded = Math.round(oppRounded * 10) / 10;
+tieRounded = Math.round(tieRounded * 10) / 10;
+
+// Финальная проверка суммы
+sum = heroRounded + oppRounded + tieRounded;
+if (Math.abs(100 - sum) > 0.1) {
+    const maxVal = Math.max(heroRounded, oppRounded, tieRounded);
+    if (maxVal === heroRounded) heroRounded += (100 - sum);
+    else if (maxVal === oppRounded) oppRounded += (100 - sum);
+    else tieRounded += (100 - sum);
+    
+    // Финальное округление после корректировки
+    heroRounded = Math.round(heroRounded * 10) / 10;
+    oppRounded = Math.round(oppRounded * 10) / 10;
+    tieRounded = Math.round(tieRounded * 10) / 10;
+}
+
+document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
+document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
+document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
     // Добавляем классы для анимации процентов
     const resultPercents = document.querySelectorAll('.result-percent');
     resultPercents.forEach(p => p.classList.add('updated'));
@@ -959,4 +986,5 @@ document.addEventListener('keydown', e => {
         default:
             if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
     }
+
 });
