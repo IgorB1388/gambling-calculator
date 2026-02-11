@@ -1,142 +1,135 @@
-const translations = {
-    ru: {
-        // Заголовок
-        title: "ПОКЕРНЫЙ КАЛЬКУЛЯТОР",
-        
-        // Панель руки и борда
-        panelHandBoard: "ВАША РУКА И БОРД",
-        yourHand: "⭐ ВАША РУКА",
-        handSubtitle: "2 карты",
-        handWarning: "⚠️ В руке должно быть 2 карты",
-        
-        board: "🎴 БОРД",
-        boardSubtitle: "0, 3, 4 или 5 карт",
-        boardWarning: "⚠️ На борде должно быть 0, 3, 4 или 5 карт",
-        
-        // Панель настроек
-        panelSettings: "⚙️ НАСТРОЙКИ",
-        opponentsLabel: "КОЛИЧЕСТВО ОППОНЕНТОВ:",
-        
-        // Панель выбора карт
-        panelChooseCards: "🃏 ВЫБЕРИТЕ КАРТЫ",
-        dropHint: "Кликните на карту для выбора или перетаскивайте между слотами",
-        
-        // Кнопки
-        calculateBtn: "🎯 РАССЧИТАТЬ",
-        clearBtn: "🗑️ ОЧИСТИТЬ",
-        
-        // Результаты
-        panelResults: "📊 РЕЗУЛЬТАТЫ",
-        yourHandResult: "ВАША РУКА",
-        opponentsResult: "ОППОНЕНТЫ",
-        tieResult: "НИЧЬЯ",
-        
-        // Комбинации (если еще используются где-то)
-        preflop: "Префлоп",
-        highCard: "Старшая карта",
-        pair: "Пара",
-        twoPair: "Две пары",
-        threeOfAKind: "Сет",
-        straight: "Стрит",
-        flush: "Флеш",
-        fullHouse: "Фулл-хаус",
-        fourOfAKind: "Каре",
-        straightFlush: "Стрит-флеш",
-        royalFlush: "Роял-флеш",
-        unknownCombo: "Неизвестная комбинация"
-    },
+// theme-switcher.js - Система смены тем GTA Casino Tools
 
-    en: {
-        // Header
-        title: "POKER CALCULATOR",
-        
-        // Hand and board panel
-        panelHandBoard: "YOUR HAND AND BOARD",
-        yourHand: "⭐ YOUR HAND",
-        handSubtitle: "2 cards",
-        handWarning: "⚠️ Hand must have 2 cards",
-        
-        board: "🎴 BOARD",
-        boardSubtitle: "0, 3, 4 or 5 cards",
-        boardWarning: "⚠️ Board must have 0, 3, 4 or 5 cards",
-        
-        // Settings panel
-        panelSettings: "⚙️ SETTINGS",
-        opponentsLabel: "NUMBER OF OPPONENTS:",
-        
-        // Choose cards panel
-        panelChooseCards: "🃏 CHOOSE CARDS",
-        dropHint: "Click to select or drag between slots",
-        
-        // Buttons
-        calculateBtn: "🎯 CALCULATE",
-        clearBtn: "🗑️ CLEAR ALL",
-        
-        // Results
-        panelResults: "📊 RESULTS",
-        yourHandResult: "YOUR HAND",
-        opponentsResult: "OPPONENTS",
-        tieResult: "TIE",
-        
-        // Hand combinations
-        preflop: "Preflop",
-        highCard: "High card",
-        pair: "Pair",
-        twoPair: "Two pair",
-        threeOfAKind: "Three of a kind",
-        straight: "Straight",
-        flush: "Flush",
-        fullHouse: "Full house",
-        fourOfAKind: "Four of a kind",
-        straightFlush: "Straight flush",
-        royalFlush: "Royal flush",
-        unknownCombo: "Unknown combination"
-    },
-
-    es: {
-        // Encabezado
-        title: "CALCULADORA DE PÓKER",
-        
-        // Panel de mano y mesa
-        panelHandBoard: "TU MANO Y LA MESA",
-        yourHand: "⭐ TU MANO",
-        handSubtitle: "2 cartas",
-        handWarning: "⚠️ La mano debe tener 2 cartas",
-        
-        board: "🎴 MESA",
-        boardSubtitle: "0, 3, 4 o 5 cartas",
-        boardWarning: "⚠️ La mesa debe tener 0, 3, 4 o 5 cartas",
-        
-        // Panel de ajustes
-        panelSettings: "⚙️ AJUSTES",
-        opponentsLabel: "NÚMERO DE OPONENTES:",
-        
-        // Panel de selección de cartas
-        panelChooseCards: "🃏 ELIGE CARTAS",
-        dropHint: "Haz clic para seleccionar o arrastra entre ranuras",
-        
-        // Botones
-        calculateBtn: "🎯 CALCULAR",
-        clearBtn: "🗑️ LIMPIAR TODO",
-        
-        // Resultados
-        panelResults: "📊 RESULTADOS",
-        yourHandResult: "TU MANO",
-        opponentsResult: "OPONENTES",
-        tieResult: "EMPATE",
-        
-        // Combinaciones de mano
-        preflop: "Preflop",
-        highCard: "Carta alta",
-        pair: "Pareja",
-        twoPair: "Doble pareja",
-        threeOfAKind: "Trío",
-        straight: "Escalera",
-        flush: "Color",
-        fullHouse: "Full house",
-        fourOfAKind: "Póker",
-        straightFlush: "Escalera de color",
-        royalFlush: "Escalera real de color",
-        unknownCombo: "Combinación desconocida"
+class ThemeManager {
+    constructor() {
+        this.themes = ['vice-city', 'san-andreas', 'gta4'];
+        this.themeNames = {
+            'vice-city': 'Vice City',
+            'san-andreas': 'San Andreas', 
+            'gta4': 'GTA 4'
+        };
+        this.currentTheme = this.getSavedTheme() || 'vice-city';
+        this.themeLink = null;
     }
-};
+    
+    getSavedTheme() {
+        return localStorage.getItem('gta-casino-theme');
+    }
+    
+    saveTheme(theme) {
+        localStorage.setItem('gta-casino-theme', theme);
+    }
+    
+    loadThemeCSS(theme) {
+        console.log(`Загружаем тему: ${theme}`);
+        
+        // Удаляем старую тему, если есть
+        const oldThemeLink = document.getElementById('theme-style');
+        if (oldThemeLink) {
+            oldThemeLink.remove();
+        }
+        
+        // Создаем новую ссылку на CSS темы
+        const link = document.createElement('link');
+        link.id = 'theme-style';
+        link.rel = 'stylesheet';
+        link.href = `${theme}-theme.css`;
+        document.head.appendChild(link);
+        
+        this.themeLink = link;
+        this.currentTheme = theme;
+        this.saveTheme(theme);
+        
+        // Обновляем кнопки
+        this.updateThemeButtons();
+        
+        // Обновляем класс body для специфичных стилей
+        this.updateBodyClass(theme);
+        
+        // Отправляем событие о смене темы
+        document.dispatchEvent(new CustomEvent('themeChanged', {
+            detail: { theme: theme }
+        }));
+    }
+    
+    updateBodyClass(theme) {
+        // Удаляем старые классы тем
+        document.body.classList.remove(...this.themes);
+        document.body.classList.add(theme);
+    }
+    
+    updateThemeButtons() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            const theme = btn.dataset.theme;
+            const isActive = theme === this.currentTheme;
+            btn.classList.toggle('active', isActive);
+            
+            // Обновляем подсказку
+            btn.title = this.themeNames[theme] + (isActive ? ' ✓' : '');
+        });
+    }
+    
+    addThemeSwitcherToHeader() {
+        const header = document.querySelector('.header-content');
+        if (!header) return;
+        
+        // Проверяем, нет ли уже переключателя тем
+        if (document.querySelector('.theme-switcher')) return;
+        
+        const themeSwitcher = document.createElement('div');
+        themeSwitcher.className = 'theme-switcher';
+        themeSwitcher.innerHTML = `
+            <button class="theme-btn active" data-theme="vice-city" title="Vice City">
+                <i class="fas fa-palette"></i>
+            </button>
+            <button class="theme-btn" data-theme="san-andreas" title="San Andreas">
+                <i class="fas fa-sun"></i>
+            </button>
+            <button class="theme-btn" data-theme="gta4" title="GTA 4">
+                <i class="fas fa-building"></i>
+            </button>
+        `;
+        
+        // Вставляем после языкового переключателя
+        const langSwitcher = document.querySelector('.language-switcher-header');
+        if (langSwitcher) {
+            langSwitcher.parentNode.insertBefore(themeSwitcher, langSwitcher.nextSibling);
+        } else {
+            // Или в конец header-content
+            header.appendChild(themeSwitcher);
+        }
+        
+        // Добавляем обработчики
+        themeSwitcher.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const theme = btn.dataset.theme;
+                this.loadThemeCSS(theme);
+            });
+        });
+    }
+    
+    init() {
+        // Добавляем переключатель тем в шапку
+        this.addThemeSwitcherToHeader();
+        
+        // Загружаем сохраненную тему
+        this.loadThemeCSS(this.currentTheme);
+        
+        // Для динамически загруженных страниц
+        const observer = new MutationObserver(() => {
+            this.addThemeSwitcherToHeader();
+        });
+        
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    const themeManager = new ThemeManager();
+    themeManager.init();
+    window.themeManager = themeManager;
+    
+    console.log('Theme Manager initialized');
+});
