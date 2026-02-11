@@ -1,5 +1,5 @@
-/* color-classes.css - ТОЛЬКО КЛАССЫ ДЛЯ ЦВЕТОВ */
-/* НИКАКИХ РАЗМЕРОВ! ТОЛЬКО color, background, border-color, box-shadow */
+/* color-classes.css - УНИВЕРСАЛЬНЫЕ КЛАССЫ ДЛЯ ВСЕХ СТРАНИЦ */
+/* ТОЛЬКО ЦВЕТА! НИКАКИХ РАЗМЕРОВ! */
 
 /* === ТЕКСТ === */
 .text-primary { color: var(--neon-teal); }
@@ -11,32 +11,109 @@
 .text-dark { color: var(--text-dark); }
 
 /* === ФОНЫ === */
+.bg-primary { background: var(--neon-teal); }
+.bg-secondary { background: var(--neon-pink); }
+.bg-accent { background: var(--neon-yellow); }
+.bg-success { background: var(--neon-green); }
+.bg-dark { background: var(--bg-dark); }
+.bg-medium { background: var(--bg-medium); }
+.bg-light { background: var(--bg-light); }
+.bg-panel { background: var(--bg-panel); }
 .bg-body { background: var(--bg-body); }
 .bg-header { background: var(--bg-header); }
-.bg-panel { background: var(--bg-panel); }
-.bg-section { background: var(--bg-section); }
 .bg-card { background: var(--bg-card); }
-.bg-coming-soon { background: var(--bg-coming-soon); }
+
+/* === ГРАДИЕНТЫ === */
+.gradient-primary { background: linear-gradient(45deg, var(--neon-teal), var(--neon-purple)); }
+.gradient-secondary { background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple)); }
+.gradient-header { background: linear-gradient(135deg, var(--bg-header), var(--bg-panel)); }
+.gradient-card { background: linear-gradient(145deg, var(--bg-card), var(--bg-panel)); }
 
 /* === ГРАНИЦЫ === */
-.border-primary { border-color: var(--border-primary); }
-.border-secondary { border-color: var(--border-secondary); }
-.border-accent { border-color: var(--border-accent); }
+.border-primary { border-color: var(--neon-teal); }
+.border-secondary { border-color: var(--neon-pink); }
+.border-accent { border-color: var(--neon-yellow); }
+.border-success { border-color: var(--neon-green); }
 .border-dashed { border-color: var(--border-dashed); }
 
-/* === КНОПКИ === */
-.btn-primary-bg { background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple)); }
-.btn-primary-text { color: white; }
-.btn-secondary-bg { background: rgba(0, 204, 255, 0.1); }
-.btn-secondary-border { border-color: var(--neon-teal); }
-.btn-secondary-text { color: var(--neon-teal); }
-
-/* === СПЕЦИАЛЬНЫЕ ЭФФЕКТЫ === */
-.glow-primary { box-shadow: var(--glow-primary); }
-.glow-secondary { box-shadow: var(--glow-secondary); }
+/* === ТЕНИ === */
 .shadow-default { box-shadow: var(--shadow); }
+.shadow-primary { box-shadow: var(--glow-primary); }
+.shadow-secondary { box-shadow: var(--glow-secondary); }
 
-/* === DRAG-OVER СОСТОЯНИЯ === */
+/* === КНОПКИ === */
+.btn-primary {
+    background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
+    color: white;
+}
+.btn-secondary {
+    background: rgba(0, 204, 255, 0.1);
+    color: var(--neon-teal);
+    border-color: var(--neon-teal);
+}
+.btn-secondary:hover {
+    background: var(--neon-teal);
+    color: white;
+}
+
+/* === ЛОГОТИП === */
+.logo-gradient {
+    background: linear-gradient(135deg, var(--neon-teal), var(--neon-purple));
+    color: white;
+    box-shadow: 0 0 20px var(--neon-teal);
+}
+.logo-text-gradient {
+    background: linear-gradient(45deg, var(--neon-green), var(--neon-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* === НАВИГАЦИЯ === */
+.nav-bg { background: rgba(0, 0, 0, 0.3); }
+.nav-link-bg { background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1)); }
+.nav-link-active {
+    background: linear-gradient(145deg, var(--neon-teal), var(--neon-purple));
+    border-color: var(--neon-green);
+    color: white;
+}
+
+/* === КАРТОЧКИ === */
+.card-bg { background: var(--bg-card); }
+.card-border { border-color: var(--neon-teal); }
+.card-icon-border { border-color: var(--neon-teal); }
+.card-icon-color { color: var(--neon-teal); }
+
+/* === FAQ === */
+.faq-border { border-color: var(--neon-green); }
+.faq-item-border { border-bottom-color: rgba(0, 255, 153, 0.2); }
+.faq-question { color: var(--neon-green); }
+.faq-answer { color: var(--text-medium); }
+
+/* === ФУТЕР === */
+.footer-bg { background: var(--bg-panel); }
+.footer-border { border-top-color: var(--neon-teal); }
+.footer-text { color: var(--text-medium); }
+
+/* === ПОКЕР-СПЕЦИФИЧЕСКИЕ (оставляем, но делаем универсальными) === */
+.hand-border { border-color: var(--neon-teal); }
+.board-border { border-color: var(--neon-pink); }
+.hand-title { color: var(--neon-teal); }
+.board-title { color: var(--neon-pink); }
+.slot-bg { background: rgba(255, 255, 255, 0.08); }
+.slot-border { border-color: rgba(255, 255, 255, 0.3); }
+.opponent-border { border-color: var(--neon-blue); }
+.opponent-bg { background: rgba(102, 153, 255, 0.1); }
+.opponent-active {
+    background: var(--neon-blue);
+    color: white;
+    border-color: var(--neon-blue);
+}
+.deck-border { border-color: var(--neon-purple); }
+.result-win { color: var(--neon-teal); }
+.result-opp { color: var(--neon-pink); }
+.result-tie { color: var(--neon-blue); }
+
+/* === DRAG-OVER (универсальные) === */
 .drag-over-primary {
     border-color: var(--neon-teal) !important;
     box-shadow: 0 0 20px var(--neon-teal) !important;
@@ -50,10 +127,9 @@
     box-shadow: 0 0 20px var(--neon-purple) !important;
 }
 
-/* === ИНДИКАТОР АКТИВНОГО БЛОКА === */
+/* === ИНДИКАТОР === */
 .active-dot {
     background-color: #ff3366;
     box-shadow: 0 0 10px #ff3366;
     border-color: rgba(255, 255, 255, 0.9);
 }
-
