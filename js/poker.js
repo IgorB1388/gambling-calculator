@@ -935,5 +935,5 @@ if (Math.abs(100 - sum) > 0.01) {
 }
 
 document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
-document.getElementById('resultOpponent').content = oppRounded.toFixed(1) + '%';
+document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';  // 👈 ИСПРАВЛЕНО!
 document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
