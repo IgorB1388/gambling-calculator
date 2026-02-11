@@ -1,297 +1,106 @@
 /* vice-city-theme.css - ТЕМА VICE CITY */
-/* ТОЛЬКО ЦВЕТА, ФОНЫ, ТЕНИ, ГРАДИЕНТЫ */
+/* ТОЛЬКО ПЕРЕМЕННЫЕ! ВСЕ СЕЛЕКТОРЫ УДАЛЕНЫ! */
 
 :root {
-    /* === VICE CITY COLORS === */
-    --vc-hot-pink:      #ff44aa;
-    --vc-electric-blue: #44aaff;
-    --vc-sunset-orange: #ff8844;
-    --vc-pastel-blue:   #88ccff;
-    --vc-mint:          #88ffaa;
+    /* === ЦВЕТА ПО РОЛИ (VICE CITY) === */
+    --color-primary: #ff44aa;
+    --color-secondary: #44aaff;
+    --color-accent: #ff8844;
+    --color-success: #88ffaa;
+    --color-info: #88ccff;
+    --color-warning: #ff8844;
+    --color-danger: #ff3366;
+    --color-highlight: #b36bff;
     
-    /* === BACKGROUNDS === */
+    /* === ФОНЫ ПО РОЛИ === */
     --bg-body: #1a1b2f;
+    --bg-surface: rgba(255, 255, 255, 0.1);
+    --bg-elevated: rgba(255, 255, 255, 0.05);
+    --bg-overlay: rgba(26, 27, 47, 0.8);
+    --bg-overlay-light: rgba(26, 27, 47, 0.8);
     --bg-header: rgba(10, 10, 26, 0.7);
-    --bg-panel: rgba(255, 255, 255, 0.1);
-    --bg-section: rgba(255, 255, 255, 0.05);
     --bg-card: rgba(26, 27, 47, 0.8);
     --bg-coming-soon: rgba(26, 27, 47, 0.8);
+    --bg-section: rgba(255, 255, 255, 0.05);
+    --bg-nav: rgba(255, 255, 255, 0.05);
+    --bg-surface-light: rgba(255, 255, 255, 0.1);
+    --bg-surface-hover: rgba(255, 68, 170, 0.2);
+    --bg-surface-active: rgba(68, 170, 255, 0.2);
     
-    /* === TEXT === */
-    --text-light:  #ffffff;
-    --text-medium: #e0e0ff;
-    --text-dark:   #0a0a1a;
+    /* === ТЕКСТ ПО РОЛИ === */
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0ff;
+    --text-inverse: #0a0a1a;
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --text-slot: rgba(255, 255, 255, 0.4);
+    --text-card: #ffffff;
+    --text-card-secondary: #e0e0ff;
     
-    /* === BORDERS === */
-    --border-primary: var(--vc-hot-pink);
-    --border-secondary: var(--vc-electric-blue);
-    --border-accent: var(--vc-sunset-orange);
+    /* === ГРАНИЦЫ ПО РОЛИ === */
+    --border-primary: #ff44aa;
+    --border-secondary: #44aaff;
+    --border-accent: #ff8844;
+    --border-success: #88ffaa;
+    --border-info: #88ccff;
+    --border-muted: rgba(255, 68, 170, 0.5);
+    --border-dark: rgba(0, 0, 0, 0.2);
     --border-dashed: rgba(255, 68, 170, 0.5);
+    --border-nav: rgba(255, 68, 170, 0.3);
     
-    /* === SHADOWS === */
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    /* === ТЕНИ ПО РОЛИ === */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.6);
+    --shadow-header: 0 0 30px rgba(255, 68, 170, 0.3), 0 0 60px rgba(68, 170, 255, 0.2);
     --glow-primary: 0 0 20px rgba(255, 68, 170, 0.6);
     --glow-secondary: 0 0 20px rgba(68, 170, 255, 0.6);
+    --glow-accent: 0 0 20px rgba(255, 136, 68, 0.6);
+    --glow-highlight: 0 0 20px rgba(179, 107, 255, 0.6);
+    --glow-success: 0 0 20px rgba(136, 255, 170, 0.6);
     
-    /* === OVERRIDE NEON VARIABLES === */
-    --neon-teal: var(--vc-electric-blue);
-    --neon-pink: var(--vc-hot-pink);
-    --neon-blue: var(--vc-pastel-blue);
-    --neon-purple: #b36bff;
-    --neon-yellow: var(--vc-sunset-orange);
-    --neon-green: var(--vc-mint);
-}
-
-body {
-    background: linear-gradient(135deg, 
+    /* === ГРАДИЕНТЫ === */
+    --gradient-body: linear-gradient(135deg, 
         #0a0a1a 0%,
         #1a1b2f 40%,
         #2a1f2f 70%,
         #1f1a2a 100%
     );
-    color: var(--text-light);
-}
-
-/* ШАПКА */
-.site-header {
-    background: var(--bg-header);
-    backdrop-filter: blur(10px);
-    border-color: var(--border-primary);
-    box-shadow: 0 0 30px rgba(255, 68, 170, 0.3), 0 0 60px rgba(68, 170, 255, 0.2);
-}
-
-/* Неоновая линия */
-.site-header::before {
-    background: linear-gradient(90deg, 
+    --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    --gradient-logo-text: linear-gradient(45deg, #ff44aa, #44aaff, #ff8844);
+    --gradient-nav-link: rgba(255, 255, 255, 0.02);
+    --gradient-nav-hover: rgba(255, 68, 170, 0.2);
+    --gradient-nav-active: linear-gradient(135deg, rgba(255, 68, 170, 0.8), rgba(68, 170, 255, 0.8));
+    --gradient-btn-primary: linear-gradient(45deg, var(--color-primary), var(--color-highlight));
+    --gradient-page-header: var(--bg-overlay);
+    --gradient-card: rgba(255, 255, 255, 0.05);
+    --gradient-faq-contact: rgba(0, 0, 0, 0.4);
+    --gradient-coming-soon: rgba(26, 27, 47, 0.8);
+    --gradient-cyber: linear-gradient(90deg, 
         transparent, 
-        var(--vc-hot-pink), 
-        var(--vc-electric-blue), 
-        var(--vc-sunset-orange), 
-        transparent);
-    filter: blur(2px);
-    animation: neon-pulse 3s ease-in-out infinite;
+        var(--color-primary), 
+        var(--color-secondary), 
+        var(--color-accent), 
+        transparent
+    );
+    
+    /* === ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ === */
+    --grid-palm: '🌴🌴';
+    --grid-size: 40px;
+    --grid-color-primary: rgba(255, 68, 170, 0.03);
+    --grid-color-secondary: rgba(68, 170, 255, 0.03);
+    --palm-color: rgba(0, 0, 0, 0.3);
+    --palm-glow: 0 0 20px rgba(255, 68, 170, 0.2);
+    --palm-font-size: 8rem;
+    --palm-letter-spacing: 50px;
+    
+    /* === АНИМАЦИИ === */
+    --animation-neon-pulse: neon-pulse 3s ease-in-out infinite;
 }
 
+/* АНИМАЦИИ (ОСТАВЛЯЕМ, ТАК КАК НЕ ЦВЕТА) */
 @keyframes neon-pulse {
     0%, 100% { opacity: 0.8; }
     50% { opacity: 1; }
 }
 
-/* ЛОГОТИП */
-.logo-icon {
-    background: linear-gradient(135deg, var(--vc-hot-pink), var(--vc-electric-blue));
-    color: white;
-    box-shadow: 0 0 20px var(--vc-hot-pink), 0 0 40px rgba(68, 170, 255, 0.4);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-}
-
-.logo-main {
-    background: linear-gradient(45deg, #ff44aa, #44aaff, #ff8844);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 20px rgba(255, 68, 170, 0.5);
-}
-
-.logo-sub {
-    color: #fff5e6;
-    text-shadow: 0 0 10px rgba(255, 68, 170, 0.3);
-}
-
-/* НАВИГАЦИЯ */
-.nav-list {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(5px);
-    border-color: rgba(255, 68, 170, 0.3);
-}
-
-.nav-link {
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--text-medium);
-}
-
-.nav-link:hover {
-    background: rgba(255, 68, 170, 0.2);
-    border-color: var(--vc-hot-pink);
-    box-shadow: 0 0 15px var(--vc-hot-pink);
-    color: white;
-}
-
-.nav-link.active {
-    background: linear-gradient(135deg, rgba(255, 68, 170, 0.8), rgba(68, 170, 255, 0.8));
-    border-color: white;
-    box-shadow: 0 0 20px var(--vc-hot-pink), 0 0 40px var(--vc-electric-blue);
-}
-
-/* КАРТОЧКИ */
-.tool-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-color: rgba(255, 68, 170, 0.4);
-}
-
-.tool-card:hover {
-    border-color: var(--vc-hot-pink);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--vc-hot-pink);
-}
-
-.tool-icon {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 68, 170, 0.6);
-    color: var(--vc-hot-pink);
-    box-shadow: 0 0 20px rgba(255, 68, 170, 0.4);
-}
-
-.tool-card[href*="poker.html"] {
-    border-color: var(--vc-hot-pink);
-}
-.tool-card[href*="poker.html"] .tool-icon {
-    border-color: var(--vc-hot-pink);
-    color: var(--vc-hot-pink);
-}
-
-.tool-card[href*="roulette.html"] {
-    border-color: var(--vc-electric-blue);
-}
-.tool-card[href*="roulette.html"] .tool-icon {
-    border-color: var(--vc-electric-blue);
-    color: var(--vc-electric-blue);
-}
-
-.tool-card[href*="arbs.html"] {
-    border-color: var(--vc-sunset-orange);
-}
-.tool-card[href*="arbs.html"] .tool-icon {
-    border-color: var(--vc-sunset-orange);
-    color: var(--vc-sunset-orange);
-}
-
-/* ПЕРЕКЛЮЧАТЕЛИ */
-.language-switcher-header {
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    border-color: rgba(255, 68, 170, 0.5);
-    box-shadow: 0 0 20px rgba(255, 68, 170, 0.3);
-}
-
-.theme-switcher {
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    border-color: rgba(255, 68, 170, 0.5);
-    box-shadow: 0 0 20px rgba(255, 68, 170, 0.3);
-}
-
-.lang-btn,
-.theme-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-light);
-}
-
-.lang-btn:hover,
-.theme-btn:hover {
-    border-color: var(--vc-hot-pink);
-    box-shadow: 0 0 15px var(--vc-hot-pink);
-}
-
-.lang-btn.active,
-.theme-btn.active {
-    background: linear-gradient(135deg, rgba(255, 68, 170, 0.8), rgba(68, 170, 255, 0.8));
-    border-color: white;
-}
-
-/* ПОКЕР */
-.poker-header {
-    background: var(--bg-panel);
-    backdrop-filter: blur(10px);
-    border-color: rgba(255, 68, 170, 0.5);
-    box-shadow: 0 0 40px rgba(255, 68, 170, 0.3);
-}
-
-.panel {
-    background: var(--bg-panel);
-    backdrop-filter: blur(10px);
-    border-color: rgba(255, 68, 170, 0.5);
-}
-
-.hand-section .section-title {
-    color: var(--vc-hot-pink);
-}
-
-.board-section .section-title {
-    color: var(--vc-electric-blue);
-}
-
-.opponent-pill.active {
-    background: var(--vc-electric-blue);
-    border-color: var(--vc-electric-blue);
-    box-shadow: 0 0 15px var(--vc-electric-blue);
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, var(--vc-hot-pink), #b36bff);
-}
-
-.btn-secondary {
-    background: rgba(68, 170, 255, 0.1);
-    color: var(--vc-electric-blue);
-    border-color: var(--vc-electric-blue);
-}
-
-.btn-secondary:hover {
-    background: var(--vc-electric-blue);
-    color: white;
-}
-
-.result-card:nth-child(1) .result-percent { color: var(--vc-hot-pink); }
-.result-card:nth-child(2) .result-percent { color: var(--vc-electric-blue); }
-.result-card:nth-child(3) .result-percent { color: #b36bff; }
-
-.result-card:nth-child(1) { border-color: var(--vc-hot-pink); }
-.result-card:nth-child(2) { border-color: var(--vc-electric-blue); }
-.result-card:nth-child(3) { border-color: #b36bff; }
-
-/* ДЕКОР - ПАЛЬМЫ И НЕОНОВАЯ СЕТКА */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(0deg, rgba(255, 68, 170, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(68, 170, 255, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-body::after {
-    content: '🌴🌴';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    font-size: 8rem;
-    color: rgba(0, 0, 0, 0.3);
-    text-shadow: 0 0 20px rgba(255, 68, 170, 0.2);
-    white-space: nowrap;
-    letter-spacing: 50px;
-    transform: translateY(30%);
-    pointer-events: none;
-    z-index: 0;
-}
-
-@media (max-width: 768px) {
-    body::after {
-        font-size: 4rem;
-        letter-spacing: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    body::after {
-        font-size: 3rem;
-        letter-spacing: 10px;
-        content: '🌴';
-    }
-}
+/* ДЕКОР ЭЛЕМЕНТЫ ЧЕРЕЗ КЛАССЫ В HTML, НЕ ТУТ! */
