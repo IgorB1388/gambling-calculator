@@ -1,91 +1,54 @@
-/* vice-city-theme.css - ТЕМА GTA VICE CITY (стиль Майами, неон, арт-деко) */
+/* vice-city-theme.css - ТЕМА GTA VICE CITY (Майами, неон, арт-деко) */
 
-/* === ПЕРЕОПРЕДЕЛЯЕМ ВСЕ ПЕРЕМЕННЫЕ === */
+/* === 1. ОТКЛЮЧАЕМ ЭФФЕКТЫ ИЗ BASE.CSS === */
+.site-header::before,
+.site-header::after,
+body::before,
+body::after {
+    display: none !important;
+}
+
+/* === 2. ПЕРЕОПРЕДЕЛЯЕМ ПЕРЕМЕННЫЕ === */
 :root {
-    /* ЦВЕТА VICE CITY */
-    --vc-hot-pink:      #ff44aa;    /* Неоново-розовый */
-    --vc-electric-blue: #44aaff;    /* Электрик-блю */
-    --vc-sunset-orange: #ff8844;    /* Закатный оранжевый */
-    --vc-pastel-blue:   #88ccff;    /* Пастельно-голубой */
-    --vc-white:         #ffffff;    /* Чисто белый */
-    --vc-cream:         #fff5e6;    /* Кремовый */
-    --vc-gold:          #ffcc88;    /* Золотистый */
-    --vc-mint:          #88ffaa;    /* Мятный */
+    --vc-hot-pink:      #ff44aa;
+    --vc-electric-blue: #44aaff;
+    --vc-sunset-orange: #ff8844;
+    --vc-pastel-blue:   #88ccff;
+    --vc-white:         #ffffff;
+    --vc-cream:         #fff5e6;
+    --vc-gold:          #ffcc88;
+    --vc-mint:          #88ffaa;
     
-    /* ОСНОВНЫЕ ЦВЕТА ТЕМЫ */
     --primary-color: var(--vc-hot-pink);
     --secondary-color: var(--vc-electric-blue);
     --accent-color: var(--vc-sunset-orange);
     --success-color: var(--vc-mint);
     
-    /* ФОНЫ VICE CITY */
-    --bg-dark: #1a1b2f;           /* Темно-синий (ночь) */
-    --bg-medium: #2a2f4a;         /* Сиреневый */
-    --bg-light: #3a3f5a;          /* Светло-сиреневый */
-    --panel-bg: rgba(255, 255, 255, 0.1);  /* Стекло */
+    --bg-dark: #1a1b2f;
+    --bg-medium: #2a2f4a;
+    --bg-light: #3a3f5a;
+    --panel-bg: rgba(255, 255, 255, 0.1);
     
-    /* ТЕКСТ VICE CITY */
     --text-light: #ffffff;
     --text-medium: #e0e0ff;
     --text-dark: #0a0a1a;
     
-    /* ЭФФЕКТЫ VICE CITY */
     --border-color: rgba(255, 68, 170, 0.5);
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --neon-glow-pink: 0 0 20px rgba(255, 68, 170, 0.6);
-    --neon-glow-blue: 0 0 20px rgba(68, 170, 255, 0.6);
 }
 
-/* === ОСНОВНОЙ ФОН === */
+/* === 3. ОСНОВНОЙ ФОН === */
 body {
     background: linear-gradient(135deg, 
-        #0a0a1a 0%,              /* Глубокий синий */
-        #1a1b2f 40%,             /* Фиолетовый */
-        #2a1f2f 70%,             /* Розоватый */
-        #1f1a2a 100%            /* Темно-фиолетовый */
+        #0a0a1a 0%,
+        #1a1b2f 40%,
+        #2a1f2f 70%,
+        #1f1a2a 100%
     ) !important;
     color: var(--text-light) !important;
-    position: relative;
 }
 
-/* === НЕОНОВАЯ СЕТКА (как в заставке Vice City) === */
-body.theme-vice-city::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(0deg, 
-            rgba(255, 68, 170, 0.03) 1px, 
-            transparent 1px),
-        linear-gradient(90deg, 
-            rgba(68, 170, 255, 0.03) 1px, 
-            transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* === ПАЛЬМЫ (силуэты) === */
-body.theme-vice-city::after {
-    content: '🌴🌴';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    font-size: 8rem;
-    color: rgba(0, 0, 0, 0.3);
-    text-shadow: 0 0 20px rgba(255, 68, 170, 0.2);
-    white-space: nowrap;
-    letter-spacing: 50px;
-    transform: translateY(30%);
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* === ШАПКА САЙТА (стекло + неон) === */
+/* === 4. ШАПКА === */
 .site-header {
     background: rgba(10, 10, 26, 0.7) !important;
     backdrop-filter: blur(10px) !important;
@@ -93,12 +56,11 @@ body.theme-vice-city::after {
     box-shadow: 
         0 0 30px rgba(255, 68, 170, 0.3),
         0 0 60px rgba(68, 170, 255, 0.2) !important;
-    position: relative;
-    z-index: 10;
 }
 
-/* Неоновая линия сверху */
+/* Неоновая линия */
 .site-header::before {
+    display: block !important;
     content: '';
     position: absolute;
     top: -2px;
@@ -120,7 +82,7 @@ body.theme-vice-city::after {
     50% { opacity: 1; }
 }
 
-/* === ЛОГОТИП === */
+/* === 5. ЛОГОТИП === */
 .logo-icon {
     background: linear-gradient(135deg, 
         var(--vc-hot-pink), 
@@ -150,27 +112,22 @@ body.theme-vice-city::after {
     letter-spacing: 4px !important;
 }
 
-/* === НАВИГАЦИЯ === */
+/* === 6. НАВИГАЦИЯ === */
 .nav-list {
     background: rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(5px) !important;
     border: 2px solid rgba(255, 68, 170, 0.3) !important;
-    box-shadow: 0 0 20px rgba(68, 170, 255, 0.2) !important;
 }
 
 .nav-link {
     background: rgba(255, 255, 255, 0.02) !important;
     color: var(--text-medium) !important;
-    border: 2px solid transparent !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
 .nav-link:hover {
     background: rgba(255, 68, 170, 0.2) !important;
     border-color: var(--vc-hot-pink) !important;
-    box-shadow: 
-        0 0 15px var(--vc-hot-pink),
-        0 0 30px rgba(68, 170, 255, 0.3) !important;
+    box-shadow: 0 0 15px var(--vc-hot-pink) !important;
     color: white !important;
     transform: translateY(-3px) scale(1.05) !important;
 }
@@ -181,30 +138,21 @@ body.theme-vice-city::after {
         rgba(68, 170, 255, 0.8)
     ) !important;
     border-color: white !important;
-    color: white !important;
-    box-shadow: 
-        0 0 20px var(--vc-hot-pink),
-        0 0 40px var(--vc-electric-blue) !important;
+    box-shadow: 0 0 20px var(--vc-hot-pink), 0 0 40px var(--vc-electric-blue) !important;
 }
 
-/* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
+/* === 7. КАРТОЧКИ === */
 .tool-card {
     background: rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(10px) !important;
     border: 2px solid rgba(255, 68, 170, 0.4) !important;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.3),
-        0 0 0px transparent !important;
-    transition: all 0.4s !important;
 }
 
 .tool-card:hover {
-    transform: translateY(-10px) scale(1.02) !important;
     border-color: var(--vc-hot-pink) !important;
     box-shadow: 
         0 15px 40px rgba(0, 0, 0, 0.4),
-        0 0 30px var(--vc-hot-pink),
-        0 0 60px rgba(68, 170, 255, 0.4) !important;
+        0 0 30px var(--vc-hot-pink) !important;
 }
 
 .tool-icon {
@@ -214,29 +162,12 @@ body.theme-vice-city::after {
     box-shadow: 0 0 20px rgba(255, 68, 170, 0.4) !important;
 }
 
-.tool-card[href*="poker.html"] .tool-icon {
-    border-color: var(--vc-hot-pink) !important;
-    color: var(--vc-hot-pink) !important;
-}
-
-.tool-card[href*="roulette.html"] .tool-icon {
-    border-color: var(--vc-electric-blue) !important;
-    color: var(--vc-electric-blue) !important;
-}
-
-.tool-card[href*="arbs.html"] .tool-icon {
-    border-color: var(--vc-sunset-orange) !important;
-    color: var(--vc-sunset-orange) !important;
-}
-
-/* === ПОКЕРНЫЙ КАЛЬКУЛЯТОР === */
+/* === 8. ПОКЕР === */
 .poker-calculator-wrapper {
     background: rgba(26, 27, 47, 0.8) !important;
     backdrop-filter: blur(10px) !important;
     border: 2px solid rgba(255, 68, 170, 0.5) !important;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        0 0 40px rgba(255, 68, 170, 0.3) !important;
+    box-shadow: 0 0 40px rgba(255, 68, 170, 0.3) !important;
 }
 
 .poker-calculator-wrapper .hand-section .section-title {
@@ -247,11 +178,7 @@ body.theme-vice-city::after {
     color: var(--vc-electric-blue) !important;
 }
 
-.poker-calculator-wrapper .result-percent {
-    text-shadow: 0 0 15px currentColor !important;
-}
-
-/* === АНАЛИЗАТОР РУЛЕТКИ === */
+/* === 9. РУЛЕТКА === */
 .roulette-title {
     color: var(--text-light) !important;
     text-shadow: 
@@ -259,17 +186,16 @@ body.theme-vice-city::after {
         4px 4px 0 rgba(68, 170, 255, 0.5) !important;
 }
 
-/* === АНАЛИЗАТОР ВИЛОК === */
+/* === 10. АРБС === */
 .arbs-title {
     color: var(--text-light) !important;
     text-shadow: 
         0 0 10px var(--vc-hot-pink),
         0 0 20px var(--vc-electric-blue),
         2px 2px 0 var(--vc-sunset-orange) !important;
-    font-family: 'Arial Black', sans-serif !important;
 }
 
-/* === FAQ === */
+/* === 11. FAQ === */
 .faq-item h3 {
     color: var(--vc-hot-pink) !important;
 }
@@ -284,39 +210,25 @@ body.theme-vice-city::after {
     border: 2px solid rgba(255, 68, 170, 0.5) !important;
 }
 
-/* === COMING SOON БЛОКИ === */
-.coming-soon-sa,
-.coming-soon-gta4,
-.info-section {
-    background: rgba(26, 27, 47, 0.8) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(255, 68, 170, 0.5) !important;
-}
-
-/* === ПЕРЕКЛЮЧАТЕЛИ === */
+/* === 12. ПЕРЕКЛЮЧАТЕЛИ === */
 .language-switcher-header,
 .theme-switcher {
     background: rgba(0, 0, 0, 0.4) !important;
     backdrop-filter: blur(10px) !important;
     border: 2px solid rgba(255, 68, 170, 0.5) !important;
-    box-shadow: 
-        0 0 20px rgba(255, 68, 170, 0.3),
-        0 0 40px rgba(68, 170, 255, 0.2) !important;
+    box-shadow: 0 0 20px rgba(255, 68, 170, 0.3) !important;
 }
 
 .lang-btn,
 .theme-btn {
     background: rgba(255, 255, 255, 0.1) !important;
     color: var(--text-light) !important;
-    border: 2px solid transparent !important;
-    transition: all 0.3s !important;
 }
 
 .lang-btn:hover,
 .theme-btn:hover {
     border-color: var(--vc-hot-pink) !important;
     box-shadow: 0 0 15px var(--vc-hot-pink) !important;
-    transform: translateY(-2px) !important;
 }
 
 .lang-btn.active,
@@ -326,23 +238,53 @@ body.theme-vice-city::after {
         rgba(68, 170, 255, 0.8)
     ) !important;
     border-color: white !important;
-    box-shadow: 
-        0 0 15px var(--vc-hot-pink),
-        0 0 30px var(--vc-electric-blue) !important;
 }
 
-/* === ФУТЕР === */
+/* === 13. ФУТЕР === */
 .site-footer {
     background: rgba(10, 10, 26, 0.8) !important;
     backdrop-filter: blur(10px) !important;
     border-top: 3px solid rgba(255, 68, 170, 0.6) !important;
     box-shadow: 0 -5px 30px rgba(255, 68, 170, 0.2) !important;
-    color: var(--text-medium) !important;
 }
 
-/* === ДЕКОРАТИВНЫЙ НЕОН (пальмы, солнце - отключаем) === */
-.theme-vice-city .site-header::after {
-    display: none !important;
+/* === 14. ДЕКОР НЕОНОВАЯ СЕТКА === */
+body.theme-vice-city::before {
+    display: block !important;
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(0deg, 
+            rgba(255, 68, 170, 0.03) 1px, 
+            transparent 1px),
+        linear-gradient(90deg, 
+            rgba(68, 170, 255, 0.03) 1px, 
+            transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* === 15. ДЕКОР ПАЛЬМЫ === */
+body.theme-vice-city::after {
+    display: block !important;
+    content: '🌴🌴';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 8rem;
+    color: rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0 20px rgba(255, 68, 170, 0.2);
+    white-space: nowrap;
+    letter-spacing: 50px;
+    transform: translateY(30%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* === АДАПТИВНОСТЬ === */
@@ -351,10 +293,6 @@ body.theme-vice-city::after {
         font-size: 4rem;
         letter-spacing: 20px;
         bottom: -20px;
-    }
-    
-    .nav-link:hover {
-        transform: translateY(-2px) scale(1.02) !important;
     }
 }
 
