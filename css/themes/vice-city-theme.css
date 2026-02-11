@@ -1,5 +1,5 @@
 /* vice-city-theme.css - ТЕМА VICE CITY */
-/* ТОЛЬКО ПЕРЕМЕННЫЕ! ВСЕ СЕЛЕКТОРЫ УДАЛЕНЫ! */
+/* УНИКАЛЬНЫЕ ЦВЕТА + ДЕКОР ЭЛЕМЕНТЫ */
 
 :root {
     /* === ЦВЕТА ПО РОЛИ (VICE CITY) === */
@@ -82,61 +82,92 @@
         var(--color-accent), 
         transparent
     );
-    
-    /* === 🏝️ УНИКАЛЬНЫЕ ДЕКОР ЭЛЕМЕНТЫ VICE CITY === */
-    --decor-neon-grid: 
+}
+
+/* === 🏝️ УНИКАЛЬНЫЙ ДЕКОР VICE CITY === */
+
+/* Неоновая сетка на фоне */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
         linear-gradient(0deg, rgba(255, 68, 170, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(68, 170, 255, 0.03) 1px, transparent 1px);
-    --decor-grid-size: 40px;
-    --decor-palms: '🌴🌴';
-    --decor-palms-size: 8rem;
-    --decor-palms-spacing: 50px;
-    --decor-palms-color: rgba(0, 0, 0, 0.3);
-    --decor-palms-glow: 0 0 20px rgba(255, 68, 170, 0.2);
-    --decor-palms-mobile: '🌴';
-    
-    /* === 🌴 ПАЛЬМЫ ДЛЯ МОБИЛОК === */
-    --decor-palms-size-mobile: 4rem;
-    --decor-palms-spacing-mobile: 20px;
-    --decor-palms-size-small: 3rem;
-    --decor-palms-spacing-small: 10px;
-    
-    /* === 💗 НЕОНОВЫЙ ПУЛЬС === */
-    --glow-neon-pulse: 0 0 30px var(--color-primary), 0 0 60px var(--color-secondary);
-    --animation-neon-pulse: neon-pulse 3s ease-in-out infinite;
-    
-    /* === 🌆 СИЛУЭТЫ ПАЛЬМ (задний фон) === */
-    --decor-skyline: '🌴🌴🌴';
-    --decor-skyline-position: bottom 0 left 0;
-    --decor-skyline-opacity: 0.1;
-    
-    /* === 🎸 АРТ-ДЕКО ПОЛОСКИ === */
-    --gradient-vinyl: repeating-linear-gradient(
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Пальмы на горизонте */
+body::after {
+    content: '🌴🌴';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 8rem;
+    color: rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0 20px rgba(255, 68, 170, 0.2);
+    white-space: nowrap;
+    letter-spacing: 50px;
+    transform: translateY(30%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Арт-деко полоски для шапки */
+.site-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: repeating-linear-gradient(
         45deg,
         rgba(255, 68, 170, 0.1) 0px,
         rgba(255, 68, 170, 0.1) 10px,
         rgba(68, 170, 255, 0.1) 10px,
         rgba(68, 170, 255, 0.1) 20px
     );
-    
-    /* === АНИМАЦИИ === */
-    --animation-neon-pulse: neon-pulse 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
-/* 🎸 АНИМАЦИИ VICE CITY */
+/* Неоновый пульс для активных элементов */
+.nav-link.active,
+.btn-primary,
+.opponent-pill.active {
+    animation: neon-pulse 3s ease-in-out infinite;
+}
+
 @keyframes neon-pulse {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
+    0%, 100% { 
+        box-shadow: 0 0 20px var(--color-primary), 0 0 40px var(--color-secondary);
+        opacity: 1;
+    }
+    50% { 
+        box-shadow: 0 0 30px var(--color-primary), 0 0 60px var(--color-secondary);
+        opacity: 0.95;
+    }
 }
 
-@keyframes palm-sway {
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(2deg); }
+/* Адаптивность для мобилок */
+@media (max-width: 768px) {
+    body::after {
+        font-size: 4rem;
+        letter-spacing: 20px;
+    }
 }
 
-@keyframes neon-flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.9; }
+@media (max-width: 480px) {
+    body::after {
+        font-size: 3rem;
+        letter-spacing: 10px;
+        content: '🌴';
+    }
 }
-
-/* ДЕКОР ЭЛЕМЕНТЫ ЧЕРЕЗ КЛАССЫ В HTML, НЕ ТУТ! */
