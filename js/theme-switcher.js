@@ -31,10 +31,11 @@ class ThemeManager {
         }
         
         // Создаем новую ссылку на CSS темы
+   
         const link = document.createElement('link');
         link.id = 'theme-style';
         link.rel = 'stylesheet';
-        link.href = `css/themes/${theme}.css`; // base.css, vice-city.css и т.д.
+        link.href = `css/themes/${theme}-theme.css`;
         document.head.appendChild(link);
         this.themeLink = link;
         
@@ -123,4 +124,5 @@ class ThemeManager {
 const themeManager = new ThemeManager();
 themeManager.init();
 window.themeManager = themeManager;
+
 
