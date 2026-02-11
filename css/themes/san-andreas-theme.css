@@ -1,16 +1,16 @@
 /* san-andreas-theme.css - ТЕМА SAN ANDREAS */
-/* ТОЛЬКО ПЕРЕМЕННЫЕ! ПОЛНАЯ КОПИЯ СТРУКТУРЫ base-theme.css */
+/* УНИКАЛЬНЫЕ ЦВЕТА + ДЕКОР ЭЛЕМЕНТЫ */
 
 :root {
     /* === ЦВЕТА ПО РОЛИ (SAN ANDREAS) === */
-    --color-primary: #ff9900;      /* солнце/апельсин */
-    --color-secondary: #ff6600;    /* закат/манго */
-    --color-accent: #8b4513;       /* дерево/земля */
-    --color-success: #228b22;      /* лес/пальмы */
-    --color-info: #f4a460;         /* песок */
-    --color-warning: #ffcc00;      /* золото */
-    --color-danger: #b22222;       /* кирпич/огонь */
-    --color-highlight: #d2b48c;    /* бежевый/кожа */
+    --color-primary: #ff9900;
+    --color-secondary: #ff6600;
+    --color-accent: #8b4513;
+    --color-success: #228b22;
+    --color-info: #f4a460;
+    --color-warning: #ffcc00;
+    --color-danger: #b22222;
+    --color-highlight: #d2b48c;
     
     /* === ФОНЫ ПО РОЛИ === */
     --bg-body: #331a00;
@@ -83,30 +83,157 @@
         var(--color-accent),
         transparent
     );
-    --gradient-wood: 
+}
+
+/* === 🌵 УНИКАЛЬНЫЙ ДЕКОР SAN ANDREAS === */
+
+/* Эффект солнца на фоне */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, 
+        rgba(255, 204, 0, 0.8) 0%,
+        rgba(255, 153, 0, 0.6) 30%,
+        rgba(255, 102, 0, 0.3) 60%,
+        transparent 70%
+    );
+    border-radius: 50%;
+    filter: blur(10px);
+    z-index: 0;
+    pointer-events: none;
+    animation: sun-haze 8s ease-in-out infinite;
+}
+
+/* Пальма в углу */
+body::after {
+    content: '🌴';
+    position: fixed;
+    bottom: 20px;
+    right: 50px;
+    font-size: 4rem;
+    color: #228b22;
+    filter: drop-shadow(2px 2px 0 #006400);
+    z-index: 9999;
+    animation: sway 4s ease-in-out infinite;
+    transform-origin: bottom center;
+    pointer-events: none;
+}
+
+/* Деревянная текстура для шапки */
+.site-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
         linear-gradient(90deg, 
             transparent 50%, 
             rgba(139, 69, 19, 0.1) 50%),
         linear-gradient(
             transparent 50%, 
             rgba(210, 180, 140, 0.1) 50%);
-    
-    /* === ДЕКОРАТИВНЫЕ ПЕРЕМЕННЫЕ === */
-    --decor-sun: radial-gradient(circle, 
-        rgba(255, 204, 0, 0.8) 0%,
-        rgba(255, 153, 0, 0.6) 30%,
-        rgba(255, 102, 0, 0.3) 60%,
-        transparent 70%
-    );
-    --decor-palm: '🌴';
-    --decor-palm-color: #228b22;
-    --decor-palm-shadow: #006400;
-    
-    /* === АНИМАЦИИ === */
-    --animation-sway: sway 4s ease-in-out infinite;
+    background-size: 30px 30px;
+    opacity: 0.3;
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
 }
 
+/* Пустынная рябь для футера */
+.site-footer::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(139, 69, 19, 0.1) 0px,
+        rgba(139, 69, 19, 0.1) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    pointer-events: none;
+}
+
+/* Койот-эффект для карточек */
+.tool-card:hover {
+    transform: translateY(-15px) scale(1.03);
+    border-width: 3px;
+    box-shadow: 
+        var(--shadow-md),
+        0 0 40px rgba(255, 153, 0, 0.4),
+        0 0 80px rgba(139, 69, 19, 0.2);
+}
+
+/* Текстура как у старого вестерна для панелей */
+.panel,
+.faq-container,
+.info-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.panel::after,
+.faq-container::after,
+.info-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><path d="M0 50 L100 50 M50 0 L50 100" stroke="rgba(139,69,19,0.05)" stroke-width="1"/></svg>');
+    background-size: 50px 50px;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Анимации */
 @keyframes sway {
     0%, 100% { transform: rotate(-2deg); }
     50% { transform: rotate(2deg); }
+}
+
+@keyframes sun-haze {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes dust-devil {
+    0% { transform: rotate(0deg) scale(1); opacity: 0.3; }
+    50% { transform: rotate(180deg) scale(1.2); opacity: 0.5; }
+    100% { transform: rotate(360deg) scale(1); opacity: 0.3; }
+}
+
+/* Адаптивность для мобилок */
+@media (max-width: 768px) {
+    body::after {
+        font-size: 3rem;
+        right: 20px;
+        bottom: 10px;
+    }
+    
+    body::before {
+        width: 150px;
+        height: 150px;
+        top: -30px;
+        right: -30px;
+    }
+}
+
+@media (max-width: 480px) {
+    body::after {
+        font-size: 2.5rem;
+        right: 15px;
+        bottom: 5px;
+    }
 }
