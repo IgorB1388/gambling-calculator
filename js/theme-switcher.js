@@ -24,30 +24,19 @@ class ThemeManager {
     loadThemeCSS(theme) {
         console.log(`Загружаем тему: ${theme}`);
         
-        // Проверяем, что base.css загружен
-        if (!document.querySelector('link[href="base.css"]')) {
-            console.error('base.css не найден!');
-            return;
-        }
-        
         // Удаляем старую тему
         const oldThemeLink = document.getElementById('theme-style');
         if (oldThemeLink) {
             oldThemeLink.remove();
         }
         
-        // Если выбрана базовая тема - только убираем дополнительный CSS
-        if (theme === 'base') {
-            this.removeThemeCSS();
-        } else {
-            // Создаем новую ссылку на CSS темы
-            const link = document.createElement('link');
-            link.id = 'theme-style';
-            link.rel = 'stylesheet';
-            link.href = `${theme}-theme.css`;
-            document.head.appendChild(link);
-            this.themeLink = link;
-        }
+        // Создаем новую ссылку на CSS темы
+        const link = document.createElement('link');
+        link.id = 'theme-style';
+        link.rel = 'stylesheet';
+        link.href = `${theme}.css`; // base.css, vice-city.css и т.д.
+        document.head.appendChild(link);
+        this.themeLink = link;
         
         this.currentTheme = theme;
         this.saveTheme(theme);
@@ -62,14 +51,6 @@ class ThemeManager {
         document.dispatchEvent(new CustomEvent('themeChanged', {
             detail: { theme: theme }
         }));
-    }
-    
-    removeThemeCSS() {
-        const themeLink = document.getElementById('theme-style');
-        if (themeLink) {
-            themeLink.remove();
-        }
-        this.themeLink = null;
     }
     
     updateBodyClass(theme) {
