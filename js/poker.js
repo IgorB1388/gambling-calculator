@@ -378,135 +378,72 @@ async function calculateEquity() {
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
 
-    const SIMULATIONS = 25000;
-    let heroTotal = 0,
-        oppTotal = 0,
-        tieHands = 0;
+    const SIMULATIONS = 20000;
+    let heroWins = 0, oppWins = 0, ties = 0;
 
-    const createOptimizedDeck = () => {
-        const suits = ['s', 'h', 'c', 'd'];
-        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-        const deck = [];
-        for (const v of values) {
-            for (const s of suits) {
-                deck.push({
-                    code: v + s,
-                    value: v,
-                    suit: s === 'h' ? '♥' : s === 'd' ? '♦' : s === 's' ? '♠' : '♣',
-                    suitCode: s,
-                    rank: HandEvaluator.ranks[v]
-                });
-            }
-        }
-        return deck;
-    };
+    const suits = ['s','h','c','d'];
+    const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+    const fullDeck = [];
+    for (const v of values) for (const s of suits) fullDeck.push({code:v+s, value:v, suitCode:s, rank:HandEvaluator.ranks[v]});
+    const usedCodes = new Set(Array.from(usedCards));
 
-    const initialDeck = createOptimizedDeck();
-    const usedCardCodes = new Set(Array.from(usedCards));
-
-    const neededBoardCards = 5 - boardCards.length;
-    const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
+    const neededBoard = 5 - boardCards.length;
 
     for (let i = 0; i < SIMULATIONS; i++) {
-        const availableDeck = initialDeck.filter(c => !usedCardCodes.has(c.code));
-        if (availableDeck.length < totalCardsNeeded) continue;
+        let deck = fullDeck.filter(c => !usedCodes.has(c.code));
+        if (deck.length < neededBoard + opponentsCount*2) continue;
 
-        // Перетасовка колоды
-        const shuffled = [...availableDeck];
-        for (let j = shuffled.length - 1; j > 0; j--) {
-            const k = Math.floor(Math.random() * (j + 1));
-            [shuffled[j], shuffled[k]] = [shuffled[k], shuffled[j]];
+        // тасуем
+        for (let j = deck.length -1; j>0; j--){
+            const k=Math.floor(Math.random()*(j+1));
+            [deck[j], deck[k]]=[deck[k], deck[j]];
         }
 
-        // Доска
-        const fullBoard = [...boardCards];
-        for (let j = 0; j < neededBoardCards; j++) fullBoard.push(shuffled[j]);
+        // формируем борд
+        const fullBoard = [...boardCards, ...deck.slice(0,neededBoard)];
+        let idx = neededBoard;
 
-        // Руки оппонентов
-        const opponentHands = [];
-        let idx = neededBoardCards;
-        for (let o = 0; o < opponentsCount; o++) {
-            opponentHands.push([shuffled[idx], shuffled[idx + 1]]);
-            idx += 2;
+        // руки оппонентов
+        const oppHands = [];
+        for(let o=0;o<opponentsCount;o++){
+            oppHands.push([deck[idx], deck[idx+1]]);
+            idx+=2;
         }
 
         const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
+        const oppScores = oppHands.map(h=>HandEvaluator.evaluate([...h, ...fullBoard]));
 
-        // Определяем лучшую руку среди оппонентов
-        let bestOpponentScore = -1;
-        let tyingOpponents = 0;
+        const maxScore = Math.max(heroScore, ...oppScores);
+        const winners = [heroScore, ...oppScores].map(s=>s===maxScore?1:0);
+        const totalWinners = winners.reduce((a,b)=>a+b,0);
 
-        for (const hand of opponentHands) {
-            const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
-            if (score > bestOpponentScore) {
-                bestOpponentScore = score;
-                tyingOpponents = 1;
-            } else if (score === bestOpponentScore) {
-                tyingOpponents++;
-            }
-        }
-
-        // Распределяем очки
-        if (heroScore > bestOpponentScore) {
-            heroTotal += 1;
-        } else if (heroScore < bestOpponentScore) {
-            oppTotal += 1;
+        if (winners[0]===1){
+            if(totalWinners===1) heroWins++;
+            else ties += 1 / totalWinners;
         } else {
-            // Равные руки: делим поровну между всеми игроками (hero + tyingOpponents)
-            const totalPlayers = tyingOpponents + 1;
-            const share = 1 / totalPlayers;
-            heroTotal += share;
-            oppTotal += share * tyingOpponents;
-            tieHands += share;
+            oppWins += winners.slice(1).reduce((a,b)=>a+b,0) / totalWinners;
         }
     }
 
-    // Преобразуем в проценты
-    let heroPercent = (heroTotal / SIMULATIONS) * 100;
-    let oppPercent = (oppTotal / SIMULATIONS) * 100;
-    let tiePercent = (tieHands / SIMULATIONS) * 100;
+    const total = heroWins + oppWins + ties;
+    const heroPercent = Math.round((heroWins + ties) / total * 100);
+    const oppPercent = Math.round((oppWins + ties) / total * 100);
 
-    // Округление до 0.1
-    heroPercent = Math.max(0, Math.round(heroPercent * 10) / 10);
-    oppPercent = Math.max(0, Math.round(oppPercent * 10) / 10);
-    tiePercent = Math.max(0, Math.round(tiePercent * 10) / 10);
+    document.getElementById('heroEquity').textContent = heroPercent + '%';
+    document.getElementById('oppEquity').textContent = oppPercent + '%';
 
-    // Коррекция, чтобы сумма была ровно 100%
-    let sum = heroPercent + oppPercent + tiePercent;
-    let diff = 100 - sum;
-    if (Math.abs(diff) > 0.001) {
-        const maxVal = Math.max(heroPercent, oppPercent, tiePercent);
-        if (maxVal === heroPercent) heroPercent = Math.round((heroPercent + diff) * 10) / 10;
-        else if (maxVal === oppPercent) oppPercent = Math.round((oppPercent + diff) * 10) / 10;
-        else tiePercent = Math.round((tiePercent + diff) * 10) / 10;
-    }
-
-    // Вывод
-    document.getElementById('resultHero').textContent = heroPercent.toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = oppPercent.toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = tiePercent.toFixed(1) + '%';
-
-    hasCalculatedResults = true;
-    isCalculating = false;
-    updateStatus();
+    isCalculating=false;
+    document.getElementById('calculateBtn').disabled=false;
 }
 
-
-
-// --- Прочие функции ---
+// --- Вспомогательные ---
 function getHandCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('hero')).length;}
 function getBoardCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('board')).length;}
-function activateBlockBySlotId(slotId){if(slotId.startsWith('hero')) selectHandBlock(); else if(slotId.startsWith('board')) selectBoardBlock();}
-function selectHandBlock(){activeBlock='hand';updateActiveSection('handSection','handTitle');}
-function selectBoardBlock(){activeBlock='board';updateActiveSection('boardSection','boardTitle');}
-function updateActiveSection(sectionId,titleId){['handSection','boardSection'].forEach(id=>document.getElementById(id).classList.remove('active'));['handTitle','boardTitle'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById(sectionId).classList.add('active');document.getElementById(titleId).classList.add('active');}
-function setOpponents(count){opponentsCount=count;document.querySelectorAll('.opponent-pill').forEach(pill=>pill.classList.toggle('active',parseInt(pill.dataset.opponents)===count));resetResults();}
-function checkAndSwitchActiveBlock(){const hc=getHandCardsCount(),bc=getBoardCardsCount();if(activeBlock==='hand' && hc>=2 && bc<5) selectBoardBlock();else if(activeBlock==='board' && bc>=5 && hc<2) selectHandBlock();}
-function resetResults(){if(hasCalculatedResults){document.getElementById('resultHero').textContent='—';document.getElementById('resultOpponent').textContent='—';document.getElementById('resultTie').textContent='—';hasCalculatedResults=false;}}
-function handleCardClick(cardCode){if(usedCards.has(cardCode)) return;activeBlock==='hand'?addCardToHand(cardCode):addCardToBoard(cardCode);}
-function addCardToHand(cardCode){if(getHandCardsCount()<2){for(let i=1;i<=2;i++){const s=`hero-${i}`;if(!selectedCards.has(s)){addCardToSlot(cardCode,s);if(getHandCardsCount()>=2 && getBoardCardsCount()<5) selectBoardBlock();return;}}} else addCardToBoard(cardCode);}
-function addCardToBoard(cardCode){if(getBoardCardsCount()<5){for(let i=1;i<=5;i++){const s=`board-${i}`;if(!selectedCards.has(s)){addCardToSlot(cardCode,s);if(getBoardCardsCount()>=5 && getHandCardsCount()<2) selectHandBlock();return;}}} else addCardToHand(cardCode);}
-function moveCardBetweenSlots(from,to){if(!selectedCards.has(from)) return;const c=selectedCards.get(from);resetResults();if(selectedCards.has(to)){const temp=selectedCards.get(to);selectedCards.set(to,c);selectedCards.set(from,temp);}else{selectedCards.set(to,c);selectedCards.delete(from);}activateBlockBySlotId(to);updateCardDisplay();updateStatus();checkBoardValidity();checkHandValidity();checkAndSwitchActiveBlock();}
-function clearAll(){selectedCards.clear();usedCards.clear();resetResults();updateCardDisplay();updateStatus();checkBoardValidity();checkHandValidity();}
-
-
+function clearAll(){selectedCards.clear();usedCards.clear();resetResults();updateCardDisplay();updateStatus();}
+function resetResults(){document.getElementById('heroEquity').textContent='0%';document.getElementById('oppEquity').textContent='0%';}
+function setOpponents(n){opponentsCount=n;resetResults();}
+function selectHandBlock(){activeBlock='hand';document.getElementById('handSection').classList.add('active');document.getElementById('boardSection').classList.remove('active');}
+function selectBoardBlock(){activeBlock='board';document.getElementById('boardSection').classList.add('active');document.getElementById('handSection').classList.remove('active');}
+function handleCardClick(cardCode){if(activeBlock==='hand' && getHandCardsCount()<2)addCardToSlot(cardCode,'hero-'+(getHandCardsCount()+1));else if(activeBlock==='board' && getBoardCardsCount()<5)addCardToSlot(cardCode,'board-'+(getBoardCardsCount()+1));}
+function moveCardBetweenSlots(fromSlot,toSlot){const card=selectedCards.get(fromSlot);selectedCards.delete(fromSlot);selectedCards.set(toSlot,card);}
+function activateBlockBySlotId(slotId){if(slotId.startsWith('hero'))selectHandBlock();else selectBoardBlock();}
