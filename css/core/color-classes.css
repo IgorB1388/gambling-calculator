@@ -1,1 +1,59 @@
+/* color-classes.css - ТОЛЬКО КЛАССЫ ДЛЯ ЦВЕТОВ */
+/* НИКАКИХ РАЗМЕРОВ! ТОЛЬКО color, background, border-color, box-shadow */
+
+/* === ТЕКСТ === */
+.text-primary { color: var(--neon-teal); }
+.text-secondary { color: var(--neon-pink); }
+.text-accent { color: var(--neon-yellow); }
+.text-success { color: var(--neon-green); }
+.text-light { color: var(--text-light); }
+.text-medium { color: var(--text-medium); }
+.text-dark { color: var(--text-dark); }
+
+/* === ФОНЫ === */
+.bg-body { background: var(--bg-body); }
+.bg-header { background: var(--bg-header); }
+.bg-panel { background: var(--bg-panel); }
+.bg-section { background: var(--bg-section); }
+.bg-card { background: var(--bg-card); }
+.bg-coming-soon { background: var(--bg-coming-soon); }
+
+/* === ГРАНИЦЫ === */
+.border-primary { border-color: var(--border-primary); }
+.border-secondary { border-color: var(--border-secondary); }
+.border-accent { border-color: var(--border-accent); }
+.border-dashed { border-color: var(--border-dashed); }
+
+/* === КНОПКИ === */
+.btn-primary-bg { background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple)); }
+.btn-primary-text { color: white; }
+.btn-secondary-bg { background: rgba(0, 204, 255, 0.1); }
+.btn-secondary-border { border-color: var(--neon-teal); }
+.btn-secondary-text { color: var(--neon-teal); }
+
+/* === СПЕЦИАЛЬНЫЕ ЭФФЕКТЫ === */
+.glow-primary { box-shadow: var(--glow-primary); }
+.glow-secondary { box-shadow: var(--glow-secondary); }
+.shadow-default { box-shadow: var(--shadow); }
+
+/* === DRAG-OVER СОСТОЯНИЯ === */
+.drag-over-primary {
+    border-color: var(--neon-teal) !important;
+    box-shadow: 0 0 20px var(--neon-teal) !important;
+}
+.drag-over-secondary {
+    border-color: var(--neon-pink) !important;
+    box-shadow: 0 0 20px var(--neon-pink) !important;
+}
+.drag-over-accent {
+    border-color: var(--neon-purple) !important;
+    box-shadow: 0 0 20px var(--neon-purple) !important;
+}
+
+/* === ИНДИКАТОР АКТИВНОГО БЛОКА === */
+.active-dot {
+    background-color: #ff3366;
+    box-shadow: 0 0 10px #ff3366;
+    border-color: rgba(255, 255, 255, 0.9);
+}
 
