@@ -1,55 +1,55 @@
-/* styles.css - ОБЩИЕ СТИЛИ ДЛЯ ВСЕХ СТРАНИЦ (кроме покера, рулетки, арбов) */
-/* Основной стиль для index.html, FAQ и общих элементов */
+/* vice-city-theme.css - ТЕМА GTA VICE CITY (стиль Майами, неон, арт-деко) */
 
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Segoe UI', 'Arial', sans-serif; 
-}
-
+/* === ПЕРЕОПРЕДЕЛЯЕМ ВСЕ ПЕРЕМЕННЫЕ === */
 :root {
-    /* === УНИКАЛЬНЫЕ NEON ЦВЕТА (для главной и FAQ) === */
-    --neon-electric-blue: #0066ff;
-    --neon-laser-green:   #00ff99;
-    --neon-hot-pink:      #ff3399;
-    --neon-sunset:        #ff6633;
-    --neon-galaxy:        #9933ff;
-    --neon-cyber:         #00ccff;
+    /* ЦВЕТА VICE CITY */
+    --vc-hot-pink:      #ff44aa;    /* Неоново-розовый */
+    --vc-electric-blue: #44aaff;    /* Электрик-блю */
+    --vc-sunset-orange: #ff8844;    /* Закатный оранжевый */
+    --vc-pastel-blue:   #88ccff;    /* Пастельно-голубой */
+    --vc-white:         #ffffff;    /* Чисто белый */
+    --vc-cream:         #fff5e6;    /* Кремовый */
+    --vc-gold:          #ffcc88;    /* Золотистый */
+    --vc-mint:          #88ffaa;    /* Мятный */
     
-    /* === ФОНЫ (более темные для контраста) === */
-    --bg-deep-space:   #0a0f2a;
-    --bg-cosmic:       #1a1f3a;
-    --bg-nebula:       #2a2f4a;
-    --panel-void:      #252a45;
+    /* ОСНОВНЫЕ ЦВЕТА ТЕМЫ */
+    --primary-color: var(--vc-hot-pink);
+    --secondary-color: var(--vc-electric-blue);
+    --accent-color: var(--vc-sunset-orange);
+    --success-color: var(--vc-mint);
     
-    /* === ТЕКСТ === */
-    --text-starlight:  #ffffff;
-    --text-moonlight:  #e6e6ff;
-    --text-dust:       #9999cc;
+    /* ФОНЫ VICE CITY */
+    --bg-dark: #1a1b2f;           /* Темно-синий (ночь) */
+    --bg-medium: #2a2f4a;         /* Сиреневый */
+    --bg-light: #3a3f5a;          /* Светло-сиреневый */
+    --panel-bg: rgba(255, 255, 255, 0.1);  /* Стекло */
     
-    /* === ЭФФЕКТЫ === */
-    --border-glow:     rgba(255, 255, 255, 0.15);
-    --shadow-deep:     0 15px 35px rgba(0, 0, 0, 0.6);
-    --glow-intensity:  0 0 25px;
-    --grid-color:      rgba(0, 102, 255, 0.1);
+    /* ТЕКСТ VICE CITY */
+    --text-light: #ffffff;
+    --text-medium: #e0e0ff;
+    --text-dark: #0a0a1a;
+    
+    /* ЭФФЕКТЫ VICE CITY */
+    --border-color: rgba(255, 68, 170, 0.5);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --neon-glow-pink: 0 0 20px rgba(255, 68, 170, 0.6);
+    --neon-glow-blue: 0 0 20px rgba(68, 170, 255, 0.6);
 }
 
-/* ОБЩИЕ СТИЛИ ТЕЛА (переопределяются в poker.css, roulette.css, arbs.css) */
-body:not(.roulette-page):not(.poker-page):not(.arbs-page) {
-    background: 
-        linear-gradient(135deg, var(--bg-deep-space) 0%, #000822 100%),
-        radial-gradient(circle at 20% 80%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 51, 153, 0.1) 0%, transparent 50%);
-    min-height: 100vh;
-    color: var(--text-starlight);
-    line-height: 1.7;
+/* === ОСНОВНОЙ ФОН === */
+body {
+    background: linear-gradient(135deg, 
+        #0a0a1a 0%,              /* Глубокий синий */
+        #1a1b2f 40%,             /* Фиолетовый */
+        #2a1f2f 70%,             /* Розоватый */
+        #1f1a2a 100%            /* Темно-фиолетовый */
+    ) !important;
+    color: var(--text-light) !important;
     position: relative;
-    overflow-x: hidden;
 }
 
-/* Космическая сетка на фоне (только для главной и FAQ) */
-body:not(.roulette-page):not(.poker-page):not(.arbs-page)::before {
+/* === НЕОНОВАЯ СЕТКА (как в заставке Vice City) === */
+body.theme-vice-city::before {
     content: '';
     position: fixed;
     top: 0;
@@ -57,930 +57,311 @@ body:not(.roulette-page):not(.poker-page):not(.arbs-page)::before {
     right: 0;
     bottom: 0;
     background-image: 
-        linear-gradient(var(--grid-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-    background-size: 50px 50px;
+        linear-gradient(0deg, 
+            rgba(255, 68, 170, 0.03) 1px, 
+            transparent 1px),
+        linear-gradient(90deg, 
+            rgba(68, 170, 255, 0.03) 1px, 
+            transparent 1px);
+    background-size: 40px 40px;
     pointer-events: none;
-    opacity: 0.2;
-    z-index: -1;
-}
-
-/* ОБЩИЙ КОНТЕЙНЕР */
-.site-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* ========== ОБЩАЯ ШАПКА (для всех страниц) ========== */
-.site-header {
-    background: rgba(26, 31, 58, 0.9);
-    border-radius: 20px;
-    border: 2px solid var(--neon-electric-blue);
-    box-shadow: 
-        var(--shadow-deep),
-        var(--glow-intensity) rgba(0, 102, 255, 0.4),
-        inset 0 0 30px rgba(0, 102, 255, 0.1);
-    margin-bottom: 40px;
-    padding: 20px 30px;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    border-image: linear-gradient(45deg, var(--neon-electric-blue), var(--neon-galaxy)) 1;
-}
-
-/* Сканирующая линия (для всех страниц) */
-.site-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        var(--neon-laser-green), 
-        var(--neon-cyber), 
-        var(--neon-hot-pink), 
-        transparent);
-    animation: cyber-scan 4s linear infinite;
-    filter: blur(1px);
-}
-
-@keyframes cyber-scan {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
-
-/* Содержимое шапки */
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 25px;
-}
-
-/* ЛОГОТИП */
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    text-decoration: none;
-    position: relative;
-}
-
-.logo:hover .logo-icon {
-    transform: rotateY(180deg);
-}
-
-.logo-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--neon-electric-blue), var(--neon-galaxy));
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    color: white;
-    box-shadow: 
-        0 0 20px var(--neon-electric-blue),
-        0 0 40px rgba(0, 102, 255, 0.3);
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    position: relative;
-    overflow: hidden;
-}
-
-.logo-icon::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 70%
-    );
-    transform: rotate(45deg);
-    animation: hologram 3s infinite linear;
-}
-
-@keyframes hologram {
-    0% { transform: translateX(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) rotate(45deg); }
-}
-
-.logo-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.logo-main {
-    font-size: 2rem;
-    font-weight: 900;
-    background: linear-gradient(45deg, var(--neon-laser-green), var(--neon-cyber));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(0, 255, 153, 0.3);
-}
-
-.logo-sub {
-    font-size: 1rem;
-    color: var(--neon-hot-pink);
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
-
-/* ОСНОВНАЯ НАВИГАЦИЯ */
-.main-nav {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.nav-list {
-    display: flex;
-    list-style: none;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 15px;
-    border: 1px solid rgba(0, 102, 255, 0.3);
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 24px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1));
-    border: 2px solid transparent;
-    border-radius: 12px;
-    color: var(--text-moonlight);
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 1.05rem;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    overflow: hidden;
-    min-width: 120px;
-    justify-content: center;
-}
-
-.nav-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.6s;
-}
-
-.nav-link:hover::before {
-    left: 100%;
-}
-
-.nav-link i {
-    font-size: 1.3rem;
-    transition: all 0.3s;
-}
-
-.nav-link:hover {
-    background: linear-gradient(145deg, rgba(0, 102, 255, 0.2), rgba(153, 51, 255, 0.2));
-    border-color: var(--neon-electric-blue);
-    color: white;
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 
-        0 5px 20px rgba(0, 102, 255, 0.4),
-        0 0 15px var(--neon-electric-blue);
-}
-
-.nav-link.active {
-    background: linear-gradient(145deg, var(--neon-electric-blue), var(--neon-galaxy));
-    border-color: var(--neon-laser-green);
-    color: white;
-    box-shadow: 
-        0 0 20px var(--neon-electric-blue),
-        0 0 30px rgba(0, 102, 255, 0.5),
-        inset 0 0 10px rgba(255, 255, 255, 0.2);
-}
-
-.nav-link.active i {
-    color: var(--neon-laser-green);
-    filter: drop-shadow(0 0 5px var(--neon-laser-green));
-}
-
-/* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА */
-.language-switcher-header {
-    display: flex;
-    gap: 8px;
-    background: rgba(10, 15, 42, 0.8);
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 2px solid var(--neon-galaxy);
-    backdrop-filter: blur(15px);
-    box-shadow: 
-        0 5px 20px rgba(0, 0, 0, 0.4),
-        0 0 15px rgba(153, 51, 255, 0.3);
-}
-
-.lang-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid transparent;
-    border-radius: 8px;
-    padding: 0;
-    width: 42px;
-    height: 32px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.lang-btn::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s;
-}
-
-.lang-btn:hover::after {
-    transform: translateX(100%);
-}
-
-.lang-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: var(--neon-cyber);
-    transform: translateY(-2px) scale(1.1);
-    box-shadow: 0 0 15px var(--neon-cyber);
-}
-
-.lang-btn.active {
-    background: linear-gradient(135deg, var(--neon-galaxy), var(--neon-hot-pink));
-    border-color: var(--neon-laser-green);
-    box-shadow: 
-        0 0 20px var(--neon-galaxy),
-        inset 0 0 10px rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
-}
-
-.lang-flag {
-    width: 26px;
-    height: 20px;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-    filter: brightness(1.2);
-    transition: all 0.3s;
-}
-
-.lang-btn.active .lang-flag {
-    filter: brightness(1.5) contrast(1.2);
-    border-color: var(--neon-laser-green);
-    box-shadow: 0 0 8px var(--neon-laser-green);
-}
-
-/* ОСНОВНОЕ СОДЕРЖИМОЕ */
-.main-content {
-    flex-grow: 1;
-    margin-bottom: 40px;
-}
-
-/* ОБЩИЙ PAGE-HEADER (используется в index.html, FAQ) */
-.page-header:not(.roulette-header) {
-    text-align: center;
-    margin-bottom: 50px;
-    padding: 40px;
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(42, 47, 74, 0.9));
-    border-radius: 25px;
-    border: 2px solid var(--neon-sunset);
-    box-shadow: 
-        var(--shadow-deep),
-        0 0 40px rgba(255, 102, 51, 0.3);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-.page-header:not(.roulette-header)::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(255, 102, 51, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(0, 204, 255, 0.1) 0%, transparent 50%);
     z-index: 0;
 }
 
-.page-header:not(.roulette-header) h1 {
-    font-size: 3rem;
-    background: linear-gradient(45deg, var(--neon-sunset), var(--neon-hot-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 15px;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 0 20px rgba(255, 102, 51, 0.3);
-    letter-spacing: 1px;
-}
-
-.page-header:not(.roulette-header) p {
-    color: var(--neon-cyber);
-    font-size: 1.3rem;
-    position: relative;
-    z-index: 1;
-    max-width: 600px;
-    margin: 0 auto;
-    font-weight: 500;
-}
-
-/* КАРТОЧКИ ИНСТРУМЕНТОВ (только для главной) */
-.tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
-    margin: 50px 0;
-}
-
-.tool-card {
-    background: linear-gradient(145deg, rgba(26, 31, 58, 0.9), rgba(42, 47, 74, 0.9));
-    border-radius: 20px;
-    padding: 30px;
-    text-decoration: none;
-    color: var(--text-starlight);
-    border: 2px solid;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    min-height: 320px;
-    backdrop-filter: blur(10px);
-}
-
-.tool-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, 
-        var(--neon-electric-blue), 
-        var(--neon-laser-green), 
-        var(--neon-cyber),
-        var(--neon-hot-pink));
-    z-index: 1;
-}
-
-.tool-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+/* === ПАЛЬМЫ (силуэты) === */
+body.theme-vice-city::after {
+    content: '🌴🌴';
+    position: fixed;
     bottom: 0;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-    opacity: 0;
-    transition: opacity 0.5s;
+    left: 0;
+    right: 0;
+    font-size: 8rem;
+    color: rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0 20px rgba(255, 68, 170, 0.2);
+    white-space: nowrap;
+    letter-spacing: 50px;
+    transform: translateY(30%);
+    pointer-events: none;
+    z-index: 0;
 }
 
-.tool-card:hover::after {
-    opacity: 1;
+/* === ШАПКА САЙТА (стекло + неон) === */
+.site-header {
+    background: rgba(10, 10, 26, 0.7) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 68, 170, 0.5) !important;
+    box-shadow: 
+        0 0 30px rgba(255, 68, 170, 0.3),
+        0 0 60px rgba(68, 170, 255, 0.2) !important;
+    position: relative;
+    z-index: 10;
+}
+
+/* Неоновая линия сверху */
+.site-header::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 10%;
+    width: 80%;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--vc-hot-pink), 
+        var(--vc-electric-blue), 
+        var(--vc-sunset-orange), 
+        transparent);
+    filter: blur(2px);
+    animation: neon-pulse 3s ease-in-out infinite;
+}
+
+@keyframes neon-pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* === ЛОГОТИП === */
+.logo-icon {
+    background: linear-gradient(135deg, 
+        var(--vc-hot-pink), 
+        var(--vc-electric-blue)
+    ) !important;
+    color: white !important;
+    box-shadow: 
+        0 0 20px var(--vc-hot-pink),
+        0 0 40px rgba(68, 170, 255, 0.4) !important;
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.logo-main {
+    background: linear-gradient(45deg, 
+        #ff44aa, 
+        #44aaff, 
+        #ff8844
+    ) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    text-shadow: 0 0 20px rgba(255, 68, 170, 0.5) !important;
+}
+
+.logo-sub {
+    color: var(--vc-cream) !important;
+    text-shadow: 0 0 10px rgba(255, 68, 170, 0.3);
+    letter-spacing: 4px !important;
+}
+
+/* === НАВИГАЦИЯ === */
+.nav-list {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(5px) !important;
+    border: 2px solid rgba(255, 68, 170, 0.3) !important;
+    box-shadow: 0 0 20px rgba(68, 170, 255, 0.2) !important;
+}
+
+.nav-link {
+    background: rgba(255, 255, 255, 0.02) !important;
+    color: var(--text-medium) !important;
+    border: 2px solid transparent !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.nav-link:hover {
+    background: rgba(255, 68, 170, 0.2) !important;
+    border-color: var(--vc-hot-pink) !important;
+    box-shadow: 
+        0 0 15px var(--vc-hot-pink),
+        0 0 30px rgba(68, 170, 255, 0.3) !important;
+    color: white !important;
+    transform: translateY(-3px) scale(1.05) !important;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, 
+        rgba(255, 68, 170, 0.8), 
+        rgba(68, 170, 255, 0.8)
+    ) !important;
+    border-color: white !important;
+    color: white !important;
+    box-shadow: 
+        0 0 20px var(--vc-hot-pink),
+        0 0 40px var(--vc-electric-blue) !important;
+}
+
+/* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
+.tool-card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 68, 170, 0.4) !important;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.3),
+        0 0 0px transparent !important;
+    transition: all 0.4s !important;
 }
 
 .tool-card:hover {
-    transform: translateY(-15px) scale(1.03);
+    transform: translateY(-10px) scale(1.02) !important;
+    border-color: var(--vc-hot-pink) !important;
     box-shadow: 
-        var(--shadow-deep),
-        0 0 50px rgba(0, 102, 255, 0.4),
-        0 0 80px rgba(0, 255, 153, 0.2);
-    border-width: 3px;
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px var(--vc-hot-pink),
+        0 0 60px rgba(68, 170, 255, 0.4) !important;
 }
 
 .tool-icon {
-    width: 90px;
-    height: 90px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
-    margin-bottom: 25px;
-    border: 3px solid;
-    position: relative;
-    z-index: 2;
-    transition: all 0.5s;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 2px solid rgba(255, 68, 170, 0.6) !important;
+    color: var(--vc-hot-pink) !important;
+    box-shadow: 0 0 20px rgba(255, 68, 170, 0.4) !important;
 }
 
-.tool-card:hover .tool-icon {
-    transform: rotateY(180deg) scale(1.1);
-    background: rgba(255, 255, 255, 0.15);
-}
-
-/* Индивидуальные цвета для каждой карточки */
-.tool-card[href*="poker.html"] {
-    border-color: var(--neon-electric-blue);
-}
 .tool-card[href*="poker.html"] .tool-icon {
-    border-color: var(--neon-electric-blue);
-    color: var(--neon-electric-blue);
-    box-shadow: 0 0 20px rgba(0, 102, 255, 0.4);
+    border-color: var(--vc-hot-pink) !important;
+    color: var(--vc-hot-pink) !important;
 }
 
-.tool-card[href*="roulette.html"] {
-    border-color: var(--neon-sunset);
-}
 .tool-card[href*="roulette.html"] .tool-icon {
-    border-color: var(--neon-sunset);
-    color: var(--neon-sunset);
-    box-shadow: 0 0 20px rgba(255, 102, 51, 0.4);
+    border-color: var(--vc-electric-blue) !important;
+    color: var(--vc-electric-blue) !important;
 }
 
-.tool-card[href*="arbs.html"] {
-    border-color: var(--neon-laser-green);
-}
 .tool-card[href*="arbs.html"] .tool-icon {
-    border-color: var(--neon-laser-green);
-    color: var(--neon-laser-green);
-    box-shadow: 0 0 20px rgba(0, 255, 153, 0.4);
+    border-color: var(--vc-sunset-orange) !important;
+    color: var(--vc-sunset-orange) !important;
 }
 
-.tool-card h3 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: white;
-    position: relative;
-    z-index: 2;
-    font-weight: 800;
-    letter-spacing: 0.5px;
+/* === ПОКЕРНЫЙ КАЛЬКУЛЯТОР === */
+.poker-calculator-wrapper {
+    background: rgba(26, 27, 47, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 68, 170, 0.5) !important;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(255, 68, 170, 0.3) !important;
 }
 
-.tool-card p {
-    color: var(--text-moonlight);
-    margin-bottom: 20px;
-    flex-grow: 1;
-    line-height: 1.6;
-    position: relative;
-    z-index: 2;
-    font-size: 1.05rem;
+.poker-calculator-wrapper .hand-section .section-title {
+    color: var(--vc-hot-pink) !important;
 }
 
-/* ИНФО СЕКЦИЯ (только для главной) */
-.info-section {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(42, 47, 74, 0.9));
-    border-radius: 25px;
-    padding: 40px;
-    border: 2px solid var(--neon-cyber);
-    margin-top: 60px;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
+.poker-calculator-wrapper .board-section .section-title {
+    color: var(--vc-electric-blue) !important;
 }
 
-.info-section::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent 30%, rgba(0, 204, 255, 0.05) 50%, transparent 70%);
-    animation: float 20s infinite linear;
+.poker-calculator-wrapper .result-percent {
+    text-shadow: 0 0 15px currentColor !important;
 }
 
-@keyframes float {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* === АНАЛИЗАТОР РУЛЕТКИ === */
+.roulette-title {
+    color: var(--text-light) !important;
+    text-shadow: 
+        2px 2px 0 var(--vc-hot-pink),
+        4px 4px 0 rgba(68, 170, 255, 0.5) !important;
 }
 
-.info-section h2 {
-    color: var(--neon-cyber);
-    margin-bottom: 25px;
-    font-size: 2.2rem;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 0 15px rgba(0, 204, 255, 0.3);
+/* === АНАЛИЗАТОР ВИЛОК === */
+.arbs-title {
+    color: var(--text-light) !important;
+    text-shadow: 
+        0 0 10px var(--vc-hot-pink),
+        0 0 20px var(--vc-electric-blue),
+        2px 2px 0 var(--vc-sunset-orange) !important;
+    font-family: 'Arial Black', sans-serif !important;
 }
 
-.info-section p {
-    color: var(--text-moonlight);
-    margin-bottom: 20px;
-    line-height: 1.8;
-    position: relative;
-    z-index: 1;
-    font-size: 1.1rem;
-}
-
-/* ОБЩИЙ COMING SOON (для arbs.html) */
-.coming-soon:not(.coming-soon-sa) {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(42, 47, 74, 0.95));
-    border-radius: 25px;
-    padding: 60px 40px;
-    text-align: center;
-    border: 3px dashed var(--neon-galaxy);
-    margin: 60px 0;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-.coming-soon:not(.coming-soon-sa)::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 30% 40%, rgba(153, 51, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(255, 51, 153, 0.1) 0%, transparent 50%);
-    animation: pulse-glow 4s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
-}
-
-.coming-soon-icon:not(.coming-soon-icon-sa) {
-    font-size: 5rem;
-    color: var(--neon-galaxy);
-    margin-bottom: 30px;
-    position: relative;
-    z-index: 1;
-    filter: drop-shadow(0 0 15px var(--neon-galaxy));
-    animation: float-icon 3s ease-in-out infinite;
-}
-
-@keyframes float-icon {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.coming-soon:not(.coming-soon-sa) h2 {
-    color: var(--neon-galaxy);
-    margin-bottom: 20px;
-    font-size: 2.5rem;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 0 20px var(--neon-galaxy);
-    letter-spacing: 2px;
-}
-
-.coming-soon:not(.coming-soon-sa) p {
-    color: var(--text-moonlight);
-    font-size: 1.3rem;
-    max-width: 700px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-    line-height: 1.6;
-}
-
-/* FAQ (только для faq.html) */
-.faq-container {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(42, 47, 74, 0.95));
-    border-radius: 25px;
-    padding: 40px;
-    border: 2px solid var(--neon-laser-green);
-    margin: 40px 0;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-.faq-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--neon-laser-green), var(--neon-cyber), var(--neon-laser-green));
-    background-size: 200% 100%;
-    animation: scan 3s linear infinite;
-}
-
-@keyframes scan {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-}
-
-.faq-item {
-    margin-bottom: 30px;
-    padding-bottom: 30px;
-    border-bottom: 2px solid rgba(0, 255, 153, 0.2);
-    position: relative;
-    z-index: 1;
-}
-
-.faq-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
+/* === FAQ === */
 .faq-item h3 {
-    color: var(--neon-laser-green);
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    color: var(--vc-hot-pink) !important;
 }
 
 .faq-item h3::before {
-    content: '▸';
-    color: var(--neon-hot-pink);
-    font-size: 1.2rem;
+    color: var(--vc-electric-blue) !important;
 }
 
-.faq-item p {
-    color: var(--text-moonlight);
-    line-height: 1.7;
-    font-size: 1.1rem;
-    padding-left: 20px;
-    border-left: 2px solid rgba(0, 255, 153, 0.3);
-    margin-left: 10px;
+.faq-container {
+    background: rgba(26, 27, 47, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 68, 170, 0.5) !important;
 }
 
-.faq-contact {
-    text-align: center;
-    padding: 40px;
-    background: linear-gradient(135deg, rgba(0, 255, 153, 0.05), rgba(0, 204, 255, 0.05));
-    border-radius: 20px;
-    border: 2px solid var(--neon-laser-green);
-    margin-top: 40px;
-    position: relative;
-    overflow: hidden;
+/* === COMING SOON БЛОКИ === */
+.coming-soon-sa,
+.coming-soon-gta4,
+.info-section {
+    background: rgba(26, 27, 47, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 68, 170, 0.5) !important;
 }
 
-.faq-contact::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(0, 255, 153, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(0, 204, 255, 0.1) 0%, transparent 50%);
+/* === ПЕРЕКЛЮЧАТЕЛИ === */
+.language-switcher-header,
+.theme-switcher {
+    background: rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid rgba(255, 68, 170, 0.5) !important;
+    box-shadow: 
+        0 0 20px rgba(255, 68, 170, 0.3),
+        0 0 40px rgba(68, 170, 255, 0.2) !important;
 }
 
-.faq-contact h3 {
-    color: var(--neon-laser-green);
-    margin-bottom: 20px;
-    font-size: 1.8rem;
-    position: relative;
-    z-index: 1;
+.lang-btn,
+.theme-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-light) !important;
+    border: 2px solid transparent !important;
+    transition: all 0.3s !important;
 }
 
-.faq-contact p {
-    color: var(--text-moonlight);
-    font-size: 1.1rem;
-    position: relative;
-    z-index: 1;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
+.lang-btn:hover,
+.theme-btn:hover {
+    border-color: var(--vc-hot-pink) !important;
+    box-shadow: 0 0 15px var(--vc-hot-pink) !important;
+    transform: translateY(-2px) !important;
 }
 
-/* ФУТЕР (для всех страниц) */
+.lang-btn.active,
+.theme-btn.active {
+    background: linear-gradient(135deg, 
+        rgba(255, 68, 170, 0.8), 
+        rgba(68, 170, 255, 0.8)
+    ) !important;
+    border-color: white !important;
+    box-shadow: 
+        0 0 15px var(--vc-hot-pink),
+        0 0 30px var(--vc-electric-blue) !important;
+}
+
+/* === ФУТЕР === */
 .site-footer {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(42, 47, 74, 0.95));
-    border-radius: 20px;
-    padding: 25px;
-    text-align: center;
-    border-top: 3px solid var(--neon-electric-blue);
-    margin-top: auto;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
+    background: rgba(10, 10, 26, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 3px solid rgba(255, 68, 170, 0.6) !important;
+    box-shadow: 0 -5px 30px rgba(255, 68, 170, 0.2) !important;
+    color: var(--text-medium) !important;
 }
 
-.site-footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        var(--neon-electric-blue), 
-        var(--neon-cyber), 
-        var(--neon-electric-blue), 
-        transparent);
-    animation: footer-glow 3s linear infinite;
+/* === ДЕКОРАТИВНЫЙ НЕОН (пальмы, солнце - отключаем) === */
+.theme-vice-city .site-header::after {
+    display: none !important;
 }
 
-@keyframes footer-glow {
-    0% { opacity: 0.3; }
-    50% { opacity: 1; }
-    100% { opacity: 0.3; }
-}
-
-.site-footer p {
-    color: var(--text-moonlight);
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-    position: relative;
-    z-index: 1;
-}
-
-.footer-note {
-    font-size: 0.9rem;
-    color: var(--text-dust);
-    font-style: italic;
-}
-
-/* ========== АДАПТИВНОСТЬ ========== */
-@media (max-width: 1200px) {
-    .site-container {
-        max-width: 1000px;
-    }
-    
-    .page-header:not(.roulette-header) h1 {
-        font-size: 2.5rem;
-    }
-    
-    .tools-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-}
-
-@media (max-width: 1024px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-    }
-    
-    .logo {
-        justify-content: center;
-    }
-    
-    .nav-list {
-        width: 100%;
-        justify-content: center;
-        gap: 8px;
-    }
-    
-    .nav-link {
-        min-width: 110px;
-        padding: 10px 20px;
-    }
-}
-
+/* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    .site-container {
-        padding: 15px;
-    }
-    
-    .page-header:not(.roulette-header) {
-        padding: 30px 20px;
-        margin-bottom: 30px;
-    }
-    
-    .page-header:not(.roulette-header) h1 {
-        font-size: 2rem;
-    }
-    
-    .page-header:not(.roulette-header) p {
-        font-size: 1.1rem;
-    }
-    
-    .tools-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
-        margin: 30px 0;
-    }
-    
-    .tool-card {
-        padding: 25px;
-        min-height: 280px;
-    }
-    
-    .tool-icon {
-        width: 75px;
-        height: 75px;
-        font-size: 30px;
-    }
-    
-    .tool-card h3 {
-        font-size: 1.5rem;
-    }
-    
-    .nav-link {
-        padding: 8px 16px;
-        font-size: 0.95rem;
-        min-width: 100px;
-    }
-    
-    .logo-main {
-        font-size: 1.6rem;
-    }
-    
-    .logo-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
-    }
-    
-    .info-section,
-    .faq-container,
-    .coming-soon:not(.coming-soon-sa) {
-        padding: 25px 20px;
-        border-radius: 20px;
-    }
-    
-    .coming-soon-icon:not(.coming-soon-icon-sa) {
+    body.theme-vice-city::after {
         font-size: 4rem;
+        letter-spacing: 20px;
+        bottom: -20px;
     }
     
-    .coming-soon:not(.coming-soon-sa) h2 {
-        font-size: 2rem;
+    .nav-link:hover {
+        transform: translateY(-2px) scale(1.02) !important;
     }
 }
 
 @media (max-width: 480px) {
-    .nav-list {
-        flex-direction: column;
-        align-items: center;
-        width: auto;
-    }
-    
-    .nav-link {
-        width: 200px;
-        justify-content: flex-start;
-    }
-    
-    .page-header:not(.roulette-header) {
-        padding: 25px 15px;
-    }
-    
-    .page-header:not(.roulette-header) h1 {
-        font-size: 1.8rem;
-    }
-    
-    .coming-soon:not(.coming-soon-sa) {
-        padding: 30px 15px;
-    }
-    
-    .coming-soon-icon:not(.coming-soon-icon-sa) {
-        font-size: 3.5rem;
-    }
-    
-    .language-switcher-header {
-        padding: 8px 10px;
-        gap: 6px;
-    }
-    
-    .lang-btn {
-        width: 38px;
-        height: 30px;
-    }
-    
-    .lang-flag {
-        width: 24px;
-        height: 18px;
-    }
-    
-    .logo {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .logo-text {
-        align-items: center;
+    body.theme-vice-city::after {
+        font-size: 3rem;
+        letter-spacing: 10px;
+        content: '🌴';
     }
 }
