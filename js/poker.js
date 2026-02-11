@@ -879,65 +879,61 @@ let heroRounded = Math.round(heroPercent * 10) / 10;
 let oppRounded = Math.round(oppPercent * 10) / 10;
 let tieRounded = Math.round(tiePercent * 10) / 10;
 
-// Защита от отрицательных значений
+// ЖЕСТКАЯ ЗАЩИТА ОТ МИНУСОВ
 heroRounded = Math.max(0, heroRounded);
 oppRounded = Math.max(0, oppRounded);
 tieRounded = Math.max(0, tieRounded);
 
-// Корректировка до 100%
+// ПЕРВАЯ КОРРЕКТИРОВКА - добавляем к самому большому
 let sum = heroRounded + oppRounded + tieRounded;
 let diff = 100 - sum;
 
 if (Math.abs(diff) > 0.001) {
-    // Находим максимальное значение
     const maxVal = Math.max(heroRounded, oppRounded, tieRounded);
-    let adjusted = false;
     
-    // Пробуем корректировать максимум
     if (maxVal === heroRounded) {
-        let newVal = heroRounded + diff;
-        newVal = Math.round(newVal * 10) / 10;
-        heroRounded = Math.max(0, newVal);
-        adjusted = true;
+        heroRounded = Math.round((heroRounded + diff) * 10) / 10;
     } else if (maxVal === oppRounded) {
-        let newVal = oppRounded + diff;
-        newVal = Math.round(newVal * 10) / 10;
-        oppRounded = Math.max(0, newVal);
-        adjusted = true;
-    } else if (maxVal === tieRounded) {
-        let newVal = tieRounded + diff;
-        newVal = Math.round(newVal * 10) / 10;
-        tieRounded = Math.max(0, newVal);
-        adjusted = true;
-    }
-    
-    // Если не получилось скорректировать максимум
-    if (!adjusted) {
-        let newVal = heroRounded + diff;
-        newVal = Math.round(newVal * 10) / 10;
-        heroRounded = Math.max(0, newVal);
+        oppRounded = Math.round((oppRounded + diff) * 10) / 10;
+    } else {
+        tieRounded = Math.round((tieRounded + diff) * 10) / 10;
     }
 }
 
-// Финальная защита от отрицательных
+// ФИНАЛЬНАЯ ЗАЩИТА ОТ МИНУСОВ
 heroRounded = Math.max(0, Math.round(heroRounded * 10) / 10);
 oppRounded = Math.max(0, Math.round(oppRounded * 10) / 10);
 tieRounded = Math.max(0, Math.round(tieRounded * 10) / 10);
 
-// Финальная проверка суммы
+// ВТОРАЯ КОРРЕКТИРОВКА - принудительно добиваем до 100
 sum = heroRounded + oppRounded + tieRounded;
-if (Math.abs(100 - sum) > 0.1) {
-    // Корректируем героя
-    let newVal = heroRounded + (100 - sum);
+diff = 100 - sum;
+
+if (Math.abs(diff) > 0.001) {
+    // Корректируем ГЕРОЯ, но НЕ ДАЕМ УЙТИ В МИНУС
+    let newVal = heroRounded + diff;
     newVal = Math.round(newVal * 10) / 10;
     heroRounded = Math.max(0, newVal);
+    
+    // Если герой стал 0 и diff отрицательный - добавляем к оппонентам
+    if (heroRounded === 0 && diff < 0) {
+        oppRounded = Math.max(0, Math.round((oppRounded + diff) * 10) / 10);
+    }
 }
 
-// Финальное округление
+// ФИНАЛЬНОЕ ОКРУГЛЕНИЕ
 heroRounded = Math.round(heroRounded * 10) / 10;
 oppRounded = Math.round(oppRounded * 10) / 10;
 tieRounded = Math.round(tieRounded * 10) / 10;
 
+// ГАРАНТИЯ 100% СУММЫ
+sum = heroRounded + oppRounded + tieRounded;
+if (Math.abs(100 - sum) > 0.01) {
+    // Если все еще не 100 - последняя корректировка героя
+    heroRounded = Math.round((heroRounded + (100 - sum)) * 10) / 10;
+    heroRounded = Math.max(0, heroRounded);
+}
+
 document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
-document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
+document.getElementById('resultOpponent').content = oppRounded.toFixed(1) + '%';
 document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
