@@ -1,72 +1,67 @@
-/* vice-city-theme.css - ТЕМА GTA VICE CITY (Майами, неон, арт-деко) */
+/* vice-city-theme.css - ТЕМА VICE CITY */
+/* ТОЛЬКО ЦВЕТА, ФОНЫ, ТЕНИ, ГРАДИЕНТЫ */
 
-/* === 1. ОТКЛЮЧАЕМ ЭФФЕКТЫ ИЗ BASE.CSS === */
-.site-header::before,
-.site-header::after,
-body::before,
-body::after {
-    display: none !important;
-}
-
-/* === 2. ПЕРЕОПРЕДЕЛЯЕМ ПЕРЕМЕННЫЕ === */
 :root {
+    /* === VICE CITY COLORS === */
     --vc-hot-pink:      #ff44aa;
     --vc-electric-blue: #44aaff;
     --vc-sunset-orange: #ff8844;
     --vc-pastel-blue:   #88ccff;
-    --vc-white:         #ffffff;
-    --vc-cream:         #fff5e6;
-    --vc-gold:          #ffcc88;
     --vc-mint:          #88ffaa;
     
-    --primary-color: var(--vc-hot-pink);
-    --secondary-color: var(--vc-electric-blue);
-    --accent-color: var(--vc-sunset-orange);
-    --success-color: var(--vc-mint);
+    /* === BACKGROUNDS === */
+    --bg-body: #1a1b2f;
+    --bg-header: rgba(10, 10, 26, 0.7);
+    --bg-panel: rgba(255, 255, 255, 0.1);
+    --bg-section: rgba(255, 255, 255, 0.05);
+    --bg-card: rgba(26, 27, 47, 0.8);
+    --bg-coming-soon: rgba(26, 27, 47, 0.8);
     
-    --bg-dark: #1a1b2f;
-    --bg-medium: #2a2f4a;
-    --bg-light: #3a3f5a;
-    --panel-bg: rgba(255, 255, 255, 0.1);
-    
-    --text-light: #ffffff;
+    /* === TEXT === */
+    --text-light:  #ffffff;
     --text-medium: #e0e0ff;
-    --text-dark: #0a0a1a;
+    --text-dark:   #0a0a1a;
     
-    --border-color: rgba(255, 68, 170, 0.5);
+    /* === BORDERS === */
+    --border-primary: var(--vc-hot-pink);
+    --border-secondary: var(--vc-electric-blue);
+    --border-accent: var(--vc-sunset-orange);
+    --border-dashed: rgba(255, 68, 170, 0.5);
+    
+    /* === SHADOWS === */
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --glow-primary: 0 0 20px rgba(255, 68, 170, 0.6);
+    --glow-secondary: 0 0 20px rgba(68, 170, 255, 0.6);
+    
+    /* === OVERRIDE NEON VARIABLES === */
+    --neon-teal: var(--vc-electric-blue);
+    --neon-pink: var(--vc-hot-pink);
+    --neon-blue: var(--vc-pastel-blue);
+    --neon-purple: #b36bff;
+    --neon-yellow: var(--vc-sunset-orange);
+    --neon-green: var(--vc-mint);
 }
 
-/* === 3. ОСНОВНОЙ ФОН === */
 body {
     background: linear-gradient(135deg, 
         #0a0a1a 0%,
         #1a1b2f 40%,
         #2a1f2f 70%,
         #1f1a2a 100%
-    ) !important;
-    color: var(--text-light) !important;
+    );
+    color: var(--text-light);
 }
 
-/* === 4. ШАПКА === */
+/* ШАПКА */
 .site-header {
-    background: rgba(10, 10, 26, 0.7) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(255, 68, 170, 0.5) !important;
-    box-shadow: 
-        0 0 30px rgba(255, 68, 170, 0.3),
-        0 0 60px rgba(68, 170, 255, 0.2) !important;
+    background: var(--bg-header);
+    backdrop-filter: blur(10px);
+    border-color: var(--border-primary);
+    box-shadow: 0 0 30px rgba(255, 68, 170, 0.3), 0 0 60px rgba(68, 170, 255, 0.2);
 }
 
 /* Неоновая линия */
 .site-header::before {
-    display: block !important;
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: 10%;
-    width: 80%;
-    height: 4px;
     background: linear-gradient(90deg, 
         transparent, 
         var(--vc-hot-pink), 
@@ -82,175 +77,180 @@ body {
     50% { opacity: 1; }
 }
 
-/* === 5. ЛОГОТИП === */
+/* ЛОГОТИП */
 .logo-icon {
-    background: linear-gradient(135deg, 
-        var(--vc-hot-pink), 
-        var(--vc-electric-blue)
-    ) !important;
-    color: white !important;
-    box-shadow: 
-        0 0 20px var(--vc-hot-pink),
-        0 0 40px rgba(68, 170, 255, 0.4) !important;
-    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+    background: linear-gradient(135deg, var(--vc-hot-pink), var(--vc-electric-blue));
+    color: white;
+    box-shadow: 0 0 20px var(--vc-hot-pink), 0 0 40px rgba(68, 170, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
 .logo-main {
-    background: linear-gradient(45deg, 
-        #ff44aa, 
-        #44aaff, 
-        #ff8844
-    ) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    text-shadow: 0 0 20px rgba(255, 68, 170, 0.5) !important;
+    background: linear-gradient(45deg, #ff44aa, #44aaff, #ff8844);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255, 68, 170, 0.5);
 }
 
 .logo-sub {
-    color: var(--vc-cream) !important;
+    color: #fff5e6;
     text-shadow: 0 0 10px rgba(255, 68, 170, 0.3);
-    letter-spacing: 4px !important;
 }
 
-/* === 6. НАВИГАЦИЯ === */
+/* НАВИГАЦИЯ */
 .nav-list {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(5px) !important;
-    border: 2px solid rgba(255, 68, 170, 0.3) !important;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border-color: rgba(255, 68, 170, 0.3);
 }
 
 .nav-link {
-    background: rgba(255, 255, 255, 0.02) !important;
-    color: var(--text-medium) !important;
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-medium);
 }
 
 .nav-link:hover {
-    background: rgba(255, 68, 170, 0.2) !important;
-    border-color: var(--vc-hot-pink) !important;
-    box-shadow: 0 0 15px var(--vc-hot-pink) !important;
-    color: white !important;
-    transform: translateY(-3px) scale(1.05) !important;
+    background: rgba(255, 68, 170, 0.2);
+    border-color: var(--vc-hot-pink);
+    box-shadow: 0 0 15px var(--vc-hot-pink);
+    color: white;
 }
 
 .nav-link.active {
-    background: linear-gradient(135deg, 
-        rgba(255, 68, 170, 0.8), 
-        rgba(68, 170, 255, 0.8)
-    ) !important;
-    border-color: white !important;
-    box-shadow: 0 0 20px var(--vc-hot-pink), 0 0 40px var(--vc-electric-blue) !important;
+    background: linear-gradient(135deg, rgba(255, 68, 170, 0.8), rgba(68, 170, 255, 0.8));
+    border-color: white;
+    box-shadow: 0 0 20px var(--vc-hot-pink), 0 0 40px var(--vc-electric-blue);
 }
 
-/* === 7. КАРТОЧКИ === */
+/* КАРТОЧКИ */
 .tool-card {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(255, 68, 170, 0.4) !important;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-color: rgba(255, 68, 170, 0.4);
 }
 
 .tool-card:hover {
-    border-color: var(--vc-hot-pink) !important;
-    box-shadow: 
-        0 15px 40px rgba(0, 0, 0, 0.4),
-        0 0 30px var(--vc-hot-pink) !important;
+    border-color: var(--vc-hot-pink);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--vc-hot-pink);
 }
 
 .tool-icon {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 2px solid rgba(255, 68, 170, 0.6) !important;
-    color: var(--vc-hot-pink) !important;
-    box-shadow: 0 0 20px rgba(255, 68, 170, 0.4) !important;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 68, 170, 0.6);
+    color: var(--vc-hot-pink);
+    box-shadow: 0 0 20px rgba(255, 68, 170, 0.4);
 }
 
-/* === 8. ПОКЕР === */
-.poker-calculator-wrapper {
-    background: rgba(26, 27, 47, 0.8) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(255, 68, 170, 0.5) !important;
-    box-shadow: 0 0 40px rgba(255, 68, 170, 0.3) !important;
+.tool-card[href*="poker.html"] {
+    border-color: var(--vc-hot-pink);
+}
+.tool-card[href*="poker.html"] .tool-icon {
+    border-color: var(--vc-hot-pink);
+    color: var(--vc-hot-pink);
 }
 
-.poker-calculator-wrapper .hand-section .section-title {
-    color: var(--vc-hot-pink) !important;
+.tool-card[href*="roulette.html"] {
+    border-color: var(--vc-electric-blue);
+}
+.tool-card[href*="roulette.html"] .tool-icon {
+    border-color: var(--vc-electric-blue);
+    color: var(--vc-electric-blue);
 }
 
-.poker-calculator-wrapper .board-section .section-title {
-    color: var(--vc-electric-blue) !important;
+.tool-card[href*="arbs.html"] {
+    border-color: var(--vc-sunset-orange);
+}
+.tool-card[href*="arbs.html"] .tool-icon {
+    border-color: var(--vc-sunset-orange);
+    color: var(--vc-sunset-orange);
 }
 
-/* === 9. РУЛЕТКА === */
-.roulette-title {
-    color: var(--text-light) !important;
-    text-shadow: 
-        2px 2px 0 var(--vc-hot-pink),
-        4px 4px 0 rgba(68, 170, 255, 0.5) !important;
+/* ПЕРЕКЛЮЧАТЕЛИ */
+.language-switcher-header {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-color: rgba(255, 68, 170, 0.5);
+    box-shadow: 0 0 20px rgba(255, 68, 170, 0.3);
 }
 
-/* === 10. АРБС === */
-.arbs-title {
-    color: var(--text-light) !important;
-    text-shadow: 
-        0 0 10px var(--vc-hot-pink),
-        0 0 20px var(--vc-electric-blue),
-        2px 2px 0 var(--vc-sunset-orange) !important;
-}
-
-/* === 11. FAQ === */
-.faq-item h3 {
-    color: var(--vc-hot-pink) !important;
-}
-
-.faq-item h3::before {
-    color: var(--vc-electric-blue) !important;
-}
-
-.faq-container {
-    background: rgba(26, 27, 47, 0.8) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(255, 68, 170, 0.5) !important;
-}
-
-/* === 12. ПЕРЕКЛЮЧАТЕЛИ === */
-.language-switcher-header,
 .theme-switcher {
-    background: rgba(0, 0, 0, 0.4) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(255, 68, 170, 0.5) !important;
-    box-shadow: 0 0 20px rgba(255, 68, 170, 0.3) !important;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-color: rgba(255, 68, 170, 0.5);
+    box-shadow: 0 0 20px rgba(255, 68, 170, 0.3);
 }
 
 .lang-btn,
 .theme-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: var(--text-light) !important;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
 }
 
 .lang-btn:hover,
 .theme-btn:hover {
-    border-color: var(--vc-hot-pink) !important;
-    box-shadow: 0 0 15px var(--vc-hot-pink) !important;
+    border-color: var(--vc-hot-pink);
+    box-shadow: 0 0 15px var(--vc-hot-pink);
 }
 
 .lang-btn.active,
 .theme-btn.active {
-    background: linear-gradient(135deg, 
-        rgba(255, 68, 170, 0.8), 
-        rgba(68, 170, 255, 0.8)
-    ) !important;
-    border-color: white !important;
+    background: linear-gradient(135deg, rgba(255, 68, 170, 0.8), rgba(68, 170, 255, 0.8));
+    border-color: white;
 }
 
-/* === 13. ФУТЕР === */
-.site-footer {
-    background: rgba(10, 10, 26, 0.8) !important;
-    backdrop-filter: blur(10px) !important;
-    border-top: 3px solid rgba(255, 68, 170, 0.6) !important;
-    box-shadow: 0 -5px 30px rgba(255, 68, 170, 0.2) !important;
+/* ПОКЕР */
+.poker-header {
+    background: var(--bg-panel);
+    backdrop-filter: blur(10px);
+    border-color: rgba(255, 68, 170, 0.5);
+    box-shadow: 0 0 40px rgba(255, 68, 170, 0.3);
 }
 
-/* === 14. ДЕКОР НЕОНОВАЯ СЕТКА === */
-body.theme-vice-city::before {
-    display: block !important;
+.panel {
+    background: var(--bg-panel);
+    backdrop-filter: blur(10px);
+    border-color: rgba(255, 68, 170, 0.5);
+}
+
+.hand-section .section-title {
+    color: var(--vc-hot-pink);
+}
+
+.board-section .section-title {
+    color: var(--vc-electric-blue);
+}
+
+.opponent-pill.active {
+    background: var(--vc-electric-blue);
+    border-color: var(--vc-electric-blue);
+    box-shadow: 0 0 15px var(--vc-electric-blue);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--vc-hot-pink), #b36bff);
+}
+
+.btn-secondary {
+    background: rgba(68, 170, 255, 0.1);
+    color: var(--vc-electric-blue);
+    border-color: var(--vc-electric-blue);
+}
+
+.btn-secondary:hover {
+    background: var(--vc-electric-blue);
+    color: white;
+}
+
+.result-card:nth-child(1) .result-percent { color: var(--vc-hot-pink); }
+.result-card:nth-child(2) .result-percent { color: var(--vc-electric-blue); }
+.result-card:nth-child(3) .result-percent { color: #b36bff; }
+
+.result-card:nth-child(1) { border-color: var(--vc-hot-pink); }
+.result-card:nth-child(2) { border-color: var(--vc-electric-blue); }
+.result-card:nth-child(3) { border-color: #b36bff; }
+
+/* ДЕКОР - ПАЛЬМЫ И НЕОНОВАЯ СЕТКА */
+body::before {
     content: '';
     position: fixed;
     top: 0;
@@ -258,20 +258,14 @@ body.theme-vice-city::before {
     right: 0;
     bottom: 0;
     background-image: 
-        linear-gradient(0deg, 
-            rgba(255, 68, 170, 0.03) 1px, 
-            transparent 1px),
-        linear-gradient(90deg, 
-            rgba(68, 170, 255, 0.03) 1px, 
-            transparent 1px);
+        linear-gradient(0deg, rgba(255, 68, 170, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(68, 170, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 0;
 }
 
-/* === 15. ДЕКОР ПАЛЬМЫ === */
-body.theme-vice-city::after {
-    display: block !important;
+body::after {
     content: '🌴🌴';
     position: fixed;
     bottom: 0;
@@ -287,17 +281,15 @@ body.theme-vice-city::after {
     z-index: 0;
 }
 
-/* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    body.theme-vice-city::after {
+    body::after {
         font-size: 4rem;
         letter-spacing: 20px;
-        bottom: -20px;
     }
 }
 
 @media (max-width: 480px) {
-    body.theme-vice-city::after {
+    body::after {
         font-size: 3rem;
         letter-spacing: 10px;
         content: '🌴';
