@@ -1,47 +1,48 @@
-/* san-andreas-theme.css - ТЕМА GTA SAN ANDREAS (для ВСЕГО САЙТА) */
+/* san-andreas-theme.css - ТЕМА GTA SAN ANDREAS */
 
-/* === ПЕРЕОПРЕДЕЛЯЕМ ВСЕ ПЕРЕМЕННЫЕ ДЛЯ ВСЕХ СТРАНИЦ === */
-:root {
-    /* ЦВЕТА SAN ANDREAS */
-    --primary-color: #ff9900;      /* Оранжевый */
-    --secondary-color: #ff6600;    /* Темно-оранжевый */
-    --accent-color: #8b4513;       /* Коричневый */
-    --success-color: #228b22;      /* Зеленый */
-    
-    /* ФОНЫ SAN ANDREAS */
-    --bg-dark: #331a00;           /* Темно-коричневый */
-    --bg-medium: #663300;         /* Коричневый */
-    --bg-light: #996633;          /* Светло-коричневый */
-    --panel-bg: #d2b48c;          /* Бежевый (песок) */
-    
-    /* ТЕКСТ SAN ANDREAS */
-    --text-light: #fff5e6;        /* Кремовый */
-    --text-medium: #996633;       /* Коричневый */
-    --text-dark: #331a00;
-    
-    /* ЭФФЕКТЫ SAN ANDREAS */
-    --border-color: #8b7355;      /* Деревянный */
-    --shadow: 0 10px 30px rgba(139, 69, 19, 0.4);
-    
-    /* ДОПОЛНИТЕЛЬНЫЕ ЦВЕТА */
-    --sa-sand: #f4a460;           /* Песочный (добавлено) */
-    --sa-gold: #ffd700;           /* Золотой */
+/* === 1. ОТКЛЮЧАЕМ ЭФФЕКТЫ ИЗ BASE.CSS === */
+.site-header::before,
+.site-header::after,
+body::before,
+body::after {
+    display: none !important;
 }
 
-/* === ОСНОВНОЙ ФОН ДЛЯ ВСЕХ СТРАНИЦ === */
+/* === 2. ПЕРЕОПРЕДЕЛЯЕМ ПЕРЕМЕННЫЕ === */
+:root {
+    --primary-color: #ff9900;
+    --secondary-color: #ff6600;
+    --accent-color: #8b4513;
+    --success-color: #228b22;
+    
+    --bg-dark: #331a00;
+    --bg-medium: #663300;
+    --bg-light: #996633;
+    --panel-bg: #d2b48c;
+    
+    --text-light: #fff5e6;
+    --text-medium: #996633;
+    --text-dark: #331a00;
+    
+    --border-color: #8b7355;
+    --shadow: 0 10px 30px rgba(139, 69, 19, 0.4);
+    
+    --sa-sand: #f4a460;
+    --sa-gold: #ffd700;
+}
+
+/* === 3. ОСНОВНОЙ ФОН === */
 body {
     background: linear-gradient(180deg, 
-        #ff9966 0%,               /* Закат */
-        #ffcc66 30%,              /* Солнце */
-        #e6b87e 70%,              /* Пустыня */
-        #bc8f8f 100%              /* Земля */
+        #ff9966 0%,
+        #ffcc66 30%,
+        #e6b87e 70%,
+        #bc8f8f 100%
     ) !important;
     color: var(--text-dark) !important;
 }
 
-/* === ОБЩИЕ ЭЛЕМЕНТЫ (работают на ВСЕХ страницах) === */
-
-/* ШАПКА САЙТА */
+/* === 4. ШАПКА === */
 .site-header {
     background: linear-gradient(135deg, 
         rgba(255, 221, 153, 0.9) 0%,
@@ -52,10 +53,9 @@ body {
     color: var(--text-dark) !important;
 }
 
-/* Деревянная текстура для всех заголовков */
-.site-header::before,
-.page-header::before,
-.panel-title::before {
+/* Деревянная текстура */
+.site-header::before {
+    display: block !important;
     content: '';
     position: absolute;
     top: 0;
@@ -75,7 +75,7 @@ body {
     border-radius: inherit;
 }
 
-/* ЛОГОТИП */
+/* === 5. ЛОГОТИП === */
 .logo-icon {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
     color: var(--text-dark) !important;
@@ -92,7 +92,7 @@ body {
     color: var(--accent-color) !important;
 }
 
-/* НАВИГАЦИЯ */
+/* === 6. НАВИГАЦИЯ === */
 .nav-list {
     background: rgba(139, 69, 19, 0.2) !important;
     border: 2px solid rgba(139, 69, 19, 0.3) !important;
@@ -110,7 +110,7 @@ body {
     color: var(--text-light) !important;
 }
 
-/* КАРТОЧКИ ИНСТРУМЕНТОВ */
+/* === 7. КАРТОЧКИ === */
 .tool-card,
 .coming-soon-sa,
 .coming-soon-gta4,
@@ -125,31 +125,31 @@ body {
     box-shadow: var(--shadow) !important;
 }
 
-/* ПОКЕРНЫЙ КАЛЬКУЛЯТОР (специфика) */
+/* === 8. ПОКЕР === */
 .poker-calculator-wrapper {
     background: linear-gradient(180deg, var(--bg-medium) 0%, var(--bg-dark) 100%) !important;
     border: 3px solid var(--primary-color) !important;
     color: var(--text-light) !important;
 }
 
-/* АНАЛИЗАТОР РУЛЕТКИ (специфика) */
+/* === 9. РУЛЕТКА === */
 .roulette-title {
     color: var(--text-dark) !important;
     text-shadow: 3px 3px 0 var(--sa-sand), 6px 6px 0 rgba(139, 69, 19, 0.3) !important;
 }
 
-/* АНАЛИЗАТОР ВИЛОК (специфика) */
+/* === 10. АРБС === */
 .arbs-title {
     color: var(--text-light) !important;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 2px 2px 0 #000 !important;
 }
 
-/* FAQ (специфика) */
+/* === 11. FAQ === */
 .faq-item h3 {
     color: var(--primary-color) !important;
 }
 
-/* ПЕРЕКЛЮЧАТЕЛИ (язык, темы) */
+/* === 12. ПЕРЕКЛЮЧАТЕЛИ === */
 .language-switcher-header,
 .theme-switcher {
     background: rgba(139, 69, 19, 0.3) !important;
@@ -168,7 +168,7 @@ body {
     color: var(--text-dark) !important;
 }
 
-/* ФУТЕР */
+/* === 13. ФУТЕР === */
 .site-footer {
     background: linear-gradient(135deg, 
         rgba(255, 204, 102, 0.9) 0%,
@@ -178,30 +178,9 @@ body {
     color: var(--text-dark) !important;
 }
 
-/* === ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ ДЛЯ ВСЕХ СТРАНИЦ === */
-
-/* ПАЛЬМА (на всех страницах в теме San Andreas) */
-body.theme-san-andreas::after {
-    content: '🌴';
-    position: fixed;
-    bottom: 20px;
-    right: 50px;
-    font-size: 4rem;
-    color: #228b22;
-    filter: drop-shadow(2px 2px 0 #006400);
-    z-index: 9999;
-    animation: sway 4s ease-in-out infinite;
-    transform-origin: bottom center;
-    pointer-events: none;
-}
-
-@keyframes sway {
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(2deg); }
-}
-
-/* ЭФФЕКТ СОЛНЦА (на всех страницах) */
+/* === 14. ДЕКОР СОЛНЦЕ === */
 body.theme-san-andreas::before {
+    display: block !important;
     content: '';
     position: fixed;
     top: -50px;
@@ -220,11 +199,24 @@ body.theme-san-andreas::before {
     pointer-events: none;
 }
 
-/* === ОТКЛЮЧАЕМ ЧУЖИЕ ЭФФЕКТЫ === */
+/* === 15. ДЕКОР ПАЛЬМА === */
+body.theme-san-andreas::after {
+    display: block !important;
+    content: '🌴';
+    position: fixed;
+    bottom: 20px;
+    right: 50px;
+    font-size: 4rem;
+    color: #228b22;
+    filter: drop-shadow(2px 2px 0 #006400);
+    z-index: 9999;
+    animation: sway 4s ease-in-out infinite;
+    pointer-events: none;
+}
 
-/* Сканирующая линия из base темы не должна показываться */
-.theme-san-andreas .site-header::after {
-    display: none !important;
+@keyframes sway {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
 }
 
 /* === АДАПТИВНОСТЬ === */
@@ -234,7 +226,6 @@ body.theme-san-andreas::before {
         right: 20px;
         bottom: 10px;
     }
-    
     body.theme-san-andreas::before {
         width: 150px;
         height: 150px;
