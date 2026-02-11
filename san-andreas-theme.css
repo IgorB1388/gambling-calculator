@@ -22,6 +22,10 @@
     /* ЭФФЕКТЫ SAN ANDREAS */
     --border-color: #8b7355;      /* Деревянный */
     --shadow: 0 10px 30px rgba(139, 69, 19, 0.4);
+    
+    /* ДОПОЛНИТЕЛЬНЫЕ ЦВЕТА */
+    --sa-sand: #f4a460;           /* Песочный (добавлено) */
+    --sa-gold: #ffd700;           /* Золотой */
 }
 
 /* === ОСНОВНОЙ ФОН ДЛЯ ВСЕХ СТРАНИЦ === */
@@ -216,15 +220,10 @@ body.theme-san-andreas::before {
     pointer-events: none;
 }
 
-/* === ВАЖНО: Отключаем специфичные стили других тем === */
+/* === ОТКЛЮЧАЕМ ЧУЖИЕ ЭФФЕКТЫ === */
 
-/* Отключаем сканирующую линию из base темы */
-.site-header::after {
-    display: none !important;
-}
-
-/* Отключаем эффекты дождя из GTA4 темы */
-body::before:not(.theme-san-andreas::before) {
+/* Сканирующая линия из base темы не должна показываться */
+.theme-san-andreas .site-header::after {
     display: none !important;
 }
 
