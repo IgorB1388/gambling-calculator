@@ -1,331 +1,112 @@
 /* san-andreas-theme.css - ТЕМА SAN ANDREAS */
-/* ТОЛЬКО ЦВЕТА, ФОНЫ, ТЕНИ, ГРАДИЕНТЫ */
+/* ТОЛЬКО ПЕРЕМЕННЫЕ! ПОЛНАЯ КОПИЯ СТРУКТУРЫ base-theme.css */
 
 :root {
-    /* === SAN ANDREAS COLORS === */
-    --sa-sun-yellow:    #ffcc00;
-    --sa-orange:        #ff9900;
-    --sa-burnt-orange:  #ff6600;
-    --sa-brown:         #8b4513;
-    --sa-sand:          #f4a460;
-    --sa-gold:          #ffd700;
-    --sa-dark-brown:    #654321;
-    --sa-cream:         #fffdd0;
+    /* === ЦВЕТА ПО РОЛИ (SAN ANDREAS) === */
+    --color-primary: #ff9900;      /* солнце/апельсин */
+    --color-secondary: #ff6600;    /* закат/манго */
+    --color-accent: #8b4513;       /* дерево/земля */
+    --color-success: #228b22;      /* лес/пальмы */
+    --color-info: #f4a460;         /* песок */
+    --color-warning: #ffcc00;      /* золото */
+    --color-danger: #b22222;       /* кирпич/огонь */
+    --color-highlight: #d2b48c;    /* бежевый/кожа */
     
-    /* === BACKGROUNDS === */
-    --bg-body: linear-gradient(180deg, #ff9966 0%, #ffcc66 30%, #e6b87e 70%, #bc8f8f 100%);
+    /* === ФОНЫ ПО РОЛИ === */
+    --bg-body: #331a00;
+    --bg-surface: #d2b48c;
+    --bg-elevated: #e6b87e;
+    --bg-overlay: rgba(139, 69, 19, 0.8);
+    --bg-overlay-light: rgba(139, 69, 19, 0.95);
     --bg-header: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
-    --bg-panel: #d2b48c;
-    --bg-section: #e6b87e;
     --bg-card: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
     --bg-coming-soon: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
+    --bg-section: #e6b87e;
+    --bg-nav: rgba(139, 69, 19, 0.2);
+    --bg-surface-light: rgba(255, 255, 255, 0.3);
+    --bg-surface-hover: rgba(255, 153, 0, 0.3);
+    --bg-surface-active: rgba(255, 102, 0, 0.3);
     
-    /* === TEXT === */
-    --text-light:  #fff5e6;
-    --text-medium: #663300;
-    --text-dark:   #331a00;
+    /* === ТЕКСТ ПО РОЛИ === */
+    --text-primary: #331a00;
+    --text-secondary: #663300;
+    --text-inverse: #fff5e6;
+    --text-muted: #996633;
+    --text-slot: rgba(51, 26, 0, 0.6);
+    --text-card: #331a00;
+    --text-card-secondary: #663300;
     
-    /* === BORDERS === */
-    --border-primary: var(--sa-orange);
-    --border-secondary: var(--sa-burnt-orange);
-    --border-accent: var(--sa-brown);
+    /* === ГРАНИЦЫ ПО РОЛИ === */
+    --border-primary: #ff9900;
+    --border-secondary: #ff6600;
+    --border-accent: #8b4513;
+    --border-success: #228b22;
+    --border-info: #f4a460;
+    --border-muted: rgba(139, 69, 19, 0.3);
+    --border-dark: rgba(51, 26, 0, 0.3);
     --border-dashed: rgba(139, 69, 19, 0.3);
+    --border-nav: rgba(139, 69, 19, 0.3);
     
-    /* === SHADOWS === */
-    --shadow: 0 10px 30px rgba(139, 69, 19, 0.4);
+    /* === ТЕНИ ПО РОЛИ === */
+    --shadow-sm: 0 2px 5px rgba(139, 69, 19, 0.2);
+    --shadow-md: 0 10px 30px rgba(139, 69, 19, 0.4);
+    --shadow-lg: 0 15px 40px rgba(139, 69, 19, 0.5);
+    --shadow-header: 0 10px 30px rgba(139, 69, 19, 0.4), 0 0 30px rgba(255, 153, 0, 0.5);
     --glow-primary: 0 0 20px rgba(255, 153, 0, 0.5);
+    --glow-secondary: 0 0 20px rgba(255, 102, 0, 0.5);
+    --glow-accent: 0 0 20px rgba(139, 69, 19, 0.5);
+    --glow-highlight: 0 0 20px rgba(210, 180, 140, 0.5);
+    --glow-success: 0 0 20px rgba(34, 139, 34, 0.5);
     
-    /* === OVERRIDE NEON VARIABLES === */
-    --neon-teal: var(--sa-orange);
-    --neon-pink: var(--sa-burnt-orange);
-    --neon-blue: #6aa8ff;
-    --neon-purple: var(--sa-brown);
-    --neon-yellow: var(--sa-gold);
-    --neon-green: #228b22;
-}
-
-body {
-    background: var(--bg-body);
-    color: var(--text-dark);
-}
-
-/* ШАПКА */
-.site-header {
-    background: var(--bg-header);
-    border-color: var(--border-accent);
-    box-shadow: var(--shadow), 0 0 30px rgba(255, 153, 0, 0.5);
-}
-
-/* Деревянная текстура */
-.site-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(90deg, transparent 50%, rgba(139, 69, 19, 0.1) 50%),
-        linear-gradient(transparent 50%, rgba(210, 180, 140, 0.1) 50%);
-    background-size: 30px 30px;
-    opacity: 0.3;
-    pointer-events: none;
-    border-radius: inherit;
-}
-
-/* ЛОГОТИП */
-.logo-icon {
-    background: linear-gradient(135deg, var(--sa-orange), var(--sa-burnt-orange));
-    color: var(--text-dark);
-    box-shadow: 0 0 20px var(--sa-orange);
-}
-
-.logo-main {
-    background: linear-gradient(45deg, var(--sa-orange), var(--sa-burnt-orange));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.logo-sub {
-    color: var(--sa-brown);
-}
-
-/* НАВИГАЦИЯ */
-.nav-list {
-    background: rgba(139, 69, 19, 0.2);
-    border-color: rgba(139, 69, 19, 0.3);
-}
-
-.nav-link {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(139, 69, 19, 0.1));
-    color: var(--text-dark);
-}
-
-.nav-link:hover,
-.nav-link.active {
-    background: linear-gradient(145deg, var(--sa-orange), var(--sa-burnt-orange));
-    border-color: var(--sa-brown);
-    color: var(--text-light);
-}
-
-/* КАРТОЧКИ */
-.tool-card {
-    background: var(--bg-card);
-    border-color: var(--border-accent);
-    color: var(--text-dark);
-    box-shadow: var(--shadow);
-}
-
-.tool-icon {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: var(--sa-brown);
-    color: var(--sa-brown);
-}
-
-.tool-card[href*="poker.html"] {
-    border-color: var(--sa-orange);
-}
-.tool-card[href*="poker.html"] .tool-icon {
-    border-color: var(--sa-orange);
-    color: var(--sa-orange);
-}
-
-.tool-card[href*="roulette.html"] {
-    border-color: var(--sa-burnt-orange);
-}
-.tool-card[href*="roulette.html"] .tool-icon {
-    border-color: var(--sa-burnt-orange);
-    color: var(--sa-burnt-orange);
-}
-
-.tool-card[href*="arbs.html"] {
-    border-color: var(--sa-gold);
-}
-.tool-card[href*="arbs.html"] .tool-icon {
-    border-color: var(--sa-gold);
-    color: var(--sa-gold);
-}
-
-.tool-card h3 {
-    color: var(--text-dark);
-}
-
-.tool-card p {
-    color: var(--text-medium);
-}
-
-/* ПЕРЕКЛЮЧАТЕЛИ */
-.language-switcher-header,
-.theme-switcher {
-    background: rgba(139, 69, 19, 0.3);
-    border-color: var(--border-accent);
-}
-
-.lang-btn,
-.theme-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: var(--text-dark);
-}
-
-.lang-btn:hover,
-.theme-btn:hover {
-    border-color: var(--sa-orange);
-    box-shadow: 0 0 15px var(--sa-orange);
-}
-
-.lang-btn.active,
-.theme-btn.active {
-    background: linear-gradient(135deg, var(--sa-orange), var(--sa-burnt-orange));
-    color: var(--text-dark);
-}
-
-/* ФУТЕР */
-.site-footer {
-    background: linear-gradient(135deg, rgba(255, 204, 102, 0.9), rgba(255, 153, 0, 0.9));
-    border-top-color: var(--border-accent);
-    color: var(--text-dark);
-}
-
-/* ПОКЕР */
-.poker-header {
-    background: var(--bg-panel);
-    border-color: var(--border-primary);
-    box-shadow: var(--shadow);
-}
-
-.panel {
-    background: var(--bg-panel);
-    border-color: var(--border-primary);
-    box-shadow: var(--shadow);
-}
-
-.hand-section {
-    background: var(--bg-section);
-    border-color: var(--border-primary);
-}
-
-.board-section {
-    background: var(--bg-section);
-    border-color: var(--border-secondary);
-}
-
-.hand-section .section-title {
-    color: var(--sa-orange);
-}
-
-.board-section .section-title {
-    color: var(--sa-burnt-orange);
-}
-
-.opponents-control {
-    background: var(--bg-section);
-    border-color: var(--border-accent);
-}
-
-.opponents-label {
-    color: var(--sa-gold);
-}
-
-.opponent-pill {
-    border-color: var(--sa-orange);
-    color: var(--sa-orange);
-}
-
-.opponent-pill.active {
-    background: var(--sa-orange);
-    color: white;
-    border-color: var(--sa-orange);
-    box-shadow: 0 0 15px var(--sa-orange);
-}
-
-.deck-grid {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--border-accent);
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, var(--sa-burnt-orange), var(--sa-orange));
-    color: white;
-}
-
-.btn-secondary {
-    background: rgba(139, 69, 19, 0.1);
-    color: var(--sa-orange);
-    border-color: var(--sa-orange);
-}
-
-.btn-secondary:hover {
-    background: var(--sa-orange);
-    color: white;
-}
-
-.results-panel {
-    border-color: var(--border-primary);
-    background: var(--bg-panel);
-    box-shadow: var(--shadow);
-}
-
-.result-card {
-    background: var(--bg-section);
-    border-color: var(--border-primary);
-    box-shadow: var(--shadow);
-}
-
-.result-card:nth-child(1) .result-percent { color: var(--sa-orange); }
-.result-card:nth-child(2) .result-percent { color: var(--sa-burnt-orange); }
-.result-card:nth-child(3) .result-percent { color: var(--sa-gold); }
-
-.result-card:nth-child(1) { border-color: var(--sa-orange); }
-.result-card:nth-child(2) { border-color: var(--sa-burnt-orange); }
-.result-card:nth-child(3) { border-color: var(--sa-gold); }
-
-/* ДЕКОР - ПАЛЬМА И СОЛНЦЕ */
-body::before {
-    content: '';
-    position: fixed;
-    top: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, 
+    /* === ГРАДИЕНТЫ === */
+    --gradient-body: linear-gradient(180deg, 
+        #ff9966 0%,
+        #ffcc66 30%,
+        #e6b87e 70%,
+        #bc8f8f 100%
+    );
+    --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    --gradient-logo-text: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+    --gradient-nav-link: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(139, 69, 19, 0.1));
+    --gradient-nav-hover: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
+    --gradient-nav-active: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
+    --gradient-btn-primary: linear-gradient(45deg, var(--color-secondary), var(--color-primary));
+    --gradient-btn-secondary: linear-gradient(145deg, rgba(139, 69, 19, 0.1), rgba(255, 255, 255, 0.2));
+    --gradient-page-header: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
+    --gradient-card: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
+    --gradient-coming-soon: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
+    --gradient-faq-contact: linear-gradient(135deg, rgba(34,139,34,0.05), rgba(255,153,0,0.05));
+    --gradient-cyber: linear-gradient(90deg,
+        transparent,
+        var(--color-primary),
+        var(--color-secondary),
+        var(--color-accent),
+        transparent
+    );
+    --gradient-wood: 
+        linear-gradient(90deg, 
+            transparent 50%, 
+            rgba(139, 69, 19, 0.1) 50%),
+        linear-gradient(
+            transparent 50%, 
+            rgba(210, 180, 140, 0.1) 50%);
+    
+    /* === ДЕКОРАТИВНЫЕ ПЕРЕМЕННЫЕ === */
+    --decor-sun: radial-gradient(circle, 
         rgba(255, 204, 0, 0.8) 0%,
         rgba(255, 153, 0, 0.6) 30%,
         rgba(255, 102, 0, 0.3) 60%,
-        transparent 70%);
-    border-radius: 50%;
-    filter: blur(10px);
-    z-index: 0;
-    pointer-events: none;
-}
-
-body::after {
-    content: '🌴';
-    position: fixed;
-    bottom: 20px;
-    right: 50px;
-    font-size: 4rem;
-    color: #228b22;
-    filter: drop-shadow(2px 2px 0 #006400);
-    z-index: 9999;
-    animation: sway 4s ease-in-out infinite;
-    transform-origin: bottom center;
-    pointer-events: none;
+        transparent 70%
+    );
+    --decor-palm: '🌴';
+    --decor-palm-color: #228b22;
+    --decor-palm-shadow: #006400;
+    
+    /* === АНИМАЦИИ === */
+    --animation-sway: sway 4s ease-in-out infinite;
 }
 
 @keyframes sway {
     0%, 100% { transform: rotate(-2deg); }
     50% { transform: rotate(2deg); }
-}
-
-@media (max-width: 768px) {
-    body::after {
-        font-size: 3rem;
-        right: 20px;
-    }
-    body::before {
-        width: 150px;
-        height: 150px;
-        top: -30px;
-        right: -30px;
-    }
 }
