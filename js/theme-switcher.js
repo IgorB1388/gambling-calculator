@@ -1,4 +1,4 @@
-// theme-switcher.js - Система смены тем
+// theme-switcher.js - Система смены тем GTA Casino Tools
 
 class ThemeManager {
     constructor() {
@@ -24,13 +24,19 @@ class ThemeManager {
     loadThemeCSS(theme) {
         console.log(`Загружаем тему: ${theme}`);
         
-        // Удаляем старую тему, если есть (кроме base)
+        // Проверяем, что base.css загружен
+        if (!document.querySelector('link[href="base.css"]')) {
+            console.error('base.css не найден!');
+            return;
+        }
+        
+        // Удаляем старую тему
         const oldThemeLink = document.getElementById('theme-style');
-        if (oldThemeLink && theme !== 'base') {
+        if (oldThemeLink) {
             oldThemeLink.remove();
         }
         
-        // Если выбрана базовая тема - не загружаем дополнительный CSS
+        // Если выбрана базовая тема - только убираем дополнительный CSS
         if (theme === 'base') {
             this.removeThemeCSS();
         } else {
@@ -49,7 +55,7 @@ class ThemeManager {
         // Обновляем кнопки
         this.updateThemeButtons();
         
-        // Обновляем класс body для специфичных стилей
+        // Обновляем класс body
         this.updateBodyClass(theme);
         
         // Отправляем событие о смене темы
@@ -69,6 +75,7 @@ class ThemeManager {
     updateBodyClass(theme) {
         // Удаляем старые классы тем
         document.body.classList.remove(...this.themes);
+        // Добавляем новый класс
         document.body.classList.add(theme);
     }
     
@@ -77,17 +84,18 @@ class ThemeManager {
             const theme = btn.dataset.theme;
             const isActive = theme === this.currentTheme;
             btn.classList.toggle('active', isActive);
-            
-            // Обновляем подсказку
             btn.title = this.themeNames[theme] + (isActive ? ' ✓' : '');
         });
     }
     
     addThemeSwitcherToHeader() {
         const header = document.querySelector('.header-content');
-        if (!header) return;
+        if (!header) {
+            console.log('Header not found, waiting...');
+            return;
+        }
         
-        // Проверяем, нет ли уже переключателя тем
+        // Проверяем, нет ли уже переключателя
         if (document.querySelector('.theme-switcher')) return;
         
         const themeSwitcher = document.createElement('div');
@@ -112,6 +120,7 @@ class ThemeManager {
         if (langSwitcher) {
             langSwitcher.parentNode.insertBefore(themeSwitcher, langSwitcher.nextSibling);
         } else {
+            // Если нет языкового переключателя, добавляем в конец header
             header.appendChild(themeSwitcher);
         }
         
@@ -123,16 +132,29 @@ class ThemeManager {
                 this.loadThemeCSS(theme);
             });
         });
+        
+        console.log('Theme switcher added to header');
     }
     
     init() {
-        // Добавляем переключатель тем в шапку
-        this.addThemeSwitcherToHeader();
+        console.log('Initializing Theme Manager...');
         
-        // Загружаем сохраненную тему
-        this.loadThemeCSS(this.currentTheme);
+        // Ждем полной загрузки DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    this.addThemeSwitcherToHeader();
+                    this.loadThemeCSS(this.currentTheme);
+                }, 100);
+            });
+        } else {
+            setTimeout(() => {
+                this.addThemeSwitcherToHeader();
+                this.loadThemeCSS(this.currentTheme);
+            }, 100);
+        }
         
-        // Для динамически загруженных страниц
+        // Наблюдатель для динамически добавляемого контента
         const observer = new MutationObserver(() => {
             this.addThemeSwitcherToHeader();
         });
@@ -141,10 +163,9 @@ class ThemeManager {
     }
 }
 
-// Инициализация
-document.addEventListener('DOMContentLoaded', () => {
-    const themeManager = new ThemeManager();
-    themeManager.init();
-    window.themeManager = themeManager;
-    console.log('Theme Manager initialized with 4 themes');
-});
+// Единая точка инициализации
+const themeManager = new ThemeManager();
+themeManager.init();
+window.themeManager = themeManager;
+
+console.log('Theme Manager ready');
