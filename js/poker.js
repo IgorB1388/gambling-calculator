@@ -364,81 +364,109 @@ function checkBoardValidity(){const w=document.getElementById('boardWarning');co
 // --- Расчёт эквити ---
 async function calculateEquity(){
     if(isCalculating) return;
-    const heroCards=Array.from(selectedCards.entries()).filter(([s])=>s.startsWith('hero')).map(([,c])=>c);
-    const boardCards=Array.from(selectedCards.entries()).filter(([s])=>s.startsWith('board')).map(([,c])=>c);
+    const heroCards = Array.from(selectedCards.entries())
+        .filter(([s]) => s.startsWith('hero'))
+        .map(([,c]) => c);
+    const boardCards = Array.from(selectedCards.entries())
+        .filter(([s]) => s.startsWith('board'))
+        .map(([,c]) => c);
+
     if(!checkHandValidity() || !checkBoardValidity()) return;
-    isCalculating=true;
-    document.getElementById('calculateBtn').disabled=true;
 
-    const SIMULATIONS=25000;
-    let heroTotal=0,oppTotal=0,tieHands=0;
+    isCalculating = true;
+    document.getElementById('calculateBtn').disabled = true;
 
-    const createOptimizedDeck=()=>{
-        const suits=['s','h','c','d'], values=['2','3','4','5','6','7','8','9','10','J','Q','K','A'], deck=[];
-        for(const v of values) for(const s of suits) deck.push({code:v+s,value:v,suit:s==='h'?'♥':s==='d'?'♦':s==='s'?'♠':'♣',suitCode:s,rank:HandEvaluator.ranks[v]});
+    const SIMULATIONS = 25000;
+    let heroTotal = 0, oppTotal = 0, tieHands = 0;
+
+    // Создание полной колоды
+    const createOptimizedDeck = () => {
+        const suits = ['s','h','c','d'], values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'], deck = [];
+        for(const v of values) for(const s of suits)
+            deck.push({code:v+s,value:v,suit:s==='h'?'♥':s==='d'?'♦':s==='s'?'♠':'♣',suitCode:s,rank:HandEvaluator.ranks[v]});
         return deck;
     };
-    const initialDeck=createOptimizedDeck();
-    const usedCardCodes=new Set(Array.from(usedCards));
-    const neededBoardCards=5-boardCards.length;
-    const totalCardsNeeded=neededBoardCards+opponentsCount*2;
+
+    const initialDeck = createOptimizedDeck();
+    const usedCardCodes = new Set(Array.from(usedCards));
+    const neededBoardCards = 5 - boardCards.length;
+    const totalCardsNeeded = neededBoardCards + opponentsCount*2;
 
     for(let i=0;i<SIMULATIONS;i++){
-        const availableDeck=initialDeck.filter(c=>!usedCardCodes.has(c.code));
-        if(availableDeck.length<totalCardsNeeded) continue;
-        const shuffled=[...availableDeck];
+        // Доступные карты
+        const availableDeck = initialDeck.filter(c => !usedCardCodes.has(c.code));
+        if(availableDeck.length < totalCardsNeeded) continue;
+
+        // Перемешиваем
+        const shuffled = [...availableDeck];
         for(let j=shuffled.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[shuffled[j],shuffled[k]]=[shuffled[k],shuffled[j]];}
-        const fullBoard=[...boardCards];
+
+        // Полная доска
+        const fullBoard = [...boardCards];
         for(let j=0;j<neededBoardCards;j++) fullBoard.push(shuffled[j]);
-        const opponentHands=[];
-        let idx=neededBoardCards;
-        for(let o=0;o<opponentsCount;o++){if(idx+1>=shuffled.length) break;opponentHands.push([shuffled[idx],shuffled[idx+1]]);idx+=2;}
-        if(opponentHands.length!==opponentsCount) continue;
 
-        const heroScore=HandEvaluator.evaluate([...heroCards,...fullBoard]);
-        let bestOpponentScore=-1,tyingOpponents=0;
-        for(const hand of opponentHands){
-            const score=HandEvaluator.evaluate([...hand,...fullBoard]);
-            if(score>bestOpponentScore){bestOpponentScore=score;tyingOpponents=1;}
-            else if(score===bestOpponentScore) tyingOpponents++;
+        // Руки оппонентов
+        const opponentHands = [];
+        let idx = neededBoardCards;
+        for(let o=0;o<opponentsCount;o++){
+            if(idx+1 >= shuffled.length) break;
+            opponentHands.push([shuffled[idx],shuffled[idx+1]]);
+            idx += 2;
         }
-        if(heroScore>bestOpponentScore) heroTotal+=1;
-        else if(heroScore<bestOpponentScore) oppTotal+=1;
-        else{tieHands+=1;const totalTie=tyingOpponents+1;heroTotal+=1/totalTie;oppTotal+=tyingOpponents/totalTie;}
+        if(opponentHands.length !== opponentsCount) continue;
+
+        // Оценка рук
+        const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
+        let bestOpponentScore = -1, tyingOpponents = 0;
+
+        for(const hand of opponentHands){
+            const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
+            if(score > bestOpponentScore){bestOpponentScore = score; tyingOpponents = 1;}
+            else if(score === bestOpponentScore) tyingOpponents++;
+        }
+
+        if(heroScore > bestOpponentScore) heroTotal += 1;
+        else if(heroScore < bestOpponentScore) oppTotal += 1;
+        else {
+            // Ничья: делим доли между игроками
+            const totalTie = tyingOpponents + 1;
+            heroTotal += 1/totalTie;
+            oppTotal += tyingOpponents / totalTie;
+            tieHands += 1/totalTie;
+        }
     }
 
-    let heroPercent=(heroTotal/SIMULATIONS)*100;
-    let oppPercent=(oppTotal/SIMULATIONS)*100;
-    let tiePercent=(tieHands/SIMULATIONS)*100;
+    // ===== Безопасный расчёт процентов =====
+    let heroPercent = Math.max(0, Math.round((heroTotal/SIMULATIONS)*1000)/10);
+    let oppPercent  = Math.max(0, Math.round((oppTotal/SIMULATIONS)*1000)/10);
+    let tiePercent  = Math.max(0, Math.round((tieHands/SIMULATIONS)*1000)/10);
 
-    heroPercent=Math.max(0,Math.round(heroPercent*10)/10);
-    oppPercent=Math.max(0,Math.round(oppPercent*10)/10);
-    tiePercent=Math.max(0,Math.round(tiePercent*10)/10);
+    // Корректировка для суммы 100%
+    let sum = heroPercent + oppPercent + tiePercent;
+    let diff = Math.round((100 - sum)*10)/10;
 
-    let sum=heroPercent+oppPercent+tiePercent;
-    let diff=100-sum;
-    if(Math.abs(diff)>0.001){
-        const maxVal=Math.max(heroPercent,oppPercent,tiePercent);
-        if(maxVal===heroPercent) heroPercent=Math.round((heroPercent+diff)*10)/10;
-        else if(maxVal===oppPercent) oppPercent=Math.round((oppPercent+diff)*10)/10;
-        else tiePercent=Math.round((tiePercent+diff)*10)/10;
+    if(Math.abs(diff) > 0.01){
+        // Добавляем разницу к самому большому проценту
+        if(heroPercent >= oppPercent && heroPercent >= tiePercent) heroPercent += diff;
+        else if(oppPercent >= heroPercent && oppPercent >= tiePercent) oppPercent += diff;
+        else tiePercent += diff;
     }
 
-    heroPercent=Math.max(0,Math.round(heroPercent*10)/10);
-    oppPercent=Math.max(0,Math.round(oppPercent*10)/10);
-    tiePercent=Math.max(0,Math.round(tiePercent*10)/10);
+    // Финальная округлённая защита
+    heroPercent = Math.max(0, Math.round(heroPercent*10)/10);
+    oppPercent  = Math.max(0, Math.round(oppPercent*10)/10);
+    tiePercent  = Math.max(0, Math.round(tiePercent*10)/10);
 
-    sum=heroPercent+oppPercent+tiePercent;
-    diff=100-sum;
-    if(Math.abs(diff)>0.001){let newVal=heroPercent+diff;newVal=Math.round(newVal*10)/10;heroPercent=Math.max(0,newVal);}
+    // Вывод
+    document.getElementById('resultHero').textContent = heroPercent.toFixed(1) + '%';
+    document.getElementById('resultOpponent').textContent = oppPercent.toFixed(1) + '%';
+    document.getElementById('resultTie').textContent = tiePercent.toFixed(1) + '%';
 
-    document.getElementById('resultHero').textContent=heroPercent.toFixed(1)+'%';
-    document.getElementById('resultOpponent').textContent=oppPercent.toFixed(1)+'%';
-    document.getElementById('resultTie').textContent=tiePercent.toFixed(1)+'%';
-    hasCalculatedResults=true;
-    isCalculating=false;
+    hasCalculatedResults = true;
+    isCalculating = false;
     updateStatus();
 }
+
 
 // --- Прочие функции ---
 function getHandCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('hero')).length;}
@@ -455,3 +483,4 @@ function addCardToHand(cardCode){if(getHandCardsCount()<2){for(let i=1;i<=2;i++)
 function addCardToBoard(cardCode){if(getBoardCardsCount()<5){for(let i=1;i<=5;i++){const s=`board-${i}`;if(!selectedCards.has(s)){addCardToSlot(cardCode,s);if(getBoardCardsCount()>=5 && getHandCardsCount()<2) selectHandBlock();return;}}} else addCardToHand(cardCode);}
 function moveCardBetweenSlots(from,to){if(!selectedCards.has(from)) return;const c=selectedCards.get(from);resetResults();if(selectedCards.has(to)){const temp=selectedCards.get(to);selectedCards.set(to,c);selectedCards.set(from,temp);}else{selectedCards.set(to,c);selectedCards.delete(from);}activateBlockBySlotId(to);updateCardDisplay();updateStatus();checkBoardValidity();checkHandValidity();checkAndSwitchActiveBlock();}
 function clearAll(){selectedCards.clear();usedCards.clear();resetResults();updateCardDisplay();updateStatus();checkBoardValidity();checkHandValidity();}
+
