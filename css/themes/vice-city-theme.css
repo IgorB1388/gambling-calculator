@@ -83,24 +83,60 @@
         transparent
     );
     
-    /* === ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ === */
-    --grid-palm: '🌴🌴';
-    --grid-size: 40px;
-    --grid-color-primary: rgba(255, 68, 170, 0.03);
-    --grid-color-secondary: rgba(68, 170, 255, 0.03);
-    --palm-color: rgba(0, 0, 0, 0.3);
-    --palm-glow: 0 0 20px rgba(255, 68, 170, 0.2);
-    --palm-font-size: 8rem;
-    --palm-letter-spacing: 50px;
+    /* === 🏝️ УНИКАЛЬНЫЕ ДЕКОР ЭЛЕМЕНТЫ VICE CITY === */
+    --decor-neon-grid: 
+        linear-gradient(0deg, rgba(255, 68, 170, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(68, 170, 255, 0.03) 1px, transparent 1px);
+    --decor-grid-size: 40px;
+    --decor-palms: '🌴🌴';
+    --decor-palms-size: 8rem;
+    --decor-palms-spacing: 50px;
+    --decor-palms-color: rgba(0, 0, 0, 0.3);
+    --decor-palms-glow: 0 0 20px rgba(255, 68, 170, 0.2);
+    --decor-palms-mobile: '🌴';
+    
+    /* === 🌴 ПАЛЬМЫ ДЛЯ МОБИЛОК === */
+    --decor-palms-size-mobile: 4rem;
+    --decor-palms-spacing-mobile: 20px;
+    --decor-palms-size-small: 3rem;
+    --decor-palms-spacing-small: 10px;
+    
+    /* === 💗 НЕОНОВЫЙ ПУЛЬС === */
+    --glow-neon-pulse: 0 0 30px var(--color-primary), 0 0 60px var(--color-secondary);
+    --animation-neon-pulse: neon-pulse 3s ease-in-out infinite;
+    
+    /* === 🌆 СИЛУЭТЫ ПАЛЬМ (задний фон) === */
+    --decor-skyline: '🌴🌴🌴';
+    --decor-skyline-position: bottom 0 left 0;
+    --decor-skyline-opacity: 0.1;
+    
+    /* === 🎸 АРТ-ДЕКО ПОЛОСКИ === */
+    --gradient-vinyl: repeating-linear-gradient(
+        45deg,
+        rgba(255, 68, 170, 0.1) 0px,
+        rgba(255, 68, 170, 0.1) 10px,
+        rgba(68, 170, 255, 0.1) 10px,
+        rgba(68, 170, 255, 0.1) 20px
+    );
     
     /* === АНИМАЦИИ === */
     --animation-neon-pulse: neon-pulse 3s ease-in-out infinite;
 }
 
-/* АНИМАЦИИ (ОСТАВЛЯЕМ, ТАК КАК НЕ ЦВЕТА) */
+/* 🎸 АНИМАЦИИ VICE CITY */
 @keyframes neon-pulse {
     0%, 100% { opacity: 0.8; }
     50% { opacity: 1; }
+}
+
+@keyframes palm-sway {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+}
+
+@keyframes neon-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.9; }
 }
 
 /* ДЕКОР ЭЛЕМЕНТЫ ЧЕРЕЗ КЛАССЫ В HTML, НЕ ТУТ! */
