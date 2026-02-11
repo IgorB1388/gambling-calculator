@@ -1,83 +1,45 @@
-/* gta4-theme.css - ТЕМА GTA 4 (для ВСЕГО САЙТА) */
+/* gta4-theme.css - ТЕМА GTA 4 */
 
-/* === ПЕРЕОПРЕДЕЛЯЕМ ВСЕ ПЕРЕМЕННЫЕ === */
-:root {
-    /* ЦВЕТА GTA 4 */
-    --primary-color: #666666;      /* Серый */
-    --secondary-color: #4682b4;    /* Стальной синий */
-    --accent-color: #ffd700;       /* Такси желтый */
-    --success-color: #32cd32;      /* Лаймовый */
-    
-    /* ФОНЫ GTA 4 */
-    --bg-dark: #1a1a2e;           /* Темно-синий (ночь) */
-    --bg-medium: #2d3436;         /* Серый (город) */
-    --bg-light: #4a4a4a;          /* Светло-серый */
-    --panel-bg: #3d3d3d;          /* Металлический серый */
-    
-    /* ТЕКСТ GTA 4 */
-    --text-light: #ecf0f1;        /* Светло-серый */
-    --text-medium: #bdc3c7;       /* Серый */
-    --text-dark: #2c3e50;
-    
-    /* ЭФФЕКТЫ GTA 4 */
-    --border-color: #5d6d7e;      /* Металлик */
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    --gta4-glow-taxi: 0 0 15px rgba(255, 215, 0, 0.5);
+/* === 1. ОТКЛЮЧАЕМ ЭФФЕКТЫ ИЗ BASE.CSS === */
+.site-header::before,
+.site-header::after,
+body::before,
+body::after {
+    display: none !important;
 }
 
-/* === ОСНОВНОЙ ФОН ДЛЯ ВСЕХ СТРАНИЦ === */
+/* === 2. ПЕРЕОПРЕДЕЛЯЕМ ПЕРЕМЕННЫЕ === */
+:root {
+    --primary-color: #666666;
+    --secondary-color: #4682b4;
+    --accent-color: #ffd700;
+    --success-color: #32cd32;
+    
+    --bg-dark: #1a1a2e;
+    --bg-medium: #2d3436;
+    --bg-light: #4a4a4a;
+    --panel-bg: #3d3d3d;
+    
+    --text-light: #ecf0f1;
+    --text-medium: #bdc3c7;
+    --text-dark: #2c3e50;
+    
+    --border-color: #5d6d7e;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* === 3. ОСНОВНОЙ ФОН === */
 body {
     background: linear-gradient(180deg, 
-        #0c2461 0%,               /* Ночное небо */
-        #1a1a2e 30%,              /* Город */
-        #2d3436 70%,              /* Улицы */
-        #2c3e50 100%             /* Асфальт */
+        #0c2461 0%,
+        #1a1a2e 30%,
+        #2d3436 70%,
+        #2c3e50 100%
     ) !important;
     color: var(--text-light) !important;
 }
 
-/* === ЭФФЕКТ ДОЖДЯ (на всех страницах) === */
-body.theme-gta4::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(90deg, transparent 50%, rgba(70, 130, 180, 0.1) 50%),
-        linear-gradient(transparent 50%, rgba(70, 130, 180, 0.1) 50%);
-    background-size: 100px 100px;
-    opacity: 0.15;
-    pointer-events: none;
-    z-index: 0;
-    animation: rain 20s linear infinite;
-}
-
-@keyframes rain {
-    0% { background-position: 0 0; }
-    100% { background-position: 100px 100px; }
-}
-
-/* === СИЛУЭТЫ НЕБОСКРЕБОВ === */
-body.theme-gta4::after {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 150px;
-    background: 
-        linear-gradient(transparent, rgba(0, 0, 0, 0.7)),
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="5" y="30" width="6" height="70" fill="%232c3e50"/><rect x="15" y="20" width="8" height="80" fill="%232c3e50"/><rect x="28" y="10" width="10" height="90" fill="%232c3e50"/><rect x="45" y="25" width="7" height="75" fill="%232c3e50"/><rect x="60" y="15" width="9" height="85" fill="%232c3e50"/><rect x="75" y="35" width="6" height="65" fill="%232c3e50"/><rect x="88" y="40" width="5" height="60" fill="%232c3e50"/></svg>');
-    background-repeat: repeat-x;
-    background-size: 120px 150px;
-    z-index: 0;
-    opacity: 0.3;
-    pointer-events: none;
-}
-
-/* === ШАПКА САЙТА (металлик) === */
+/* === 4. ШАПКА === */
 .site-header {
     background: linear-gradient(135deg, 
         rgba(45, 52, 54, 0.95) 0%,
@@ -85,11 +47,11 @@ body.theme-gta4::after {
     ) !important;
     border: 3px solid var(--border-color) !important;
     box-shadow: var(--shadow), 0 0 30px rgba(0, 0, 0, 0.7) !important;
-    color: var(--text-light) !important;
 }
 
 /* Металлическая текстура */
 .site-header::before {
+    display: block !important;
     content: '';
     position: absolute;
     top: 0;
@@ -112,7 +74,7 @@ body.theme-gta4::after {
     pointer-events: none;
 }
 
-/* === ЛОГОТИП === */
+/* === 5. ЛОГОТИП === */
 .logo-icon {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
     color: var(--text-light) !important;
@@ -130,7 +92,7 @@ body.theme-gta4::after {
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* === НАВИГАЦИЯ === */
+/* === 6. НАВИГАЦИЯ === */
 .nav-list {
     background: rgba(0, 0, 0, 0.5) !important;
     border: 2px solid var(--border-color) !important;
@@ -154,7 +116,7 @@ body.theme-gta4::after {
     box-shadow: 0 0 15px var(--secondary-color) !important;
 }
 
-/* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
+/* === 7. КАРТОЧКИ === */
 .tool-card,
 .coming-soon-gta4,
 .coming-soon-sa,
@@ -169,41 +131,36 @@ body.theme-gta4::after {
     box-shadow: var(--shadow) !important;
 }
 
-/* === ПОКЕРНЫЙ КАЛЬКУЛЯТОР === */
+/* === 8. ПОКЕР === */
 .poker-calculator-wrapper {
     background: linear-gradient(180deg, var(--bg-medium) 0%, var(--bg-dark) 100%) !important;
     border: 3px solid var(--secondary-color) !important;
     color: var(--text-light) !important;
 }
 
-/* === АНАЛИЗАТОР РУЛЕТКИ === */
+/* === 9. РУЛЕТКА === */
 .roulette-title {
     color: var(--text-light) !important;
     text-shadow: 2px 2px 0 #000, 4px 4px 0 var(--bg-dark) !important;
 }
 
-/* === АНАЛИЗАТОР ВИЛОК === */
+/* === 10. АРБС === */
 .arbs-title {
     color: var(--text-light) !important;
     text-shadow: 0 0 10px var(--accent-color), 2px 2px 0 #000 !important;
     font-family: 'Courier New', monospace !important;
 }
 
-/* === FAQ === */
+/* === 11. FAQ === */
 .faq-item h3 {
     color: var(--accent-color) !important;
 }
 
-.faq-item h3::before {
-    color: var(--secondary-color) !important;
-}
-
-/* === ПЕРЕКЛЮЧАТЕЛИ (язык, темы) === */
+/* === 12. ПЕРЕКЛЮЧАТЕЛИ === */
 .language-switcher-header,
 .theme-switcher {
     background: rgba(0, 0, 0, 0.6) !important;
     border: 2px solid var(--border-color) !important;
-    box-shadow: 0 0 15px rgba(70, 130, 180, 0.3) !important;
 }
 
 .lang-btn,
@@ -225,7 +182,7 @@ body.theme-gta4::after {
     color: white !important;
 }
 
-/* === ФУТЕР === */
+/* === 13. ФУТЕР === */
 .site-footer {
     background: linear-gradient(135deg, 
         rgba(45, 52, 54, 0.95) 0%,
@@ -235,18 +192,53 @@ body.theme-gta4::after {
     color: var(--text-medium) !important;
 }
 
-/* === ТАКСИ (декоративный элемент на всех страницах) === */
-body.theme-gta4::after {
-    content: '🚕';
+/* === 14. ДЕКОР ДОЖДЬ === */
+body.theme-gta4::before {
+    display: block !important;
+    content: '';
     position: fixed;
-    bottom: 30px;
-    right: 100px;
-    font-size: 3rem;
-    color: var(--accent-color);
-    filter: drop-shadow(2px 2px 0 #000);
-    z-index: 9999;
-    animation: taxi-drive 15s linear infinite;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(90deg, transparent 50%, rgba(70, 130, 180, 0.1) 50%),
+        linear-gradient(transparent 50%, rgba(70, 130, 180, 0.1) 50%);
+    background-size: 100px 100px;
+    opacity: 0.15;
     pointer-events: none;
+    z-index: 0;
+    animation: rain 20s linear infinite;
+}
+
+@keyframes rain {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+}
+
+/* === 15. ДЕКОР НЕБОСКРЕБЫ === */
+body.theme-gta4::after {
+    display: block !important;
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: 
+        linear-gradient(transparent, rgba(0, 0, 0, 0.7)),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="5" y="30" width="6" height="70" fill="%232c3e50"/><rect x="15" y="20" width="8" height="80" fill="%232c3e50"/><rect x="28" y="10" width="10" height="90" fill="%232c3e50"/><rect x="45" y="25" width="7" height="75" fill="%232c3e50"/><rect x="60" y="15" width="9" height="85" fill="%232c3e50"/><rect x="75" y="35" width="6" height="65" fill="%232c3e50"/><rect x="88" y="40" width="5" height="60" fill="%232c3e50"/></svg>');
+    background-repeat: repeat-x;
+    background-size: 120px 150px;
+    z-index: 0;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* === 16. ДЕКОР ТАКСИ === */
+body.theme-gta4 .taxi {
+    display: block !important;
+    animation: taxi-drive 15s linear infinite;
 }
 
 @keyframes taxi-drive {
@@ -262,35 +254,13 @@ body.theme-gta4::after {
     }
 }
 
-/* === ОТКЛЮЧАЕМ ЧУЖИЕ ЭФФЕКТЫ === */
-
-/* Сканирующая линия из base темы */
-.theme-gta4 .site-header::after {
-    display: none !important;
-}
-
-/* Пальма из San Andreas */
-.theme-gta4 body.theme-san-andreas::after {
-    display: none !important;
-}
-
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    body.theme-gta4::after {
-        font-size: 2.5rem;
-        right: 50px;
-        bottom: 20px;
-    }
-    
     body.theme-gta4::before {
         background-size: 70px 70px;
     }
-}
-
-@media (max-width: 480px) {
     body.theme-gta4::after {
-        font-size: 2rem;
-        right: 20px;
-        bottom: 15px;
+        height: 100px;
+        background-size: 80px 100px;
     }
 }
