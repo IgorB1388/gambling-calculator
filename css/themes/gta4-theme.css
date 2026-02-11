@@ -1,335 +1,127 @@
 /* gta4-theme.css - ТЕМА GTA 4 */
-/* ТОЛЬКО ЦВЕТА, ФОНЫ, ТЕНИ, ГРАДИЕНТЫ */
+/* ТОЛЬКО ПЕРЕМЕННЫЕ! ПОЛНАЯ КОПИЯ СТРУКТУРЫ base-theme.css */
 
 :root {
-    /* === GTA 4 COLORS === */
-    --gta4-gray-dark:    #2c2c2c;
-    --gta4-gray-medium:  #4a4a4a;
-    --gta4-gray-light:   #666666;
-    --gta4-steel:        #778899;
-    --gta4-rain:         #4682b4;
-    --gta4-taxi-yellow:  #ffd700;
+    /* === ЦВЕТА ПО РОЛИ (GTA 4) === */
+    --color-primary: #4682b4;      /* стальной синий */
+    --color-secondary: #666666;    /* серый/бетон */
+    --color-accent: #ffd700;       /* такси желтый */
+    --color-success: #32cd32;      /* лаймовый */
+    --color-info: #778899;         /* светлый стальной */
+    --color-warning: #ff8c00;      /* темный оранж */
+    --color-danger: #8b0000;       /* кирпичный */
+    --color-highlight: #5d6d7e;    /* металлик */
     
-    /* === BACKGROUNDS === */
-    --bg-body: linear-gradient(180deg, #0c2461 0%, #1a1a2e 30%, #2d3436 70%, #2c3e50 100%);
+    /* === ФОНЫ ПО РОЛИ === */
+    --bg-body: #1a1a2e;
+    --bg-surface: #3d3d3d;
+    --bg-elevated: #2d3436;
+    --bg-overlay: rgba(45, 52, 54, 0.95);
+    --bg-overlay-light: rgba(45, 52, 54, 0.8);
     --bg-header: linear-gradient(135deg, rgba(45,52,54,0.95), rgba(74,74,74,0.95));
-    --bg-panel: #3d3d3d;
-    --bg-section: #2d3436;
     --bg-card: linear-gradient(135deg, rgba(61,61,61,0.95), rgba(45,52,54,0.95));
     --bg-coming-soon: linear-gradient(135deg, rgba(61,61,61,0.95), rgba(45,52,54,0.95));
+    --bg-section: #2d3436;
+    --bg-nav: rgba(0, 0, 0, 0.5);
+    --bg-surface-light: rgba(255, 255, 255, 0.05);
+    --bg-surface-hover: rgba(70, 130, 180, 0.3);
+    --bg-surface-active: rgba(70, 130, 180, 0.5);
     
-    /* === TEXT === */
-    --text-light:  #ecf0f1;
-    --text-medium: #bdc3c7;
-    --text-dark:   #2c3e50;
+    /* === ТЕКСТ ПО РОЛИ === */
+    --text-primary: #ecf0f1;
+    --text-secondary: #bdc3c7;
+    --text-inverse: #2c3e50;
+    --text-muted: #95a5a6;
+    --text-slot: rgba(236, 240, 241, 0.4);
+    --text-card: #ecf0f1;
+    --text-card-secondary: #bdc3c7;
     
-    /* === BORDERS === */
-    --border-primary: var(--gta4-steel);
-    --border-secondary: var(--gta4-rain);
-    --border-accent: var(--gta4-taxi-yellow);
+    /* === ГРАНИЦЫ ПО РОЛИ === */
+    --border-primary: #4682b4;
+    --border-secondary: #666666;
+    --border-accent: #ffd700;
+    --border-success: #32cd32;
+    --border-info: #778899;
+    --border-muted: #5d6d7e;
+    --border-dark: rgba(44, 62, 80, 0.5);
     --border-dashed: #5d6d7e;
+    --border-nav: #5d6d7e;
     
-    /* === SHADOWS === */
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    /* === ТЕНИ ПО РОЛИ === */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.8);
+    --shadow-header: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 0, 0, 0.7);
     --glow-primary: 0 0 15px rgba(70, 130, 180, 0.5);
+    --glow-secondary: 0 0 15px rgba(102, 102, 102, 0.5);
+    --glow-accent: 0 0 15px rgba(255, 215, 0, 0.5);
+    --glow-highlight: 0 0 15px rgba(93, 109, 126, 0.5);
+    --glow-success: 0 0 15px rgba(50, 205, 50, 0.5);
     
-    /* === OVERRIDE NEON VARIABLES === */
-    --neon-teal: var(--gta4-rain);
-    --neon-pink: var(--gta4-steel);
-    --neon-blue: #6aa8ff;
-    --neon-purple: var(--gta4-gray-light);
-    --neon-yellow: var(--gta4-taxi-yellow);
-    --neon-green: #32cd32;
-}
-
-body {
-    background: var(--bg-body);
-    color: var(--text-light);
-}
-
-/* ШАПКА */
-.site-header {
-    background: var(--bg-header);
-    border-color: var(--border-primary);
-    box-shadow: var(--shadow), 0 0 30px rgba(0, 0, 0, 0.7);
-}
-
-/* Металлическая текстура */
-.site-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.05) 55%, transparent 55%),
-        linear-gradient(-45deg, transparent 45%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.05) 55%, transparent 55%);
-    background-size: 20px 20px;
-    opacity: 0.3;
-    pointer-events: none;
-}
-
-/* ЛОГОТИП */
-.logo-icon {
-    background: linear-gradient(135deg, var(--gta4-gray-light), var(--gta4-rain));
-    color: var(--text-light);
-    box-shadow: 0 0 20px rgba(70, 130, 180, 0.5);
-}
-
-.logo-main {
-    background: linear-gradient(45deg, var(--text-light), var(--gta4-rain));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.logo-sub {
-    color: var(--gta4-taxi-yellow);
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-/* НАВИГАЦИЯ */
-.nav-list {
-    background: rgba(0, 0, 0, 0.5);
-    border-color: var(--border-primary);
-}
-
-.nav-link {
-    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
-    color: var(--text-medium);
-}
-
-.nav-link:hover {
-    background: rgba(70, 130, 180, 0.3);
-    border-color: var(--gta4-rain);
-    color: var(--text-light);
-}
-
-.nav-link.active {
-    background: linear-gradient(145deg, var(--gta4-rain), var(--gta4-gray-light));
-    border-color: var(--gta4-taxi-yellow);
-    color: white;
-    box-shadow: 0 0 15px var(--gta4-rain);
-}
-
-/* КАРТОЧКИ */
-.tool-card {
-    background: var(--bg-card);
-    border-color: var(--border-primary);
-    color: var(--text-light);
-    box-shadow: var(--shadow);
-}
-
-.tool-icon {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--gta4-rain);
-    color: var(--gta4-rain);
-}
-
-.tool-card[href*="poker.html"] {
-    border-color: var(--gta4-rain);
-}
-.tool-card[href*="poker.html"] .tool-icon {
-    border-color: var(--gta4-rain);
-    color: var(--gta4-rain);
-}
-
-.tool-card[href*="roulette.html"] {
-    border-color: var(--gta4-steel);
-}
-.tool-card[href*="roulette.html"] .tool-icon {
-    border-color: var(--gta4-steel);
-    color: var(--gta4-steel);
-}
-
-.tool-card[href*="arbs.html"] {
-    border-color: var(--gta4-taxi-yellow);
-}
-.tool-card[href*="arbs.html"] .tool-icon {
-    border-color: var(--gta4-taxi-yellow);
-    color: var(--gta4-taxi-yellow);
-}
-
-.tool-card h3 {
-    color: var(--text-light);
-}
-
-.tool-card p {
-    color: var(--text-medium);
-}
-
-/* ПЕРЕКЛЮЧАТЕЛИ */
-.language-switcher-header,
-.theme-switcher {
-    background: rgba(0, 0, 0, 0.6);
-    border-color: var(--border-primary);
-    box-shadow: 0 0 15px rgba(70, 130, 180, 0.3);
-}
-
-.lang-btn,
-.theme-btn {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-light);
-}
-
-.lang-btn:hover,
-.theme-btn:hover {
-    border-color: var(--gta4-taxi-yellow);
-    box-shadow: 0 0 15px var(--gta4-taxi-yellow);
-}
-
-.lang-btn.active,
-.theme-btn.active {
-    background: linear-gradient(135deg, var(--gta4-rain), var(--gta4-gray-light));
-    border-color: var(--gta4-taxi-yellow);
-    color: white;
-}
-
-/* ФУТЕР */
-.site-footer {
-    background: linear-gradient(135deg, rgba(45,52,54,0.95), rgba(26,26,46,0.95));
-    border-top-color: var(--gta4-rain);
-    color: var(--text-medium);
-}
-
-/* ПОКЕР */
-.poker-header {
-    background: var(--bg-panel);
-    border-color: var(--border-primary);
-    box-shadow: var(--shadow);
-}
-
-.panel {
-    background: var(--bg-panel);
-    border-color: var(--border-primary);
-    box-shadow: var(--shadow);
-}
-
-.hand-section {
-    background: var(--bg-section);
-    border-color: var(--border-primary);
-}
-
-.board-section {
-    background: var(--bg-section);
-    border-color: var(--border-secondary);
-}
-
-.hand-section .section-title {
-    color: var(--gta4-rain);
-}
-
-.board-section .section-title {
-    color: var(--gta4-steel);
-}
-
-.opponents-control {
-    background: var(--bg-section);
-    border-color: var(--border-accent);
-}
-
-.opponents-label {
-    color: var(--gta4-taxi-yellow);
-}
-
-.opponent-pill {
-    border-color: var(--gta4-rain);
-    color: var(--gta4-rain);
-}
-
-.opponent-pill.active {
-    background: var(--gta4-rain);
-    color: white;
-    border-color: var(--gta4-rain);
-    box-shadow: 0 0 15px var(--gta4-rain);
-}
-
-.deck-grid {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--border-accent);
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, var(--gta4-rain), var(--gta4-gray-light));
-    color: white;
-}
-
-.btn-secondary {
-    background: rgba(70, 130, 180, 0.1);
-    color: var(--gta4-rain);
-    border-color: var(--gta4-rain);
-}
-
-.btn-secondary:hover {
-    background: var(--gta4-rain);
-    color: white;
-}
-
-.results-panel {
-    border-color: var(--border-primary);
-    background: var(--bg-panel);
-    box-shadow: var(--shadow);
-}
-
-.result-card {
-    background: var(--bg-section);
-    border-color: var(--border-primary);
-    box-shadow: var(--shadow);
-}
-
-.result-card:nth-child(1) .result-percent { color: var(--gta4-rain); }
-.result-card:nth-child(2) .result-percent { color: var(--gta4-steel); }
-.result-card:nth-child(3) .result-percent { color: var(--gta4-taxi-yellow); }
-
-.result-card:nth-child(1) { border-color: var(--gta4-rain); }
-.result-card:nth-child(2) { border-color: var(--gta4-steel); }
-.result-card:nth-child(3) { border-color: var(--gta4-taxi-yellow); }
-
-/* ДЕКОР - ДОЖДЬ, НЕБОСКРЕБЫ, ТАКСИ */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
+    /* === ГРАДИЕНТЫ === */
+    --gradient-body: linear-gradient(180deg, 
+        #0c2461 0%,
+        #1a1a2e 30%,
+        #2d3436 70%,
+        #2c3e50 100%
+    );
+    --gradient-logo: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    --gradient-logo-text: linear-gradient(45deg, var(--text-primary), var(--color-primary));
+    --gradient-nav-link: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+    --gradient-nav-hover: rgba(70, 130, 180, 0.3);
+    --gradient-nav-active: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
+    --gradient-btn-primary: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+    --gradient-btn-secondary: linear-gradient(145deg, rgba(70,130,180,0.1), rgba(0,0,0,0.2));
+    --gradient-page-header: linear-gradient(135deg, rgba(61,61,61,0.95), rgba(45,52,54,0.95));
+    --gradient-card: linear-gradient(135deg, rgba(61,61,61,0.95), rgba(45,52,54,0.95));
+    --gradient-coming-soon: linear-gradient(135deg, rgba(61,61,61,0.95), rgba(45,52,54,0.95));
+    --gradient-cyber: linear-gradient(90deg,
+        transparent,
+        var(--color-primary),
+        var(--color-secondary),
+        var(--color-accent),
+        transparent
+    );
+    
+    /* === ДЕКОРАТИВНЫЕ ПЕРЕМЕННЫЕ === */
+    --decor-rain: 
         linear-gradient(90deg, transparent 50%, rgba(70, 130, 180, 0.1) 50%),
         linear-gradient(transparent 50%, rgba(70, 130, 180, 0.1) 50%);
-    background-size: 100px 100px;
-    opacity: 0.15;
-    pointer-events: none;
-    z-index: 0;
-    animation: rain 20s linear infinite;
-}
-
-body::after {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 150px;
-    background: 
+    --decor-rain-size: 100px 100px;
+    --decor-rain-opacity: 0.15;
+    
+    --decor-skyscraper: 
         linear-gradient(transparent, rgba(0, 0, 0, 0.7)),
         url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="5" y="30" width="6" height="70" fill="%232c3e50"/><rect x="15" y="20" width="8" height="80" fill="%232c3e50"/><rect x="28" y="10" width="10" height="90" fill="%232c3e50"/><rect x="45" y="25" width="7" height="75" fill="%232c3e50"/><rect x="60" y="15" width="9" height="85" fill="%232c3e50"/><rect x="75" y="35" width="6" height="65" fill="%232c3e50"/><rect x="88" y="40" width="5" height="60" fill="%232c3e50"/></svg>');
-    background-repeat: repeat-x;
-    background-size: 120px 150px;
-    z-index: 0;
-    opacity: 0.3;
-    pointer-events: none;
+    --decor-skyscraper-size: 120px 150px;
+    --decor-skyscraper-opacity: 0.3;
+    
+    --decor-taxi: '🚕';
+    --decor-taxi-color: #ffd700;
+    --decor-taxi-shadow: #000;
+    
+    /* === МЕТАЛЛИЧЕСКАЯ ТЕКСТУРА === */
+    --gradient-metal: 
+        linear-gradient(45deg, 
+            transparent 45%, 
+            rgba(255,255,255,0.05) 45%, 
+            rgba(255,255,255,0.05) 55%, 
+            transparent 55%),
+        linear-gradient(-45deg, 
+            transparent 45%, 
+            rgba(255,255,255,0.05) 45%, 
+            rgba(255,255,255,0.05) 55%, 
+            transparent 55%);
+    --gradient-metal-size: 20px 20px;
+    
+    /* === АНИМАЦИИ === */
+    --animation-rain: rain 20s linear infinite;
+    --animation-taxi: taxi-drive 15s linear infinite;
 }
 
 @keyframes rain {
     0% { background-position: 0 0; }
     100% { background-position: 100px 100px; }
-}
-
-/* Такси */
-.taxi {
-    color: var(--gta4-taxi-yellow);
-    filter: drop-shadow(2px 2px 0 #000);
-    animation: taxi-drive 15s linear infinite;
 }
 
 @keyframes taxi-drive {
@@ -342,15 +134,5 @@ body::after {
     100% { 
         transform: translateX(-200px) translateY(0);
         opacity: 0;
-    }
-}
-
-@media (max-width: 768px) {
-    body::before {
-        background-size: 70px 70px;
-    }
-    body::after {
-        height: 100px;
-        background-size: 80px 100px;
     }
 }
