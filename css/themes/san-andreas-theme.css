@@ -3,14 +3,14 @@
 
 :root {
     /* === ЦВЕТА ПО РОЛИ (SAN ANDREAS) === */
-    --color-primary: #ff9900;
-    --color-secondary: #ff6600;
-    --color-accent: #8b4513;
-    --color-success: #228b22;
-    --color-info: #f4a460;
-    --color-warning: #ffcc00;
-    --color-danger: #b22222;
-    --color-highlight: #d2b48c;
+    --color-primary: #ff9900;      /* солнце/апельсин */
+    --color-secondary: #ff6600;    /* закат/манго */
+    --color-accent: #8b4513;       /* дерево/земля */
+    --color-success: #228b22;      /* лес/пальмы */
+    --color-info: #f4a460;         /* песок */
+    --color-warning: #ffcc00;      /* золото */
+    --color-danger: #b22222;       /* кирпич/огонь */
+    --color-highlight: #d2b48c;    /* бежевый/кожа */
     
     /* === ФОНЫ ПО РОЛИ === */
     --bg-body: #331a00;
@@ -19,9 +19,7 @@
     --bg-overlay: rgba(139, 69, 19, 0.8);
     --bg-overlay-light: rgba(139, 69, 19, 0.95);
     --bg-header: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
-    --bg-card: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
     --bg-coming-soon: linear-gradient(135deg, rgba(255,221,153,0.9), rgba(255,204,102,0.9));
-    --bg-section: #e6b87e;
     --bg-nav: rgba(139, 69, 19, 0.2);
     --bg-surface-light: rgba(255, 255, 255, 0.3);
     --bg-surface-hover: rgba(255, 153, 0, 0.3);
@@ -33,8 +31,6 @@
     --text-inverse: #fff5e6;
     --text-muted: #996633;
     --text-slot: rgba(51, 26, 0, 0.6);
-    --text-card: #331a00;
-    --text-card-secondary: #663300;
     
     /* === ГРАНИЦЫ ПО РОЛИ === */
     --border-primary: #ff9900;
@@ -145,21 +141,41 @@ body::after {
     z-index: 0;
 }
 
-/* Пустынная рябь для футера */
+/* 🏜️ НОВЫЙ ДЕКОР: Перекати-поле для футера */
 .site-footer::after {
-    content: '';
+    content: '🌵';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 30px;
-    background: repeating-linear-gradient(
-        45deg,
-        rgba(139, 69, 19, 0.1) 0px,
-        rgba(139, 69, 19, 0.1) 10px,
-        transparent 10px,
-        transparent 20px
-    );
+    bottom: 10px;
+    right: 30px;
+    font-size: 2rem;
+    color: rgba(34, 139, 34, 0.3);
+    animation: tumbleweed 15s linear infinite;
+    pointer-events: none;
+}
+
+/* 🤠 НОВЫЙ ДЕКОР: Ковбойская шляпа для активных элементов */
+.nav-link.active::before,
+.btn-primary-bg::before,
+.opponent-pill.active::before {
+    content: '🤠';
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 5px rgba(255, 153, 0, 0.5));
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* 💨 НОВЫЙ ДЕКОР: Пыльные вихри при наведении */
+.tool-card:hover::after {
+    content: '💨';
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+    color: rgba(139, 69, 19, 0.3);
+    animation: dust-devil 3s ease-in-out infinite;
     pointer-events: none;
 }
 
@@ -197,7 +213,7 @@ body::after {
     z-index: 0;
 }
 
-/* Анимации */
+/* === АНИМАЦИИ === */
 @keyframes sway {
     0%, 100% { transform: rotate(-2deg); }
     50% { transform: rotate(2deg); }
@@ -214,7 +230,14 @@ body::after {
     100% { transform: rotate(360deg) scale(1); opacity: 0.3; }
 }
 
-/* Адаптивность для мобилок */
+@keyframes tumbleweed {
+    0% { transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateX(-100vw) rotate(360deg); opacity: 0; }
+}
+
+/* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
     body::after {
         font-size: 3rem;
@@ -228,6 +251,11 @@ body::after {
         top: -30px;
         right: -30px;
     }
+    
+    .site-footer::after {
+        font-size: 1.5rem;
+        right: 20px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -235,5 +263,17 @@ body::after {
         font-size: 2.5rem;
         right: 15px;
         bottom: 5px;
+    }
+    
+    .site-footer::after {
+        display: none;
+    }
+    
+    .nav-link.active::before,
+    .btn-primary-bg::before,
+    .opponent-pill.active::before {
+        font-size: 0.9rem;
+        top: -15px;
+        right: -5px;
     }
 }
