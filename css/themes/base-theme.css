@@ -1,5 +1,5 @@
 /* base-theme.css - ТЕМА "НЕОН" (базовая) */
-/* ТОЛЬКО ПЕРЕМЕННЫЕ! ВСЕ СЕЛЕКТОРЫ УДАЛЕНЫ! */
+/* ТОЛЬКО ПЕРЕМЕННЫЕ! ВСЕ СЕЛЕКТОРЫ В color-classes.css! */
 
 :root {
     /* === ЦВЕТА ПО РОЛИ === */
@@ -21,7 +21,6 @@
     --bg-header: #353a55;
     --bg-card: rgba(42, 47, 74, 0.9);
     --bg-coming-soon: rgba(42, 47, 74, 0.95);
-    --bg-section: #3a3f5a;
     --bg-nav: rgba(0, 0, 0, 0.3);
     --bg-surface-light: rgba(255, 255, 255, 0.05);
     --bg-surface-hover: rgba(0, 102, 255, 0.2);
@@ -33,8 +32,6 @@
     --text-inverse: #000000;
     --text-muted: rgba(255, 255, 255, 0.4);
     --text-slot: rgba(255, 255, 255, 0.4);
-    --text-card: #ffffff;
-    --text-card-secondary: #ccccff;
     
     /* === ГРАНИЦЫ ПО РОЛИ === */
     --border-primary: #00f0ff;
@@ -88,4 +85,58 @@
     --animation-ripple: ripple 0.6s ease-out;
     --animation-quick-glow: quick-glow 0.25s ease-in-out;
     --animation-float-icon: float-icon 3s ease-in-out infinite;
+}
+
+/* ✅ АНИМАЦИИ ОСТАВЛЯЕМ ЗДЕСЬ */
+@keyframes cyber-scan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes hologram {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+@keyframes float {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes scan {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+@keyframes footer-glow {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+@keyframes button-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+@keyframes ripple {
+    0% { transform: scale(0, 0); opacity: 0.5; }
+    100% { transform: scale(20, 20); opacity: 0; }
+}
+
+@keyframes quick-glow {
+    0% { border-color: var(--color-primary); box-shadow: var(--shadow-md); }
+    50% { border-color: var(--color-success); box-shadow: var(--shadow-md), 0 0 25px var(--color-success); }
+    100% { border-color: var(--color-primary); box-shadow: var(--shadow-md); }
+}
+
+@keyframes float-icon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
