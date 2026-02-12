@@ -35,15 +35,15 @@
                     </ul>
                 </nav>
                 
-                <div class="language-switcher-header bg-dark border-accent">
+                <div class="language-switcher-header bg-surface border-accent">
                     <div class="lang-btn" data-lang="ru" title="Русский">
-                        <img src="images/flags/ru.png" alt="RU" class="lang-flag border-light">
+                        <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
                     </div>
                     <div class="lang-btn" data-lang="en" title="English">
-                        <img src="images/flags/en.png" alt="EN" class="lang-flag border-light">
+                        <img src="images/flags/en.png" alt="EN" class="lang-flag border-muted">
                     </div>
                     <div class="lang-btn" data-lang="es" title="Español">
-                        <img src="images/flags/es.png" alt="ES" class="lang-flag border-light">
+                        <img src="images/flags/es.png" alt="ES" class="lang-flag border-muted">
                     </div>
                 </div>
             </div>
@@ -51,11 +51,11 @@
 
         <!-- ПОКЕР-КАЛЬКУЛЯТОР -->
         <div class="poker-container">
-            <div class="poker-header bg-panel border-primary shadow-default">
+            <div class="poker-header bg-surface border-primary shadow-default">
                 <div class="header-suits">
-                    <span class="text-dark">♠</span>
+                    <span class="text-black">♠</span>
                     <span class="text-red">♥</span>
-                    <span class="text-dark">♣</span>
+                    <span class="text-black">♣</span>
                     <span class="text-red">♦</span>
                 </div>
                 <h1 class="text-gradient" data-i18n="title"></h1>
@@ -64,10 +64,10 @@
             
             <div class="main-area">
                 <!-- ЛЕВАЯ ПАНЕЛЬ -->
-                <div class="panel bg-panel border-primary shadow-default">
+                <div class="panel bg-surface border-primary shadow-default">
                     <div class="panel-title text-light" data-i18n="panelHandBoard"></div>
                     
-                    <div class="hand-section bg-section border-primary" id="handSection">
+                    <div class="hand-section bg-elevated border-primary" id="handSection">
                         <div class="section-title text-primary" id="handTitle" data-i18n="yourHand"></div>
                         <div class="hand-subtitle text-medium" data-i18n="handSubtitle"></div>
                         <div class="section-content">
@@ -79,7 +79,7 @@
                         <div class="warning text-warning" id="handWarning" data-i18n="handWarning"></div>
                     </div>
                     
-                    <div class="board-section bg-section border-secondary" id="boardSection">
+                    <div class="board-section bg-elevated border-secondary" id="boardSection">
                         <div class="section-title text-secondary" id="boardTitle" data-i18n="board"></div>
                         <div class="board-subtitle text-medium" data-i18n="boardSubtitle"></div>
                         <div class="section-content">
@@ -96,10 +96,10 @@
                 </div>
                 
                 <!-- ПРАВАЯ ПАНЕЛЬ -->
-                <div class="panel bg-panel border-primary shadow-default">
+                <div class="panel bg-surface border-primary shadow-default">
                     <div class="panel-title text-light" data-i18n="panelSettings"></div>
                     
-                    <div class="opponents-control bg-section border-accent">
+                    <div class="opponents-control bg-elevated border-accent">
                         <div class="opponents-label text-accent" data-i18n="opponentsLabel"></div>
                         <div class="opponent-pills" id="opponentPills">
                             <button class="opponent-pill opponent-bg opponent-border text-opponent active opponent-active" data-opponents="1">1</button>
@@ -121,29 +121,29 @@
                     <div class="drop-hint text-success" data-i18n="dropHint"></div>
                     
                     <div class="controls">
-                        <button class="btn btn-primary btn-primary-bg btn-primary-text" id="calculateBtn" data-i18n="calculateBtn"></button>
-                        <button class="btn btn-secondary btn-secondary-bg btn-secondary-border btn-secondary-text" id="clearAllBtn" data-i18n="clearBtn"></button>
+                        <button class="btn btn-primary-bg btn-primary-text" id="calculateBtn" data-i18n="calculateBtn"></button>
+                        <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="clearAllBtn" data-i18n="clearBtn"></button>
                     </div>
                 </div>
             </div>
             
             <!-- ПАНЕЛЬ РЕЗУЛЬТАТОВ -->
-            <div class="results-panel bg-panel border-primary shadow-default" id="resultsPanel">
+            <div class="results-panel bg-surface border-primary shadow-default" id="resultsPanel">
                 <div class="panel-title text-light" data-i18n="panelResults"></div>
                 
                 <div class="results-grid">
-                    <div class="result-card bg-section border-primary shadow-default">
+                    <div class="result-card bg-elevated border-primary shadow-default">
                         <div class="text-primary" style="font-size: 1.1rem;" data-i18n="yourHandResult"></div>
                         <div class="result-percent text-win" id="resultHero">—</div>
                     </div>
                     
-                    <div class="result-card bg-section border-secondary shadow-default">
+                    <div class="result-card bg-elevated border-secondary shadow-default">
                         <div class="text-secondary" style="font-size: 1.1rem;" data-i18n="opponentsResult"></div>
                         <div class="result-percent text-opp" id="resultOpponent">—</div>
                     </div>
                     
-                    <div class="result-card bg-section border-blue shadow-default">
-                        <div class="text-blue" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
+                    <div class="result-card bg-elevated border-info shadow-default">
+                        <div class="text-info" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
                         <div class="result-percent text-tie" id="resultTie">—</div>
                     </div>
                 </div>
