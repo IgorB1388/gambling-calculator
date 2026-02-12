@@ -19,9 +19,7 @@
     --bg-overlay: rgba(26, 27, 47, 0.8);
     --bg-overlay-light: rgba(26, 27, 47, 0.8);
     --bg-header: rgba(10, 10, 26, 0.7);
-    --bg-card: rgba(26, 27, 47, 0.8);
     --bg-coming-soon: rgba(26, 27, 47, 0.8);
-    --bg-section: rgba(255, 255, 255, 0.05);
     --bg-nav: rgba(255, 255, 255, 0.05);
     --bg-surface-light: rgba(255, 255, 255, 0.1);
     --bg-surface-hover: rgba(255, 68, 170, 0.2);
@@ -33,8 +31,6 @@
     --text-inverse: #0a0a1a;
     --text-muted: rgba(255, 255, 255, 0.4);
     --text-slot: rgba(255, 255, 255, 0.4);
-    --text-card: #ffffff;
-    --text-card-secondary: #e0e0ff;
     
     /* === ГРАНИЦЫ ПО РОЛИ === */
     --border-primary: #ff44aa;
@@ -140,7 +136,7 @@ body::after {
 
 /* Неоновый пульс для активных элементов */
 .nav-link.active,
-.btn-primary,
+.btn-primary-bg,
 .opponent-pill.active {
     animation: neon-pulse 3s ease-in-out infinite;
 }
