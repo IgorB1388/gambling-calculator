@@ -155,7 +155,6 @@ let dragOverTimer=null;
 
 // --- Инициализация ---
 document.addEventListener('DOMContentLoaded',()=>{
-    document.body.classList.add('js'); // ✅ Включаем анимации
     createDeck();
     initEventListeners();
     initDragAndDrop();
@@ -166,7 +165,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     selectHandBlock();
 });
 
-// --- Создание колоды (ИСПРАВЛЕНО) ---
+// --- Создание колоды (БЕЛЫЙ ФОН + КРАСНЫЕ/ЧЕРНЫЕ МАСТИ) ---
 function createDeck(){
     const deckGrid=document.getElementById('deck');
     deckGrid.innerHTML='';
@@ -341,8 +340,9 @@ function removeCardFromSlot(slotId){
     }
 }
 
-// --- Отображение карт (ИСПРАВЛЕНО) ---
+// --- Отображение карт (ГЛАВНОЕ ИСПРАВЛЕНИЕ - БЕЛЫЙ ФОН + КРАСНЫЕ МАСТИ) ---
 function updateCardDisplay(){
+    // Обновляем карты в слотах (рука/борд)
     document.querySelectorAll('.card-slot').forEach(slot=>{
         const slotId=slot.dataset.slot;
         if(selectedCards.has(slotId)){
@@ -358,19 +358,25 @@ function updateCardDisplay(){
         }
     });
     
-    // ✅ ИСПРАВЛЕНО: обновляем цвета мастей в колоде
+    // Обновляем карты в колоде (БЕЛЫЙ ФОН + КРАСНЫЕ/ЧЕРНЫЕ МАСТИ)
     document.querySelectorAll('.deck-card').forEach(deckCard=>{
         const isUsed=usedCards.has(deckCard.dataset.card);
         deckCard.classList.toggle('selected',isUsed);
         deckCard.draggable=!isUsed;
         deckCard.style.cursor=isUsed?'default':'pointer';
         
-        // 👇 ВАЖНО: сохраняем цвета мастей при любых обновлениях
+        // Добавляем белый фон и тень (если вдруг потерялись)
+        deckCard.classList.add('bg-deck-card', 'deck-card-border', 'deck-card-shadow');
+        
+        // КРАСНЫЕ И ЧЕРНЫЕ МАСТИ - ОБЯЗАТЕЛЬНО!
         const cardCode = deckCard.dataset.card;
         const suitCode = cardCode.slice(-1);
         const isRedSuit = suitCode === 'h' || suitCode === 'd';
-        deckCard.classList.toggle('text-red', isRedSuit);
-        deckCard.classList.toggle('text-black', !isRedSuit);
+        
+        // Удаляем старые классы цветов
+        deckCard.classList.remove('text-red', 'text-black');
+        // Добавляем правильный цвет
+        deckCard.classList.add(isRedSuit ? 'text-red' : 'text-black');
     });
 }
 
