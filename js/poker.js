@@ -155,6 +155,7 @@ let dragOverTimer=null;
 
 // --- Инициализация ---
 document.addEventListener('DOMContentLoaded',()=>{
+    document.body.classList.add('js'); // ✅ Включаем анимации
     createDeck();
     initEventListeners();
     initDragAndDrop();
@@ -174,7 +175,6 @@ function createDeck(){
     
     suits.forEach(suit=>values.forEach(value=>{
         const cardCode=value+suit.code;
-        // 🃏 ИСПРАВЛЕНО: добавлены классы bg-deck-card, deck-card-border, deck-card-shadow
         const deckCard=document.createElement('div');
         deckCard.className=`deck-card bg-deck-card deck-card-border deck-card-shadow ${suit.color==='red' ? 'text-red' : 'text-black'}`;
         deckCard.dataset.card=cardCode;
@@ -348,7 +348,6 @@ function updateCardDisplay(){
         if(selectedCards.has(slotId)){
             const card=selectedCards.get(slotId);
             const isRed=card.suit==='♥'||card.suit==='♦';
-            // 🃏 ИСПРАВЛЕНО: добавлены классы bg-card-white, border-card-light, shadow-card
             slot.innerHTML=`
                 <div class="real-card bg-card-white border-card-light shadow-card ${isRed ? 'text-red' : 'text-black'}" draggable="true">
                     <div class="card-content">${card.value}<br>${card.suit}</div>
@@ -359,11 +358,19 @@ function updateCardDisplay(){
         }
     });
     
+    // ✅ ИСПРАВЛЕНО: обновляем цвета мастей в колоде
     document.querySelectorAll('.deck-card').forEach(deckCard=>{
         const isUsed=usedCards.has(deckCard.dataset.card);
         deckCard.classList.toggle('selected',isUsed);
         deckCard.draggable=!isUsed;
         deckCard.style.cursor=isUsed?'default':'pointer';
+        
+        // 👇 ВАЖНО: сохраняем цвета мастей при любых обновлениях
+        const cardCode = deckCard.dataset.card;
+        const suitCode = cardCode.slice(-1);
+        const isRedSuit = suitCode === 'h' || suitCode === 'd';
+        deckCard.classList.toggle('text-red', isRedSuit);
+        deckCard.classList.toggle('text-black', !isRedSuit);
     });
 }
 
@@ -473,7 +480,7 @@ function resetResults(){
     }
 }
 
-// --- Расчёт эквити (ИСПРАВЛЕНО) ---
+// --- Расчёт эквити ---
 async function calculateEquity() {
     if (isCalculating) return;
 
@@ -578,6 +585,12 @@ async function calculateEquity() {
     isCalculating = false;
     updateStatus();
 }
+
+// --- Смена темы: пересоздаем колоду ---
+document.addEventListener('themeChanged', () => {
+    createDeck();
+    updateCardDisplay();
+});
 
 // --- Экспорт для отладки ---
 window.getHandCardsCount = getHandCardsCount;
