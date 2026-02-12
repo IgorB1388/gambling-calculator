@@ -116,7 +116,8 @@
                     
                     <div class="panel-title text-light" style="margin-top: 25px;" data-i18n="panelChooseCards"></div>
                     
-                    <div class="deck-grid deck-bg deck-border" id="deck"></div>
+                    <!-- ❌ УБРАЛ КЛАССЫ deck-bg и deck-border - они конфликтуют! -->
+                    <div class="deck-grid" id="deck"></div>
                     
                     <div class="drop-hint text-success" data-i18n="dropHint"></div>
                     
@@ -155,7 +156,7 @@
         </footer>
     </div>
 
-    <script src="js/translations.js"></script>
+    <!-- ✅ УБРАЛ translations.js - его нет! -->
     <script src="js/language.js"></script>
     <script src="js/main.js"></script>
     <script src="js/poker.js"></script>
