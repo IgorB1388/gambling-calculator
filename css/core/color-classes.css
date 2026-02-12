@@ -18,9 +18,7 @@
     --bg-overlay: rgba(42, 47, 74, 0.9);
     --bg-overlay-light: rgba(42, 47, 74, 0.95);
     --bg-header: #353a55;
-    --bg-card: rgba(42, 47, 74, 0.9);
     --bg-coming-soon: rgba(42, 47, 74, 0.95);
-    --bg-section: #3a3f5a;
     --bg-nav: rgba(0, 0, 0, 0.3);
     
     --text-primary: #ffffff;
@@ -49,7 +47,7 @@
 .text-red { color: #ff3366 !important; }
 .text-black { color: #000000 !important; }
 .bg-card-white { background: #ffffff !important; }
-.bg-deck-card { background: #f0f0f0 !important; }
+.bg-deck-card { background: #ffffff !important; } /* ИЗМЕНЕНО: теперь белый, как и просил */
 .border-card-light { border-color: rgba(0, 0, 0, 0.2) !important; }
 .shadow-card { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important; }
 .shadow-card-hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important; }
@@ -90,15 +88,12 @@
 .bg-overlay { background: var(--bg-overlay); }
 .bg-overlay-light { background: var(--bg-overlay-light); }
 .bg-header { background: var(--bg-header); }
-.bg-card { background: var(--bg-card); }
 .bg-coming-soon { background: var(--bg-coming-soon); }
-.bg-section { background: var(--bg-section); }
 .bg-nav { background: var(--bg-nav); }
 
 /* === ГРАДИЕНТЫ === */
 .gradient-primary { background: linear-gradient(45deg, var(--color-secondary), var(--color-highlight)); }
 .gradient-header { background: var(--bg-header); }
-.gradient-card { background: var(--bg-card); }
 .gradient-logo { background: linear-gradient(135deg, var(--color-primary), var(--color-highlight)); }
 .text-gradient { 
     background: linear-gradient(45deg, var(--color-secondary), var(--color-primary));
@@ -136,7 +131,7 @@
     color: var(--text-primary) !important;
 }
 
-/* 👥 КНОПКИ ОППОНЕНТОВ - ИСПРАВЛЕНО! */
+/* 👥 КНОПКИ ОППОНЕНТОВ */
 .opponent-pill {
     border-color: var(--color-info) !important;
     background: rgba(106, 168, 255, 0.1) !important;
@@ -170,7 +165,7 @@
 }
 
 /* === КАРТОЧКИ === */
-.card-bg { background: var(--bg-card); }
+.card-bg { background: var(--bg-surface); }
 .card-border { border-color: var(--color-primary); }
 .card-icon-border { border-color: var(--color-primary); }
 .card-icon-color { color: var(--color-primary); }
@@ -201,9 +196,7 @@
 .opponent-bg { background: rgba(106, 168, 255, 0.1); }
 .opponent-text { color: var(--color-info); }
 
-/* КОЛОДА */
-.deck-bg { background: rgba(255, 255, 255, 0.05); }
-.deck-border { border-color: var(--color-highlight); }
+/* ❌❌❌ УДАЛЕНО: deck-bg и deck-border - они конфликтовали с картами ❌❌❌ */
 
 /* РЕЗУЛЬТАТЫ */
 .result-win { color: var(--color-primary); }
@@ -213,7 +206,7 @@
 /* ⚠️ ПРЕДУПРЕЖДЕНИЯ */
 .warning-text { color: var(--color-warning); }
 
-/* 🖱️ DRAG-OVER ПОДСВЕТКА - ИСПРАВЛЕНО! */
+/* 🖱️ DRAG-OVER ПОДСВЕТКА */
 .hand-section.drag-over:not(.drag-over-no-space),
 .board-section.drag-over:not(.drag-over-no-space),
 #deck.drag-over:not(.drag-over-no-space) {
@@ -221,7 +214,7 @@
     box-shadow: 0 0 20px var(--color-accent) !important;
 }
 
-/* 🔴 ИНДИКАТОР АКТИВНОГО БЛОКА - ИСПРАВЛЕНО! */
+/* 🔴 ИНДИКАТОР АКТИВНОГО БЛОКА */
 .section-title::before {
     border-color: transparent !important;
 }
@@ -232,4 +225,3 @@
     border-color: rgba(255, 255, 255, 0.9) !important;
     opacity: 1 !important;
 }
-
