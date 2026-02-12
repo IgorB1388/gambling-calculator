@@ -53,6 +53,8 @@
 .border-card-light { border-color: rgba(0, 0, 0, 0.2) !important; }
 .shadow-card { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important; }
 .shadow-card-hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important; }
+.deck-card-border { border-color: transparent !important; }
+.deck-card-shadow { box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important; }
 
 /* === ТЕКСТ === */
 .text-primary { color: var(--color-primary); }
@@ -230,3 +232,4 @@
     border-color: rgba(255, 255, 255, 0.9) !important;
     opacity: 1 !important;
 }
+
