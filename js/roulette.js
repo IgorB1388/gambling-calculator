@@ -1,962 +1,360 @@
-const HandEvaluator = {
-    ranks: { '2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'10':8,'J':9,'Q':10,'K':11,'A':12 },
-    suits: { 's':0,'h':1,'c':2,'d':3 },
-    
-    evaluate(cards) {
-        if (cards.length < 5) return 0;
-        
-        const formatted = cards.map(c => ({
-            rank: this.ranks[c.value],
-            suit: this.suits[c.suitCode],
-            originalRank: this.ranks[c.value]
-        })).sort((a,b) => b.rank - a.rank);
-        
-        const flush = this.hasFlush(formatted);
-        const straight = this.hasStraight(formatted);
-        
-        if (flush && straight) {
-            const straightValue = this.getStraightValue(formatted);
-            const isRoyal = straightValue === 12 && formatted.some(c => c.rank === 12);
-            return isRoyal ? 9 << 20 : (8 << 20) + (straightValue << 16);
+// roulette.js - Анализатор стратегий рулетки
+
+// --- Конфигурация рулетки ---
+const RouletteConfig = {
+    european: {
+        numbers: 37,
+        zero: 0,
+        payouts: {
+            straight: 35,
+            split: 17,
+            street: 11,
+            corner: 8,
+            line: 5,
+            dozen: 2,
+            column: 2,
+            even: 1,
+            odd: 1,
+            red: 1,
+            black: 1,
+            low: 1,
+            high: 1
         }
-        
-        const counts = this.getRankCounts(formatted);
-        const values = Object.values(counts).sort((a,b) => b-a);
-        
-        if (values[0] === 4) {
-            const quadsRank = this.getRankOfCount(counts,4);
-            const kicker = this.getKickers(formatted,[quadsRank],1)[0];
-            return (7 << 20) + (quadsRank << 16) + (kicker << 12);
-        }
-        
-        if (values[0] === 3 && values[1] >= 2) {
-            const tripsRank = this.getRankOfCount(counts,3);
-            const pairRank = this.getRankOfCount(counts,2,tripsRank);
-            return (6 << 20) + (tripsRank << 16) + (pairRank << 12);
-        }
-        
-        if (flush) {
-            const flushCards = this.getFlushCards(formatted);
-            return (5 << 20) + this.getHandValue(flushCards.slice(0,5));
-        }
-        
-        if (straight) {
-            const straightValue = this.getStraightValue(formatted);
-            return (4 << 20) + (straightValue << 16);
-        }
-        
-        if (values[0] === 3) {
-            const tripsRank = this.getRankOfCount(counts,3);
-            const kickers = this.getKickers(formatted,[tripsRank],2);
-            return (3 << 20) + (tripsRank << 16) + (kickers[0] << 12) + (kickers[1] << 8);
-        }
-        
-        if (values[0] === 2 && values[1] === 2) {
-            const pairs = this.getRanksOfCount(counts,2).sort((a,b) => b-a);
-            const kicker = this.getKickers(formatted,pairs,1)[0];
-            return (2 << 20) + (pairs[0] << 16) + (pairs[1] << 12) + (kicker << 8);
-        }
-        
-        if (values[0] === 2) {
-            const pairRank = this.getRankOfCount(counts,2);
-            const kickers = this.getKickers(formatted,[pairRank],3);
-            return (1 << 20) + (pairRank << 16) + (kickers[0] << 12) + (kickers[1] << 8) + (kickers[2] << 4);
-        }
-        
-        return this.getHandValue(formatted.slice(0,5));
     },
-    
-    hasFlush(cards) {
-        if (cards.length < 5) return false;
-        const suitCounts = [0,0,0,0];
-        cards.forEach(c => suitCounts[c.suit]++);
-        return suitCounts.some(count => count >= 5);
-    },
-    
-    hasStraight(cards) {
-        if (cards.length < 5) return false;
-        
-        const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b) => b-a);
-        
-        for (let i=0; i<=uniqueRanks.length-5; i++) {
-            if (uniqueRanks[i] - uniqueRanks[i+4] === 4) {
-                return true;
-            }
+    american: {
+        numbers: 38,
+        zero: [0, 37], // 0 и 00
+        payouts: {
+            straight: 35,
+            split: 17,
+            street: 11,
+            corner: 8,
+            line: 5,
+            dozen: 2,
+            column: 2,
+            even: 1,
+            odd: 1,
+            red: 1,
+            black: 1,
+            low: 1,
+            high: 1
         }
-        
-        const ranksWithWheel = uniqueRanks.map(r => r === 12 ? -1 : r).sort((a,b) => b-a);
-        const wheelRanks = [-1, 0, 1, 2, 3];
-        
-        for (let i=0; i<=ranksWithWheel.length-5; i++) {
-            const slice = ranksWithWheel.slice(i, i+5);
-            if (slice[0] - slice[4] === 4) {
-                const hasAllWheelCards = wheelRanks.every(r => slice.includes(r));
-                if (hasAllWheelCards) return true;
-            }
-        }
-        
-        return false;
-    },
-    
-    getStraightValue(cards) {
-        const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b) => b-a);
-        
-        for (let i=0; i<=uniqueRanks.length-5; i++) {
-            if (uniqueRanks[i] - uniqueRanks[i+4] === 4) {
-                return uniqueRanks[i];
-            }
-        }
-        
-        const ranksWithWheel = uniqueRanks.map(r => r === 12 ? -1 : r).sort((a,b) => b-a);
-        const wheelRanks = [-1, 0, 1, 2, 3];
-        
-        for (let i=0; i<=ranksWithWheel.length-5; i++) {
-            const slice = ranksWithWheel.slice(i, i+5);
-            if (slice[0] - slice[4] === 4) {
-                const hasAllWheelCards = wheelRanks.every(r => slice.includes(r));
-                if (hasAllWheelCards) {
-                    return 3;
-                }
-            }
-        }
-        
-        return -1;
-    },
-    
-    getRankCounts(cards) {
-        const counts = {};
-        cards.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
-        return counts;
-    },
-    
-    getRankOfCount(counts, targetCount, exclude = -1) {
-        for (const [rank, count] of Object.entries(counts)) {
-            const rankNum = parseInt(rank);
-            if (count === targetCount && rankNum !== exclude) return rankNum;
-        }
-        return -1;
-    },
-    
-    getRanksOfCount(counts, targetCount) {
-        return Object.entries(counts)
-            .filter(([,count]) => count === targetCount)
-            .map(([rank]) => parseInt(rank));
-    },
-    
-    getKickers(cards, excludeRanks, count) {
-        const kickers = cards
-            .filter(c => !excludeRanks.includes(c.rank))
-            .map(c => c.rank)
-            .sort((a,b) => b-a)
-            .slice(0,count);
-        while (kickers.length < count) kickers.push(0);
-        return kickers;
-    },
-    
-    getFlushCards(cards) {
-        const suitCounts = [0,0,0,0];
-        cards.forEach(c => suitCounts[c.suit]++);
-        const flushSuit = suitCounts.findIndex(count => count >= 5);
-        return cards
-            .filter(c => c.suit === flushSuit)
-            .sort((a,b) => b.rank - a.rank)
-            .slice(0,5);
-    },
-    
-    getHandValue(cards) {
-        return cards.reduce((value,c,i) => value + (c.rank << (4*(4-i))), 0);
     }
 };
 
-let activeBlock = 'hand';
-const selectedCards = new Map();
-const usedCards = new Set();
-let opponentsCount = 1;
-let isCalculating = false;
-let hasCalculatedResults = false; // Новый флаг
-
-let currentDragSource = null;
-let currentDragCard = null;
-
-let currentDragOverSection = null;
-let dragOverTimer = null;
-
-function activateBlockBySlotId(slotId) {
-    if (slotId.startsWith('hero')) {
-        selectHandBlock();
-    } else if (slotId.startsWith('board')) {
-        selectBoardBlock();
+// --- Ставки и их условия ---
+const BetDefinitions = {
+    red: {
+        condition: (num, type) => {
+            if (num === 0 || (type === 'american' && num === 37)) return false;
+            return [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(num);
+        }
+    },
+    black: {
+        condition: (num, type) => {
+            if (num === 0 || (type === 'american' && num === 37)) return false;
+            return [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35].includes(num);
+        }
+    },
+    even: {
+        condition: (num, type) => num !== 0 && (type !== 'american' || num !== 37) && num % 2 === 0
+    },
+    odd: {
+        condition: (num, type) => num !== 0 && (type !== 'american' || num !== 37) && num % 2 === 1
+    },
+    low: {
+        condition: (num, type) => num !== 0 && (type !== 'american' || num !== 37) && num <= 18
+    },
+    high: {
+        condition: (num, type) => num !== 0 && (type !== 'american' || num !== 37) && num >= 19
+    },
+    dozen1: {
+        condition: (num, type) => num >= 1 && num <= 12
+    },
+    dozen2: {
+        condition: (num, type) => num >= 13 && num <= 24
+    },
+    dozen3: {
+        condition: (num, type) => num >= 25 && num <= 36
+    },
+    column1: {
+        condition: (num, type) => num % 3 === 1 && num <= 34
+    },
+    column2: {
+        condition: (num, type) => num % 3 === 2 && num <= 35
+    },
+    column3: {
+        condition: (num, type) => num % 3 === 0 && num <= 36 && num !== 0
     }
-}
+};
 
+// --- Состояние интерфейса ---
+let isSimulating = false;
+
+// --- Инициализация ---
 document.addEventListener('DOMContentLoaded', () => {
-    createDeck();
     initEventListeners();
-    initDragAndDrop();
-    initSectionDrop();
-    updateStatus();
-    checkBoardValidity();
-    checkHandValidity();
-    selectHandBlock();
+    updateTargetInputState();
 });
 
-function createDeck() {
-    const deckGrid = document.getElementById('deck');
-    deckGrid.innerHTML = '';
-    
-    const suits = [
-        {code:'s',symbol:'♠',color:'black'},
-        {code:'h',symbol:'♥',color:'red'},
-        {code:'c',symbol:'♣',color:'black'},
-        {code:'d',symbol:'♦',color:'red'}
-    ];
-    
-    const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-    
-    suits.forEach(suit => values.forEach(value => {
-        const cardCode = value + suit.code;
-        const deckCard = document.createElement('div');
-        deckCard.className = `deck-card ${suit.color}`;
-        deckCard.dataset.card = cardCode;
-        deckCard.draggable = true;
-        
-        deckCard.addEventListener('dragstart', function(e) {
-            if (this.classList.contains('selected')) {
-                e.preventDefault();
-                return;
-            }
-            currentDragSource = 'deck';
-            currentDragCard = { cardCode: cardCode };
-            e.dataTransfer.setData('text/plain', cardCode);
-            this.style.opacity = '0.5';
-        });
-        
-        const cardFace = document.createElement('div');
-        cardFace.className = 'card-face';
-        cardFace.innerHTML = `<div class="card-value">${value}</div><div class="card-suit-large">${suit.symbol}</div>`;
-        deckCard.appendChild(cardFace);
-        deckGrid.appendChild(deckCard);
-        
-        deckCard.addEventListener('click', e => {
-            if (deckCard.classList.contains('selected')) return;
-            handleCardClick(cardCode);
-        });
-    }));
-    
-    deckGrid.addEventListener('selectstart', e => e.preventDefault());
-    deckGrid.addEventListener('dragstart', e => {
-        if (!e.target.closest('.deck-card')) e.preventDefault();
-    });
-}
-
+// --- Обработчики событий ---
 function initEventListeners() {
-    document.getElementById('handSection').addEventListener('click', selectHandBlock);
-    document.getElementById('boardSection').addEventListener('click', selectBoardBlock);
-    document.getElementById('calculateBtn').addEventListener('click', calculateEquity);
-    document.getElementById('clearAllBtn').addEventListener('click', clearAll);
-    
-    document.querySelectorAll('.opponent-pill').forEach(pill => {
-        pill.addEventListener('click', () => setOpponents(parseInt(pill.dataset.opponents)));
-    });
-    
-    document.querySelectorAll('.card-slot').forEach(slot => {
-        slot.addEventListener('click', e => {
-            const realCard = e.target.closest('.real-card');
-            if (realCard) {
-                removeCardFromSlot(slot.dataset.slot);
-            }
+    // Тип рулетки
+    document.querySelectorAll('[data-type]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('[data-type]').forEach(b => {
+                b.classList.remove('active', 'opponent-active');
+            });
+            this.classList.add('active', 'opponent-active');
         });
     });
+
+    // Чекбоксы условий остановки
+    document.getElementById('stopTarget').addEventListener('change', updateTargetInputState);
+    document.getElementById('stopSpins').addEventListener('change', updateTargetInputState);
+    
+    // Кнопки
+    document.getElementById('simulateBtn').addEventListener('click', simulateStrategy);
+    document.getElementById('resetBtn').addEventListener('click', resetSimulation);
 }
 
-function initDragAndDrop() {
-    document.addEventListener('dragstart', e => {
-        const realCard = e.target.closest('.real-card');
-        if (realCard) {
-            const slot = realCard.parentElement;
-            const card = selectedCards.get(slot.dataset.slot);
-            if (card) {
-                currentDragSource = 'slot';
-                currentDragCard = {
-                    cardCode: card.code,
-                    fromSlot: slot.dataset.slot
-                };
-                e.dataTransfer.setData('text/plain', JSON.stringify({
-                    cardCode: card.code,
-                    fromSlot: slot.dataset.slot
-                }));
-                realCard.style.opacity = '0.5';
-            }
-        }
-    });
+function updateTargetInputState() {
+    const targetChecked = document.getElementById('stopTarget').checked;
+    document.getElementById('targetAmount').disabled = !targetChecked;
     
-    document.addEventListener('dragend', () => {
-        document.querySelectorAll('.deck-card, .real-card').forEach(el => el.style.opacity = '1');
-        document.querySelectorAll('.card-slot').forEach(slot => slot.classList.remove('drag-over'));
-        
-        document.querySelectorAll('.hand-section, .board-section, #deck').forEach(el => {
-            el.classList.remove('drag-over', 'drag-over-no-space');
-        });
-        
-        currentDragCard = null;
-        currentDragSource = null;
-        currentDragOverSection = null;
-        
-        if (dragOverTimer) {
-            clearTimeout(dragOverTimer);
-            dragOverTimer = null;
-        }
-    });
-    
-    document.querySelectorAll('.card-slot').forEach(slot => {
-        slot.addEventListener('dragover', e => {
-            e.preventDefault();
-            slot.classList.add('drag-over');
-        });
-        
-        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
-        
-        slot.addEventListener('drop', e => {
-            e.preventDefault();
-            slot.classList.remove('drag-over');
-            
-            const data = e.dataTransfer.getData('text/plain');
-            if (!data) return;
-            
-            const targetSlotId = slot.dataset.slot;
-            
-            try {
-                const parsed = JSON.parse(data);
-                if (parsed.fromSlot && parsed.fromSlot !== targetSlotId) {
-                    moveCardBetweenSlots(parsed.fromSlot, targetSlotId);
-                    return;
-                }
-            } catch {
-                const cardCode = data;
-                if (usedCards.has(cardCode)) return;
-                if (selectedCards.has(targetSlotId)) return;
-                addCardToSlot(cardCode, targetSlotId);
-            }
-        });
-    });
-    
-    const deckGrid = document.getElementById('deck');
-    
-    deckGrid.addEventListener('dragover', e => {
-        e.preventDefault();
-        if (currentDragSource === 'slot') {
-            deckGrid.classList.add('drag-over');
-        }
-    });
-    
-    deckGrid.addEventListener('dragleave', e => {
-        if (!deckGrid.contains(e.relatedTarget)) {
-            deckGrid.classList.remove('drag-over', 'drag-over-no-space');
-        }
-    });
-    
-    deckGrid.addEventListener('drop', e => {
-        e.preventDefault();
-        deckGrid.classList.remove('drag-over', 'drag-over-no-space');
-        
-        if (currentDragSource === 'slot' && currentDragCard?.fromSlot) {
-            removeCardFromSlot(currentDragCard.fromSlot);
-        }
-    });
+    const spinsChecked = document.getElementById('stopSpins').checked;
+    document.getElementById('maxSpins').disabled = !spinsChecked;
 }
 
-function hasFreeSlotsInSection(sectionId) {
-    if (sectionId === 'handSection') {
-        return getHandCardsCount() < 2;
-    } else if (sectionId === 'boardSection') {
-        return getBoardCardsCount() < 5;
+// --- ОСНОВНАЯ ФУНКЦИЯ СИМУЛЯЦИИ ---
+async function simulateStrategy() {
+    if (isSimulating) return;
+    
+    // Получаем настройки
+    const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
+    const config = RouletteConfig[rouletteType];
+    
+    const startingBankroll = parseInt(document.getElementById('startingBankroll').value) || 1000;
+    const betAmount = parseInt(document.getElementById('betAmount').value) || 10;
+    const strategy = document.getElementById('strategySelect').value;
+    
+    const triggerType = document.getElementById('triggerType').value; // 'missed' или 'hit'
+    const triggerCount = parseInt(document.getElementById('triggerCount').value) || 3;
+    
+    const stopBankrupt = document.getElementById('stopBankrupt').checked;
+    const stopTarget = document.getElementById('stopTarget').checked;
+    const targetAmount = parseInt(document.getElementById('targetAmount').value) || 2000;
+    const stopSpins = document.getElementById('stopSpins').checked;
+    const maxSpins = parseInt(document.getElementById('maxSpins').value) || 100;
+    
+    const sessionCount = parseInt(document.getElementById('sessionCount').value) || 500;
+    
+    // Валидация
+    if (betAmount > startingBankroll) {
+        alert('Ставка не может быть больше банка!');
+        return;
     }
-    return false;
+    
+    isSimulating = true;
+    document.getElementById('simulateBtn').disabled = true;
+    document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span data-i18n="simulating"></span>';
+    
+    // Запускаем симуляцию асинхронно
+    setTimeout(() => {
+        const results = runSimulation(
+            config, startingBankroll, betAmount, strategy,
+            triggerType, triggerCount,
+            stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins,
+            sessionCount
+        );
+        
+        displayResults(results);
+        
+        isSimulating = false;
+        document.getElementById('simulateBtn').disabled = false;
+        document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-cogs"></i> <span data-i18n="simulateBtn"></span>';
+    }, 50);
 }
 
-function initSectionDrop() {
-    const handSection = document.getElementById('handSection');
-    const boardSection = document.getElementById('boardSection');
-    const deckGrid = document.getElementById('deck');
+// --- Функция симуляции одной сессии ---
+function simulateSession(config, startingBankroll, betAmount, strategy, triggerType, triggerCount, stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins) {
+    let bankroll = startingBankroll;
+    let spins = 0;
+    let history = [];
+    let triggerCounter = 0;
+    let betPlaced = false;
     
-    [handSection, boardSection, deckGrid].forEach(section => {
-        section.addEventListener('dragover', e => {
-            e.preventDefault();
-            
-            if (dragOverTimer) {
-                clearTimeout(dragOverTimer);
-            }
-            
-            if (currentDragOverSection && currentDragOverSection !== section) {
-                currentDragOverSection.classList.remove('drag-over', 'drag-over-no-space');
-            }
-            
-            let hasFreeSlots = true;
-            if (section !== deckGrid) {
-                hasFreeSlots = hasFreeSlotsInSection(section.id);
-            } else {
-                hasFreeSlots = currentDragSource === 'slot';
-            }
-            
-            if (hasFreeSlots) {
-                section.classList.remove('drag-over-no-space');
-                section.classList.add('drag-over');
-            } else {
-                section.classList.remove('drag-over');
-                section.classList.add('drag-over-no-space');
-            }
-            
-            currentDragOverSection = section;
-            
-            dragOverTimer = setTimeout(() => {
-                if (!section.contains(document.elementFromPoint(e.clientX, e.clientY))) {
-                    section.classList.remove('drag-over', 'drag-over-no-space');
-                }
-            }, 50);
-        });
+    while (true) {
+        // Проверка условий остановки
+        if (stopBankrupt && bankroll <= 0) break;
+        if (stopTarget && bankroll >= targetAmount) break;
+        if (stopSpins && spins >= maxSpins) break;
         
-        section.addEventListener('dragleave', e => {
-            if (dragOverTimer) {
-                clearTimeout(dragOverTimer);
-            }
-            
-            dragOverTimer = setTimeout(() => {
-                if (!section.contains(e.relatedTarget)) {
-                    section.classList.remove('drag-over', 'drag-over-no-space');
-                    currentDragOverSection = null;
-                }
-            }, 100);
-        });
+        // Генерируем номер
+        const number = Math.floor(Math.random() * config.numbers);
+        history.push(number);
+        spins++;
         
-        section.addEventListener('drop', e => {
-            e.preventDefault();
-            
-            section.classList.remove('drag-over', 'drag-over-no-space');
-            currentDragOverSection = null;
-            
-            if (dragOverTimer) {
-                clearTimeout(dragOverTimer);
-                dragOverTimer = null;
-            }
-            
-            if (!currentDragCard) return;
-            
-            const cardCode = currentDragCard.cardCode;
-            
-            if (section === deckGrid) {
-                if (currentDragSource === 'slot' && currentDragCard?.fromSlot) {
-                    removeCardFromSlot(currentDragCard.fromSlot);
-                }
-                return;
-            }
-            
-            if (usedCards.has(cardCode) && currentDragSource !== 'slot') return;
-            
-            const sectionType = section.id === 'handSection' ? 'hand' : 'board';
-            
-            let freeSlot = null;
-            if (sectionType === 'hand') {
-                for (let i = 1; i <= 2; i++) {
-                    const slotId = `hero-${i}`;
-                    if (!selectedCards.has(slotId)) {
-                        freeSlot = slotId;
-                        break;
-                    }
-                }
+        // Проверяем условие активации
+        const isWin = BetDefinitions[strategy]?.condition(number, config.type);
+        
+        if (triggerType === 'missed') {
+            if (!isWin) {
+                triggerCounter++;
             } else {
-                for (let i = 1; i <= 5; i++) {
-                    const slotId = `board-${i}`;
-                    if (!selectedCards.has(slotId)) {
-                        freeSlot = slotId;
-                        break;
-                    }
-                }
+                triggerCounter = 0;
             }
+        } else { // 'hit'
+            if (isWin) {
+                triggerCounter++;
+            } else {
+                triggerCounter = 0;
+            }
+        }
+        
+        // Делаем ставку, если условие выполнено
+        if (triggerCounter >= triggerCount && !betPlaced) {
+            betPlaced = true;
             
-            if (freeSlot) {
-                if (currentDragSource === 'deck') {
-                    addCardToSlot(cardCode, freeSlot);
-                } else if (currentDragSource === 'slot') {
-                    moveCardBetweenSlots(currentDragCard.fromSlot, freeSlot);
-                }
+            if (bankroll >= betAmount) {
+                bankroll -= betAmount;
                 
-                activateBlockBySlotId(freeSlot);
+                if (isWin) {
+                    const payout = config.payouts[strategy] || 1;
+                    bankroll += betAmount + (betAmount * payout);
+                }
             }
-        });
-    });
-}
-
-function moveCardBetweenSlots(fromSlotId, toSlotId) {
-    if (!selectedCards.has(fromSlotId)) return;
-    const card = selectedCards.get(fromSlotId);
-    
-    // Сбрасываем результаты перед изменением карт
-    resetResults();
-    
-    if (selectedCards.has(toSlotId)) {
-        const tempCard = selectedCards.get(toSlotId);
-        selectedCards.set(toSlotId, card);
-        selectedCards.set(fromSlotId, tempCard);
-    } else {
-        selectedCards.set(toSlotId, card);
-        selectedCards.delete(fromSlotId);
-    }
-    
-    activateBlockBySlotId(toSlotId);
-    updateCardDisplay();
-    updateStatus();
-    checkBoardValidity();
-    checkHandValidity();
-    checkAndSwitchActiveBlock();
-}
-
-function selectHandBlock() {
-    activeBlock = 'hand';
-    
-    document.querySelectorAll('.hand-section, .board-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    const handSection = document.getElementById('handSection');
-    handSection.classList.add('active');
-    
-    const boardSection = document.getElementById('boardSection');
-    boardSection.classList.remove('active');
-    
-    updateActiveSection('handSection', 'handTitle');
-}
-
-function selectBoardBlock() {
-    activeBlock = 'board';
-    
-    document.querySelectorAll('.hand-section, .board-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    const boardSection = document.getElementById('boardSection');
-    boardSection.classList.add('active');
-    
-    const handSection = document.getElementById('handSection');
-    handSection.classList.remove('active');
-    
-    updateActiveSection('boardSection', 'boardTitle');
-}
-
-function updateActiveSection(sectionId, titleId) {
-    ['handSection','boardSection'].forEach(id => document.getElementById(id).classList.remove('active'));
-    ['handTitle','boardTitle'].forEach(id => document.getElementById(id).classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-    document.getElementById(titleId).classList.add('active');
-}
-
-function handleCardClick(cardCode) {
-    if (usedCards.has(cardCode)) return;
-    
-    if (activeBlock === 'hand') {
-        const handCardsCount = getHandCardsCount();
-        if (handCardsCount < 2) {
-            addCardToHand(cardCode);
-        } else {
-            if (getBoardCardsCount() < 5) {
-                selectBoardBlock();
-            }
-            addCardToBoard(cardCode);
         }
-    } else {
-        const boardCardsCount = getBoardCardsCount();
-        if (boardCardsCount < 5) {
-            addCardToBoard(cardCode);
-        } else {
-            if (getHandCardsCount() < 2) {
-                selectHandBlock();
-            }
-            addCardToHand(cardCode);
-        }
-    }
-}
-
-function getHandCardsCount() {
-    return Array.from(selectedCards.keys()).filter(slot => slot.startsWith('hero')).length;
-}
-
-function getBoardCardsCount() {
-    return Array.from(selectedCards.keys()).filter(slot => slot.startsWith('board')).length;
-}
-
-function addCardToHand(cardCode) {
-    if (getHandCardsCount() >= 2) {
-        if (getBoardCardsCount() < 5) {
-            selectBoardBlock();
-        }
-        addCardToBoard(cardCode);
-        return;
-    }
-    
-    for (let i=1; i<=2; i++) {
-        const slot = `hero-${i}`;
-        if (!selectedCards.has(slot)) {
-            addCardToSlot(cardCode, slot);
-            
-            if (getHandCardsCount() >= 2 && getBoardCardsCount() < 5) {
-                selectBoardBlock();
-            }
-            return;
-        }
-    }
-}
-
-function addCardToBoard(cardCode) {
-    if (getBoardCardsCount() >= 5) {
-        if (getHandCardsCount() < 2) {
-            selectHandBlock();
-        }
-        addCardToHand(cardCode);
-        return;
-    }
-    
-    for (let i=1; i<=5; i++) {
-        const slot = `board-${i}`;
-        if (!selectedCards.has(slot)) {
-            addCardToSlot(cardCode, slot);
-            
-            if (getBoardCardsCount() >= 5 && getHandCardsCount() < 2) {
-                selectHandBlock();
-            }
-            return;
-        }
-    }
-}
-
-function addCardToSlot(cardCode, slotId) {
-    const value = cardCode.slice(0,-1);
-    const suitCode = cardCode.slice(-1);
-    const suitSymbols = {h:'♥',d:'♦',s:'♠',c:'♣'};
-    
-    selectedCards.set(slotId, {
-        code: cardCode,
-        value: value,
-        suit: suitSymbols[suitCode],
-        suitCode: suitCode,
-        rank: HandEvaluator.ranks[value] || 0
-    });
-    
-    usedCards.add(cardCode);
-    
-    activateBlockBySlotId(slotId);
-    
-    // Сбрасываем результаты при добавлении новой карты
-    resetResults();
-    
-    updateCardDisplay();
-    updateStatus();
-    checkBoardValidity();
-    checkHandValidity();
-    
-    checkAndSwitchActiveBlock();
-}
-
-function removeCardFromSlot(slotId) {
-    if (selectedCards.has(slotId)) {
-        const card = selectedCards.get(slotId);
-        usedCards.delete(card.code);
-        selectedCards.delete(slotId);
         
-        // Сбрасываем результаты при удалении карты
-        resetResults();
-        
-        updateCardDisplay();
-        updateStatus();
-        checkBoardValidity();
-        checkHandValidity();
-        
-        checkAndSwitchActiveBlock();
-    }
-}
-
-function updateCardDisplay() {
-    document.querySelectorAll('.card-slot').forEach(slot => {
-        const slotId = slot.dataset.slot;
-        const hasCard = selectedCards.has(slotId);
-        
-        if (hasCard) {
-            const card = selectedCards.get(slotId);
-            const isRed = card.suit === '♥' || card.suit === '♦';
-            
-            slot.innerHTML = `
-                <div class="real-card ${isRed ? 'red' : 'black'}" draggable="true">
-                    <div class="card-content">${card.value}<br>${card.suit}</div>
-                </div>
-            `;
-        } else {
-            slot.innerHTML = '<div class="slot-empty">+</div>';
+        // Сбрасываем флаг ставки после розыгрыша
+        if (betPlaced) {
+            betPlaced = false;
+            triggerCounter = 0;
         }
-    });
-    
-    document.querySelectorAll('.deck-card').forEach(deckCard => {
-        const cardCode = deckCard.dataset.card;
-        const isUsed = usedCards.has(cardCode);
-        deckCard.classList.toggle('selected', isUsed);
-        deckCard.draggable = !isUsed;
-        deckCard.style.cursor = isUsed ? 'default' : 'pointer';
-    });
-}
-
-function updateStatus() {
-    const calculateBtn = document.getElementById('calculateBtn');
-    const isValid = checkHandValidity() && checkBoardValidity() && !isCalculating;
-    
-    calculateBtn.disabled = !isValid;
-}
-
-function checkHandValidity() {
-    const warning = document.getElementById('handWarning');
-    const isValid = getHandCardsCount() === 2;
-    warning.style.display = isValid ? 'none' : 'block';
-    return isValid;
-}
-
-function checkBoardValidity() {
-    const warning = document.getElementById('boardWarning');
-    const boardCards = getBoardCardsCount();
-    const isValid = boardCards === 0 || boardCards === 3 || boardCards === 4 || boardCards === 5;
-    warning.style.display = (boardCards === 1 || boardCards === 2) ? 'block' : 'none';
-    return isValid;
-}
-
-function setOpponents(count) {
-    opponentsCount = count;
-    document.querySelectorAll('.opponent-pill').forEach(pill => {
-        const isActive = parseInt(pill.dataset.opponents) === count;
-        pill.classList.toggle('active', isActive);
-    });
-    
-    // Сбрасываем результаты при изменении количества оппонентов
-    resetResults();
-}
-
-function checkAndSwitchActiveBlock() {
-    const handCardsCount = getHandCardsCount();
-    const boardCardsCount = getBoardCardsCount();
-    
-    if (activeBlock === 'hand' && handCardsCount >= 2 && boardCardsCount < 5) {
-        selectBoardBlock();
-        return;
     }
     
-    if (activeBlock === 'board' && boardCardsCount >= 5 && handCardsCount < 2) {
-        selectHandBlock();
-        return;
-    }
-}
-
-// Функция сброса результатов без анимации
-function resetResults() {
-    if (hasCalculatedResults) {
-        document.getElementById('resultHero').textContent = '—';
-        document.getElementById('resultOpponent').textContent = '—';
-        document.getElementById('resultTie').textContent = '—';
-        hasCalculatedResults = false;
-    }
-}
-
-async function calculateEquity() {
-    if (isCalculating) return;
-    
-    const heroCards = Array.from(selectedCards.entries())
-        .filter(([slot]) => slot.startsWith('hero'))
-        .map(([,card]) => card);
-    const boardCards = Array.from(selectedCards.entries())
-        .filter(([slot]) => slot.startsWith('board'))
-        .map(([,card]) => card);
-    
-    if (!checkHandValidity() || !checkBoardValidity()) {
-        return;
-    }
-    
-    isCalculating = true;
-    document.getElementById('calculateBtn').disabled = true;
-    
-    const SIMULATIONS = 25000;
-    
-    let heroTotal = 0;
-    let oppTotal = 0;
-    let tieHands = 0;
-    
-    const createOptimizedDeck = () => {
-        const suits = ['s','h','c','d'];
-        const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-        const deck = new Array(52);
-        let index = 0;
-        
-        for (let i = 0; i < values.length; i++) {
-            for (let j = 0; j < suits.length; j++) {
-                const value = values[i];
-                const suit = suits[j];
-                deck[index++] = {
-                    code: value + suit,
-                    value: value,
-                    suit: suit==='h'?'♥':suit==='d'?'♦':suit==='s'?'♠':'♣',
-                    suitCode: suit,
-                    rank: HandEvaluator.ranks[value]
-                };
-            }
-        }
-        return deck;
+    return {
+        finalBankroll: bankroll,
+        profit: bankroll - startingBankroll,
+        spins: spins,
+        success: bankroll > startingBankroll,
+        bankrupt: bankroll <= 0,
+        hitTarget: bankroll >= targetAmount
     };
-    
-    const initialDeck = createOptimizedDeck();
-    const usedCardCodes = new Set(Array.from(usedCards));
-    const neededBoardCards = 5 - boardCards.length;
-    const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
-    
-    for (let i = 0; i < SIMULATIONS; i++) {
-        const availableDeck = [];
-        for (const card of initialDeck) {
-            if (!usedCardCodes.has(card.code)) {
-                availableDeck.push(card);
-            }
-        }
-        
-        if (availableDeck.length < totalCardsNeeded) {
-            continue;
-        }
-        
-        const shuffled = [...availableDeck];
-        for (let j = shuffled.length - 1; j > 0; j--) {
-            const k = Math.floor(Math.random() * (j + 1));
-            [shuffled[j], shuffled[k]] = [shuffled[k], shuffled[j]];
-        }
-        
-        const fullBoard = [...boardCards];
-        for (let j = 0; j < neededBoardCards; j++) {
-            fullBoard.push(shuffled[j]);
-        }
-        
-        const opponentHands = [];
-        let cardIndex = neededBoardCards;
-        
-        for (let opp = 0; opp < opponentsCount; opp++) {
-            if (cardIndex + 1 >= shuffled.length) break;
-            opponentHands.push([shuffled[cardIndex], shuffled[cardIndex + 1]]);
-            cardIndex += 2;
-        }
-        
-        if (opponentHands.length !== opponentsCount) continue;
-        
-        const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
-        
-        let bestOpponentScore = -1;
-        let tyingOpponents = 0;
-        
-        for (const hand of opponentHands) {
-            const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
-            if (score > bestOpponentScore) {
-                bestOpponentScore = score;
-                tyingOpponents = 1;
-            } else if (score === bestOpponentScore) {
-                tyingOpponents++;
-            }
-        }
-           
-        if (heroScore > bestOpponentScore) {
-            heroTotal += 1;
-        } else if (heroScore < bestOpponentScore) {
-            oppTotal += 1;
-        } else {
-            tieHands += 1;
-            const totalPlayersInTie = tyingOpponents + 1;
-            heroTotal += 1 / totalPlayersInTie;
-            oppTotal += tyingOpponents / totalPlayersInTie;
-        }
-    }
-    
-    const heroPercent = (heroTotal / SIMULATIONS) * 100;
-    const oppPercent = (oppTotal / SIMULATIONS) * 100;
-    const tiePercent = (tieHands / SIMULATIONS) * 100;
-    
-    let heroRounded = Math.round(heroPercent * 10) / 10;
-    let oppRounded = Math.round(oppPercent * 10) / 10;
-    let tieRounded = Math.round(tiePercent * 10) / 10;
-    
-    let sum = heroRounded + oppRounded + tieRounded;
-    let diff = 100 - sum;
-    
-    if (Math.abs(diff) > 0.05) {
-        heroRounded += diff;
-    }
-    
-    if (!isFinite(heroRounded) || isNaN(heroRounded)) heroRounded = 0;
-    if (!isFinite(oppRounded) || isNaN(oppRounded)) oppRounded = 0;
-    if (!isFinite(tieRounded) || isNaN(tieRounded)) tieRounded = 0;
-    
-    document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
-
-    // Добавляем классы для анимации процентов
-    const resultPercents = document.querySelectorAll('.result-percent');
-    resultPercents.forEach(p => p.classList.add('updated'));
-    
-    // Моргание панели результатов - СРАЗУ
-    const resultsPanel = document.querySelector('.results-panel');
-    resultsPanel.classList.remove('fresh-result');
-    // Принудительный reflow для сброса анимации
-    void resultsPanel.offsetWidth;
-    resultsPanel.classList.add('fresh-result');
-    
-    hasCalculatedResults = true;
-    
-    // Убираем класс анимации процентов после завершения
-    setTimeout(() => {
-        resultPercents.forEach(p => p.classList.remove('updated'));
-        resultsPanel.classList.remove('fresh-result');
-    }, 300);
-
-    isCalculating = false;
-    updateStatus();
 }
 
-function clearAll() {
-    // Анимация кнопки очистки
-    const clearBtn = document.getElementById('clearAllBtn');
-    clearBtn.classList.add('clicked');
-    setTimeout(() => {
-        clearBtn.classList.remove('clicked');
-    }, 300);
+// --- Функция запуска множества сессий ---
+function runSimulation(config, startingBankroll, betAmount, strategy, triggerType, triggerCount, stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins, sessionCount) {
+    const sessions = [];
     
-    // Очистка карт
-    selectedCards.clear();
-    usedCards.clear();
-    updateCardDisplay();
+    for (let i = 0; i < sessionCount; i++) {
+        const session = simulateSession(
+            config, startingBankroll, betAmount, strategy,
+            triggerType, triggerCount,
+            stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins
+        );
+        sessions.push(session);
+    }
     
-    // Сброс результатов БЕЗ анимации
-    document.getElementById('resultHero').textContent = '—';
-    document.getElementById('resultOpponent').textContent = '—';
-    document.getElementById('resultTie').textContent = '—';
-    hasCalculatedResults = false;
+    // Анализируем результаты
+    const successfulSessions = sessions.filter(s => s.profit > 0).length;
+    const bankruptSessions = sessions.filter(s => s.bankrupt).length;
+    const totalProfit = sessions.reduce((sum, s) => sum + s.profit, 0);
+    const avgProfit = totalProfit / sessionCount;
+    const avgSpins = sessions.reduce((sum, s) => sum + s.spins, 0) / sessionCount;
+    const maxProfit = Math.max(...sessions.map(s => s.profit));
+    const minProfit = Math.min(...sessions.map(s => s.profit));
     
-    updateStatus();
-    checkBoardValidity();
-    checkHandValidity();
-    selectHandBlock();
+    return {
+        winRate: successfulSessions / sessionCount,
+        avgProfit: avgProfit,
+        riskRate: bankruptSessions / sessionCount,
+        successfulSessions,
+        bankruptSessions,
+        totalSessions: sessionCount,
+        avgSpins,
+        maxProfit,
+        maxLoss: Math.abs(minProfit),
+        profitDistribution: sessions.map(s => s.profit).sort((a,b) => a - b)
+    };
 }
 
-window.getHandCardsCount = getHandCardsCount;
-window.getBoardCardsCount = getBoardCardsCount;
-window.checkHandValidity = checkHandValidity;
-window.checkBoardValidity = checkBoardValidity;
-window.hasFreeSlotsInSection = hasFreeSlotsInSection;
-window.activateBlockBySlotId = activateBlockBySlotId;
+// --- Отображение результатов ---
+function displayResults(results) {
+    document.getElementById('winRate').textContent = (results.winRate * 100).toFixed(1) + '%';
+    document.getElementById('avgProfit').textContent = '$' + Math.round(results.avgProfit);
+    document.getElementById('riskPercent').textContent = (results.riskRate * 100).toFixed(1) + '%';
+    
+    document.getElementById('sessionsSimulated').textContent = results.totalSessions;
+    document.getElementById('successfulSessions').textContent = results.successfulSessions;
+    document.getElementById('bankruptSessions').textContent = results.bankruptSessions;
+    document.getElementById('avgSpins').textContent = Math.round(results.avgSpins);
+    document.getElementById('maxProfit').textContent = '$' + results.maxProfit;
+    document.getElementById('maxLoss').textContent = '$' + results.maxLoss;
+    
+    // Здесь можно добавить отрисовку простого графика
+    drawSimpleChart(results.profitDistribution);
+}
 
-document.addEventListener('keydown', e => {
-    switch(e.key) {
-        case 'Escape': clearAll(); break;
-        case '1': selectHandBlock(); break;
-        case '2': selectBoardBlock(); break;
-        case 'Enter': case ' ':
-            if (!document.getElementById('calculateBtn').disabled) calculateEquity();
-            break;
-        default:
-            if (e.key >= '1' && e.key <= '9') setOpponents(parseInt(e.key));
+function drawSimpleChart(distribution) {
+    const chartContainer = document.querySelector('.chart-placeholder');
+    if (!chartContainer) return;
+    
+    if (distribution.length === 0) {
+        chartContainer.innerHTML = '<span class="text-muted" data-i18n="noData"></span>';
+        return;
     }
-});
+    
+    // Простейшее визуальное представление - процент положительных исходов
+    const positiveCount = distribution.filter(v => v > 0).length;
+    const positivePercent = (positiveCount / distribution.length) * 100;
+    
+    chartContainer.innerHTML = `
+        <div style="width: 100%; padding: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span class="text-medium" data-i18n="profitableSessions"></span>
+                <span class="text-success">${positivePercent.toFixed(1)}%</span>
+            </div>
+            <div style="width: 100%; height: 20px; background: var(--bg-elevated); border-radius: 10px; overflow: hidden;">
+                <div style="width: ${positivePercent}%; height: 100%; background: var(--color-success); border-radius: 10px;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <span class="text-danger">$${Math.min(...distribution)}</span>
+                <span class="text-light">0</span>
+                <span class="text-success">+$${Math.max(...distribution)}</span>
+            </div>
+        </div>
+    `;
+}
+
+function resetSimulation() {
+    document.getElementById('startingBankroll').value = 1000;
+    document.getElementById('betAmount').value = 10;
+    document.getElementById('triggerCount').value = 3;
+    document.getElementById('targetAmount').value = 2000;
+    document.getElementById('maxSpins').value = 100;
+    document.getElementById('sessionCount').value = 500;
+    
+    document.getElementById('stopTarget').checked = false;
+    document.getElementById('stopSpins').checked = true;
+    updateTargetInputState();
+    
+    // Сброс результатов
+    document.getElementById('winRate').textContent = '0.0%';
+    document.getElementById('avgProfit').textContent = '$0';
+    document.getElementById('riskPercent').textContent = '0.0%';
+    document.getElementById('sessionsSimulated').textContent = '0';
+    document.getElementById('successfulSessions').textContent = '0';
+    document.getElementById('bankruptSessions').textContent = '0';
+    document.getElementById('avgSpins').textContent = '0';
+    document.getElementById('maxProfit').textContent = '$0';
+    document.getElementById('maxLoss').textContent = '$0';
+    
+    const chartContainer = document.querySelector('.chart-placeholder');
+    if (chartContainer) {
+        chartContainer.innerHTML = '<span class="text-muted" data-i18n="chartPlaceholder"></span>';
+    }
+}
+
+// Экспорт для отладки
+window.simulateStrategy = simulateStrategy;
