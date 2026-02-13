@@ -53,6 +53,19 @@
     --glow-accent: 0 0 20px rgba(139, 69, 19, 0.5);
     --glow-highlight: 0 0 20px rgba(210, 180, 140, 0.5);
     --glow-success: 0 0 20px rgba(34, 139, 34, 0.5);
+
+    /* Переключатель тем для San Andreas */
+--theme-switcher-bg: rgba(139, 69, 19, 0.2);
+--theme-switcher-border: #ff9900;
+--theme-btn-bg: rgba(255, 255, 255, 0.2);
+--theme-btn-text: #331a00;
+--theme-btn-hover-border: #ff6600;
+--theme-btn-hover-glow: #ff6600;
+--theme-btn-active-bg: #ff9900;
+--theme-btn-active-text: #331a00;
+--theme-btn-active-border: #ff9900;
+--theme-btn-active-glow: #ff9900;
+
     
     /* === ГРАДИЕНТЫ === */
     --gradient-body: linear-gradient(180deg, 
@@ -277,3 +290,4 @@ body::after {
         right: -5px;
     }
 }
+
