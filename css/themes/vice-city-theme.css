@@ -24,6 +24,15 @@
     --bg-surface-light: rgba(255, 255, 255, 0.1);
     --bg-surface-hover: rgba(255, 68, 170, 0.2);
     --bg-surface-active: rgba(68, 170, 255, 0.2);
+
+    /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
+    --border-1: #ff44aa;
+    --border-2: #44aaff;
+    --border-3: #ff8844;
+    --border-4: #88ffaa;
+    --border-5: #88ccff;
+    --border-6: #b36bff;
+    --border-7: #ff44aa;
     
     /* === ТЕКСТ ПО РОЛИ === */
     --text-primary: #ffffff;
@@ -179,4 +188,5 @@ body::after {
         content: '🌴';
     }
 }
+
 
