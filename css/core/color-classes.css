@@ -167,6 +167,29 @@
     color: var(--text-primary) !important;
 }
 
+/* === ПЕРЕКЛЮЧАТЕЛЬ ТЕМ === */
+.theme-switcher {
+    background: var(--theme-switcher-bg);
+    border-color: var(--theme-switcher-border);
+}
+
+.theme-btn {
+    background: var(--theme-btn-bg);
+    color: var(--theme-btn-text);
+}
+
+.theme-btn:hover {
+    border-color: var(--theme-btn-hover-border);
+    box-shadow: 0 0 15px var(--theme-btn-hover-glow);
+}
+
+.theme-btn.active {
+    background: var(--theme-btn-active-bg);
+    color: var(--theme-btn-active-text);
+    border-color: var(--theme-btn-active-border);
+    box-shadow: 0 0 15px var(--theme-btn-active-glow);
+}
+
 /* === КАРТОЧКИ === */
 .card-bg { background: var(--bg-surface); }
 .card-border { border-color: var(--color-primary); }
@@ -241,3 +264,4 @@
     border-color: rgba(255, 255, 255, 0.9) !important;
     opacity: 1 !important;
 }
+
