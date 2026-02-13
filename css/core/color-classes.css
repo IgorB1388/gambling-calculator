@@ -265,3 +265,15 @@
     opacity: 1 !important;
 }
 
+/* 🖱️ DRAG-OVER ПОДСВЕТКА ДЛЯ СЛОТОВ */
+.hand-section .card-slot.drag-over {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 15px var(--color-primary) !important;
+}
+
+.board-section .card-slot.drag-over {
+    border-color: var(--color-secondary) !important;
+    box-shadow: 0 0 15px var(--color-secondary) !important;
+}
+
+
