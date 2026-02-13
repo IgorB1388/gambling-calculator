@@ -51,7 +51,7 @@
 
         <!-- ПОКЕР-КАЛЬКУЛЯТОР -->
         <div class="poker-container">
-            <div class="poker-header bg-surface border-1 shadow-default">
+            <div class="poker-header bg-surface border-primary shadow-default">
                 <div class="header-suits">
                     <span class="text-black">♠</span>
                     <span class="text-red">♥</span>
@@ -64,11 +64,11 @@
             
             <div class="main-area">
                 <!-- ЛЕВАЯ ПАНЕЛЬ -->
-                <div class="panel bg-surface border-1 shadow-default">
+                <div class="panel bg-surface border-primary shadow-default">
                     <div class="panel-title text-light" data-i18n="panelHandBoard"></div>
                     
-                    <div class="hand-section bg-elevated border-1" id="handSection">
-                        <div class="section-title text-1" id="handTitle" data-i18n="yourHand"></div>
+                    <div class="hand-section bg-elevated border-primary" id="handSection">
+                        <div class="section-title text-primary" id="handTitle" data-i18n="yourHand"></div>
                         <div class="hand-subtitle text-medium" data-i18n="handSubtitle"></div>
                         <div class="section-content">
                             <div class="cards-row">
@@ -79,8 +79,8 @@
                         <div class="warning text-warning" id="handWarning" data-i18n="handWarning"></div>
                     </div>
                     
-                    <div class="board-section bg-elevated border-2" id="boardSection">
-                        <div class="section-title text-2" id="boardTitle" data-i18n="board"></div>
+                    <div class="board-section bg-elevated border-secondary" id="boardSection">
+                        <div class="section-title text-secondary" id="boardTitle" data-i18n="board"></div>
                         <div class="board-subtitle text-medium" data-i18n="boardSubtitle"></div>
                         <div class="section-content">
                             <div class="cards-row">
@@ -96,11 +96,11 @@
                 </div>
                 
                 <!-- ПРАВАЯ ПАНЕЛЬ -->
-                <div class="panel bg-surface border-1 shadow-default">
+                <div class="panel bg-surface border-primary shadow-default">
                     <div class="panel-title text-light" data-i18n="panelSettings"></div>
                     
-                    <div class="opponents-control bg-elevated border-3">
-                        <div class="opponents-label text-3" data-i18n="opponentsLabel"></div>
+                    <div class="opponents-control bg-elevated border-accent">
+                        <div class="opponents-label text-accent" data-i18n="opponentsLabel"></div>
                         <div class="opponent-pills" id="opponentPills">
                             <button class="opponent-pill opponent-bg opponent-border text-opponent active opponent-active" data-opponents="1">1</button>
                             <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="2">2</button>
@@ -116,8 +116,8 @@
                     
                     <div class="panel-title text-light" style="margin-top: 25px;" data-i18n="panelChooseCards"></div>
                     
-                    <!-- КОЛОДА С ГРАНИЦЕЙ border-7 -->
-                    <div class="deck-grid border-7" id="deck"></div>
+                    <!-- КОЛОДА - ДОБАВЛЕН КЛАСС border-primary -->
+                    <div class="deck-grid border-primary" id="deck"></div>
                     
                     <div class="drop-hint text-success" data-i18n="dropHint"></div>
                     
@@ -129,22 +129,22 @@
             </div>
             
             <!-- ПАНЕЛЬ РЕЗУЛЬТАТОВ -->
-            <div class="results-panel bg-surface border-1 shadow-default" id="resultsPanel">
+            <div class="results-panel bg-surface border-primary shadow-default" id="resultsPanel">
                 <div class="panel-title text-light" data-i18n="panelResults"></div>
                 
                 <div class="results-grid">
-                    <div class="result-card bg-elevated border-1 shadow-default">
-                        <div class="text-1" style="font-size: 1.1rem;" data-i18n="yourHandResult"></div>
+                    <div class="result-card bg-elevated border-primary shadow-default">
+                        <div class="text-primary" style="font-size: 1.1rem;" data-i18n="yourHandResult"></div>
                         <div class="result-percent text-win" id="resultHero">—</div>
                     </div>
                     
-                    <div class="result-card bg-elevated border-2 shadow-default">
-                        <div class="text-2" style="font-size: 1.1rem;" data-i18n="opponentsResult"></div>
+                    <div class="result-card bg-elevated border-secondary shadow-default">
+                        <div class="text-secondary" style="font-size: 1.1rem;" data-i18n="opponentsResult"></div>
                         <div class="result-percent text-opp" id="resultOpponent">—</div>
                     </div>
                     
-                    <div class="result-card bg-elevated border-5 shadow-default">
-                        <div class="text-5" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
+                    <div class="result-card bg-elevated border-info shadow-default">
+                        <div class="text-info" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
                         <div class="result-percent text-tie" id="resultTie">—</div>
                     </div>
                 </div>
