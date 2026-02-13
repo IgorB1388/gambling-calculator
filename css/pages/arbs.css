@@ -177,8 +177,8 @@
     grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
     gap: 10px;
     padding: 10px 15px;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
+    /* ✅ УБРАЛ ЧЕРНУЮ ЛИНИЮ */
+    border-bottom: none;
 }
 
 .table-row:last-child {
