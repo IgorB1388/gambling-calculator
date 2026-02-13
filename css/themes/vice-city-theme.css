@@ -42,6 +42,18 @@
     --border-dark: rgba(0, 0, 0, 0.2);
     --border-dashed: rgba(255, 68, 170, 0.5);
     --border-nav: rgba(255, 68, 170, 0.3);
+
+    /* Переключатель тем для Vice City */
+--theme-switcher-bg: rgba(255, 68, 170, 0.2);
+--theme-switcher-border: #ff44aa;
+--theme-btn-bg: rgba(255, 255, 255, 0.1);
+--theme-btn-text: #ffffff;
+--theme-btn-hover-border: #44aaff;
+--theme-btn-hover-glow: #44aaff;
+--theme-btn-active-bg: #ff44aa;
+--theme-btn-active-text: #ffffff;
+--theme-btn-active-border: #ff44aa;
+--theme-btn-active-glow: #ff44aa;
     
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -167,3 +179,4 @@ body::after {
         content: '🌴';
     }
 }
+
