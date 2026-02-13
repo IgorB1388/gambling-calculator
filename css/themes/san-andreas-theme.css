@@ -11,6 +11,7 @@
     --color-warning: #ffcc00;      /* золото */
     --color-danger: #b22222;       /* кирпич/огонь */
     --color-highlight: #d2b48c;    /* бежевый/кожа */
+    --color-deck: #ff9900;  /* оранжевый как в San Andreas */
     
     /* === ФОНЫ ПО РОЛИ === */
     --bg-body: #331a00;
@@ -51,6 +52,7 @@
     --border-dark: rgba(51, 26, 0, 0.3);
     --border-dashed: rgba(139, 69, 19, 0.3);
     --border-nav: rgba(139, 69, 19, 0.3);
+    --border-deck: #ff9900;
     
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(139, 69, 19, 0.2);
@@ -299,5 +301,6 @@ body::after {
         right: -5px;
     }
 }
+
 
 
