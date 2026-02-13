@@ -11,6 +11,7 @@
     --color-warning: #ff9966;
     --color-danger: #ff3366;
     --color-highlight: #b36bff;
+    --color-deck: #b36bff;        /* новый цвет для колоды */
     
     --bg-body: #2a2f4a;
     --bg-surface: #353a55;
@@ -32,6 +33,7 @@
     --border-accent: #ffd966;
     --border-success: #2effc7;
     --border-info: #6aa8ff;
+    --border-deck: #b36bff;        /* новый цвет для колоды */
     --border-muted: rgba(255, 255, 255, 0.3);
     --border-dark: rgba(0, 0, 0, 0.2);
     --border-dashed: rgba(255, 255, 255, 0.3);
@@ -47,7 +49,7 @@
 .text-red { color: #ff3366 !important; }
 .text-black { color: #000000 !important; }
 .bg-card-white { background: #ffffff !important; }
-.bg-deck-card { background: #ffffff !important; } /* ИЗМЕНЕНО: теперь белый, как и просил */
+.bg-deck-card { background: #ffffff !important; }
 .border-card-light { border-color: rgba(0, 0, 0, 0.2) !important; }
 .shadow-card { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4) !important; }
 .shadow-card-hover { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important; }
@@ -107,6 +109,7 @@
 .border-accent { border-color: var(--border-accent); }
 .border-success { border-color: var(--border-success); }
 .border-info { border-color: var(--border-info); }
+.border-deck { border-color: var(--border-deck); }      /* новый класс для колоды */
 .border-muted { border-color: var(--border-muted); }
 .border-dark { border-color: var(--border-dark); }
 .border-dashed { border-color: var(--border-dashed); }
@@ -196,10 +199,14 @@
 .opponent-bg { background: rgba(106, 168, 255, 0.1); }
 .opponent-text { color: var(--color-info); }
 
-/* === КЛАСС ДЛЯ ГРАНИЦЫ КОЛОДЫ === */
-.deck-border {
-    border-color: var(--color-primary) !important;
-}
+/* === УНИВЕРСАЛЬНЫЕ КЛАССЫ ДЛЯ ГРАНИЦ === */
+.border-1 { border-color: var(--color-primary) !important; }
+.border-2 { border-color: var(--color-secondary) !important; }
+.border-3 { border-color: var(--color-accent) !important; }
+.border-4 { border-color: var(--color-success) !important; }
+.border-5 { border-color: var(--color-info) !important; }
+.border-6 { border-color: var(--color-highlight) !important; }
+.border-7 { border-color: var(--color-deck) !important; }
 
 /* РЕЗУЛЬТАТЫ */
 .result-win { color: var(--color-primary); }
@@ -210,11 +217,17 @@
 .warning-text { color: var(--color-warning); }
 
 /* 🖱️ DRAG-OVER ПОДСВЕТКА */
-.hand-section.drag-over:not(.drag-over-no-space),
-.board-section.drag-over:not(.drag-over-no-space),
+.hand-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 20px var(--color-primary) !important;
+}
+.board-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--color-secondary) !important;
+    box-shadow: 0 0 20px var(--color-secondary) !important;
+}
 #deck.drag-over:not(.drag-over-no-space) {
-    border-color: var(--color-accent) !important;
-    box-shadow: 0 0 20px var(--color-accent) !important;
+    border-color: var(--color-deck) !important;
+    box-shadow: 0 0 20px var(--color-deck) !important;
 }
 
 /* 🔴 ИНДИКАТОР АКТИВНОГО БЛОКА */
@@ -228,4 +241,3 @@
     border-color: rgba(255, 255, 255, 0.9) !important;
     opacity: 1 !important;
 }
-
