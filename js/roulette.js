@@ -25,7 +25,7 @@ const RouletteConfig = {
     },
     american: {
         numbers: 38,
-        zero: [0, 37], // 0 и 00
+        zero: [0, 37],
         type: 'american',
         payouts: {
             straight: 35,
@@ -106,28 +106,22 @@ let isSimulating = false;
 document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     updateTargetInputState();
-    updateStrategyOptions(); // Заполняем выпадающий список
+    updateStrategyOptions();
 });
+
+// --- Функция для получения перевода ---
+function getTranslation(key) {
+    return window.translations && window.translations[key] ? window.translations[key] : key;
+}
 
 // --- Обновление выпадающего списка стратегий ---
 function updateStrategyOptions() {
     const select = document.getElementById('strategySelect');
     const type = document.querySelector('[data-type].active')?.dataset.type || 'european';
     
-    // Очищаем
     select.innerHTML = '';
     
-    // Базовые опции
-    const baseOptions = [
-        { value: 'red', text: '🔴 Красное' },
-        { value: 'black', text: '⚫ Черное' },
-        { value: 'even', text: 'Четное' },
-        { value: 'odd', text: 'Нечетное' },
-        { value: 'low', text: '1-18' },
-        { value: 'high', text: '19-36' }
-    ];
-    
-    // Добавляем зеро в зависимости от типа
+    // Зеро в зависимости от типа
     if (type === 'european') {
         const zeroOption = document.createElement('option');
         zeroOption.value = 'zero';
@@ -145,63 +139,54 @@ function updateStrategyOptions() {
         select.appendChild(doubleZeroOption);
     }
     
-    // Добавляем базовые опции
-    baseOptions.forEach(opt => {
+    // Базовые ставки (красное, черное и т.д.) - через JSON
+    const baseKeys = ['red', 'black', 'even', 'odd', 'low', 'high'];
+    baseKeys.forEach(key => {
         const option = document.createElement('option');
-        option.value = opt.value;
-        option.textContent = opt.text;
+        option.value = key;
+        option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
         select.appendChild(option);
     });
     
-    // Добавляем дюжины
-    const dozens = [
-        { value: 'dozen1', text: '1-я дюжина (1-12)' },
-        { value: 'dozen2', text: '2-я дюжина (13-24)' },
-        { value: 'dozen3', text: '3-я дюжина (25-36)' }
-    ];
-    
-    dozens.forEach(opt => {
+    // Дюжины - через JSON
+    const dozenKeys = ['dozen1', 'dozen2', 'dozen3'];
+    dozenKeys.forEach(key => {
         const option = document.createElement('option');
-        option.value = opt.value;
-        option.textContent = opt.text;
+        option.value = key;
+        option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
         select.appendChild(option);
     });
     
-    // Добавляем колонны
-    const columns = [
-        { value: 'column1', text: '1-я колонна' },
-        { value: 'column2', text: '2-я колонна' },
-        { value: 'column3', text: '3-я колонна' }
-    ];
-    
-    columns.forEach(opt => {
+    // Колонны - через JSON (с длинными названиями 1,4,7,...)
+    const columnKeys = ['column1', 'column2', 'column3'];
+    columnKeys.forEach(key => {
         const option = document.createElement('option');
-        option.value = opt.value;
-        option.textContent = opt.text;
+        option.value = key;
+        option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
         select.appendChild(option);
     });
+    
+    // Применяем переводы
+    if (window.reloadTranslationsForNewContent) {
+        window.reloadTranslationsForNewContent(select);
+    }
 }
 
 // --- Обработчики событий ---
 function initEventListeners() {
-    // Тип рулетки
     document.querySelectorAll('[data-type]').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('[data-type]').forEach(b => {
                 b.classList.remove('active');
             });
             this.classList.add('active');
-            
-            // Обновляем список стратегий при смене типа
             updateStrategyOptions();
         });
     });
 
-    // Чекбоксы условий остановки
     document.getElementById('stopTarget').addEventListener('change', updateTargetInputState);
     document.getElementById('stopSpins').addEventListener('change', updateTargetInputState);
     
-    // Кнопки
     document.getElementById('simulateBtn').addEventListener('click', simulateStrategy);
     document.getElementById('resetBtn').addEventListener('click', resetSimulation);
 }
@@ -218,7 +203,6 @@ function updateTargetInputState() {
 async function simulateStrategy() {
     if (isSimulating) return;
     
-    // Получаем настройки
     const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
     const config = RouletteConfig[rouletteType];
     
@@ -237,7 +221,6 @@ async function simulateStrategy() {
     
     const sessionCount = parseInt(document.getElementById('sessionCount').value) || 500;
     
-    // Валидация
     if (betAmount > startingBankroll) {
         alert('Ставка не может быть больше банка!');
         return;
@@ -247,7 +230,6 @@ async function simulateStrategy() {
     document.getElementById('simulateBtn').disabled = true;
     document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span data-i18n="simulating"></span>';
     
-    // Запускаем симуляцию асинхронно
     setTimeout(() => {
         const results = runSimulation(
             config, startingBankroll, betAmount, strategy,
@@ -272,16 +254,13 @@ function simulateSession(config, startingBankroll, betAmount, strategy, triggerT
     let betPlaced = false;
     
     while (true) {
-        // Проверка условий остановки
         if (stopBankrupt && bankroll <= 0) break;
         if (stopTarget && bankroll >= targetAmount) break;
         if (stopSpins && spins >= maxSpins) break;
         
-        // Генерируем номер
         const number = Math.floor(Math.random() * config.numbers);
         spins++;
         
-        // Проверяем условие активации
         const isWin = BetDefinitions[strategy]?.condition(number, config.type);
         
         if (triggerType === 'missed') {
@@ -292,7 +271,6 @@ function simulateSession(config, startingBankroll, betAmount, strategy, triggerT
             else triggerCounter = 0;
         }
         
-        // Делаем ставку, если условие выполнено
         if (triggerCounter >= triggerCount && !betPlaced) {
             betPlaced = true;
             
@@ -306,7 +284,6 @@ function simulateSession(config, startingBankroll, betAmount, strategy, triggerT
             }
         }
         
-        // Сбрасываем флаг ставки после розыгрыша
         if (betPlaced) {
             betPlaced = false;
             triggerCounter = 0;
@@ -413,7 +390,6 @@ function resetSimulation() {
     document.getElementById('stopSpins').checked = true;
     updateTargetInputState();
     
-    // Сброс результатов
     document.getElementById('winRate').textContent = '0.0%';
     document.getElementById('avgProfit').textContent = '$0';
     document.getElementById('riskPercent').textContent = '0.0%';
@@ -430,5 +406,4 @@ function resetSimulation() {
     }
 }
 
-// Экспорт для отладки
 window.simulateStrategy = simulateStrategy;
