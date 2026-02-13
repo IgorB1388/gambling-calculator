@@ -11,6 +11,8 @@
     --color-warning: #ff8844;
     --color-danger: #ff3366;
     --color-highlight: #b36bff;
+    --color-deck: #ff44aa;  /* розовый как в Vice City */
+
     
     /* === ФОНЫ ПО РОЛИ === */
     --bg-body: #1a1b2f;
@@ -51,6 +53,7 @@
     --border-dark: rgba(0, 0, 0, 0.2);
     --border-dashed: rgba(255, 68, 170, 0.5);
     --border-nav: rgba(255, 68, 170, 0.3);
+    --border-deck: #ff44aa;
 
     /* Переключатель тем для Vice City */
 --theme-switcher-bg: rgba(255, 68, 170, 0.2);
@@ -188,5 +191,6 @@ body::after {
         content: '🌴';
     }
 }
+
 
 
