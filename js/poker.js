@@ -312,7 +312,7 @@ function hasFreeSlotsInSection(sectionId){
     return false;
 }
 
-// --- Вспомогательные для поиска свободных слотов (НОВЫЕ) ---
+// --- Вспомогательные для поиска свободных слотов ---
 function getFirstFreeSlotInHand() {
     for (let i = 1; i <= 2; i++) {
         const slotId = `hero-${i}`;
@@ -359,7 +359,6 @@ function removeCardFromSlot(slotId){
 
 // --- Отображение карт ---
 function updateCardDisplay(){
-    // Обновляем карты в слотах (рука/борд)
     document.querySelectorAll('.card-slot').forEach(slot=>{
         const slotId=slot.dataset.slot;
         if(selectedCards.has(slotId)){
@@ -375,24 +374,17 @@ function updateCardDisplay(){
         }
     });
     
-    // Обновляем карты в колоде (БЕЛЫЙ ФОН + КРАСНЫЕ/ЧЕРНЫЕ МАСТИ)
     document.querySelectorAll('.deck-card').forEach(deckCard=>{
         const isUsed=usedCards.has(deckCard.dataset.card);
         deckCard.classList.toggle('selected',isUsed);
         deckCard.draggable=!isUsed;
         deckCard.style.cursor=isUsed?'default':'pointer';
-        
-        // Добавляем белый фон и тень (если вдруг потерялись)
         deckCard.classList.add('bg-deck-card', 'deck-card-border', 'deck-card-shadow');
         
-        // КРАСНЫЕ И ЧЕРНЫЕ МАСТИ - ОБЯЗАТЕЛЬНО!
         const cardCode = deckCard.dataset.card;
         const suitCode = cardCode.slice(-1);
         const isRedSuit = suitCode === 'h' || suitCode === 'd';
-        
-        // Удаляем старые классы цветов
         deckCard.classList.remove('text-red', 'text-black');
-        // Добавляем правильный цвет
         deckCard.classList.add(isRedSuit ? 'text-red' : 'text-black');
     });
 }
@@ -441,7 +433,7 @@ function activateBlockBySlotId(slotId){
 function getHandCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('hero')).length;}
 function getBoardCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('board')).length;}
 
-// --- Обработка клика по карте (ИСПРАВЛЕНО) ---
+// --- Обработка клика по карте ---
 function handleCardClick(cardCode) {
     if (usedCards.has(cardCode)) return;
     
@@ -607,7 +599,6 @@ async function calculateEquity() {
     let oppRounded = Math.max(0, Math.round(oppPercent * 10) / 10);
     let tieRounded = Math.max(0, Math.round(tiePercent * 10) / 10);
 
-    // Корректировка до 100%
     let sum = heroRounded + oppRounded + tieRounded;
     if (Math.abs(100 - sum) > 0.1) {
         const factor = 100 / sum;
