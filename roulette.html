@@ -94,11 +94,22 @@
                         </div>
                     </div>
 
-                    <!-- СТРАТЕГИЯ (будет заполняться JS) -->
+                    <!-- СТРАТЕГИЯ -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="strategyLabel"></div>
                         <select id="strategySelect" class="settings-select bg-elevated border-muted text-light">
-                            <!-- JS добавит сюда 0 или 00 -->
+                            <option value="red" data-i18n="strategyRed"></option>
+                            <option value="black" data-i18n="strategyBlack"></option>
+                            <option value="even" data-i18n="strategyEven"></option>
+                            <option value="odd" data-i18n="strategyOdd"></option>
+                            <option value="low" data-i18n="strategyLow"></option>
+                            <option value="high" data-i18n="strategyHigh"></option>
+                            <option value="dozen1" data-i18n="strategyDozen1"></option>
+                            <option value="dozen2" data-i18n="strategyDozen2"></option>
+                            <option value="dozen3" data-i18n="strategyDozen3"></option>
+                            <option value="column1" data-i18n="strategyColumn1"></option>
+                            <option value="column2" data-i18n="strategyColumn2"></option>
+                            <option value="column3" data-i18n="strategyColumn3"></option>
                         </select>
                     </div>
 
@@ -163,66 +174,10 @@
                     </div>
                 </div>
 
-                <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ + СТОЛ -->
+                <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
                 <div class="panel bg-surface border-primary shadow-default">
                     <div class="panel-title text-light" data-i18n="rouletteResultsTitle"></div>
                     
-                    <!-- ВИЗУАЛИЗАЦИЯ СТОЛА РУЛЕТКИ -->
-                    <div class="roulette-table-visual" id="rouletteTable">
-                        <!-- Зеро (два нуля, но второе скрыто) -->
-                        <div class="zero-row">
-                            <div class="zero-cell">0</div>
-                            <div class="zero-cell double-zero">00</div>
-                        </div>
-                        
-                        <!-- Сетка чисел 1-36 -->
-                        <div class="numbers-grid">
-                            <div class="number-cell">1</div>
-                            <div class="number-cell">2</div>
-                            <div class="number-cell">3</div>
-                            <div class="number-cell">4</div>
-                            <div class="number-cell">5</div>
-                            <div class="number-cell">6</div>
-                            <div class="number-cell">7</div>
-                            <div class="number-cell">8</div>
-                            <div class="number-cell">9</div>
-                            <div class="number-cell">10</div>
-                            <div class="number-cell">11</div>
-                            <div class="number-cell">12</div>
-                            <div class="number-cell">13</div>
-                            <div class="number-cell">14</div>
-                            <div class="number-cell">15</div>
-                            <div class="number-cell">16</div>
-                            <div class="number-cell">17</div>
-                            <div class="number-cell">18</div>
-                            <div class="number-cell">19</div>
-                            <div class="number-cell">20</div>
-                            <div class="number-cell">21</div>
-                            <div class="number-cell">22</div>
-                            <div class="number-cell">23</div>
-                            <div class="number-cell">24</div>
-                            <div class="number-cell">25</div>
-                            <div class="number-cell">26</div>
-                            <div class="number-cell">27</div>
-                            <div class="number-cell">28</div>
-                            <div class="number-cell">29</div>
-                            <div class="number-cell">30</div>
-                            <div class="number-cell">31</div>
-                            <div class="number-cell">32</div>
-                            <div class="number-cell">33</div>
-                            <div class="number-cell">34</div>
-                            <div class="number-cell">35</div>
-                            <div class="number-cell">36</div>
-                        </div>
-                        
-                        <!-- Дюжины -->
-                        <div class="dozens">
-                            <div class="dozen-cell" data-dozen="1">1-12</div>
-                            <div class="dozen-cell" data-dozen="2">13-24</div>
-                            <div class="dozen-cell" data-dozen="3">25-36</div>
-                        </div>
-                    </div>
-
                     <!-- ОСНОВНЫЕ ПОКАЗАТЕЛИ -->
                     <div class="results-grid-compact">
                         <div class="stat-card bg-elevated border-info">
