@@ -312,6 +312,23 @@ function hasFreeSlotsInSection(sectionId){
     return false;
 }
 
+// --- Вспомогательные для поиска свободных слотов (НОВЫЕ) ---
+function getFirstFreeSlotInHand() {
+    for (let i = 1; i <= 2; i++) {
+        const slotId = `hero-${i}`;
+        if (!selectedCards.has(slotId)) return slotId;
+    }
+    return null;
+}
+
+function getFirstFreeSlotInBoard() {
+    for (let i = 1; i <= 5; i++) {
+        const slotId = `board-${i}`;
+        if (!selectedCards.has(slotId)) return slotId;
+    }
+    return null;
+}
+
 // --- Управление картами ---
 function addCardToSlot(cardCode,slotId){
     const value=cardCode.slice(0,-1), suitCode=cardCode.slice(-1), suitSymbols={h:'♥',d:'♦',s:'♠',c:'♣'};
@@ -340,7 +357,7 @@ function removeCardFromSlot(slotId){
     }
 }
 
-// --- Отображение карт (ГЛАВНОЕ ИСПРАВЛЕНИЕ - БЕЛЫЙ ФОН + КРАСНЫЕ МАСТИ) ---
+// --- Отображение карт ---
 function updateCardDisplay(){
     // Обновляем карты в слотах (рука/борд)
     document.querySelectorAll('.card-slot').forEach(slot=>{
@@ -423,11 +440,32 @@ function activateBlockBySlotId(slotId){
 // --- Вспомогательные ---
 function getHandCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('hero')).length;}
 function getBoardCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('board')).length;}
-function handleCardClick(cardCode){
-    if(usedCards.has(cardCode)) return;
-    if(activeBlock==='hand' && getHandCardsCount()<2) addCardToSlot(cardCode,'hero-'+(getHandCardsCount()+1));
-    else if(activeBlock==='board' && getBoardCardsCount()<5) addCardToSlot(cardCode,'board-'+(getBoardCardsCount()+1));
+
+// --- Обработка клика по карте (ИСПРАВЛЕНО) ---
+function handleCardClick(cardCode) {
+    if (usedCards.has(cardCode)) return;
+    
+    if (activeBlock === 'hand') {
+        const freeSlot = getFirstFreeSlotInHand();
+        if (freeSlot) {
+            addCardToSlot(cardCode, freeSlot);
+        } else if (getBoardCardsCount() < 5) {
+            selectBoardBlock();
+            const freeBoardSlot = getFirstFreeSlotInBoard();
+            if (freeBoardSlot) addCardToSlot(cardCode, freeBoardSlot);
+        }
+    } else {
+        const freeSlot = getFirstFreeSlotInBoard();
+        if (freeSlot) {
+            addCardToSlot(cardCode, freeSlot);
+        } else if (getHandCardsCount() < 2) {
+            selectHandBlock();
+            const freeHandSlot = getFirstFreeSlotInHand();
+            if (freeHandSlot) addCardToSlot(cardCode, freeHandSlot);
+        }
+    }
 }
+
 function moveCardBetweenSlots(fromSlot,toSlot){
     if(!selectedCards.has(fromSlot)) return;
     const card=selectedCards.get(fromSlot);
@@ -569,11 +607,13 @@ async function calculateEquity() {
     let oppRounded = Math.max(0, Math.round(oppPercent * 10) / 10);
     let tieRounded = Math.max(0, Math.round(tiePercent * 10) / 10);
 
+    // Корректировка до 100%
     let sum = heroRounded + oppRounded + tieRounded;
-    let diff = 100 - sum;
-    
-    if (Math.abs(diff) > 0.01) {
-        heroRounded = Math.max(0, Math.round((heroRounded + diff) * 10) / 10);
+    if (Math.abs(100 - sum) > 0.1) {
+        const factor = 100 / sum;
+        heroRounded = Math.round(heroRounded * factor * 10) / 10;
+        oppRounded = Math.round(oppRounded * factor * 10) / 10;
+        tieRounded = Math.round(tieRounded * factor * 10) / 10;
     }
 
     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
