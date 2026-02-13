@@ -196,7 +196,10 @@
 .opponent-bg { background: rgba(106, 168, 255, 0.1); }
 .opponent-text { color: var(--color-info); }
 
-/* ❌❌❌ УДАЛЕНО: deck-bg и deck-border - они конфликтовали с картами ❌❌❌ */
+/* === КЛАСС ДЛЯ ГРАНИЦЫ КОЛОДЫ === */
+.deck-border {
+    border-color: var(--color-primary) !important;
+}
 
 /* РЕЗУЛЬТАТЫ */
 .result-win { color: var(--color-primary); }
@@ -225,3 +228,4 @@
     border-color: rgba(255, 255, 255, 0.9) !important;
     opacity: 1 !important;
 }
+
