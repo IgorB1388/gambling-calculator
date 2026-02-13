@@ -13,6 +13,7 @@
 </head>
 <body class="bg-body">
     <div class="site-container">
+        <!-- ===== ШАПКА ===== -->
         <header class="site-header bg-header border-primary shadow-default">
             <div class="header-content">
                 <div class="logo">
@@ -35,39 +36,128 @@
                     </ul>
                 </nav>
                 
-                <div class="language-switcher-header bg-dark border-accent">
+                <div class="language-switcher-header bg-surface border-accent">
                     <div class="lang-btn" data-lang="ru" title="Русский">
-                        <img src="images/flags/ru.png" alt="RU" class="lang-flag border-light">
+                        <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
                     </div>
                     <div class="lang-btn" data-lang="en" title="English">
-                        <img src="images/flags/en.png" alt="EN" class="lang-flag border-light">
+                        <img src="images/flags/en.png" alt="EN" class="lang-flag border-muted">
                     </div>
                     <div class="lang-btn" data-lang="es" title="Español">
-                        <img src="images/flags/es.png" alt="ES" class="lang-flag border-light">
+                        <img src="images/flags/es.png" alt="ES" class="lang-flag border-muted">
                     </div>
                 </div>
             </div>
         </header>
 
-        <main class="main-content">
-            <div class="page-header bg-card border-secondary shadow-default">
+        <!-- ===== АНАЛИЗАТОР ВИЛОК ===== -->
+        <div class="arbitrage-container">
+            <!-- ЗАГОЛОВОК -->
+            <div class="arbitrage-header bg-surface border-secondary shadow-default">
                 <h1 class="text-gradient" data-i18n="arbsTitle"></h1>
-                <p class="text-primary" data-i18n="arbsSubtitle"></p>
+                <p class="subtitle text-medium" data-i18n="arbsSubtitle"></p>
             </div>
 
-            <div class="coming-soon-gta4 bg-coming-soon border-accent">
-                <div class="coming-soon-icon-gta4 text-accent">
-                    <i class="fas fa-search-dollar"></i>
+            <div class="arbitrage-main-area">
+                <!-- ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ И ВВОД -->
+                <div class="panel bg-surface border-primary shadow-default">
+                    <div class="panel-title text-light" data-i18n="arbsSettingsTitle"></div>
+                    
+                    <!-- КОЛИЧЕСТВО ИСХОДОВ -->
+                    <div class="settings-group">
+                        <div class="settings-label text-accent" data-i18n="arbsOutcomesLabel"></div>
+                        <div class="outcome-pills" id="outcomeCountPills">
+                            <button class="outcome-pill opponent-bg opponent-border text-opponent active opponent-active" data-outcomes="2">2</button>
+                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="3">3</button>
+                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="4">4</button>
+                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="5">5</button>
+                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="6">6</button>
+                        </div>
+                    </div>
+
+                    <!-- КОЭФФИЦИЕНТЫ (динамическая таблица) -->
+                    <div class="settings-group">
+                        <div class="settings-label text-accent" data-i18n="arbsOddsLabel"></div>
+                        <div class="odds-table" id="oddsTable">
+                            <!-- будут сгенерированы js -->
+                        </div>
+                    </div>
+
+                    <!-- ОБЩАЯ СУММА СТАВКИ -->
+                    <div class="settings-group">
+                        <div class="settings-label text-accent" data-i18n="arbsStakeLabel"></div>
+                        <div class="input-wrapper">
+                            <input type="number" id="totalStake" class="settings-input bg-elevated border-muted text-light" value="1000" min="1" step="1">
+                            <span class="input-suffix text-medium">₽</span>
+                        </div>
+                    </div>
+
+                    <!-- КНОПКИ -->
+                    <div class="controls">
+                        <button class="btn btn-primary-bg btn-primary-text" id="calculateArbBtn">
+                            <i class="fas fa-calculator"></i> <span data-i18n="arbsCalculateBtn"></span>
+                        </button>
+                        <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="resetArbBtn">
+                            <i class="fas fa-undo-alt"></i> <span data-i18n="resetBtn"></span>
+                        </button>
+                    </div>
                 </div>
-                <h2 class="text-accent" data-i18n="arbsComingSoon"></h2>
-                <p class="text-medium" data-i18n="arbsDescription"></p>
-            </div>
-            
-            <div class="taxi">
-                🚕
-            </div>
-        </main>
 
+                <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
+                <div class="panel bg-surface border-primary shadow-default">
+                    <div class="panel-title text-light" data-i18n="arbsResultsTitle"></div>
+                    
+                    <!-- ИНДИКАТОР ВИЛКИ -->
+                    <div class="arb-indicator" id="arbIndicator">
+                        <div class="indicator-circle" id="indicatorCircle"></div>
+                        <div class="indicator-text">
+                            <span class="text-medium" data-i18n="arbsStatusLabel"></span>
+                            <span class="text-light" id="arbStatus">—</span>
+                        </div>
+                    </div>
+
+                    <!-- ПРОЦЕНТ ПРИБЫЛИ -->
+                    <div class="profit-card bg-elevated border-success" id="profitCard" style="display: none;">
+                        <div class="profit-label text-medium" data-i18n="arbsProfitPercent"></div>
+                        <div class="profit-value text-success" id="profitPercent">0.00%</div>
+                    </div>
+
+                    <!-- ТАБЛИЦА РАСПРЕДЕЛЕНИЯ -->
+                    <div class="distribution-table" id="distributionTable">
+                        <div class="table-header">
+                            <span class="text-medium" data-i18n="arbsOutcome"></span>
+                            <span class="text-medium" data-i18n="arbsOdds"></span>
+                            <span class="text-medium" data-i18n="arbsStake"></span>
+                            <span class="text-medium" data-i18n="arbsPayout"></span>
+                        </div>
+                        <div class="table-body" id="tableBody">
+                            <!-- будут сгенерированы js -->
+                        </div>
+                    </div>
+
+                    <!-- ИТОГИ -->
+                    <div class="totals">
+                        <div class="total-row">
+                            <span class="text-medium" data-i18n="arbsTotalStake"></span>
+                            <span class="text-light" id="totalStakeDisplay">0 ₽</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="text-medium" data-i18n="arbsTotalPayout"></span>
+                            <span class="text-light" id="totalPayout">0 ₽</span>
+                        </div>
+                        <div class="total-row profit-row" id="profitRow" style="display: none;">
+                            <span class="text-medium" data-i18n="arbsNetProfit"></span>
+                            <span class="text-success" id="netProfit">0 ₽</span>
+                        </div>
+                    </div>
+
+                    <!-- ПОДСКАЗКА -->
+                    <div class="arb-hint text-muted" data-i18n="arbsHint"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ФУТЕР ===== -->
         <footer class="site-footer footer-bg border-primary">
             <p class="footer-text" data-i18n="footerText"></p>
         </footer>
@@ -75,6 +165,7 @@
 
     <script src="js/language.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/arbs.js"></script>
     <script src="js/theme-switcher.js"></script>
 </body>
 </html>
