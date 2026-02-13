@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     selectHandBlock();
 });
 
-// --- Создание колоды (БЕЛЫЙ ФОН + КРАСНЫЕ/ЧЕРНЫЕ МАСТИ) ---
+// --- Создание колоды ---
 function createDeck(){
     const deckGrid=document.getElementById('deck');
     deckGrid.innerHTML='';
@@ -219,7 +219,7 @@ function initEventListeners(){
     });
 }
 
-// --- Drag & Drop ---
+// --- Drag & Drop для слотов ---
 function initDragAndDrop(){
     document.addEventListener('dragstart',e=>{
         const realCard=e.target.closest('.real-card');
@@ -234,14 +234,52 @@ function initDragAndDrop(){
             }
         }
     });
+    
     document.addEventListener('dragend',()=>{
         document.querySelectorAll('.deck-card, .real-card').forEach(el=>el.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(s=>s.classList.remove('drag-over'));
-        document.querySelectorAll('.hand-section, .board-section, #deck').forEach(el=>el.classList.remove('drag-over','drag-over-no-space'));
+        document.querySelectorAll('.hand-section, .board-section, #deck').forEach(el=>{
+            el.classList.remove('drag-over','drag-over-no-space');
+        });
         currentDragCard=null;
         currentDragSource=null;
         currentDragOverSection=null;
         if(dragOverTimer){clearTimeout(dragOverTimer);dragOverTimer=null;}
+    });
+    
+    // Обработчики для слотов
+    document.querySelectorAll('.card-slot').forEach(slot => {
+        slot.addEventListener('dragover', e => {
+            e.preventDefault();
+            slot.classList.add('drag-over');
+        });
+        
+        slot.addEventListener('dragleave', () => {
+            slot.classList.remove('drag-over');
+        });
+        
+        slot.addEventListener('drop', e => {
+            e.preventDefault();
+            slot.classList.remove('drag-over');
+            
+            const data = e.dataTransfer.getData('text/plain');
+            if (!data) return;
+            
+            const targetSlotId = slot.dataset.slot;
+            
+            try {
+                const parsed = JSON.parse(data);
+                if (parsed.fromSlot && parsed.fromSlot !== targetSlotId) {
+                    moveCardBetweenSlots(parsed.fromSlot, targetSlotId);
+                    return;
+                }
+            } catch {
+                const cardCode = data;
+                if (usedCards.has(cardCode)) return;
+                if (selectedCards.has(targetSlotId)) return;
+                addCardToSlot(cardCode, targetSlotId);
+            }
+        });
     });
 }
 
@@ -252,15 +290,25 @@ function initSectionDrop(){
         section.addEventListener('dragover',e=>{
             e.preventDefault();
             if(dragOverTimer){clearTimeout(dragOverTimer);}
-            if(currentDragOverSection && currentDragOverSection!==section) currentDragOverSection.classList.remove('drag-over','drag-over-no-space');
+            if(currentDragOverSection && currentDragOverSection!==section){
+                currentDragOverSection.classList.remove('drag-over','drag-over-no-space');
+            }
             
-            let hasFreeSlots=section.id==='deck'?currentDragSource==='slot':hasFreeSlotsInSection(section.id);
+            let hasFreeSlots;
+            if(section.id==='deck'){
+                hasFreeSlots = currentDragSource==='slot';
+            } else {
+                hasFreeSlots = hasFreeSlotsInSection(section.id);
+            }
+            
             section.classList.toggle('drag-over',hasFreeSlots);
             section.classList.toggle('drag-over-no-space',!hasFreeSlots);
             currentDragOverSection=section;
             
             dragOverTimer=setTimeout(()=>{
-                if(!section.contains(document.elementFromPoint(e.clientX,e.clientY))) section.classList.remove('drag-over','drag-over-no-space');
+                if(!section.contains(document.elementFromPoint(e.clientX,e.clientY))){
+                    section.classList.remove('drag-over','drag-over-no-space');
+                }
             },50);
         });
         
@@ -280,10 +328,13 @@ function initSectionDrop(){
             currentDragOverSection=null;
             if(dragOverTimer){clearTimeout(dragOverTimer);dragOverTimer=null;}
             if(!currentDragCard) return;
+            
             const cardCode=currentDragCard.cardCode;
             
             if(section.id==='deck'){
-                if(currentDragSource==='slot' && currentDragCard.fromSlot) removeCardFromSlot(currentDragCard.fromSlot);
+                if(currentDragSource==='slot' && currentDragCard.fromSlot){
+                    removeCardFromSlot(currentDragCard.fromSlot);
+                }
                 return;
             }
             
@@ -298,8 +349,11 @@ function initSectionDrop(){
             }
             
             if(freeSlot){
-                if(currentDragSource==='deck') addCardToSlot(cardCode,freeSlot);
-                else if(currentDragSource==='slot') moveCardBetweenSlots(currentDragCard.fromSlot,freeSlot);
+                if(currentDragSource==='deck'){
+                    addCardToSlot(cardCode,freeSlot);
+                } else if(currentDragSource==='slot'){
+                    moveCardBetweenSlots(currentDragCard.fromSlot,freeSlot);
+                }
                 activateBlockBySlotId(freeSlot);
             }
         });
@@ -381,11 +435,11 @@ function updateCardDisplay(){
         deckCard.style.cursor=isUsed?'default':'pointer';
         deckCard.classList.add('bg-deck-card', 'deck-card-border', 'deck-card-shadow');
         
-        const cardCode = deckCard.dataset.card;
-        const suitCode = cardCode.slice(-1);
-        const isRedSuit = suitCode === 'h' || suitCode === 'd';
-        deckCard.classList.remove('text-red', 'text-black');
-        deckCard.classList.add(isRedSuit ? 'text-red' : 'text-black');
+        const cardCode=deckCard.dataset.card;
+        const suitCode=cardCode.slice(-1);
+        const isRedSuit=suitCode==='h'||suitCode==='d';
+        deckCard.classList.remove('text-red','text-black');
+        deckCard.classList.add(isRedSuit?'text-red':'text-black');
     });
 }
 
