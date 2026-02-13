@@ -54,6 +54,18 @@
     --glow-accent: 0 0 25px rgba(255, 217, 102, 0.4);
     --glow-highlight: 0 0 25px rgba(179, 107, 255, 0.4);
     --glow-success: 0 0 25px rgba(46, 255, 199, 0.4);
+
+    /* Переключатель тем */
+    --theme-switcher-bg: var(--bg-nav);
+    --theme-switcher-border: var(--color-accent);
+    --theme-btn-bg: var(--bg-surface-light);
+    --theme-btn-text: var(--text-primary);
+    --theme-btn-hover-border: var(--color-accent);
+    --theme-btn-hover-glow: var(--color-accent);
+    --theme-btn-active-bg: var(--color-accent);
+    --theme-btn-active-text: var(--text-inverse);
+    --theme-btn-active-border: var(--color-accent);
+    --theme-btn-active-glow: var(--color-accent);
     
     /* === ГРАДИЕНТЫ === */
     --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-highlight));
@@ -140,3 +152,4 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
+
