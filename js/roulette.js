@@ -5,6 +5,7 @@ const RouletteConfig = {
     european: {
         numbers: 37,
         zero: 0,
+        type: 'european',
         payouts: {
             straight: 35,
             split: 17,
@@ -18,12 +19,14 @@ const RouletteConfig = {
             red: 1,
             black: 1,
             low: 1,
-            high: 1
+            high: 1,
+            zero: 35
         }
     },
     american: {
         numbers: 38,
         zero: [0, 37], // 0 и 00
+        type: 'american',
         payouts: {
             straight: 35,
             split: 17,
@@ -37,7 +40,9 @@ const RouletteConfig = {
             red: 1,
             black: 1,
             low: 1,
-            high: 1
+            high: 1,
+            zero: 35,
+            doublezero: 35
         }
     }
 };
@@ -68,6 +73,12 @@ const BetDefinitions = {
     high: {
         condition: (num, type) => num !== 0 && (type !== 'american' || num !== 37) && num >= 19
     },
+    zero: {
+        condition: (num, type) => num === 0
+    },
+    doublezero: {
+        condition: (num, type) => type === 'american' && num === 37
+    },
     dozen1: {
         condition: (num, type) => num >= 1 && num <= 12
     },
@@ -95,7 +106,81 @@ let isSimulating = false;
 document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     updateTargetInputState();
+    updateStrategyOptions(); // Заполняем выпадающий список
 });
+
+// --- Обновление выпадающего списка стратегий ---
+function updateStrategyOptions() {
+    const select = document.getElementById('strategySelect');
+    const type = document.querySelector('[data-type].active')?.dataset.type || 'european';
+    
+    // Очищаем
+    select.innerHTML = '';
+    
+    // Базовые опции
+    const baseOptions = [
+        { value: 'red', text: '🔴 Красное' },
+        { value: 'black', text: '⚫ Черное' },
+        { value: 'even', text: 'Четное' },
+        { value: 'odd', text: 'Нечетное' },
+        { value: 'low', text: '1-18' },
+        { value: 'high', text: '19-36' }
+    ];
+    
+    // Добавляем зеро в зависимости от типа
+    if (type === 'european') {
+        const zeroOption = document.createElement('option');
+        zeroOption.value = 'zero';
+        zeroOption.textContent = '0 (Зеро)';
+        select.appendChild(zeroOption);
+    } else {
+        const zeroOption = document.createElement('option');
+        zeroOption.value = 'zero';
+        zeroOption.textContent = '0 (Зеро)';
+        select.appendChild(zeroOption);
+        
+        const doubleZeroOption = document.createElement('option');
+        doubleZeroOption.value = 'doublezero';
+        doubleZeroOption.textContent = '00 (Двойное зеро)';
+        select.appendChild(doubleZeroOption);
+    }
+    
+    // Добавляем базовые опции
+    baseOptions.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        select.appendChild(option);
+    });
+    
+    // Добавляем дюжины
+    const dozens = [
+        { value: 'dozen1', text: '1-я дюжина (1-12)' },
+        { value: 'dozen2', text: '2-я дюжина (13-24)' },
+        { value: 'dozen3', text: '3-я дюжина (25-36)' }
+    ];
+    
+    dozens.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        select.appendChild(option);
+    });
+    
+    // Добавляем колонны
+    const columns = [
+        { value: 'column1', text: '1-я колонна' },
+        { value: 'column2', text: '2-я колонна' },
+        { value: 'column3', text: '3-я колонна' }
+    ];
+    
+    columns.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        select.appendChild(option);
+    });
+}
 
 // --- Обработчики событий ---
 function initEventListeners() {
@@ -106,6 +191,9 @@ function initEventListeners() {
                 b.classList.remove('active', 'opponent-active');
             });
             this.classList.add('active', 'opponent-active');
+            
+            // Обновляем список стратегий при смене типа
+            updateStrategyOptions();
         });
     });
 
@@ -133,6 +221,7 @@ async function simulateStrategy() {
     // Получаем настройки
     const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
     const config = RouletteConfig[rouletteType];
+    config.type = rouletteType; // добавляем тип в конфиг
     
     const startingBankroll = parseInt(document.getElementById('startingBankroll').value) || 1000;
     const betAmount = parseInt(document.getElementById('betAmount').value) || 10;
@@ -292,7 +381,6 @@ function displayResults(results) {
     document.getElementById('maxProfit').textContent = '$' + results.maxProfit;
     document.getElementById('maxLoss').textContent = '$' + results.maxLoss;
     
-    // Здесь можно добавить отрисовку простого графика
     drawSimpleChart(results.profitDistribution);
 }
 
@@ -305,7 +393,6 @@ function drawSimpleChart(distribution) {
         return;
     }
     
-    // Простейшее визуальное представление - процент положительных исходов
     const positiveCount = distribution.filter(v => v > 0).length;
     const positivePercent = (positiveCount / distribution.length) * 100;
     
