@@ -55,23 +55,23 @@
             <!-- ЗАГОЛОВОК -->
             <div class="arbitrage-header bg-surface border-secondary shadow-default">
                 <h1 class="text-gradient" data-i18n="arbsTitle"></h1>
-                <!-- УДАЛЕН subtitle -->
             </div>
 
             <div class="arbitrage-main-area">
                 <!-- ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ И ВВОД -->
                 <div class="panel bg-surface border-primary shadow-default">
-                    <div class="panel-title text-light" data-i18n="arbsSettingsTitle"></div>
+                    <!-- У заголовка убрали черную полосу -->
+                    <div class="panel-title text-light" style="border-bottom: none;" data-i18n="arbsSettingsTitle"></div>
                     
                     <!-- КОЛИЧЕСТВО ИСХОДОВ -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="arbsOutcomesLabel"></div>
                         <div class="outcome-pills" id="outcomeCountPills">
-                            <button class="outcome-pill opponent-bg border-5 text-opponent active opponent-active" data-outcomes="2">2</button>
-                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="3">3</button>
-                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="4">4</button>
-                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="5">5</button>
-                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="6">6</button>
+                            <button class="outcome-pill opponent-bg border-5 text-primary active opponent-active" data-outcomes="2">2</button>
+                            <button class="outcome-pill opponent-bg border-5 text-primary" data-outcomes="3">3</button>
+                            <button class="outcome-pill opponent-bg border-5 text-primary" data-outcomes="4">4</button>
+                            <button class="outcome-pill opponent-bg border-5 text-primary" data-outcomes="5">5</button>
+                            <button class="outcome-pill opponent-bg border-5 text-primary" data-outcomes="6">6</button>
                         </div>
                     </div>
 
@@ -169,4 +169,3 @@
     <script src="js/theme-switcher.js"></script>
 </body>
 </html>
-
