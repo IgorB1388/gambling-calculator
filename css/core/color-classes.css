@@ -223,13 +223,13 @@
 .opponent-text { color: var(--color-info); }
 
 /* === УНИВЕРСАЛЬНЫЕ КЛАССЫ ДЛЯ ГРАНИЦ === */
-.border-1 { border-color: var(--color-primary) !important; }
-.border-2 { border-color: var(--color-secondary) !important; }
-.border-3 { border-color: var(--color-accent) !important; }
-.border-4 { border-color: var(--color-success) !important; }
-.border-5 { border-color: var(--color-info) !important; }
-.border-6 { border-color: var(--color-highlight) !important; }
-.border-7 { border-color: var(--color-deck) !important; }
+.border-1 { border-color: var(--border-1) !important; }
+.border-2 { border-color: var(--border-2) !important; }
+.border-3 { border-color: var(--border-3) !important; }
+.border-4 { border-color: var(--border-4) !important; }
+.border-5 { border-color: var(--border-5) !important; }
+.border-6 { border-color: var(--border-6) !important; }
+.border-7 { border-color: var(--border-7) !important; }
 
 /* РЕЗУЛЬТАТЫ */
 .result-win { color: var(--color-primary); }
@@ -264,4 +264,5 @@
     border-color: rgba(255, 255, 255, 0.9) !important;
     opacity: 1 !important;
 }
+
 
