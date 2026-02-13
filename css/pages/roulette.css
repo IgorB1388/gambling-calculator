@@ -83,6 +83,19 @@
     transform: translateY(-2px);
 }
 
+/* 🚩 ФЛАГИ ДЛЯ ТИПА РУЛЕТКИ */
+.roulette-flag {
+    width: 24px;
+    height: 18px;
+    object-fit: cover;
+    border-radius: 3px;
+    margin-right: 4px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--border-muted);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .input-wrapper {
     display: flex;
     align-items: center;
@@ -291,6 +304,11 @@
         min-width: 150px;
         padding: 10px 20px;
     }
+    
+    .roulette-flag {
+        width: 20px;
+        height: 15px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -310,5 +328,10 @@
     
     .btn {
         width: 100%;
+    }
+    
+    .roulette-flag {
+        width: 18px;
+        height: 14px;
     }
 }
