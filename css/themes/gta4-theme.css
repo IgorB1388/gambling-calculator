@@ -40,6 +40,18 @@
     --border-muted: rgba(52, 152, 219, 0.3);
     --border-dark: rgba(0, 0, 0, 0.5);
     --border-dashed: rgba(52, 152, 219, 0.4);
+
+    /* Переключатель тем для GTA 4 */
+--theme-switcher-bg: rgba(52, 152, 219, 0.2);
+--theme-switcher-border: #f1c40f;
+--theme-btn-bg: rgba(255, 255, 255, 0.1);
+--theme-btn-text: #ecf0f1;
+--theme-btn-hover-border: #f1c40f;
+--theme-btn-hover-glow: #f1c40f;
+--theme-btn-active-bg: #3498db;
+--theme-btn-active-text: #ffffff;
+--theme-btn-active-border: #3498db;
+--theme-btn-active-glow: #3498db;
     
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -317,3 +329,4 @@ html, body {
         bottom: 15px;
     }
 }
+
