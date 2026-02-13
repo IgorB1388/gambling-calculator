@@ -43,6 +43,15 @@
     --border-dark: rgba(0, 0, 0, 0.2);
     --border-dashed: rgba(255, 255, 255, 0.3);
     --border-nav: rgba(0, 102, 255, 0.3);
+
+    /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
+    --border-1: #00f0ff;
+    --border-2: #ff5fd2;
+    --border-3: #ffd966;
+    --border-4: #2effc7;
+    --border-5: #6aa8ff;
+    --border-6: #b36bff;
+    --border-7: #b36bff;
     
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -152,4 +161,5 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
+
 
