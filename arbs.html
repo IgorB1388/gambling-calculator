@@ -67,11 +67,11 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="arbsOutcomesLabel"></div>
                         <div class="outcome-pills" id="outcomeCountPills">
-                            <button class="outcome-pill opponent-bg opponent-border text-opponent active opponent-active" data-outcomes="2">2</button>
-                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="3">3</button>
-                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="4">4</button>
-                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="5">5</button>
-                            <button class="outcome-pill opponent-bg opponent-border text-opponent" data-outcomes="6">6</button>
+                            <button class="outcome-pill opponent-bg border-5 text-opponent active opponent-active" data-outcomes="2">2</button>
+                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="3">3</button>
+                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="4">4</button>
+                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="5">5</button>
+                            <button class="outcome-pill opponent-bg border-5 text-opponent" data-outcomes="6">6</button>
                         </div>
                     </div>
 
@@ -108,7 +108,7 @@
                     <div class="panel-title text-light" data-i18n="arbsResultsTitle"></div>
                     
                     <!-- ИНДИКАТОР ВИЛКИ -->
-                    <div class="arb-indicator" id="arbIndicator">
+                    <div class="arb-indicator border-1" id="arbIndicator">
                         <div class="indicator-circle" id="indicatorCircle"></div>
                         <div class="indicator-text">
                             <span class="text-medium" data-i18n="arbsStatusLabel"></span>
@@ -117,13 +117,13 @@
                     </div>
 
                     <!-- ПРОЦЕНТ ПРИБЫЛИ -->
-                    <div class="profit-card bg-elevated border-success" id="profitCard" style="display: none;">
+                    <div class="profit-card bg-elevated border-4" id="profitCard" style="display: none;">
                         <div class="profit-label text-medium" data-i18n="arbsProfitPercent"></div>
-                        <div class="profit-value text-success" id="profitPercent">0.00%</div>
+                        <div class="profit-value text-4" id="profitPercent">0.00%</div>
                     </div>
 
                     <!-- ТАБЛИЦА РАСПРЕДЕЛЕНИЯ -->
-                    <div class="distribution-table" id="distributionTable">
+                    <div class="distribution-table border-1" id="distributionTable">
                         <div class="table-header">
                             <span class="text-medium" data-i18n="arbsOutcome"></span>
                             <span class="text-medium" data-i18n="arbsOdds"></span>
@@ -136,7 +136,7 @@
                     </div>
 
                     <!-- ИТОГИ -->
-                    <div class="totals">
+                    <div class="totals border-1">
                         <div class="total-row">
                             <span class="text-medium" data-i18n="arbsTotalStake"></span>
                             <span class="text-light" id="totalStakeDisplay">0 ₽</span>
@@ -147,7 +147,7 @@
                         </div>
                         <div class="total-row profit-row" id="profitRow" style="display: none;">
                             <span class="text-medium" data-i18n="arbsNetProfit"></span>
-                            <span class="text-success" id="netProfit">0 ₽</span>
+                            <span class="text-4" id="netProfit">0 ₽</span>
                         </div>
                     </div>
 
