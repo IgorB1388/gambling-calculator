@@ -67,7 +67,7 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="rouletteTypeLabel"></div>
                         <div class="option-pills" id="rouletteTypePills">
-                            <button class="option-pill opponent-bg opponent-border text-opponent active opponent-active" data-type="european">
+                            <button class="option-pill opponent-bg opponent-border text-opponent active" data-type="european">
                                 <img src="images/flags/eu.png" alt="EU" class="roulette-flag"> <span data-i18n="rouletteEuropean"></span>
                             </button>
                             <button class="option-pill opponent-bg opponent-border text-opponent" data-type="american">
@@ -94,22 +94,11 @@
                         </div>
                     </div>
 
-                    <!-- СТРАТЕГИЯ -->
+                    <!-- СТРАТЕГИЯ (пустой, JS заполнит) -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="strategyLabel"></div>
-                        <select id="strategySelect" class="settings-select bg-elevated border-muted text-light">
-                            <option value="red" data-i18n="strategyRed"></option>
-                            <option value="black" data-i18n="strategyBlack"></option>
-                            <option value="even" data-i18n="strategyEven"></option>
-                            <option value="odd" data-i18n="strategyOdd"></option>
-                            <option value="low" data-i18n="strategyLow"></option>
-                            <option value="high" data-i18n="strategyHigh"></option>
-                            <option value="dozen1" data-i18n="strategyDozen1"></option>
-                            <option value="dozen2" data-i18n="strategyDozen2"></option>
-                            <option value="dozen3" data-i18n="strategyDozen3"></option>
-                            <option value="column1" data-i18n="strategyColumn1"></option>
-                            <option value="column2" data-i18n="strategyColumn2"></option>
-                            <option value="column3" data-i18n="strategyColumn3"></option>
+                        <select id="strategySelect" class="settings-select">
+                            <!-- JS заполнит -->
                         </select>
                     </div>
 
@@ -117,7 +106,7 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="triggerLabel"></div>
                         <div class="trigger-builder">
-                            <select id="triggerType" class="settings-select bg-elevated border-muted text-light" style="width: 40%;">
+                            <select id="triggerType" class="settings-select" style="width: 40%;">
                                 <option value="missed" data-i18n="triggerMissed"></option>
                                 <option value="hit" data-i18n="triggerHit"></option>
                             </select>
