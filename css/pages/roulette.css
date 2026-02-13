@@ -281,7 +281,147 @@
     justify-content: center;
 }
 
-/* Адаптивность */
+/* ===== ВИЗУАЛИЗАЦИЯ СТОЛА РУЛЕТКИ ===== */
+.roulette-table-visual {
+    background: #1a472a;  /* зеленое сукно */
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid #ffd700;
+    margin-bottom: 20px;
+}
+
+.zero-row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.zero-cell {
+    width: 60px;
+    height: 60px;
+    background: #2e7d32;  /* зеленое зеро */
+    color: #ffd700;        /* золотой текст */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid #ffd700;
+}
+
+/* Второй ноль скрыт по умолчанию */
+.double-zero {
+    display: none;
+}
+
+/* При активной американской рулетке показываем 00 */
+body:has([data-type="american"].active) .double-zero {
+    display: flex;
+}
+
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3px;
+    margin-bottom: 10px;
+}
+
+.number-cell {
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Красные числа (стандартные красные в рулетке) */
+.number-cell:nth-child(odd):not(:nth-child(11)):not(:nth-child(17)):not(:nth-child(29)) {
+    background: #e31b23;
+}
+
+/* Черные числа (все четные + особые нечетные) */
+.number-cell:nth-child(even),
+.number-cell:nth-child(11),
+.number-cell:nth-child(17),
+.number-cell:nth-child(29) {
+    background: #0f0f0f;
+}
+
+/* Коррекция для 19 (нечетное, но красное) */
+.number-cell:nth-child(19) {
+    background: #e31b23 !important;
+}
+
+.dozens {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.dozen-cell {
+    background: #1a472a;
+    color: #ffd700;
+    border: 2px solid #ffd700;
+    padding: 8px;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dozen-cell:hover {
+    background: #ffd700;
+    color: #1a472a;
+}
+
+/* Адаптивность для стола */
+@media (max-width: 768px) {
+    .zero-cell {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    
+    .number-cell {
+        font-size: 0.8rem;
+    }
+    
+    .dozen-cell {
+        padding: 6px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .roulette-table-visual {
+        padding: 10px;
+    }
+    
+    .zero-cell {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .number-cell {
+        font-size: 0.7rem;
+    }
+    
+    .dozen-cell {
+        padding: 4px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Адаптивность для общих элементов */
 @media (max-width: 768px) {
     .panel {
         padding: 20px;
