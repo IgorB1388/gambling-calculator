@@ -112,7 +112,7 @@ function calculateArbitrage() {
     saveLastCalculation();
 }
 
-// --- Отображение результатов ---
+// --- Отображение результатов (ИСПРАВЛЕНО: через классы, а не style) ---
 function displayResults(data) {
     const indicatorCircle = document.getElementById('indicatorCircle');
     const arbStatus = document.getElementById('arbStatus');
@@ -124,13 +124,21 @@ function displayResults(data) {
     const profitRow = document.getElementById('profitRow');
     const netProfit = document.getElementById('netProfit');
 
-    // Индикатор
+    // ✅ Индикатор через классы, а не style
     if (data.isArb) {
-        indicatorCircle.style.backgroundColor = 'var(--color-success)';
+        // Убираем старые классы фона
+        indicatorCircle.classList.remove('bg-danger-solid', 'bg-warning-solid');
+        // Добавляем зеленый фон
+        indicatorCircle.classList.add('bg-success-solid');
+        
         arbStatus.textContent = '✅ Вилка найдена!';
         arbStatus.className = 'text-success';
     } else {
-        indicatorCircle.style.backgroundColor = 'var(--color-danger)';
+        // Убираем старые классы фона
+        indicatorCircle.classList.remove('bg-success-solid', 'bg-warning-solid');
+        // Добавляем красный фон
+        indicatorCircle.classList.add('bg-danger-solid');
+        
         arbStatus.textContent = '❌ Вилки нет';
         arbStatus.className = 'text-danger';
     }
@@ -170,13 +178,13 @@ function displayResults(data) {
     }
 }
 
-// --- Сброс калькулятора ---
+// --- Сброс калькулятора (ИСПРАВЛЕНО) ---
 function resetCalculator() {
     generateOddsInputs(2);
     document.getElementById('totalStake').value = 1000;
     
-    // Сброс результатов
-    document.getElementById('indicatorCircle').style.backgroundColor = '';
+    // ✅ Сброс через классы
+    document.getElementById('indicatorCircle').classList.remove('bg-success-solid', 'bg-danger-solid', 'bg-warning-solid');
     document.getElementById('arbStatus').textContent = '—';
     document.getElementById('arbStatus').className = 'text-light';
     document.getElementById('profitCard').style.display = 'none';
