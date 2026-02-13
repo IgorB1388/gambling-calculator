@@ -1,3 +1,264 @@
-/* arbs.css - ТОЛЬКО РАЗМЕТКА АРБИТРАЖЕЙ */
+/* arbs.css - только позиционирование, никаких цветов! */
 
-/* Структура для страницы арбитражей - будет добавлена позже */
+.arbitrage-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.arbitrage-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 25px;
+    border-radius: 15px;
+    border-width: 2px;
+    border-style: solid;
+    position: relative;
+}
+
+.arbitrage-main-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 1100px) {
+    .arbitrage-main-area {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    border-radius: 15px;
+    padding: 25px;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.panel-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.settings-label {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.outcome-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.outcome-pill {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.outcome-pill:hover {
+    transform: scale(1.1);
+}
+
+/* Таблица коэффициентов */
+.odds-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.odds-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.odds-index {
+    font-weight: bold;
+    text-align: center;
+}
+
+.odds-input {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 1rem;
+    width: 100%;
+    background: transparent;
+}
+
+/* Индикатор вилки */
+.arb-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.indicator-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.indicator-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Карточка прибыли */
+.profit-card {
+    padding: 15px;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profit-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* Таблица распределения */
+.distribution-table {
+    width: 100%;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+    overflow: hidden;
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
+    gap: 10px;
+    padding: 12px 15px;
+    font-weight: bold;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
+    gap: 10px;
+    padding: 10px 15px;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+/* Итоги */
+.totals {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.profit-row {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top-width: 2px;
+    border-top-style: solid;
+}
+
+/* Подсказка */
+.arb-hint {
+    font-size: 0.85rem;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .panel {
+        padding: 20px;
+    }
+    
+    .odds-row {
+        grid-template-columns: 40px 1fr 1fr;
+    }
+    
+    .table-header,
+    .table-row {
+        grid-template-columns: 1.5fr 1fr 1.2fr 1.2fr;
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+    
+    .profit-value {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .outcome-pills {
+        justify-content: center;
+    }
+    
+    .outcome-pill {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .table-header,
+    .table-row {
+        grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
+        font-size: 0.8rem;
+    }
+    
+    .indicator-circle {
+        width: 30px;
+        height: 30px;
+    }
+}
