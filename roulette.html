@@ -1,246 +1,100 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="siteTitle"></title>
-    <link rel="stylesheet" href="css/core/color-classes.css">
-    <link rel="stylesheet" href="css/core/layout.css">
-    <link rel="stylesheet" href="css/pages/roulette.css">
-    <link rel="stylesheet" href="css/themes/base-theme.css" id="theme-style">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-body">
-    <div class="site-container">
-        <!-- ===== ШАПКА ===== -->
-        <header class="site-header bg-header border-primary shadow-default">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon logo-gradient">
-                        <i class="fas fa-dice"></i>
-                    </div>
-                    <div class="logo-text">
-                        <span class="logo-main logo-text-gradient">GTA CASINO</span>
-                        <span class="logo-sub text-secondary">TOOLS</span>
-                    </div>
-                </div>
-                
-                <nav class="main-nav">
-                    <ul class="nav-list nav-bg border-primary">
-                        <li><a href="index.html" class="nav-link nav-link-bg text-medium" data-i18n="navHome"><i class="fas fa-home"></i></a></li>
-                        <li><a href="poker.html" class="nav-link nav-link-bg text-medium" data-i18n="navPoker"><i class="fas fa-club"></i></a></li>
-                        <li><a href="roulette.html" class="nav-link nav-link-bg text-medium active nav-link-active" data-i18n="navRoulette"><i class="fas fa-dice"></i></a></li>
-                        <li><a href="arbs.html" class="nav-link nav-link-bg text-medium" data-i18n="navArbs"><i class="fas fa-chart-line"></i></a></li>
-                        <li><a href="faq.html" class="nav-link nav-link-bg text-medium" data-i18n="navFaq"><i class="fas fa-question-circle"></i></a></li>
-                    </ul>
-                </nav>
-                
-                <div class="language-switcher-header bg-surface border-accent">
-                    <div class="lang-btn" data-lang="ru" title="Русский">
-                        <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
-                    </div>
-                    <div class="lang-btn" data-lang="en" title="English">
-                        <img src="images/flags/en.png" alt="EN" class="lang-flag border-muted">
-                    </div>
-                    <div class="lang-btn" data-lang="es" title="Español">
-                        <img src="images/flags/es.png" alt="ES" class="lang-flag border-muted">
-                    </div>
-                </div>
-            </div>
-        </header>
+/* Визуализация стола рулетки */
+.roulette-table-visual {
+    background: #1a472a;  /* зеленое сукно */
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid #ffd700;
+    margin-bottom: 20px;
+}
 
-        <!-- ===== АНАЛИЗАТОР РУЛЕТКИ ===== -->
-        <div class="roulette-analyzer-container">
-            <!-- ЗАГОЛОВОК -->
-            <div class="roulette-header bg-surface border-secondary shadow-default">
-                <h1 class="text-gradient" data-i18n="rouletteTitle"></h1>
-                <p class="subtitle text-medium" data-i18n="rouletteSubtitle"></p>
-            </div>
+.zero-row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
 
-            <div class="analyzer-main-area">
-                <!-- ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ СТРАТЕГИИ -->
-                <div class="panel bg-surface border-primary shadow-default">
-                    <div class="panel-title text-light" data-i18n="rouletteSettingsTitle"></div>
-                    
-                    <!-- ТИП РУЛЕТКИ - С ФЛАГАМИ PNG -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="rouletteTypeLabel"></div>
-                        <div class="option-pills" id="rouletteTypePills">
-                            <button class="option-pill opponent-bg opponent-border text-opponent active opponent-active" data-type="european">
-                                <img src="images/flags/eu.png" alt="EU" class="roulette-flag"> <span data-i18n="rouletteEuropean"></span>
-                            </button>
-                            <button class="option-pill opponent-bg opponent-border text-opponent" data-type="american">
-                                <img src="images/flags/us.png" alt="US" class="roulette-flag"> <span data-i18n="rouletteAmerican"></span>
-                            </button>
-                        </div>
-                    </div>
+.zero-cell {
+    width: 60px;
+    height: 60px;
+    background: #2e7d32;  /* зеленое зеро */
+    color: #ffd700;        /* золотой текст */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid #ffd700;
+}
 
-                    <!-- НАЧАЛЬНЫЙ БАНК -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="bankrollLabel"></div>
-                        <div class="input-wrapper">
-                            <input type="number" id="startingBankroll" class="settings-input bg-elevated border-muted text-light" value="1000" min="1" step="1">
-                            <span class="input-suffix text-medium">$</span>
-                        </div>
-                    </div>
+/* Второй ноль скрыт по умолчанию */
+.double-zero {
+    display: none;
+}
 
-                    <!-- РАЗМЕР СТАВКИ -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="betSizeLabel"></div>
-                        <div class="input-wrapper">
-                            <input type="number" id="betAmount" class="settings-input bg-elevated border-muted text-light" value="10" min="1" step="1">
-                            <span class="input-suffix text-medium">$</span>
-                        </div>
-                    </div>
+/* При активной американской рулетке показываем 00 */
+body:has([data-type="american"].active) .double-zero {
+    display: flex;
+}
 
-                    <!-- СТРАТЕГИЯ -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="strategyLabel"></div>
-                        <select id="strategySelect" class="settings-select bg-elevated border-muted text-light">
-                            <option value="red" data-i18n="strategyRed"></option>
-                            <option value="black" data-i18n="strategyBlack"></option>
-                            <option value="even" data-i18n="strategyEven"></option>
-                            <option value="odd" data-i18n="strategyOdd"></option>
-                            <option value="low" data-i18n="strategyLow"></option>
-                            <option value="high" data-i18n="strategyHigh"></option>
-                            <option value="dozen1" data-i18n="strategyDozen1"></option>
-                            <option value="dozen2" data-i18n="strategyDozen2"></option>
-                            <option value="dozen3" data-i18n="strategyDozen3"></option>
-                            <option value="column1" data-i18n="strategyColumn1"></option>
-                            <option value="column2" data-i18n="strategyColumn2"></option>
-                            <option value="column3" data-i18n="strategyColumn3"></option>
-                        </select>
-                    </div>
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3px;
+    margin-bottom: 10px;
+}
 
-                    <!-- УСЛОВИЕ АКТИВАЦИИ -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="triggerLabel"></div>
-                        <div class="trigger-builder">
-                            <select id="triggerType" class="settings-select bg-elevated border-muted text-light" style="width: 40%;">
-                                <option value="missed" data-i18n="triggerMissed"></option>
-                                <option value="hit" data-i18n="triggerHit"></option>
-                            </select>
-                            <input type="number" id="triggerCount" class="settings-input bg-elevated border-muted text-light" value="3" min="1" max="10" step="1" style="width: 25%;">
-                            <span class="text-medium" data-i18n="triggerTimes"></span>
-                        </div>
-                        <div class="trigger-example text-muted" data-i18n="triggerExample"></div>
-                    </div>
+.number-cell {
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
 
-                    <!-- УСЛОВИЯ ОСТАНОВКИ -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="stopConditionsLabel"></div>
-                        
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="stopBankrupt" checked>
-                            <label for="stopBankrupt" class="text-medium" data-i18n="stopBankrupt"></label>
-                        </div>
-                        
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="stopTarget">
-                            <label for="stopTarget" class="text-medium" data-i18n="stopTarget"></label>
-                        </div>
-                        <div class="input-wrapper" style="margin-left: 25px; margin-top: 5px;">
-                            <input type="number" id="targetAmount" class="settings-input bg-elevated border-muted text-light" value="2000" min="1" step="1" disabled>
-                            <span class="input-suffix text-medium">$</span>
-                        </div>
-                        
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="stopSpins" checked>
-                            <label for="stopSpins" class="text-medium" data-i18n="stopSpins"></label>
-                        </div>
-                        <div class="input-wrapper" style="margin-left: 25px; margin-top: 5px;">
-                            <input type="number" id="maxSpins" class="settings-input bg-elevated border-muted text-light" value="100" min="1" step="1">
-                        </div>
-                    </div>
+/* Красные числа */
+.number-cell:nth-child(odd):not(:nth-child(11)):not(:nth-child(17)):not(:nth-child(29)) {
+    background: #e31b23;
+}
 
-                    <!-- КОЛИЧЕСТВО СЕССИЙ -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="sessionsLabel"></div>
-                        <div class="input-wrapper">
-                            <input type="number" id="sessionCount" class="settings-input bg-elevated border-muted text-light" value="500" min="1" max="10000" step="1">
-                        </div>
-                        <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
-                    </div>
+/* Черные числа (все четные + особые нечетные) */
+.number-cell:nth-child(even),
+.number-cell:nth-child(11),
+.number-cell:nth-child(17),
+.number-cell:nth-child(29) {
+    background: #0f0f0f;
+}
 
-                    <!-- КНОПКИ -->
-                    <div class="controls">
-                        <button class="btn btn-primary-bg btn-primary-text" id="simulateBtn">
-                            <i class="fas fa-cogs"></i> <span data-i18n="simulateBtn"></span>
-                        </button>
-                        <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="resetBtn">
-                            <i class="fas fa-undo-alt"></i> <span data-i18n="resetBtn"></span>
-                        </button>
-                    </div>
-                </div>
+/* Коррекция для 19 (нечетное, но красное) */
+.number-cell:nth-child(19) {
+    background: #e31b23 !important;
+}
 
-                <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
-                <div class="panel bg-surface border-primary shadow-default">
-                    <div class="panel-title text-light" data-i18n="rouletteResultsTitle"></div>
-                    
-                    <!-- ОСНОВНЫЕ ПОКАЗАТЕЛИ -->
-                    <div class="results-grid-compact">
-                        <div class="stat-card bg-elevated border-info">
-                            <div class="stat-label text-medium" data-i18n="winRateLabel"></div>
-                            <div class="stat-value text-info" id="winRate">0.0%</div>
-                        </div>
-                        <div class="stat-card bg-elevated border-success">
-                            <div class="stat-label text-medium" data-i18n="avgProfitLabel"></div>
-                            <div class="stat-value text-success" id="avgProfit">$0</div>
-                        </div>
-                        <div class="stat-card bg-elevated border-danger">
-                            <div class="stat-label text-medium" data-i18n="riskLabel"></div>
-                            <div class="stat-value text-danger" id="riskPercent">0.0%</div>
-                        </div>
-                    </div>
+.dozens {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
 
-                    <!-- ДЕТАЛЬНАЯ СТАТИСТИКА -->
-                    <div class="stats-detailed">
-                        <div class="stats-row">
-                            <span class="text-medium" data-i18n="sessionsSimulated"></span>
-                            <span class="text-light" id="sessionsSimulated">0</span>
-                        </div>
-                        <div class="stats-row">
-                            <span class="text-medium" data-i18n="successfulSessions"></span>
-                            <span class="text-light" id="successfulSessions">0</span>
-                        </div>
-                        <div class="stats-row">
-                            <span class="text-medium" data-i18n="bankruptSessions"></span>
-                            <span class="text-light" id="bankruptSessions">0</span>
-                        </div>
-                        <div class="stats-row">
-                            <span class="text-medium" data-i18n="avgSpins"></span>
-                            <span class="text-light" id="avgSpins">0</span>
-                        </div>
-                        <div class="stats-row">
-                            <span class="text-medium" data-i18n="maxProfit"></span>
-                            <span class="text-light text-success" id="maxProfit">$0</span>
-                        </div>
-                        <div class="stats-row">
-                            <span class="text-medium" data-i18n="maxLoss"></span>
-                            <span class="text-light text-danger" id="maxLoss">$0</span>
-                        </div>
-                    </div>
+.dozen-cell {
+    background: #1a472a;
+    color: #ffd700;
+    border: 2px solid #ffd700;
+    padding: 8px;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
 
-                    <!-- РАСПРЕДЕЛЕНИЕ РЕЗУЛЬТАТОВ -->
-                    <div class="chart-container" id="resultsChart">
-                        <div class="chart-placeholder bg-elevated border-muted">
-                            <span class="text-muted" data-i18n="chartPlaceholder"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== ФУТЕР ===== -->
-        <footer class="site-footer footer-bg border-primary">
-            <p class="footer-text" data-i18n="footerText"></p>
-        </footer>
-    </div>
-
-    <script src="js/language.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/roulette.js"></script>
-    <script src="js/theme-switcher.js"></script>
-</body>
-</html>
+.dozen-cell:hover {
+    background: #ffd700;
+    color: #1a472a;
+}
