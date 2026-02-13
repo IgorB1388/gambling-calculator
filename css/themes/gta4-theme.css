@@ -11,6 +11,7 @@
     --color-warning: #e67e22;      /* закат */
     --color-danger: #e74c3c;       /* стоп-сигнал */
     --color-highlight: #5d6d7e;    /* металлик */
+    --color-deck: #f1c40f;  /* желтый как такси */
     
     /* === ФОНЫ ПО РОЛИ - УМЕРЕННО ТЕМНЫЕ === */
     --bg-body: #1a2634;           /* темно-синий, но не черный */
@@ -49,6 +50,7 @@
     --border-muted: rgba(52, 152, 219, 0.3);
     --border-dark: rgba(0, 0, 0, 0.5);
     --border-dashed: rgba(52, 152, 219, 0.4);
+    --border-deck: #f1c40f;
 
     /* Переключатель тем для GTA 4 */
 --theme-switcher-bg: rgba(52, 152, 219, 0.2);
@@ -338,5 +340,6 @@ html, body {
         bottom: 15px;
     }
 }
+
 
 
