@@ -67,10 +67,10 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="rouletteTypeLabel"></div>
                         <div class="option-pills" id="rouletteTypePills">
-                            <button class="option-pill opponent-bg opponent-border text-opponent active" data-type="european">
+                            <button class="option-pill opponent-bg border-5 text-opponent active" data-type="european">
                                 <img src="images/flags/eu.png" alt="EU" class="roulette-flag"> <span data-i18n="rouletteEuropean"></span>
                             </button>
-                            <button class="option-pill opponent-bg opponent-border text-opponent" data-type="american">
+                            <button class="option-pill opponent-bg border-5 text-opponent" data-type="american">
                                 <img src="images/flags/us.png" alt="US" class="roulette-flag"> <span data-i18n="rouletteAmerican"></span>
                             </button>
                         </div>
@@ -169,22 +169,22 @@
                     
                     <!-- ОСНОВНЫЕ ПОКАЗАТЕЛИ -->
                     <div class="results-grid-compact">
-                        <div class="stat-card bg-elevated border-info">
+                        <div class="stat-card bg-elevated border-5">
                             <div class="stat-label text-medium" data-i18n="winRateLabel"></div>
-                            <div class="stat-value text-info" id="winRate">0.0%</div>
+                            <div class="stat-value text-5" id="winRate">0.0%</div>
                         </div>
-                        <div class="stat-card bg-elevated border-success">
+                        <div class="stat-card bg-elevated border-4">
                             <div class="stat-label text-medium" data-i18n="avgProfitLabel"></div>
-                            <div class="stat-value text-success" id="avgProfit">$0</div>
+                            <div class="stat-value text-4" id="avgProfit">$0</div>
                         </div>
-                        <div class="stat-card bg-elevated border-danger">
+                        <div class="stat-card bg-elevated border-6">
                             <div class="stat-label text-medium" data-i18n="riskLabel"></div>
-                            <div class="stat-value text-danger" id="riskPercent">0.0%</div>
+                            <div class="stat-value text-6" id="riskPercent">0.0%</div>
                         </div>
                     </div>
 
                     <!-- ДЕТАЛЬНАЯ СТАТИСТИКА -->
-                    <div class="stats-detailed">
+                    <div class="stats-detailed border-1">
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="sessionsSimulated"></span>
                             <span class="text-light" id="sessionsSimulated">0</span>
@@ -203,16 +203,16 @@
                         </div>
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="maxProfit"></span>
-                            <span class="text-light text-success" id="maxProfit">$0</span>
+                            <span class="text-light text-4" id="maxProfit">$0</span>
                         </div>
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="maxLoss"></span>
-                            <span class="text-light text-danger" id="maxLoss">$0</span>
+                            <span class="text-light text-6" id="maxLoss">$0</span>
                         </div>
                     </div>
 
                     <!-- РАСПРЕДЕЛЕНИЕ РЕЗУЛЬТАТОВ -->
-                    <div class="chart-container" id="resultsChart">
+                    <div class="chart-container border-1" id="resultsChart">
                         <div class="chart-placeholder bg-elevated border-muted">
                             <span class="text-muted" data-i18n="chartPlaceholder"></span>
                         </div>
