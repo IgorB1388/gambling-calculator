@@ -55,7 +55,7 @@
             <!-- ЗАГОЛОВОК -->
             <div class="roulette-header bg-surface border-secondary shadow-default">
                 <h1 class="text-gradient" data-i18n="rouletteTitle"></h1>
-                <p class="subtitle text-medium" data-i18n="rouletteSubtitle"></p>
+                <!-- УДАЛЕН subtitle -->
             </div>
 
             <div class="analyzer-main-area">
@@ -97,7 +97,7 @@
                     <!-- СТРАТЕГИЯ (пустой, JS заполнит) -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="strategyLabel"></div>
-                        <select id="strategySelect" class="settings-select">
+                        <select id="strategySelect" class="settings-select bg-surface border-muted text-light">
                             <!-- JS заполнит -->
                         </select>
                     </div>
@@ -106,7 +106,7 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="triggerLabel"></div>
                         <div class="trigger-builder">
-                            <select id="triggerType" class="settings-select" style="width: 40%;">
+                            <select id="triggerType" class="settings-select bg-surface border-muted text-light" style="width: 40%;">
                                 <option value="missed" data-i18n="triggerMissed"></option>
                                 <option value="hit" data-i18n="triggerHit"></option>
                             </select>
