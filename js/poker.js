@@ -570,7 +570,7 @@ function resetResults(){
     }
 }
 
-// --- Расчёт эквити ---
+// --- Полностью рабочий расчет эквити ---
 async function calculateEquity() {
     if (isCalculating) return;
 
@@ -588,10 +588,7 @@ async function calculateEquity() {
     document.getElementById('calculateBtn').disabled = true;
 
     const SIMULATIONS = 30000;
-    let heroTotal = 0;
-    let oppTotal = 0;
-    let tieHands = 0;
-    let actualRuns = 0;
+    let heroTotal = 0, oppTotal = 0, tieHands = 0, actualRuns = 0;
 
     const suits = ['s','h','c','d'];
     const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -600,75 +597,70 @@ async function calculateEquity() {
     const fullDeck = [];
     for (const v of values)
         for (const s of suits)
-            fullDeck.push({code:v+s, value:v, suitCode:s, rank:HandEvaluator.ranks[v]});
+            fullDeck.push({code:v+s, value:v, suit:s});
 
     const usedCardCodes = new Set(Array.from(usedCards));
     const neededBoardCards = 5 - boardCards.length;
     const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
 
     for (let i = 0; i < SIMULATIONS; i++) {
-
         let deck = fullDeck.filter(c => !usedCardCodes.has(c.code));
         if (deck.length < totalCardsNeeded) continue;
-
         actualRuns++;
 
-        // Перетасовка колоды
+        // тасуем
         for (let j = deck.length - 1; j > 0; j--) {
             const k = Math.floor(Math.random() * (j + 1));
             [deck[j], deck[k]] = [deck[k], deck[j]];
         }
 
-        // Собираем полный борд
+        // формируем борд
         const fullBoard = [...boardCards];
         for (let j = 0; j < neededBoardCards; j++)
             fullBoard.push(deck[j]);
 
         let index = neededBoardCards;
+        const heroHand = [...heroCards, ...fullBoard];
+        const heroScore = HandEvaluator.evaluateDetailed(heroHand); // ✅ должна возвращать {rank, mainCards, kickers}
 
-        // Симуляция рук оппонентов
-        let bestOpponentScore = -1;
+        let bestOpponentScore = null;
         let tyingOpponents = 0;
-        const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
 
         for (let o = 0; o < opponentsCount; o++) {
             const oppHand = [deck[index], deck[index + 1]];
             index += 2;
+            const oppScore = HandEvaluator.evaluateDetailed([...oppHand, ...fullBoard]);
 
-            const score = HandEvaluator.evaluate([...oppHand, ...fullBoard]);
-
-            if (score > bestOpponentScore) {
-                bestOpponentScore = score;
-                tyingOpponents = 1;
-            } else if (score === bestOpponentScore) {
-                tyingOpponents++;
+            const cmp = compareHands(heroScore, oppScore);
+            if (cmp < 0) {
+                // оппонент лучше
+                if (!bestOpponentScore || compareHands(oppScore, bestOpponentScore) > 0) {
+                    bestOpponentScore = oppScore;
+                    tyingOpponents = 1;
+                } else if (compareHands(oppScore, bestOpponentScore) === 0) {
+                    tyingOpponents++;
+                }
             }
         }
 
-        // Считаем результаты
-        if (heroScore > bestOpponentScore) {
-            heroTotal += 1;
-        } else if (heroScore < bestOpponentScore) {
-            oppTotal += 1;
-        } else {
-            tieHands += 1;
+        const cmpFinal = bestOpponentScore ? compareHands(heroScore, bestOpponentScore) : 1;
+
+        if (cmpFinal > 0) heroTotal++;
+        else if (cmpFinal < 0) oppTotal++;
+        else {
+            tieHands++;
             const split = 1 / (tyingOpponents + 1);
             heroTotal += split;
             oppTotal += tyingOpponents * split;
         }
     }
 
-    if (actualRuns === 0) {
-        isCalculating = false;
-        updateStatus();
-        return;
-    }
+    if (actualRuns === 0) { isCalculating = false; updateStatus(); return; }
 
     let heroPercent = (heroTotal / actualRuns) * 100;
     let oppPercent = (oppTotal / actualRuns) * 100;
     let tiePercent = (tieHands / actualRuns) * 100;
 
-    // 🔥 Нормализация, чтобы сумма была 100%
     let heroRounded = Math.round(heroPercent * 10) / 10;
     let oppRounded = Math.round(oppPercent * 10) / 10;
     let tieRounded = 100 - heroRounded - oppRounded;
@@ -683,6 +675,27 @@ async function calculateEquity() {
     updateStatus();
 }
 
+// Сравниваем две руки по правилам покера
+function compareHands(h1, h2) {
+    if (h1.rank > h2.rank) return 1;
+    if (h1.rank < h2.rank) return -1;
+
+    for (let i = 0; i < h1.mainCards.length; i++) {
+        const r1 = HandEvaluator.ranks[h1.mainCards[i]];
+        const r2 = HandEvaluator.ranks[h2.mainCards[i]];
+        if (r1 > r2) return 1;
+        if (r1 < r2) return -1;
+    }
+
+    for (let i = 0; i < h1.kickers.length; i++) {
+        const r1 = HandEvaluator.ranks[h1.kickers[i]];
+        const r2 = HandEvaluator.ranks[h2.kickers[i]];
+        if (r1 > r2) return 1;
+        if (r1 < r2) return -1;
+    }
+
+    return 0; // ничья
+}
 
 
 // --- Смена темы: пересоздаем колоду ---
@@ -698,6 +711,7 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
 
 
 
