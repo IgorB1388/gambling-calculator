@@ -81,7 +81,7 @@ const HandEvaluator = {
         const suitsCount = [0,0,0,0];
         cards.forEach(c=>suitsCount[c.suit]++);
         const idx = suitsCount.findIndex(c=>c>=5);
-        return idx===undefined?-1:idx;
+        return idx;
     },
 
     getRankOfCount(counts,count,exclude=-1){
@@ -685,28 +685,6 @@ async function calculateEquity() {
     updateStatus();
 }
 
-// Сравниваем две руки по правилам покера
-function compareHands(h1, h2) {
-    if (h1.rank > h2.rank) return 1;
-    if (h1.rank < h2.rank) return -1;
-
-    for (let i = 0; i < h1.mainCards.length; i++) {
-        const r1 = HandEvaluator.ranks[h1.mainCards[i]];
-        const r2 = HandEvaluator.ranks[h2.mainCards[i]];
-        if (r1 > r2) return 1;
-        if (r1 < r2) return -1;
-    }
-
-    for (let i = 0; i < h1.kickers.length; i++) {
-        const r1 = HandEvaluator.ranks[h1.kickers[i]];
-        const r2 = HandEvaluator.ranks[h2.kickers[i]];
-        if (r1 > r2) return 1;
-        if (r1 < r2) return -1;
-    }
-
-    return 0; // ничья
-}
-
 
 // --- Смена темы: пересоздаем колоду ---
 document.addEventListener('themeChanged', () => {
@@ -721,6 +699,7 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
 
 
 
