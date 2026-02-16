@@ -587,21 +587,32 @@ async function calculateEquity() {
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
 
-    const SIMULATIONS = 25000;
-    let heroTotal = 0, oppTotal = 0, tieHands = 0;
+    const SIMULATIONS = 30000;
+
+    let heroTotal = 0;
+    let oppTotal = 0;
+    let tieHands = 0;
+    let actualRuns = 0;
 
     const suits = ['s','h','c','d'];
     const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+
     const fullDeck = [];
-    for (const v of values) for (const s of suits) fullDeck.push({code:v+s, value:v, suitCode:s, rank:HandEvaluator.ranks[v]});
+    for (const v of values)
+        for (const s of suits)
+            fullDeck.push({code:v+s, value:v, suitCode:s, rank:HandEvaluator.ranks[v]});
+
     const usedCardCodes = new Set(Array.from(usedCards));
 
     const neededBoardCards = 5 - boardCards.length;
     const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
 
     for (let i = 0; i < SIMULATIONS; i++) {
+
         let deck = fullDeck.filter(c => !usedCardCodes.has(c.code));
         if (deck.length < totalCardsNeeded) continue;
+
+        actualRuns++;
 
         for (let j = deck.length - 1; j > 0; j--) {
             const k = Math.floor(Math.random() * (j + 1));
@@ -609,22 +620,22 @@ async function calculateEquity() {
         }
 
         const fullBoard = [...boardCards];
-        for (let j = 0; j < neededBoardCards; j++) fullBoard.push(deck[j]);
+        for (let j = 0; j < neededBoardCards; j++)
+            fullBoard.push(deck[j]);
 
-        let cardIndex = neededBoardCards;
-        const opponentHands = [];
-        for (let opp = 0; opp < opponentsCount; opp++) {
-            opponentHands.push([deck[cardIndex], deck[cardIndex + 1]]);
-            cardIndex += 2;
-        }
-
-        const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
+        let index = neededBoardCards;
 
         let bestOpponentScore = -1;
         let tyingOpponents = 0;
 
-        for (const hand of opponentHands) {
-            const score = HandEvaluator.evaluate([...hand, ...fullBoard]);
+        const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
+
+        for (let o = 0; o < opponentsCount; o++) {
+            const oppHand = [deck[index], deck[index + 1]];
+            index += 2;
+
+            const score = HandEvaluator.evaluate([...oppHand, ...fullBoard]);
+
             if (score > bestOpponentScore) {
                 bestOpponentScore = score;
                 tyingOpponents = 1;
@@ -639,43 +650,39 @@ async function calculateEquity() {
             oppTotal += 1;
         } else {
             tieHands += 1;
-            const totalPlayersInTie = tyingOpponents + 1;
-            heroTotal += 1 / totalPlayersInTie;
-            oppTotal += tyingOpponents / totalPlayersInTie;
+            const split = 1 / (tyingOpponents + 1);
+            heroTotal += split;
+            oppTotal += tyingOpponents * split;
         }
     }
 
-    const heroPercent = (heroTotal / SIMULATIONS) * 100;
-    const oppPercent = (oppTotal / SIMULATIONS) * 100;
-    const tiePercent = (tieHands / SIMULATIONS) * 100;
-
-    let heroRounded = Math.max(0, Math.round(heroPercent * 10) / 10);
-    let oppRounded = Math.max(0, Math.round(oppPercent * 10) / 10);
-    let tieRounded = Math.max(0, Math.round(tiePercent * 10) / 10);
-
-    let sum = heroRounded + oppRounded + tieRounded;
-    if (Math.abs(100 - sum) > 0.1) {
-        const factor = 100 / sum;
-        heroRounded = Math.round(heroRounded * factor * 10) / 10;
-        oppRounded = Math.round(oppRounded * factor * 10) / 10;
-        tieRounded = Math.round(tieRounded * factor * 10) / 10;
+    if (actualRuns === 0) {
+        isCalculating = false;
+        updateStatus();
+        return;
     }
+
+    let heroPercent = (heroTotal / actualRuns) * 100;
+    let oppPercent = (oppTotal / actualRuns) * 100;
+    let tiePercent = (tieHands / actualRuns) * 100;
+
+    // 🔥 ЖЕСТКАЯ НОРМАЛИЗАЦИЯ
+    let heroRounded = Math.round(heroPercent * 10) / 10;
+    let oppRounded = Math.round(oppPercent * 10) / 10;
+    let tieRounded = 100 - heroRounded - oppRounded;
+
+    // если из-за округления вышло -0.1
+    if (tieRounded < 0) tieRounded = 0;
 
     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
     document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
     document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
 
-    const resultsPanel = document.querySelector('.results-panel');
-    resultsPanel.classList.remove('fresh-result');
-    void resultsPanel.offsetWidth;
-    resultsPanel.classList.add('fresh-result');
-    
     hasCalculatedResults = true;
-    setTimeout(() => resultsPanel.classList.remove('fresh-result'), 300);
-
     isCalculating = false;
     updateStatus();
 }
+
 
 // --- Смена темы: пересоздаем колоду ---
 document.addEventListener('themeChanged', () => {
@@ -690,3 +697,4 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
