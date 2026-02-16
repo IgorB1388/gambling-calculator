@@ -1,144 +1,154 @@
+// --- HandEvaluator ---
 const HandEvaluator = {
     ranks: { '2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'10':8,'J':9,'Q':10,'K':11,'A':12 },
     suits: { 's':0,'h':1,'c':2,'d':3 },
-    
-    evaluate(cards) {
-        if (cards.length < 5) return 0;
-        
-        const formatted = cards.map(c => ({
-            rank: this.ranks[c.value],
-            suit: this.suits[c.suitCode],
-            originalRank: this.ranks[c.value]
-        })).sort((a,b) => b.rank - a.rank);
-        
-        const flush = this.hasFlush(formatted);
-        const straight = this.hasStraight(formatted);
-        
-        if (flush && straight) {
-            const straightValue = this.getStraightValue(formatted);
-            const isRoyal = straightValue === 12 && formatted.some(c => c.rank === 12);
-            return isRoyal ? 9 << 20 : (8 << 20) + (straightValue << 16);
+
+    evaluateDetailed(cards){
+        if(cards.length<5) return {rank:0,mainCards:[],kickers:[]};
+
+        const formatted = cards.map(c=>({
+            rank:this.ranks[c.value],
+            suit:this.suits[c.suitCode],
+            originalValue:c.value
+        })).sort((a,b)=>b.rank-a.rank);
+
+        const counts = {};
+        formatted.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
+
+        const flushSuit = this.getFlushSuit(formatted);
+        const straightHigh = this.getStraightValue(formatted);
+
+        if(flushSuit!==-1 && straightHigh!==-1){
+            // Стрит-флеш
+            const mainCards = this.getStraightFlushCards(formatted,flushSuit);
+            const isRoyal = mainCards.some(c=>c.rank===12);
+            return {rank:isRoyal?9:8, mainCards:mainCards.map(c=>c.originalValue), kickers:[]};
         }
-        
-        const counts = this.getRankCounts(formatted);
-        const values = Object.values(counts).sort((a,b) => b-a);
-        
-        if (values[0] === 4) {
-            const quadsRank = this.getRankOfCount(counts,4);
-            const kicker = this.getKickers(formatted,[quadsRank],1)[0];
-            return (7 << 20) + (quadsRank << 16) + (kicker << 12);
+
+        // Четвёрки
+        if(Object.values(counts).includes(4)){
+            const quadRank = this.getRankOfCount(counts,4);
+            const kicker = this.getKickersByRanks(formatted,[quadRank],1);
+            return {rank:7, mainCards:[this.rankToValue(quadRank)], kickers:kicker.map(r=>this.rankToValue(r))};
         }
-        
-        if (values[0] === 3 && values[1] >= 2) {
-            const tripsRank = this.getRankOfCount(counts,3);
-            const pairRank = this.getRankOfCount(counts,2,tripsRank);
-            return (6 << 20) + (tripsRank << 16) + (pairRank << 12);
+
+        // Фулл-хаус
+        if(Object.values(counts).includes(3) && Object.values(counts).filter(v=>v>=2).length>1){
+            const trips = this.getRankOfCount(counts,3);
+            const pair = this.getRankOfCount(counts,2,trips);
+            return {rank:6, mainCards:[this.rankToValue(trips),this.rankToValue(pair)], kickers:[]};
         }
-        
-        if (flush) {
-            const flushCards = this.getFlushCards(formatted);
-            return (5 << 20) + this.getHandValue(flushCards.slice(0,5));
+
+        // Флеш
+        if(flushSuit!==-1){
+            const flushCards = formatted.filter(c=>c.suit===flushSuit).slice(0,5);
+            return {rank:5, mainCards:flushCards.map(c=>c.originalValue), kickers:[]};
         }
-        
-        if (straight) {
-            const straightValue = this.getStraightValue(formatted);
-            return (4 << 20) + (straightValue << 16);
+
+        // Стрит
+        if(straightHigh!==-1){
+            const mainCards = this.getStraightCards(formatted,straightHigh);
+            return {rank:4, mainCards:mainCards.map(c=>c.originalValue), kickers:[]};
         }
-        
-        if (values[0] === 3) {
-            const tripsRank = this.getRankOfCount(counts,3);
-            const kickers = this.getKickers(formatted,[tripsRank],2);
-            return (3 << 20) + (tripsRank << 16) + (kickers[0] << 12) + (kickers[1] << 8);
+
+        // Тройка
+        if(Object.values(counts).includes(3)){
+            const trips = this.getRankOfCount(counts,3);
+            const kickers = this.getKickersByRanks(formatted,[trips],2);
+            return {rank:3, mainCards:[this.rankToValue(trips)], kickers:kickers.map(r=>this.rankToValue(r))};
         }
-        
-        if (values[0] === 2 && values[1] === 2) {
-            const pairs = this.getRanksOfCount(counts,2).sort((a,b) => b-a);
-            const kicker = this.getKickers(formatted,pairs,1)[0];
-            return (2 << 20) + (pairs[0] << 16) + (pairs[1] << 12) + (kicker << 8);
+
+        // Две пары
+        if(Object.values(counts).filter(v=>v===2).length>=2){
+            const pairs = this.getRanksOfCount(counts,2).sort((a,b)=>b-a).slice(0,2);
+            const kicker = this.getKickersByRanks(formatted,pairs,1);
+            return {rank:2, mainCards:pairs.map(r=>this.rankToValue(r)), kickers:kicker.map(r=>this.rankToValue(r))};
         }
-        
-        if (values[0] === 2) {
-            const pairRank = this.getRankOfCount(counts,2);
-            const kickers = this.getKickers(formatted,[pairRank],3);
-            return (1 << 20) + (pairRank << 16) + (kickers[0] << 12) + (kickers[1] << 8) + (kickers[2] << 4);
+
+        // Пара
+        if(Object.values(counts).includes(2)){
+            const pair = this.getRankOfCount(counts,2);
+            const kickers = this.getKickersByRanks(formatted,[pair],3);
+            return {rank:1, mainCards:[this.rankToValue(pair)], kickers:kickers.map(r=>this.rankToValue(r))};
         }
-        
-        return this.getHandValue(formatted.slice(0,5));
+
+        // Старшая карта
+        const topCards = formatted.slice(0,5);
+        return {rank:0, mainCards:topCards.map(c=>c.originalValue), kickers:[]};
     },
-    
-    hasFlush(cards) {
-        if (cards.length < 5) return false;
-        const suitCounts = [0,0,0,0];
-        cards.forEach(c => suitCounts[c.suit]++);
-        return suitCounts.some(count => count >= 5);
+
+    getFlushSuit(cards){
+        const suitsCount = [0,0,0,0];
+        cards.forEach(c=>suitsCount[c.suit]++);
+        const idx = suitsCount.findIndex(c=>c>=5);
+        return idx===undefined?-1:idx;
     },
-    
-    hasStraight(cards) {
-        if (cards.length < 5) return false;
-        const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b) => b-a);
-        for (let i=0; i<=uniqueRanks.length-5; i++) {
-            if (uniqueRanks[i] - uniqueRanks[i+4] === 4) return true;
+
+    getRankOfCount(counts,count,exclude=-1){
+        for(const [r,c] of Object.entries(counts)){
+            if(c===count && parseInt(r)!==exclude) return parseInt(r);
         }
-        const ranksWithWheel = uniqueRanks.map(r => r === 12 ? -1 : r).sort((a,b) => b-a);
-        const wheelRanks = [-1,0,1,2,3];
-        for (let i=0;i<=ranksWithWheel.length-5;i++){
-            const slice=ranksWithWheel.slice(i,i+5);
-            if(slice[0]-slice[4]===4 && wheelRanks.every(r=>slice.includes(r))) return true;
-        }
-        return false;
+        return -1;
     },
-    
-    getStraightValue(cards) {
-        const uniqueRanks = [...new Set(cards.map(c => c.rank))].sort((a,b)=>b-a);
+
+    getRanksOfCount(counts,count){
+        return Object.entries(counts).filter(([r,c])=>c===count).map(([r])=>parseInt(r));
+    },
+
+    getKickersByRanks(cards,excludeRanks,count){
+        return cards.filter(c=>!excludeRanks.includes(c.rank)).map(c=>c.rank).slice(0,count);
+    },
+
+    getStraightValue(cards){
+        const uniqueRanks=[...new Set(cards.map(c=>c.rank))].sort((a,b)=>b-a);
         for(let i=0;i<=uniqueRanks.length-5;i++){
             if(uniqueRanks[i]-uniqueRanks[i+4]===4) return uniqueRanks[i];
         }
-        const ranksWithWheel=uniqueRanks.map(r=>r===12?-1:r).sort((a,b)=>b-a);
-        const wheelRanks=[-1,0,1,2,3];
-        for(let i=0;i<=ranksWithWheel.length-5;i++){
-            const slice=ranksWithWheel.slice(i,i+5);
-            if(slice[0]-slice[4]===4 && wheelRanks.every(r=>slice.includes(r))) return 3;
-        }
+        // wheel
+        if(uniqueRanks.includes(12)&&uniqueRanks.includes(0)&&uniqueRanks.includes(1)&&uniqueRanks.includes(2)&&uniqueRanks.includes(3)) return 3;
         return -1;
     },
-    
-    getRankCounts(cards){
-        const counts={};
-        cards.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
-        return counts;
-    },
-    
-    getRankOfCount(counts,targetCount,exclude=-1){
-        for(const [rank,count] of Object.entries(counts)){
-            const rankNum=parseInt(rank);
-            if(count===targetCount && rankNum!==exclude) return rankNum;
+
+    getStraightCards(cards,high){
+        const ranks=[high,high-1,high-2,high-3,high-4].map(r=>r<0?12:r);
+        const result=[];
+        for(const r of ranks){
+            const c = cards.find(c=>c.rank===r && !result.includes(c));
+            if(c) result.push(c);
         }
-        return -1;
+        return result;
     },
-    
-    getRanksOfCount(counts,targetCount){
-        return Object.entries(counts)
-            .filter(([,count])=>count===targetCount)
-            .map(([rank])=>parseInt(rank));
+
+    getStraightFlushCards(cards,suit){
+        const suitCards = cards.filter(c=>c.suit===suit);
+        const high = this.getStraightValue(suitCards);
+        return this.getStraightCards(suitCards,high);
     },
-    
-    getKickers(cards,excludeRanks,count){
-        const kickers=cards.filter(c=>!excludeRanks.includes(c.rank)).map(c=>c.rank).sort((a,b)=>b-a).slice(0,count);
-        while(kickers.length<count) kickers.push(0);
-        return kickers;
-    },
-    
-    getFlushCards(cards){
-        const suitCounts=[0,0,0,0];
-        cards.forEach(c=>suitCounts[c.suit]++);
-        const flushSuit=suitCounts.findIndex(c=>c>=5);
-        return cards.filter(c=>c.suit===flushSuit).sort((a,b)=>b.rank-a.rank).slice(0,5);
-    },
-    
-    getHandValue(cards){
-        return cards.reduce((v,c,i)=>v+(c.rank<<(4*(4-i))),0);
+
+    rankToValue(rank){
+        return Object.keys(this.ranks).find(k=>this.ranks[k]===rank);
     }
 };
+
+// --- Сравнение рук ---
+function compareHands(h1,h2){
+    if(h1.rank>h2.rank) return 1;
+    if(h1.rank<h2.rank) return -1;
+    for(let i=0;i<h1.mainCards.length;i++){
+        const r1=HandEvaluator.ranks[h1.mainCards[i]];
+        const r2=HandEvaluator.ranks[h2.mainCards[i]];
+        if(r1>r2) return 1;
+        if(r1<r2) return -1;
+    }
+    for(let i=0;i<h1.kickers.length;i++){
+        const r1=HandEvaluator.ranks[h1.kickers[i]];
+        const r2=HandEvaluator.ranks[h2.kickers[i]];
+        if(r1>r2) return 1;
+        if(r1<r2) return -1;
+    }
+    return 0;
+}
+
 
 // --- Переменные состояния ---
 let activeBlock='hand';
@@ -711,6 +721,7 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
 
 
 
