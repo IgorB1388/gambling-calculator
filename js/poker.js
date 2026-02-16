@@ -584,6 +584,19 @@ async function calculateEquity() {
 
     if (!checkHandValidity() || !checkBoardValidity()) return;
 
+    const heroScore = HandEvaluator.evaluate([...heroCards, ...boardCards]);
+const boardScore = HandEvaluator.evaluate(boardCards);
+
+// Если борд сам делает лучшую комбинацию
+if (boardScore >= heroScore) {
+    document.getElementById('resultHero').textContent = '0%';
+    document.getElementById('resultOpponent').textContent = '0%';
+    document.getElementById('resultTie').textContent = '100%';
+    isCalculating = false;
+    updateStatus();
+    return;
+}
+
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
 
@@ -697,4 +710,5 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
 
