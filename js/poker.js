@@ -584,24 +584,10 @@ async function calculateEquity() {
 
     if (!checkHandValidity() || !checkBoardValidity()) return;
 
-    const heroScore = HandEvaluator.evaluate([...heroCards, ...boardCards]);
-const boardScore = HandEvaluator.evaluate(boardCards);
-
-// Если борд сам делает лучшую комбинацию
-if (boardScore >= heroScore) {
-    document.getElementById('resultHero').textContent = '0%';
-    document.getElementById('resultOpponent').textContent = '0%';
-    document.getElementById('resultTie').textContent = '100%';
-    isCalculating = false;
-    updateStatus();
-    return;
-}
-
     isCalculating = true;
     document.getElementById('calculateBtn').disabled = true;
 
     const SIMULATIONS = 30000;
-
     let heroTotal = 0;
     let oppTotal = 0;
     let tieHands = 0;
@@ -610,13 +596,13 @@ if (boardScore >= heroScore) {
     const suits = ['s','h','c','d'];
     const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
 
+    // Полная колода
     const fullDeck = [];
     for (const v of values)
         for (const s of suits)
             fullDeck.push({code:v+s, value:v, suitCode:s, rank:HandEvaluator.ranks[v]});
 
     const usedCardCodes = new Set(Array.from(usedCards));
-
     const neededBoardCards = 5 - boardCards.length;
     const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
 
@@ -627,20 +613,22 @@ if (boardScore >= heroScore) {
 
         actualRuns++;
 
+        // Перетасовка колоды
         for (let j = deck.length - 1; j > 0; j--) {
             const k = Math.floor(Math.random() * (j + 1));
             [deck[j], deck[k]] = [deck[k], deck[j]];
         }
 
+        // Собираем полный борд
         const fullBoard = [...boardCards];
         for (let j = 0; j < neededBoardCards; j++)
             fullBoard.push(deck[j]);
 
         let index = neededBoardCards;
 
+        // Симуляция рук оппонентов
         let bestOpponentScore = -1;
         let tyingOpponents = 0;
-
         const heroScore = HandEvaluator.evaluate([...heroCards, ...fullBoard]);
 
         for (let o = 0; o < opponentsCount; o++) {
@@ -657,6 +645,7 @@ if (boardScore >= heroScore) {
             }
         }
 
+        // Считаем результаты
         if (heroScore > bestOpponentScore) {
             heroTotal += 1;
         } else if (heroScore < bestOpponentScore) {
@@ -679,12 +668,10 @@ if (boardScore >= heroScore) {
     let oppPercent = (oppTotal / actualRuns) * 100;
     let tiePercent = (tieHands / actualRuns) * 100;
 
-    // 🔥 ЖЕСТКАЯ НОРМАЛИЗАЦИЯ
+    // 🔥 Нормализация, чтобы сумма была 100%
     let heroRounded = Math.round(heroPercent * 10) / 10;
     let oppRounded = Math.round(oppPercent * 10) / 10;
     let tieRounded = 100 - heroRounded - oppRounded;
-
-    // если из-за округления вышло -0.1
     if (tieRounded < 0) tieRounded = 0;
 
     document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
@@ -695,6 +682,7 @@ if (boardScore >= heroScore) {
     isCalculating = false;
     updateStatus();
 }
+
 
 
 // --- Смена темы: пересоздаем колоду ---
@@ -710,5 +698,6 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
 
 
