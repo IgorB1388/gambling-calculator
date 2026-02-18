@@ -47,6 +47,13 @@
     height: fit-content;
 }
 
+/* Левая панель с блоками руки и борда */
+.panel:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 /* ЗАГОЛОВКИ ПАНЕЛЕЙ */
 .panel-title {
     font-size: 1.3rem;
@@ -80,20 +87,17 @@
     border-bottom-color: var(--color-success);
 }
 
-/* СЕКЦИИ РУКИ И БОРДА */
-.hand-section, .board-section {
+/* СЕКЦИИ РУКИ И БОРДА - ФИКСИРОВАННАЯ ВЫСОТА */
+.hand-section, 
+.board-section {
     border-radius: 12px;
     padding: 20px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
     border-width: 2px;
     border-style: solid;
     position: relative;
-    min-height: 200px;
     display: flex;
     flex-direction: column;
-    flex: 1;
+    height: 280px; /* Фиксированная высота, как у блока настроек + колоды */
 }
 
 .hand-section {
@@ -116,6 +120,7 @@
     position: relative;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 0.5px;
+    flex-shrink: 0;
 }
 
 .hand-section .section-title {
@@ -126,24 +131,27 @@
     color: var(--color-secondary);
 }
 
-/* ПОДСКАЗКИ (2 карты, 5 карт) */
+/* ПОДСКАЗКИ (2 карты, 5 карт) - фиксированная высота */
 .hand-subtitle,
 .board-subtitle {
     font-size: 0.9rem;
     color: var(--text-secondary);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     line-height: 1.4;
     font-family: 'Open Sans', sans-serif;
     opacity: 0.9;
+    height: 20px; /* Фиксированная высота */
+    flex-shrink: 0;
 }
 
+/* Контент с картами - занимает оставшееся место */
 .section-content {
-    flex-grow: 1;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
-    min-height: 140px;
+    min-height: 0; /* Важно для flexbox */
 }
 
 .cards-row {
@@ -151,10 +159,8 @@
     gap: 15px;
     align-items: center;
     justify-content: center;
-    min-height: 120px;
-    margin: 0;
-    position: relative;
     flex-wrap: wrap;
+    margin: 0;
 }
 
 .card-slot {
@@ -170,33 +176,32 @@
     position: relative;
     transition: all 0.3s;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 .card-slot.drag-over {
     transform: scale(1.05);
 }
 
-/* ПРЕДУПРЕЖДЕНИЯ */
+/* ПРЕДУПРЕЖДЕНИЯ - фиксированное место внизу */
 .warning {
     font-size: 0.85rem;
     text-align: center;
-    display: none;
-    position: relative;
-    margin-top: 10px;
     padding: 5px;
     border-radius: 5px;
     background: rgba(255, 107, 74, 0.1);
     color: var(--color-warning);
     width: 100%;
-    bottom: auto;
-    left: auto;
-    right: auto;
+    height: 30px; /* Фиксированная высота для предупреждений */
+    line-height: 20px;
+    flex-shrink: 0;
+    margin-top: 5px;
+    display: none;
 }
 
 .hand-section .warning,
 .board-section .warning {
     display: block;
-    margin-top: 15px;
 }
 
 /* РЕАЛЬНЫЕ КАРТЫ */
@@ -214,6 +219,7 @@
     align-items: center;
     justify-content: center;
     background: white;
+    flex-shrink: 0;
 }
 
 .real-card:hover {
@@ -234,15 +240,18 @@
     line-height: 1.2;
 }
 
-/* БЛОК ОППОНЕНТОВ */
+/* БЛОК ОППОНЕНТОВ - фиксированная высота */
 .opponents-control {
     padding: 20px;
     border-radius: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     border-width: 2px;
     border-style: solid;
     border-color: var(--color-secondary) !important;
     background: rgba(255, 95, 210, 0.05);
+    height: 130px; /* Фиксированная высота */
+    display: flex;
+    flex-direction: column;
 }
 
 .opponents-label {
@@ -254,6 +263,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: 'Montserrat', sans-serif;
+    flex-shrink: 0;
 }
 
 .opponent-pills {
@@ -261,6 +271,8 @@
     justify-content: center;
     gap: 10px;
     flex-wrap: wrap;
+    flex: 1;
+    align-content: center;
 }
 
 .opponent-pill {
@@ -292,17 +304,19 @@
     color: white !important;
 }
 
-/* КОЛОДА */
+/* КОЛОДА - фиксированная высота */
 .deck-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
     gap: 6px;
-    margin: 20px 0;
+    margin: 0 0 20px 0;
     padding: 15px;
     border-radius: 12px;
     border-width: 2px;
     border-style: solid;
     border-color: var(--color-highlight);
+    height: 200px; /* Фиксированная высота */
+    overflow-y: auto; /* Скролл если много карт */
 }
 
 .deck-card {
@@ -371,13 +385,14 @@
     margin: 10px 0;
     font-family: 'Open Sans', sans-serif;
     font-style: italic;
+    height: 25px;
 }
 
 /* КНОПКИ */
 .controls {
     display: flex;
     gap: 15px;
-    margin-top: 25px;
+    margin-top: 10px;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -470,7 +485,6 @@
     justify-content: center;
     flex-grow: 1;
     font-family: 'Montserrat', sans-serif;
-    /* ГЛОУ УБРАН */
 }
 
 .result-card .text-primary,
@@ -541,9 +555,10 @@
         padding: 20px;
     }
     
-    .hand-section, .board-section {
+    .hand-section, 
+    .board-section {
         padding: 15px;
-        min-height: 180px;
+        height: 260px;
     }
     
     .cards-row {
@@ -565,10 +580,22 @@
         font-size: 2rem;
     }
     
+    .opponents-control {
+        height: 120px;
+        padding: 15px;
+    }
+    
+    .opponent-pill {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+    
     .deck-grid {
         grid-template-columns: repeat(7, 1fr);
         gap: 4px;
         padding: 10px;
+        height: 180px;
     }
     
     .btn {
@@ -591,6 +618,11 @@
         font-size: 1.8rem;
     }
     
+    .hand-section, 
+    .board-section {
+        height: 240px;
+    }
+    
     .card-slot {
         width: 55px;
         height: 80px;
@@ -606,6 +638,16 @@
         font-size: 1.6rem;
     }
     
+    .opponents-control {
+        height: 110px;
+    }
+    
+    .opponent-pill {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
     .btn {
         min-width: 130px;
         padding: 8px 15px;
@@ -614,16 +656,11 @@
     
     .deck-grid {
         grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .opponent-pill {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
+        height: 160px;
     }
 }
 
-/* Анимация результатов (минимальная) */
+/* Анимация результатов */
 @keyframes quick-flash {
     0% { border-color: var(--color-success); }
     50% { border-color: transparent; }
