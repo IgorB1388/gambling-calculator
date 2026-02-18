@@ -26,14 +26,6 @@
     --bg-surface-hover: rgba(255, 153, 0, 0.3);
     --bg-surface-active: rgba(255, 102, 0, 0.3);
 
-      /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
-    --border-1: #ff9900;      /* оранжевый */
-    --border-2: #ff6600;      /* темно-оранжевый */
-    --border-3: #8b4513;      /* коричневый */
-    --border-4: #228b22;      /* зеленый */
-    --border-5: #f4a460;      /* песочный */
-    --border-6: #d2b48c;      /* бежевый */
-    --border-7: #ff9900;      /* оранжевый (как primary) */
     
     /* === ТЕКСТ ПО РОЛИ === */
     --text-primary: #331a00;
@@ -53,6 +45,25 @@
     --border-dashed: rgba(139, 69, 19, 0.3);
     --border-nav: rgba(139, 69, 19, 0.3);
     --border-deck: #ff9900;
+
+        /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
+    --border-1: #00f0ff;
+    --border-2: #ff5fd2;
+    --border-3: #ffd966;
+    --border-4: #2effc7;
+    --border-5: #6aa8ff;
+    --border-6: #b36bff;
+    --border-7: #b36bff;
+
+
+    /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
+    --text-1: #00f0ff;
+    --text-2: #ff5fd2;
+    --text-3: #ffd966;
+    --text-4: #2effc7;
+    --text-5: #6aa8ff;
+    --text-6: #b36bff;
+    --text-7: #b36bff;
     
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(139, 69, 19, 0.2);
@@ -301,6 +312,7 @@ body::after {
         right: -5px;
     }
 }
+
 
 
 
