@@ -3,22 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Заголовок страницы подгружается из файлов локализации data-i18n -->
     <title data-i18n="siteTitle"></title>
+    
+    <!-- Подключение стилей -->
     <link rel="stylesheet" href="css/core/color-classes.css">
     <link rel="stylesheet" href="css/core/layout.css">
     <link rel="stylesheet" href="css/pages/roulette.css">
     <link rel="stylesheet" href="css/themes/base-theme.css" id="theme-style">
+    
+    <!-- Иконка сайта (favicon) - динамическая через SVG -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
+    
+    <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+<!-- Класс bg-body задает цвет фона из color-classes.css -->
 <body class="bg-body">
+    <!-- site-container - общий контейнер для всего контента (из layout.css) -->
     <div class="site-container">
-        <!-- ===== ШАПКА ===== -->
+        
+        <!-- ===== ШАПКА САЙТА ===== -->
         <header class="site-header bg-header border-primary shadow-default">
             <div class="header-content">
+                <!-- Логотип -->
                 <div class="logo">
                     <div class="logo-icon logo-gradient">
-                        <i class="fas fa-dice"></i>
+                        <i class="fas fa-dice"></i> <!-- Иконка кубиков для рулетки -->
                     </div>
                     <div class="logo-text">
                         <span class="logo-main logo-text-gradient">GTA CASINO</span>
@@ -26,6 +37,7 @@
                     </div>
                 </div>
                 
+                <!-- Навигационное меню -->
                 <nav class="main-nav">
                     <ul class="nav-list nav-bg border-primary">
                         <li><a href="index.html" class="nav-link nav-link-bg text-medium" data-i18n="navHome"><i class="fas fa-home"></i></a></li>
@@ -36,6 +48,7 @@
                     </ul>
                 </nav>
                 
+                <!-- Переключатель языков -->
                 <div class="language-switcher-header bg-surface border-accent">
                     <div class="lang-btn" data-lang="ru" title="Русский">
                         <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
@@ -52,131 +65,152 @@
 
         <!-- ===== АНАЛИЗАТОР РУЛЕТКИ ===== -->
         <div class="roulette-analyzer-container">
-            <!-- ЗАГОЛОВОК -->
+            
+            <!-- ЗАГОЛОВОК СТРАНИЦЫ -->
             <div class="roulette-header bg-surface border-secondary shadow-default">
                 <h1 class="text-gradient" data-i18n="rouletteTitle"></h1>
-                <!-- УДАЛЕН subtitle -->
+                <!-- subtitle удален -->
             </div>
 
+            <!-- Основная область с двумя колонками -->
             <div class="analyzer-main-area">
-                <!-- ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ СТРАТЕГИИ -->
+                
+                <!-- ===== ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ СТРАТЕГИИ ===== -->
                 <div class="panel bg-surface border-primary shadow-default">
+                    <!-- Заголовок панели настроек -->
                     <div class="panel-title text-light" data-i18n="rouletteSettingsTitle"></div>
                     
-                    <!-- ТИП РУЛЕТКИ - С ФЛАГАМИ PNG -->
+                    <!-- БЛОК ВЫБОРА ТИПА РУЛЕТКИ (с флагами PNG) -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="rouletteTypeLabel"></div>
                         <div class="option-pills" id="rouletteTypePills">
+                            <!-- Кнопка европейской рулетки (активная по умолчанию) -->
                             <button class="option-pill opponent-bg border-5 text-opponent active" data-type="european">
-                                <img src="images/flags/eu.png" alt="EU" class="roulette-flag"> <span data-i18n="rouletteEuropean"></span>
+                                <img src="images/flags/eu.png" alt="EU" class="roulette-flag"> <!-- Флаг ЕС -->
+                                <span data-i18n="rouletteEuropean"></span>
                             </button>
+                            <!-- Кнопка американской рулетки -->
                             <button class="option-pill opponent-bg border-5 text-opponent" data-type="american">
-                                <img src="images/flags/us.png" alt="US" class="roulette-flag"> <span data-i18n="rouletteAmerican"></span>
+                                <img src="images/flags/us.png" alt="US" class="roulette-flag"> <!-- Флаг США -->
+                                <span data-i18n="rouletteAmerican"></span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- НАЧАЛЬНЫЙ БАНК -->
+                    <!-- БЛОК ВВОДА НАЧАЛЬНОГО БАНКА -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="bankrollLabel"></div>
                         <div class="input-wrapper">
                             <input type="number" id="startingBankroll" class="settings-input bg-elevated border-muted text-light" value="1000" min="1" step="1">
-                            <span class="input-suffix text-medium">$</span>
+                            <span class="input-suffix text-medium">$</span> <!-- Валюта после поля -->
                         </div>
                     </div>
 
-                    <!-- РАЗМЕР СТАВКИ -->
+                    <!-- БЛОК ВВОДА РАЗМЕРА СТАВКИ -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="betSizeLabel"></div>
                         <div class="input-wrapper">
                             <input type="number" id="betAmount" class="settings-input bg-elevated border-muted text-light" value="10" min="1" step="1">
-                            <span class="input-suffix text-medium">$</span>
+                            <span class="input-suffix text-medium">$</span> <!-- Валюта после поля -->
                         </div>
                     </div>
 
-                    <!-- СТРАТЕГИЯ (пустой, JS заполнит) -->
+                    <!-- БЛОК ВЫБОРА СТРАТЕГИИ (заполняется через JS) -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="strategyLabel"></div>
                         <select id="strategySelect" class="settings-select bg-surface border-muted text-light">
-                            <!-- JS заполнит -->
+                            <!-- JS будет заполнять опции -->
                         </select>
                     </div>
 
-                    <!-- УСЛОВИЕ АКТИВАЦИИ -->
+                    <!-- БЛОК НАСТРОЙКИ УСЛОВИЯ АКТИВАЦИИ СТРАТЕГИИ -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="triggerLabel"></div>
                         <div class="trigger-builder">
+                            <!-- Тип условия: пропуск/выпадение -->
                             <select id="triggerType" class="settings-select bg-surface border-muted text-light" style="width: 40%;">
-                                <option value="missed" data-i18n="triggerMissed"></option>
-                                <option value="hit" data-i18n="triggerHit"></option>
+                                <option value="missed" data-i18n="triggerMissed"></option> <!-- Не выпало -->
+                                <option value="hit" data-i18n="triggerHit"></option> <!-- Выпало -->
                             </select>
+                            <!-- Количество раз -->
                             <input type="number" id="triggerCount" class="settings-input bg-elevated border-muted text-light" value="3" min="1" max="10" step="1" style="width: 25%;">
-                            <span class="text-medium" data-i18n="triggerTimes"></span>
+                            <span class="text-medium" data-i18n="triggerTimes"></span> <!-- "раз" -->
                         </div>
+                        <!-- Пример условия (подсказка) -->
                         <div class="trigger-example text-muted" data-i18n="triggerExample"></div>
                     </div>
 
-                    <!-- УСЛОВИЯ ОСТАНОВКИ -->
+                    <!-- БЛОК НАСТРОЙКИ УСЛОВИЙ ОСТАНОВКИ -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="stopConditionsLabel"></div>
                         
+                        <!-- Остановка при банкротстве -->
                         <div class="checkbox-item">
                             <input type="checkbox" id="stopBankrupt" checked>
                             <label for="stopBankrupt" class="text-medium" data-i18n="stopBankrupt"></label>
                         </div>
                         
+                        <!-- Остановка при достижении цели -->
                         <div class="checkbox-item">
                             <input type="checkbox" id="stopTarget">
                             <label for="stopTarget" class="text-medium" data-i18n="stopTarget"></label>
                         </div>
+                        <!-- Поле ввода целевой суммы (отключено пока чекбокс не активен) -->
                         <div class="input-wrapper" style="margin-left: 25px; margin-top: 5px;">
                             <input type="number" id="targetAmount" class="settings-input bg-elevated border-muted text-light" value="2000" min="1" step="1" disabled>
                             <span class="input-suffix text-medium">$</span>
                         </div>
                         
+                        <!-- Остановка по количеству спинов -->
                         <div class="checkbox-item">
                             <input type="checkbox" id="stopSpins" checked>
                             <label for="stopSpins" class="text-medium" data-i18n="stopSpins"></label>
                         </div>
+                        <!-- Поле ввода максимального количества спинов -->
                         <div class="input-wrapper" style="margin-left: 25px; margin-top: 5px;">
                             <input type="number" id="maxSpins" class="settings-input bg-elevated border-muted text-light" value="100" min="1" step="1">
                         </div>
                     </div>
 
-                    <!-- КОЛИЧЕСТВО СЕССИЙ -->
+                    <!-- БЛОК ВВОДА КОЛИЧЕСТВА СЕССИЙ ДЛЯ СИМУЛЯЦИИ -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="sessionsLabel"></div>
                         <div class="input-wrapper">
                             <input type="number" id="sessionCount" class="settings-input bg-elevated border-muted text-light" value="500" min="1" max="10000" step="1">
                         </div>
+                        <!-- Подсказка -->
                         <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
                     </div>
 
-                    <!-- КНОПКИ -->
+                    <!-- КНОПКИ УПРАВЛЕНИЯ -->
                     <div class="controls">
                         <button class="btn btn-primary-bg btn-primary-text" id="simulateBtn">
-                            <i class="fas fa-cogs"></i> <span data-i18n="simulateBtn"></span>
+                            <i class="fas fa-cogs"></i> <span data-i18n="simulateBtn"></span> <!-- Иконка шестеренок -->
                         </button>
                         <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="resetBtn">
-                            <i class="fas fa-undo-alt"></i> <span data-i18n="resetBtn"></span>
+                            <i class="fas fa-undo-alt"></i> <span data-i18n="resetBtn"></span> <!-- Иконка отмены -->
                         </button>
                     </div>
                 </div>
 
-                <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
+                <!-- ===== ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ ===== -->
                 <div class="panel bg-surface border-primary shadow-default">
+                    <!-- Заголовок панели результатов -->
                     <div class="panel-title text-light" data-i18n="rouletteResultsTitle"></div>
                     
-                    <!-- ОСНОВНЫЕ ПОКАЗАТЕЛИ -->
+                    <!-- ОСНОВНЫЕ ПОКАЗАТЕЛИ (компактная сетка) -->
                     <div class="results-grid-compact">
+                        <!-- Процент выигрышных сессий -->
                         <div class="stat-card bg-elevated border-5">
                             <div class="stat-label text-medium" data-i18n="winRateLabel"></div>
                             <div class="stat-value text-info" id="winRate">0.0%</div>
                         </div>
+                        <!-- Средняя прибыль -->
                         <div class="stat-card bg-elevated border-4">
                             <div class="stat-label text-medium" data-i18n="avgProfitLabel"></div>
                             <div class="stat-value text-success" id="avgProfit">$0</div>
                         </div>
+                        <!-- Риск банкротства -->
                         <div class="stat-card bg-elevated border-6">
                             <div class="stat-label text-medium" data-i18n="riskLabel"></div>
                             <div class="stat-value text-danger" id="riskPercent">0.0%</div>
@@ -185,34 +219,41 @@
 
                     <!-- ДЕТАЛЬНАЯ СТАТИСТИКА -->
                     <div class="stats-detailed border-1">
+                        <!-- Количество симулированных сессий -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="sessionsSimulated"></span>
                             <span class="text-light" id="sessionsSimulated">0</span>
                         </div>
+                        <!-- Успешные сессии -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="successfulSessions"></span>
                             <span class="text-light" id="successfulSessions">0</span>
                         </div>
+                        <!-- Сессии с банкротством -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="bankruptSessions"></span>
                             <span class="text-light" id="bankruptSessions">0</span>
                         </div>
+                        <!-- Среднее количество спинов -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="avgSpins"></span>
                             <span class="text-light" id="avgSpins">0</span>
                         </div>
+                        <!-- Максимальная прибыль -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="maxProfit"></span>
                             <span class="text-light text-success" id="maxProfit">$0</span>
                         </div>
+                        <!-- Максимальный убыток -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="maxLoss"></span>
                             <span class="text-light text-danger" id="maxLoss">$0</span>
                         </div>
                     </div>
 
-                    <!-- РАСПРЕДЕЛЕНИЕ РЕЗУЛЬТАТОВ -->
+                    <!-- КОНТЕЙНЕР ДЛЯ ГРАФИКА РАСПРЕДЕЛЕНИЯ РЕЗУЛЬТАТОВ -->
                     <div class="chart-container border-1" id="resultsChart">
+                        <!-- Заглушка графика (пока нет данных) -->
                         <div class="chart-placeholder bg-elevated border-muted">
                             <span class="text-muted" data-i18n="chartPlaceholder"></span>
                         </div>
@@ -227,10 +268,10 @@
         </footer>
     </div>
 
-    <script src="js/language.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/roulette.js"></script>
-    <script src="js/theme-switcher.js"></script>
+    <!-- Подключение скриптов -->
+    <script src="js/language.js"></script> <!-- Мультиязычность -->
+    <script src="js/main.js"></script> <!-- Основные функции -->
+    <script src="js/roulette.js"></script> <!-- Логика анализатора рулетки -->
+    <script src="js/theme-switcher.js"></script> <!-- Переключение тем -->
 </body>
 </html>
-
