@@ -52,7 +52,18 @@
     --border-5: #6aa8ff;
     --border-6: #b36bff;
     --border-7: #b36bff;
-    
+
+
+    /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
+    --text-1: #00f0ff;
+    --text-2: #ff5fd2;
+    --text-3: #ffd966;
+    --text-4: #2effc7;
+    --text-5: #6aa8ff;
+    --text-6: #b36bff;
+    --text-7: #b36bff;
+
+        
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -172,3 +183,4 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
+
