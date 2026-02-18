@@ -3,15 +3,15 @@
 
 :root {
     /* Эти переменные переопределяются в темах */
-    --color-primary: #00f0ff;
-    --color-secondary: #ff5fd2;
-    --color-accent: #ffd966;
-    --color-success: #2effc7;
-    --color-info: #6aa8ff;
-    --color-warning: #ff9966;
-    --color-danger: #ff3366;
-    --color-highlight: #b36bff;
-    --color-deck: #b36bff;        /* новый цвет для колоды */
+    --color-1: #00f0ff;
+    --color-2: #ff5fd2;
+    --color-3: #b36bff;
+    --color-4: #2effc7;
+    --color-5: #7d4eff;
+    --color-6: #ffaa33;
+    --color-7: #ff6b4a;
+    --color-8: #ff3366;
+    --color-9: #ccccff;
     
     --bg-body: #2a2f4a;
     --bg-surface: #353a55;
@@ -28,21 +28,19 @@
     --text-muted: rgba(255, 255, 255, 0.4);
     --text-slot: rgba(255, 255, 255, 0.4);
     
-    --border-primary: #00f0ff;
-    --border-secondary: #ff5fd2;
-    --border-accent: #ffd966;
-    --border-success: #2effc7;
-    --border-info: #6aa8ff;
-    --border-deck: #b36bff;        /* новый цвет для колоды */
+    --border-1: #00f0ff;
+    --border-2: #ff5fd2;
+    --border-3: #b36bff;
+    --border-4: #2effc7;
+    --border-5: #7d4eff;
+    --border-6: #ffaa33;
+    --border-7: #ff6b4a;
     --border-muted: rgba(255, 255, 255, 0.3);
     --border-dark: rgba(0, 0, 0, 0.2);
-    --border-dashed: rgba(255, 255, 255, 0.3);
     
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.5);
-    --glow-primary: 0 0 25px rgba(0, 240, 255, 0.4);
-    --glow-secondary: 0 0 25px rgba(255, 95, 210, 0.4);
 }
 
 /* === 🃏 СТАТИЧНЫЕ ЦВЕТА КАРТ - НЕ МЕНЯЮТСЯ ОТ ТЕМ! === */
@@ -56,33 +54,32 @@
 .deck-card-border { border-color: transparent !important; }
 .deck-card-shadow { box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important; }
 
-/* === ТЕКСТ === */
-.text-primary { color: var(--color-primary); }
-.text-secondary { color: var(--color-secondary); }
-.text-accent { color: var(--color-accent); }
-.text-success { color: var(--color-success); }
-.text-info { color: var(--color-info); }
-.text-warning { color: var(--color-warning); }
-.text-danger { color: var(--color-danger); }
-.text-highlight { color: var(--color-highlight); }
+/* === ТЕКСТ ПО НОМЕРАМ === */
+.text-1 { color: var(--color-1); }
+.text-2 { color: var(--color-2); }
+.text-3 { color: var(--color-3); }
+.text-4 { color: var(--color-4); }
+.text-5 { color: var(--color-5); }
+.text-6 { color: var(--color-6); }
+.text-7 { color: var(--color-7); }
+.text-8 { color: var(--color-8); }
+.text-9 { color: var(--color-9); }
+
 .text-light { color: var(--text-primary); }
 .text-medium { color: var(--text-secondary); }
 .text-dark { color: var(--text-inverse); }
 .text-muted { color: var(--text-muted); }
 .text-slot { color: var(--text-slot); }
-.text-win { color: var(--color-primary); }
-.text-opp { color: var(--color-secondary); }
-.text-tie { color: var(--color-info); }
 
 /* === ФОНЫ === */
-.bg-primary-solid { background: var(--color-primary); }
-.bg-secondary-solid { background: var(--color-secondary); }
-.bg-accent-solid { background: var(--color-accent); }
-.bg-success-solid { background: var(--color-success); }
-.bg-info-solid { background: var(--color-info); }
-.bg-warning-solid { background: var(--color-warning); }
-.bg-danger-solid { background: var(--color-danger); }
-.bg-highlight-solid { background: var(--color-highlight); }
+.bg-primary-solid { background: var(--color-1); }
+.bg-secondary-solid { background: var(--color-2); }
+.bg-accent-solid { background: var(--color-3); }
+.bg-success-solid { background: var(--color-4); }
+.bg-info-solid { background: var(--color-5); }
+.bg-warning-solid { background: var(--color-7); }
+.bg-danger-solid { background: var(--color-8); }
+.bg-highlight-solid { background: var(--color-3); }
 
 .bg-body { background: var(--bg-body); }
 .bg-surface { background: var(--bg-surface); }
@@ -93,67 +90,55 @@
 .bg-coming-soon { background: var(--bg-coming-soon); }
 .bg-nav { background: var(--bg-nav); }
 
-/* === ГРАДИЕНТЫ === */
-.gradient-primary { background: linear-gradient(45deg, var(--color-secondary), var(--color-highlight)); }
-.gradient-header { background: var(--bg-header); }
-.gradient-logo { background: linear-gradient(135deg, var(--color-primary), var(--color-highlight)); }
-.text-gradient { 
-    background: linear-gradient(45deg, var(--color-secondary), var(--color-primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* === ГРАНИЦЫ === */
-.border-primary { border-color: var(--border-primary); }
-.border-secondary { border-color: var(--border-secondary); }
-.border-accent { border-color: var(--border-accent); }
-.border-success { border-color: var(--border-success); }
-.border-info { border-color: var(--border-info); }
-.border-deck { border-color: var(--border-deck); }      /* новый класс для колоды */
-.border-muted { border-color: var(--border-muted); }
-.border-dark { border-color: var(--border-dark); }
-.border-dashed { border-color: var(--border-dashed); }
+/* === ГРАНИЦЫ ПО НОМЕРАМ === */
+.border-1 { border-color: var(--border-1) !important; }
+.border-2 { border-color: var(--border-2) !important; }
+.border-3 { border-color: var(--border-3) !important; }
+.border-4 { border-color: var(--border-4) !important; }
+.border-5 { border-color: var(--border-5) !important; }
+.border-6 { border-color: var(--border-6) !important; }
+.border-7 { border-color: var(--border-7) !important; }
+.border-muted { border-color: var(--border-muted) !important; }
+.border-dark { border-color: var(--border-dark) !important; }
 
 /* === ТЕНИ === */
 .shadow-sm { box-shadow: var(--shadow-sm); }
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-default { box-shadow: var(--shadow-md); }
-.glow-primary { box-shadow: var(--glow-primary); }
-.glow-secondary { box-shadow: var(--glow-secondary); }
 
 /* === КНОПКИ === */
-.btn-primary-bg { background: linear-gradient(45deg, var(--color-secondary), var(--color-highlight)); }
+.btn-primary-bg { background: linear-gradient(45deg, var(--color-2), var(--color-3)); }
 .btn-primary-text { color: var(--text-primary); }
 
 .btn-secondary-bg { background: rgba(0, 240, 255, 0.1); }
-.btn-secondary-text { color: var(--color-primary); }
-.btn-secondary-border { border-color: var(--color-primary); }
+.btn-secondary-text { color: var(--color-1); }
+.btn-secondary-border { border-color: var(--color-1); }
 .btn-secondary:hover {
-    background: var(--color-primary) !important;
+    background: var(--color-1) !important;
     color: var(--text-primary) !important;
 }
 
 /* 👥 КНОПКИ ОППОНЕНТОВ */
 .opponent-pill {
-    border-color: var(--color-info) !important;
-    background: rgba(106, 168, 255, 0.1) !important;
-    color: var(--color-info) !important;
+    border-color: var(--color-5) !important;
+    background: rgba(125, 78, 255, 0.1) !important;
+    color: var(--color-5) !important;
 }
 .opponent-pill:hover {
-    background: rgba(106, 168, 255, 0.3) !important;
+    background: rgba(125, 78, 255, 0.3) !important;
 }
 .opponent-pill.active {
-    background: var(--color-info) !important;
+    background: var(--color-5) !important;
     color: var(--text-primary) !important;
-    border-color: var(--color-info) !important;
-    box-shadow: 0 0 15px var(--color-info) !important;
+    border-color: var(--color-5) !important;
+    box-shadow: 0 0 15px var(--color-5) !important;
 }
 
 /* === ЛОГОТИП === */
-.logo-gradient { background: linear-gradient(135deg, var(--color-primary), var(--color-highlight)); }
+.logo-gradient { background: linear-gradient(135deg, var(--color-1), var(--color-3)); }
 .logo-text-gradient { 
-    background: linear-gradient(45deg, var(--color-success), var(--color-primary));
+    background: linear-gradient(45deg, var(--color-4), var(--color-1));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -162,8 +147,8 @@
 .nav-bg { background: var(--bg-nav); }
 .nav-link-bg { background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1)); }
 .nav-link-active {
-    background: linear-gradient(145deg, var(--color-primary), var(--color-highlight)) !important;
-    border-color: var(--color-success) !important;
+    background: linear-gradient(145deg, var(--color-1), var(--color-3)) !important;
+    border-color: var(--color-4) !important;
     color: var(--text-primary) !important;
 }
 
@@ -190,89 +175,21 @@
     box-shadow: 0 0 15px var(--theme-btn-active-glow);
 }
 
-/* === КАРТОЧКИ === */
-.card-bg { background: var(--bg-surface); }
-.card-border { border-color: var(--color-primary); }
-.card-icon-border { border-color: var(--color-primary); }
-.card-icon-color { color: var(--color-primary); }
-
 /* === FAQ === */
-.faq-border { border-color: var(--color-success); }
+.faq-border { border-color: var(--color-4); }
 .faq-item-border { border-bottom-color: rgba(46, 255, 199, 0.2); }
-.faq-question { color: var(--color-success); }
+.faq-question { color: var(--color-4); }
 .faq-answer { color: var(--text-secondary); }
 
 /* === ФУТЕР === */
 .footer-bg { background: var(--bg-surface); }
-.footer-border { border-top-color: var(--color-primary); }
+.footer-border { border-top-color: var(--color-1); }
 .footer-text { color: var(--text-secondary); }
 
-/* === 🎴 ПОКЕР-СПЕЦИФИЧЕСКИЕ === */
-.hand-border { border-color: var(--color-primary); }
-.board-border { border-color: var(--color-secondary); }
-.hand-title { color: var(--color-primary); }
-.board-title { color: var(--color-secondary); }
-
-/* СЛОТЫ КАРТ */
-.slot-bg { background: rgba(255, 255, 255, 0.08); }
-.slot-border { border-color: var(--border-muted); }
-
-/* КНОПКИ ОППОНЕНТОВ */
-.opponent-border { border-color: var(--color-info); }
-.opponent-bg { background: rgba(106, 168, 255, 0.1); }
-.opponent-text { color: var(--color-info); }
-
-/* === УНИВЕРСАЛЬНЫЕ КЛАССЫ ДЛЯ ГРАНИЦ === */
-.border-1 { border-color: var(--border-1) !important; }
-.border-2 { border-color: var(--border-2) !important; }
-.border-3 { border-color: var(--border-3) !important; }
-.border-4 { border-color: var(--border-4) !important; }
-.border-5 { border-color: var(--border-5) !important; }
-.border-6 { border-color: var(--border-6) !important; }
-.border-7 { border-color: var(--border-7) !important; }
-
-/* РЕЗУЛЬТАТЫ */
-.result-win { color: var(--color-primary); }
-.result-opp { color: var(--color-secondary); }
-.result-tie { color: var(--color-info); }
+/* === РЕЗУЛЬТАТЫ === */
+.result-win { color: var(--color-1); }
+.result-opp { color: var(--color-2); }
+.result-tie { color: var(--color-5); }
 
 /* ⚠️ ПРЕДУПРЕЖДЕНИЯ */
-.warning-text { color: var(--color-warning); }
-
-/* 🖱️ DRAG-OVER ПОДСВЕТКА */
-.hand-section.drag-over:not(.drag-over-no-space) {
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 20px var(--color-primary) !important;
-}
-.board-section.drag-over:not(.drag-over-no-space) {
-    border-color: var(--color-secondary) !important;
-    box-shadow: 0 0 20px var(--color-secondary) !important;
-}
-#deck.drag-over:not(.drag-over-no-space) {
-    border-color: var(--color-deck) !important;
-    box-shadow: 0 0 20px var(--color-deck) !important;
-}
-
-/* 🔴 ИНДИКАТОР АКТИВНОГО БЛОКА */
-.section-title::before {
-    border-color: transparent !important;
-}
-.hand-section.active .section-title::before,
-.board-section.active .section-title::before {
-    background-color: var(--color-danger) !important;
-    box-shadow: 0 0 10px var(--color-danger) !important;
-    border-color: rgba(255, 255, 255, 0.9) !important;
-    opacity: 1 !important;
-}
-
-/* 🖱️ DRAG-OVER ПОДСВЕТКА ДЛЯ СЛОТОВ */
-.hand-section .card-slot.drag-over {
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 15px var(--color-primary) !important;
-}
-
-.board-section .card-slot.drag-over {
-    border-color: var(--color-secondary) !important;
-    box-shadow: 0 0 15px var(--color-secondary) !important;
-}
-
+.warning-text { color: var(--color-7); }
