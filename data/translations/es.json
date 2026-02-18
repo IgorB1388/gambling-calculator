@@ -35,7 +35,7 @@
     "boardWarning": "⚠️ La mesa debe tener 0, 3, 4 o 5 cartas",
     "panelSettings": "⚙️ AJUSTES",
     "opponentsLabel": "NÚMERO DE OPONENTES:",
-    "panelChooseCards": "🃏 ELIGE CARTAS",
+    "panelChooseCards": "🃏 BARAJA",
     "dropHint": "Haz clic para seleccionar o arrastra entre ranuras",
     "calculateBtn": "🎯 CALCULAR",
     "clearBtn": "🗑️ LIMPIAR TODO",
@@ -85,3 +85,4 @@
     "faqContact": "¿No encontraste respuesta a tu pregunta?",
     "faqContactAnswer": "Si tiene otras preguntas o sugerencias para mejorar las herramientas, comuníquese con nosotros a través del repositorio GitHub del proyecto."
 }
+
