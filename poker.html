@@ -13,7 +13,7 @@
 </head>
 <body class="bg-body">
     <div class="site-container">
-        <header class="site-header bg-header border-1 shadow-default">
+        <header class="site-header bg-header border-primary shadow-default">
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon logo-gradient">
@@ -21,12 +21,12 @@
                     </div>
                     <div class="logo-text">
                         <span class="logo-main logo-text-gradient">GTA CASINO</span>
-                        <span class="logo-sub text-medium">TOOLS</span>
+                        <span class="logo-sub text-secondary">TOOLS</span>
                     </div>
                 </div>
                 
                 <nav class="main-nav">
-                    <ul class="nav-list nav-bg border-1">
+                    <ul class="nav-list nav-bg border-primary">
                         <li><a href="index.html" class="nav-link nav-link-bg text-medium" data-i18n="navHome"><i class="fas fa-home"></i></a></li>
                         <li><a href="poker.html" class="nav-link nav-link-bg text-medium active nav-link-active" data-i18n="navPoker"><i class="fas fa-club"></i></a></li>
                         <li><a href="roulette.html" class="nav-link nav-link-bg text-medium" data-i18n="navRoulette"><i class="fas fa-dice"></i></a></li>
@@ -35,7 +35,7 @@
                     </ul>
                 </nav>
                 
-                <div class="language-switcher-header bg-surface border-6">
+                <div class="language-switcher-header bg-surface border-accent">
                     <div class="lang-btn" data-lang="ru" title="Русский">
                         <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
                     </div>
@@ -51,7 +51,7 @@
 
         <!-- ПОКЕР-КАЛЬКУЛЯТОР -->
         <div class="poker-container">
-            <div class="poker-header bg-surface border-1 shadow-default">
+            <div class="poker-header bg-surface border-primary shadow-default">
                 <div class="header-suits">
                     <span class="text-black">♠</span>
                     <span class="text-red">♥</span>
@@ -59,98 +59,99 @@
                     <span class="text-red">♦</span>
                 </div>
                 <h1 class="text-gradient" data-i18n="title"></h1>
+                <!-- УДАЛЕН subtitle -->
             </div>
             
             <div class="main-area">
                 <!-- ЛЕВАЯ ПАНЕЛЬ -->
-                <div class="panel bg-surface border-1 shadow-default">
-                    <div class="panel-title text-1" data-i18n="panelHandBoard"></div>
+                <div class="panel bg-surface border-primary shadow-default">
+                    <div class="panel-title text-light" data-i18n="panelHandBoard"></div>
                     
-                    <div class="hand-section bg-elevated border-1" id="handSection">
-                        <div class="section-title text-1" id="handTitle" data-i18n="yourHand"></div>
-                        <div class="hand-subtitle text-9" data-i18n="handSubtitle"></div>
+                    <div class="hand-section bg-elevated border-primary" id="handSection">
+                        <div class="section-title text-primary" id="handTitle" data-i18n="yourHand"></div>
+                        <div class="hand-subtitle text-medium" data-i18n="handSubtitle"></div>
                         <div class="section-content">
                             <div class="cards-row">
-                                <div class="card-slot slot-bg border-muted" data-slot="hero-1"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg border-muted" data-slot="hero-2"><div class="slot-empty text-slot">+</div></div>
+                                <div class="card-slot slot-bg slot-border" data-slot="hero-1"><div class="slot-empty text-slot">+</div></div>
+                                <div class="card-slot slot-bg slot-border" data-slot="hero-2"><div class="slot-empty text-slot">+</div></div>
                             </div>
                         </div>
-                        <div class="warning text-7" id="handWarning" data-i18n="handWarning"></div>
+                        <div class="warning text-warning" id="handWarning" data-i18n="handWarning"></div>
                     </div>
                     
-                    <div class="board-section bg-elevated border-2" id="boardSection">
-                        <div class="section-title text-2" id="boardTitle" data-i18n="board"></div>
-                        <div class="board-subtitle text-9" data-i18n="boardSubtitle"></div>
+                    <div class="board-section bg-elevated border-secondary" id="boardSection">
+                        <div class="section-title text-secondary" id="boardTitle" data-i18n="board"></div>
+                        <div class="board-subtitle text-medium" data-i18n="boardSubtitle"></div>
                         <div class="section-content">
                             <div class="cards-row">
-                                <div class="card-slot slot-bg border-muted" data-slot="board-1"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg border-muted" data-slot="board-2"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg border-muted" data-slot="board-3"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg border-muted" data-slot="board-4"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg border-muted" data-slot="board-5"><div class="slot-empty text-slot">+</div></div>
+                                <div class="card-slot slot-bg slot-border" data-slot="board-1"><div class="slot-empty text-slot">+</div></div>
+                                <div class="card-slot slot-bg slot-border" data-slot="board-2"><div class="slot-empty text-slot">+</div></div>
+                                <div class="card-slot slot-bg slot-border" data-slot="board-3"><div class="slot-empty text-slot">+</div></div>
+                                <div class="card-slot slot-bg slot-border" data-slot="board-4"><div class="slot-empty text-slot">+</div></div>
+                                <div class="card-slot slot-bg slot-border" data-slot="board-5"><div class="slot-empty text-slot">+</div></div>
                             </div>
                         </div>
-                        <div class="warning text-7" id="boardWarning" data-i18n="boardWarning"></div>
+                        <div class="warning text-warning" id="boardWarning" data-i18n="boardWarning"></div>
                     </div>
                 </div>
                 
                 <!-- ПРАВАЯ ПАНЕЛЬ -->
-                <div class="panel bg-surface border-1 shadow-default">
-                    <div class="panel-title text-2" data-i18n="panelSettings"></div>
+                <div class="panel bg-surface border-primary shadow-default">
+                    <div class="panel-title text-light" data-i18n="panelSettings"></div>
                     
-                    <div class="opponents-control bg-elevated border-3">
-                        <div class="opponents-label text-3" data-i18n="opponentsLabel"></div>
+                    <div class="opponents-control bg-elevated border-accent">
+                        <div class="opponents-label text-accent" data-i18n="opponentsLabel"></div>
                         <div class="opponent-pills" id="opponentPills">
-                            <button class="opponent-pill active" data-opponents="1">1</button>
-                            <button class="opponent-pill" data-opponents="2">2</button>
-                            <button class="opponent-pill" data-opponents="3">3</button>
-                            <button class="opponent-pill" data-opponents="4">4</button>
-                            <button class="opponent-pill" data-opponents="5">5</button>
-                            <button class="opponent-pill" data-opponents="6">6</button>
-                            <button class="opponent-pill" data-opponents="7">7</button>
-                            <button class="opponent-pill" data-opponents="8">8</button>
-                            <button class="opponent-pill" data-opponents="9">9</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent active opponent-active" data-opponents="1">1</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="2">2</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="3">3</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="4">4</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="5">5</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="6">6</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="7">7</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="8">8</button>
+                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="9">9</button>
                         </div>
                     </div>
                     
-                    <div class="panel-title text-3" data-i18n="panelChooseCards"></div>
+                    <div class="panel-title text-light" style="margin-top: 25px;" data-i18n="panelChooseCards"></div>
                     
-                    <!-- КОЛОДА -->
-                    <div class="deck-grid border-6" id="deck"></div>
+                    <!-- КОЛОДА - ИСПРАВЛЕНО: теперь использует border-deck -->
+                    <div class="deck-grid border-deck" id="deck"></div>
                     
-                    <div class="drop-hint text-4" data-i18n="dropHint"></div>
+                    <div class="drop-hint text-success" data-i18n="dropHint"></div>
                     
                     <div class="controls">
                         <button class="btn btn-primary-bg btn-primary-text" id="calculateBtn" data-i18n="calculateBtn"></button>
-                        <button class="btn btn-secondary-bg border-1 text-1" id="clearAllBtn" data-i18n="clearBtn"></button>
+                        <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="clearAllBtn" data-i18n="clearBtn"></button>
                     </div>
                 </div>
             </div>
             
             <!-- ПАНЕЛЬ РЕЗУЛЬТАТОВ -->
-            <div class="results-panel bg-surface border-4 shadow-default" id="resultsPanel">
-                <div class="panel-title text-4" data-i18n="panelResults"></div>
+            <div class="results-panel bg-surface border-primary shadow-default" id="resultsPanel">
+                <div class="panel-title text-light" data-i18n="panelResults"></div>
                 
                 <div class="results-grid">
-                    <div class="result-card bg-elevated border-1 shadow-default">
-                        <div class="text-1" style="font-size: 1.1rem;" data-i18n="yourHandResult"></div>
-                        <div class="result-percent text-1" id="resultHero">—</div>
+                    <div class="result-card bg-elevated border-primary shadow-default">
+                        <div class="text-primary" style="font-size: 1.1rem;" data-i18n="yourHandResult"></div>
+                        <div class="result-percent text-win" id="resultHero">—</div>
                     </div>
                     
-                    <div class="result-card bg-elevated border-2 shadow-default">
-                        <div class="text-2" style="font-size: 1.1rem;" data-i18n="opponentsResult"></div>
-                        <div class="result-percent text-2" id="resultOpponent">—</div>
+                    <div class="result-card bg-elevated border-secondary shadow-default">
+                        <div class="text-secondary" style="font-size: 1.1rem;" data-i18n="opponentsResult"></div>
+                        <div class="result-percent text-opp" id="resultOpponent">—</div>
                     </div>
                     
-                    <div class="result-card bg-elevated border-5 shadow-default">
-                        <div class="text-5" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
-                        <div class="result-percent text-5" id="resultTie">—</div>
+                    <div class="result-card bg-elevated border-info shadow-default">
+                        <div class="text-info" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
+                        <div class="result-percent text-tie" id="resultTie">—</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <footer class="site-footer footer-bg border-1">
+        <footer class="site-footer footer-bg border-primary">
             <p class="footer-text" data-i18n="footerText"></p>
         </footer>
     </div>
