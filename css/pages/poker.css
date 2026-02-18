@@ -1,3 +1,6 @@
+/* poker.css - ТОЛЬКО РАЗМЕРЫ И ПОЗИЦИОНИРОВАНИЕ */
+/* ЦВЕТА ЗАДАЮТСЯ ЧЕРЕЗ КЛАССЫ В HTML */
+
 .poker-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -47,14 +50,12 @@
     height: fit-content;
 }
 
-/* Левая панель с блоками руки и борда */
 .panel:first-child {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* ЗАГОЛОВКИ ПАНЕЛЕЙ */
 .panel-title {
     font-size: 1.3rem;
     font-weight: 600;
@@ -66,28 +67,6 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Индивидуальные цвета заголовков */
-.panel:first-child .panel-title {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
-}
-
-.panel:last-child .panel-title:first-of-type {
-    color: var(--color-secondary);
-    border-bottom-color: var(--color-secondary);
-}
-
-.panel:last-child .panel-title:nth-of-type(2) {
-    color: var(--color-highlight);
-    border-bottom-color: var(--color-highlight);
-}
-
-.results-panel .panel-title {
-    color: var(--color-success);
-    border-bottom-color: var(--color-success);
-}
-
-/* СЕКЦИИ РУКИ И БОРДА - ФИКСИРОВАННАЯ ВЫСОТА */
 .hand-section, 
 .board-section {
     border-radius: 12px;
@@ -97,18 +76,9 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 280px; /* Фиксированная высота, как у блока настроек + колоды */
+    height: 280px;
 }
 
-.hand-section {
-    border-color: var(--color-primary);
-}
-
-.board-section {
-    border-color: var(--color-secondary);
-}
-
-/* ЗАГОЛОВКИ СЕКЦИЙ */
 .hand-section .section-title,
 .board-section .section-title {
     font-size: 1.5rem;
@@ -123,35 +93,24 @@
     flex-shrink: 0;
 }
 
-.hand-section .section-title {
-    color: var(--color-primary);
-}
-
-.board-section .section-title {
-    color: var(--color-secondary);
-}
-
-/* ПОДСКАЗКИ (2 карты, 5 карт) - фиксированная высота */
 .hand-subtitle,
 .board-subtitle {
     font-size: 0.9rem;
-    color: var(--text-secondary);
     margin-bottom: 10px;
     line-height: 1.4;
     font-family: 'Open Sans', sans-serif;
     opacity: 0.9;
-    height: 20px; /* Фиксированная высота */
+    height: 20px;
     flex-shrink: 0;
 }
 
-/* Контент с картами - занимает оставшееся место */
 .section-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
-    min-height: 0; /* Важно для flexbox */
+    min-height: 0;
 }
 
 .cards-row {
@@ -183,16 +142,14 @@
     transform: scale(1.05);
 }
 
-/* ПРЕДУПРЕЖДЕНИЯ - фиксированное место внизу */
 .warning {
     font-size: 0.85rem;
     text-align: center;
     padding: 5px;
     border-radius: 5px;
     background: rgba(255, 107, 74, 0.1);
-    color: var(--color-warning);
     width: 100%;
-    height: 30px; /* Фиксированная высота для предупреждений */
+    height: 30px;
     line-height: 20px;
     flex-shrink: 0;
     margin-top: 5px;
@@ -204,7 +161,6 @@
     display: block;
 }
 
-/* РЕАЛЬНЫЕ КАРТЫ */
 .real-card {
     border-radius: 8px;
     overflow: hidden;
@@ -240,16 +196,13 @@
     line-height: 1.2;
 }
 
-/* БЛОК ОППОНЕНТОВ - фиксированная высота */
 .opponents-control {
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
     border-width: 2px;
     border-style: solid;
-    border-color: var(--color-secondary) !important;
-    background: rgba(255, 95, 210, 0.05);
-    height: 130px; /* Фиксированная высота */
+    height: 130px;
     display: flex;
     flex-direction: column;
 }
@@ -259,7 +212,6 @@
     margin-bottom: 15px;
     text-align: center;
     font-size: 1.2rem;
-    color: var(--color-secondary) !important;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: 'Montserrat', sans-serif;
@@ -288,23 +240,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-color: var(--color-info) !important;
-    background: rgba(125, 78, 255, 0.1) !important;
-    color: var(--color-info) !important;
     font-family: 'Montserrat', sans-serif;
 }
 
 .opponent-pill:hover {
-    background: rgba(125, 78, 255, 0.2) !important;
     transform: scale(1.05);
 }
 
-.opponent-pill.active {
-    background: var(--color-info) !important;
-    color: white !important;
-}
-
-/* КОЛОДА - фиксированная высота */
 .deck-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
@@ -314,9 +256,8 @@
     border-radius: 12px;
     border-width: 2px;
     border-style: solid;
-    border-color: var(--color-highlight);
-    height: 200px; /* Фиксированная высота */
-    overflow-y: auto; /* Скролл если много карт */
+    height: 200px;
+    overflow-y: auto;
 }
 
 .deck-card {
@@ -377,9 +318,7 @@
     margin-top: 3px; 
 }
 
-/* ПОДСКАЗКА-ДРОП */
 .drop-hint {
-    color: var(--text-secondary) !important;
     font-size: 0.9rem;
     text-align: center;
     margin: 10px 0;
@@ -388,7 +327,6 @@
     height: 25px;
 }
 
-/* КНОПКИ */
 .controls {
     display: flex;
     gap: 15px;
@@ -417,23 +355,16 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.btn-primary {
-    background: linear-gradient(45deg, var(--color-secondary), var(--color-highlight));
+.btn-primary-bg {
+    background: linear-gradient(45deg, var(--color-2), var(--color-3));
     color: white;
 }
 
-.btn-secondary {
+.btn-secondary-bg {
     background: transparent;
-    border: 2px solid var(--color-primary);
-    color: var(--color-primary);
+    border: 2px solid;
 }
 
-.btn-secondary:hover {
-    background: var(--color-primary);
-    color: var(--text-inverse);
-}
-
-/* ПАНЕЛЬ РЕЗУЛЬТАТОВ */
 .results-panel {
     margin-top: 30px;
     display: block !important;
@@ -442,7 +373,6 @@
     padding: 25px;
     border-width: 2px;
     border-style: solid;
-    border-color: var(--color-success);
 }
 
 .results-grid {
@@ -466,16 +396,6 @@
     background: rgba(0, 0, 0, 0.2);
 }
 
-.result-card.border-primary {
-    border-color: var(--color-primary);
-}
-.result-card.border-secondary {
-    border-color: var(--color-secondary);
-}
-.result-card.border-info {
-    border-color: var(--color-info);
-}
-
 .result-percent {
     font-size: 3.5rem;
     font-weight: 700;
@@ -487,15 +407,6 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-.result-card .text-primary,
-.result-card .text-secondary,
-.result-card .text-info {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-/* ИНДИКАТОР АКТИВНОГО БЛОКА */
 .section-title::before {
     content: "";
     position: absolute;
@@ -509,7 +420,7 @@
     border-width: 2px;
     border-style: solid;
     z-index: 5;
-    background-color: var(--color-danger);
+    background-color: var(--color-8);
     border-color: white;
 }
 
@@ -518,27 +429,25 @@
     opacity: 1;
 }
 
-/* Drag-over подсветки */
 .hand-section.drag-over:not(.drag-over-no-space) {
-    box-shadow: 0 0 20px var(--color-primary) !important;
+    box-shadow: 0 0 20px var(--color-1) !important;
 }
 .board-section.drag-over:not(.drag-over-no-space) {
-    box-shadow: 0 0 20px var(--color-secondary) !important;
+    box-shadow: 0 0 20px var(--color-2) !important;
 }
 #deck.drag-over:not(.drag-over-no-space) {
-    box-shadow: 0 0 20px var(--color-highlight) !important;
+    box-shadow: 0 0 20px var(--color-6) !important;
 }
 
 .hand-section .card-slot.drag-over {
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 15px var(--color-primary) !important;
+    border-color: var(--color-1) !important;
+    box-shadow: 0 0 15px var(--color-1) !important;
 }
 .board-section .card-slot.drag-over {
-    border-color: var(--color-secondary) !important;
-    box-shadow: 0 0 15px var(--color-secondary) !important;
+    border-color: var(--color-2) !important;
+    box-shadow: 0 0 15px var(--color-2) !important;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     .section-title::before {
         width: 10px;
@@ -660,11 +569,10 @@
     }
 }
 
-/* Анимация результатов */
 @keyframes quick-flash {
-    0% { border-color: var(--color-success); }
+    0% { border-color: var(--color-4); }
     50% { border-color: transparent; }
-    100% { border-color: var(--color-success); }
+    100% { border-color: var(--color-4); }
 }
 
 .results-panel.fresh-result {
