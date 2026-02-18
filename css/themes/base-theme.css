@@ -60,7 +60,7 @@
     --text-3: #ffd966;
     --text-4: #2effc7;
     --text-5: #6aa8ff;
-    --text-6: #b36bff;
+    --text-6: #ff00ff;
     --text-7: #b36bff;
 
         
@@ -183,5 +183,6 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
+
 
 
