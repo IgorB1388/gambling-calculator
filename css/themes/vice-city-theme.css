@@ -27,15 +27,7 @@
     --bg-surface-hover: rgba(255, 68, 170, 0.2);
     --bg-surface-active: rgba(68, 170, 255, 0.2);
 
-    /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
-    --border-1: #ff44aa;
-    --border-2: #44aaff;
-    --border-3: #ff8844;
-    --border-4: #88ffaa;
-    --border-5: #88ccff;
-    --border-6: #b36bff;
-    --border-7: #ff44aa;
-    
+  
     /* === ТЕКСТ ПО РОЛИ === */
     --text-primary: #ffffff;
     --text-secondary: #e0e0ff;
@@ -54,6 +46,25 @@
     --border-dashed: rgba(255, 68, 170, 0.5);
     --border-nav: rgba(255, 68, 170, 0.3);
     --border-deck: #ff44aa;
+
+        /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
+    --border-1: #00f0ff;
+    --border-2: #ff5fd2;
+    --border-3: #ffd966;
+    --border-4: #2effc7;
+    --border-5: #6aa8ff;
+    --border-6: #b36bff;
+    --border-7: #b36bff;
+
+
+    /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
+    --text-1: #00f0ff;
+    --text-2: #ff5fd2;
+    --text-3: #ffd966;
+    --text-4: #2effc7;
+    --text-5: #6aa8ff;
+    --text-6: #b36bff;
+    --text-7: #b36bff;
 
     /* Переключатель тем для Vice City */
 --theme-switcher-bg: rgba(255, 68, 170, 0.2);
@@ -191,6 +202,7 @@ body::after {
         content: '🌴';
     }
 }
+
 
 
 
