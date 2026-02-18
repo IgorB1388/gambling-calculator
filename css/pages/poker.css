@@ -23,10 +23,6 @@
     margin-bottom: 10px;
 }
 
-.subtitle {
-    font-size: 1.1rem;
-}
-
 .main-area {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
@@ -50,10 +46,38 @@
     flex-direction: column;
 }
 
+/* ЗАГОЛОВКИ ПАНЕЛЕЙ (НАСТРОЙКИ, ВЫБЕРИТЕ КАРТЫ, РЕЗУЛЬТАТЫ) */
+.panel-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+    text-transform: uppercase;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* Заголовок "ВЫБЕРИТЕ КАРТЫ" - фиолетовый */
+.panel:last-child .panel-title:nth-of-type(2) {
+    color: var(--color-highlight);
+    text-shadow: 0 0 5px var(--color-highlight);
+    border-bottom-color: rgba(179, 107, 255, 0.3);
+}
+
+/* Заголовок "РЕЗУЛЬТАТЫ" - мятный */
+.results-panel .panel-title {
+    color: var(--color-success);
+    text-shadow: 0 0 5px var(--color-success);
+    border-bottom-color: rgba(46, 255, 199, 0.3);
+}
+
+/* СЕКЦИИ РУКИ И БОРДА */
 .hand-section, .board-section {
     border-radius: 12px;
-    padding: 15px 20px;
-    margin-bottom: 15px;
+    padding: 20px 20px 15px 20px;
+    margin-bottom: 20px;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
     border-width: 2px;
@@ -62,33 +86,43 @@
     min-height: 200px;
     display: flex;
     flex-direction: column;
-    flex: 1;
 }
 
-/* А для индикатора добавим свой transition */
-.section-title::before {
-    transition: opacity 0.3s, background-color 0.3s, box-shadow 0.3s;
-}
-
-.section-title {
-    margin-bottom: 3px;
-    font-size: 1.2rem;
+/* ЗАГОЛОВКИ СЕКЦИЙ (ВАША РУКА, БОРД) */
+.hand-section .section-title,
+.board-section .section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-shrink: 0;
-    height: 28px;
+    height: auto;
     position: relative;
+    padding-left: 0;
+    border-left: none;
 }
 
-.board-subtitle,
-.hand-subtitle {
-    font-size: 0.9rem;
-    text-align: center;
-    margin-bottom: 8px;
-    height: 20px;
-    flex-shrink: 0;
-    line-height: 20px;
+.hand-section .section-title {
+    color: var(--color-primary);
+    text-shadow: 0 0 8px var(--color-primary);
+}
+
+.board-section .section-title {
+    color: var(--color-secondary);
+    text-shadow: 0 0 8px var(--color-secondary);
+}
+
+/* ПОДЗАГОЛОВКИ (подсказки) */
+.hand-subtitle,
+.board-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    height: auto;
+    line-height: 1.4;
+    text-align: left;
+    padding-left: 2px;
 }
 
 .section-content {
@@ -173,19 +207,25 @@
     z-index: 2;
 }
 
+/* БЛОК ОППОНЕНТОВ */
 .opponents-control {
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
     border-width: 2px;
     border-style: solid;
+    border-color: var(--color-primary) !important;
 }
 
 .opponents-label {
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-weight: 600;
+    margin-bottom: 15px;
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    color: var(--color-primary) !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px var(--color-primary);
 }
 
 .opponent-pills {
@@ -208,12 +248,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-color: var(--color-info) !important;
+    background: rgba(125, 78, 255, 0.15) !important;
+    color: var(--color-info) !important;
+    box-shadow: 0 0 8px var(--color-info) !important;
 }
 
 .opponent-pill:hover {
     transform: scale(1.1);
+    background: rgba(125, 78, 255, 0.3) !important;
+    box-shadow: 0 0 15px var(--color-info) !important;
 }
 
+.opponent-pill.active {
+    background: var(--color-info) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 20px var(--color-info) !important;
+}
+
+/* КОЛОДА */
 .deck-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
@@ -245,6 +298,7 @@
 .deck-card:hover {
     transform: scale(1.1);
     z-index: 10;
+    filter: drop-shadow(0 0 5px var(--color-primary));
 }
 
 .deck-card.selected {
@@ -271,6 +325,17 @@
 .card-value { font-size: 1.2rem; margin-bottom: 3px; }
 .card-suit-large { font-size: 1.6rem; margin-top: 3px; }
 
+/* ПОДСКАЗКА-ДРОП */
+.drop-hint {
+    color: var(--color-success) !important;
+    text-shadow: 0 0 5px var(--color-success);
+    font-size: 0.95rem;
+    text-align: center;
+    margin: 15px 0 5px;
+    letter-spacing: 0.3px;
+}
+
+/* КНОПКИ */
 .controls {
     display: flex;
     gap: 15px;
@@ -303,10 +368,6 @@
 .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    transform: none;
-}
-
-.btn-primary:disabled:hover {
     transform: none;
 }
 
@@ -349,6 +410,7 @@
     }
 }
 
+/* ПАНЕЛЬ РЕЗУЛЬТАТОВ */
 .results-panel {
     margin-top: 30px;
     display: block !important;
@@ -387,58 +449,7 @@
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    transition: color 0.1s ease-out;
-}
-
-.drop-hint {
-    font-size: 0.9rem;
-    text-align: center;
-    margin-top: 5px;
-}
-
-.progress-container {
-    margin-top: 20px;
-    padding: 10px 15px;
-    border-radius: 10px;
-    border-width: 2px;
-    border-style: solid;
-    display: block;
-}
-
-.progress-bar {
-    height: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 10px;
-}
-
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    transition: width 0.3s;
-}
-
-.card-face {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-}
-
-.slot-empty {
-    font-size: 2.5rem;
-}
-
-.hand-description {
-    font-size: 0.95rem;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 5px;
-    line-height: 1.3;
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
 }
 
 /* Индикатор активного блока */
@@ -447,8 +458,8 @@
     position: absolute;
     right: -5px;
     top: -5px;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     opacity: 0;
     transition: all 0.3s ease;
@@ -460,31 +471,51 @@
 .hand-section.active .section-title::before,
 .board-section.active .section-title::before {
     opacity: 1;
+    background-color: var(--color-danger) !important;
+    box-shadow: 0 0 10px var(--color-danger) !important;
+    border-color: rgba(255, 255, 255, 0.9) !important;
+    animation: pulse-red 1.5s ease-in-out infinite;
 }
 
-/* Анимация результатов */
-@keyframes quick-glow {
-    0% { border-color: transparent; }
-    50% { border-color: transparent; }
-    100% { border-color: transparent; }
+@keyframes pulse-red {
+    0%, 100% { opacity: 0.9; box-shadow: 0 0 5px var(--color-danger); }
+    50% { opacity: 1; box-shadow: 0 0 15px var(--color-danger), 0 0 25px var(--color-danger); }
 }
 
-.results-panel.fresh-result {
-    animation: quick-glow 0.25s ease-in-out;
+/* Drag-over подсветки */
+.hand-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 20px var(--color-primary) !important;
+}
+.board-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--color-secondary) !important;
+    box-shadow: 0 0 20px var(--color-secondary) !important;
+}
+#deck.drag-over:not(.drag-over-no-space) {
+    border-color: var(--color-deck) !important;
+    box-shadow: 0 0 20px var(--color-deck) !important;
 }
 
-/* Адаптивность покера */
+.hand-section .card-slot.drag-over {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 15px var(--color-primary) !important;
+}
+.board-section .card-slot.drag-over {
+    border-color: var(--color-secondary) !important;
+    box-shadow: 0 0 15px var(--color-secondary) !important;
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
     .section-title::before {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         right: -4px;
         top: -4px;
     }
     
     .poker-header h1 {
         font-size: 2.2rem;
-        margin-top: 10px;
     }
     
     .panel {
@@ -493,8 +524,7 @@
     
     .hand-section, .board-section {
         min-height: 180px;
-        padding: 12px;
-        margin-bottom: 10px;
+        padding: 15px 15px 10px 15px;
     }
     
     .card-slot {
@@ -518,18 +548,6 @@
         padding: 10px;
     }
     
-    .deck-card {
-        aspect-ratio: 3/4;
-    }
-    
-    .card-value {
-        font-size: 1rem;
-    }
-    
-    .card-suit-large {
-        font-size: 1.3rem;
-    }
-    
     .btn {
         min-width: 150px;
         padding: 10px 20px;
@@ -544,42 +562,11 @@
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
-    .result-card {
-        min-height: 140px;
-        padding: 15px;
-    }
-    
-    .opponent-pill {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-    
-    .controls {
-        gap: 10px;
-    }
 }
 
 @media (max-width: 480px) {
-    .section-title::before {
-        width: 10px;
-        height: 10px;
-        right: -3px;
-        top: -3px;
-    }
-    
     .poker-header h1 {
         font-size: 1.8rem;
-    }
-    
-    .panel {
-        padding: 15px;
-    }
-    
-    .hand-section, .board-section {
-        min-height: 160px;
-        padding: 10px;
     }
     
     .card-slot {
@@ -603,20 +590,8 @@
         font-size: 0.9rem;
     }
     
-    .result-percent {
-        font-size: 2.5rem;
-    }
-    
-    .result-card {
-        min-height: 130px;
-    }
-    
     .deck-grid {
         grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .opponent-pills {
-        gap: 5px;
     }
     
     .opponent-pill {
@@ -626,166 +601,13 @@
     }
 }
 
-/* === НЕОНОВЫЕ ЗАГОЛОВКИ (ВМЕСТО МИКРОНЕОНА) === */
-
-/* Заголовки панелей (ВАША РУКА, БОРД, НАСТРОЙКИ, ВЫБЕРИТЕ КАРТЫ, РЕЗУЛЬТАТЫ) */
-.panel-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid;
-    border-image: linear-gradient(90deg, var(--color-primary), var(--color-secondary), transparent) 1;
-    border-bottom-style: solid;
-    text-transform: uppercase;
-    text-shadow: 0 0 8px currentColor;
-    position: relative;
-    display: inline-block;
+/* Анимация результатов (минимальная) */
+@keyframes quick-glow {
+    0% { border-color: transparent; }
+    50% { border-color: var(--color-success); }
+    100% { border-color: transparent; }
 }
 
-/* Индивидуальные цвета для заголовков */
-.panel .panel-title {
-    color: var(--color-primary);
-}
-
-/* Заголовок настроек (левый верхний в правой панели) */
-.panel:last-child .panel-title:first-of-type {
-    color: var(--color-primary);
-}
-
-/* Заголовок "ВЫБЕРИТЕ КАРТЫ" */
-.panel:last-child .panel-title:nth-of-type(2) {
-    color: var(--color-highlight);
-    border-image: linear-gradient(90deg, var(--color-highlight), var(--color-secondary), transparent) 1;
-}
-
-/* Заголовок "РЕЗУЛЬТАТЫ" */
-.results-panel .panel-title {
-    color: var(--color-success);
-    border-image: linear-gradient(90deg, var(--color-success), var(--color-primary), transparent) 1;
-}
-
-/* Секции ВАША РУКА и БОРД - делаем их крупнее и с неоном */
-.hand-section .section-title,
-.board-section .section-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-    position: relative;
-    display: inline-block;
-    padding-left: 5px;
-}
-
-.hand-section .section-title {
-    color: var(--color-primary);
-    border-left: 4px solid var(--color-primary);
-}
-
-.board-section .section-title {
-    color: var(--color-secondary);
-    border-left: 4px solid var(--color-secondary);
-}
-
-/* Убираем старый цвет из HTML-классов, оставляем наши правила */
-.hand-section .section-title.text-primary,
-.board-section .section-title.text-secondary {
-    /* Наши правила выше переопределяют их */
-}
-
-/* Подзаголовки (Subtitles) делаем чуть заметнее */
-.hand-subtitle,
-.board-subtitle {
-    font-size: 0.95rem;
-    letter-spacing: 0.5px;
-    opacity: 0.9;
-    text-transform: uppercase;
-    margin-bottom: 15px;
-    color: var(--text-secondary);
-}
-
-/* Кнопки оппонентов - меняем оранжевый на цвет темы */
-.opponents-control {
-    border-color: var(--color-primary) !important;
-}
-
-.opponents-label {
-    color: var(--color-primary) !important;
-    font-size: 1.2rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    text-shadow: 0 0 5px var(--color-primary);
-}
-
-/* Убираем оранжевый, ставим цвет темы */
-.opponents-label.text-accent {
-    color: var(--color-primary) !important;
-}
-
-/* Делаем кнопки оппонентов в стиле неон */
-.opponent-pill {
-    border-color: var(--color-info) !important;
-    background: rgba(125, 78, 255, 0.15) !important;
-    color: var(--color-info) !important;
-    box-shadow: 0 0 10px var(--color-info) !important;
-    font-weight: 600;
-    transition: all 0.3s !important;
-}
-
-.opponent-pill:hover {
-    background: rgba(125, 78, 255, 0.3) !important;
-    box-shadow: 0 0 20px var(--color-info) !important;
-    transform: scale(1.1);
-}
-
-.opponent-pill.active {
-    background: var(--color-info) !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 30px var(--color-info) !important;
-}
-
-/* Дроп-хинт (подсказка) */
-.drop-hint {
-    color: var(--color-success) !important;
-    text-shadow: 0 0 5px var(--color-success);
-    font-size: 1rem;
-    text-align: center;
-    margin: 15px 0;
-    letter-spacing: 0.5px;
-}
-
-/* Результаты - усиливаем неон */
-.result-percent {
-    text-shadow: 0 0 15px currentColor, 0 0 30px currentColor;
-    font-weight: 700;
-}
-
-/* Небольшой неоновый акцент на границах */
-.hand-section,
-.board-section,
-.panel,
-.results-panel {
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-    transition: box-shadow 0.3s;
-}
-
-.hand-section:hover,
-.board-section:hover,
-.panel:hover,
-.results-panel:hover {
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
-}
-
-/* Анимация пульсации для индикаторов (только если нужна) */
-@keyframes pulse-neon {
-    0%, 100% { opacity: 0.9; box-shadow: 0 0 10px currentColor; }
-    50% { opacity: 1; box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
-}
-
-.hand-section.active .section-title::before,
-.board-section.active .section-title::before {
-    animation: pulse-neon 1.5s ease-in-out infinite;
+.results-panel.fresh-result {
+    animation: quick-glow 0.3s ease-in-out;
 }
