@@ -26,7 +26,7 @@
     "footerText": "GTA Casino Tools © 2024 | Creado para entusiastas de los juegos de azar",
     
     "title": "CALCULADORA DE PÓKER",
-    "panelHandBoard": "TU MANO Y LA MESA",
+    "panelHandBoard": "🎯 TU MANO Y LA MESA",
     "yourHand": "⭐ TU MANO",
     "handSubtitle": "2 cartas",
     "handWarning": "⚠️ La mano debe tener 2 cartas",
@@ -85,4 +85,5 @@
     "faqContact": "¿No encontraste respuesta a tu pregunta?",
     "faqContactAnswer": "Si tiene otras preguntas o sugerencias para mejorar las herramientas, comuníquese con nosotros a través del repositorio GitHub del proyecto."
 }
+
 
