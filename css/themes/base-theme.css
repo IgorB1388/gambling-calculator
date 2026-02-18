@@ -3,48 +3,49 @@
 
 :root {
     /* === ЦВЕТА ПО РОЛИ === */
-    --color-primary: #00f0ff;
-    --color-secondary: #ff5fd2;
-    --color-accent: #ffd966;
-    --color-success: #2effc7;
-    --color-info: #6aa8ff;
-    --color-warning: #ff9966;
-    --color-danger: #ff3366;
-    --color-highlight: #b36bff;
+    --color-primary: #00f0ff;       /* яркий циан */
+    --color-secondary: #ff5fd2;     /* яркий розовый */
+    --color-accent: #ffd966;        /* мягкий желтый (для подсветки и акцентов) */
+    --color-success: #2effc7;       /* зеленый неон */
+    --color-info: #6aa8ff;          /* голубой неон */
+    --color-warning: #ffcc33;       /* скорректированный желтый для блоков оппонентов */
+    --color-danger: #ff3366;        /* ярко-розовый для опасных элементов */
+    --color-highlight: #b36bff;     /* фиолетовый для градиентов */
     
-    /* === ФОНЫ ПО РОЛИ === */
-    --bg-body: #2a2f4a;
-    --bg-surface: #353a55;
-    --bg-elevated: #3a3f5a;
-    --bg-overlay: rgba(42, 47, 74, 0.9);
-    --bg-overlay-light: rgba(42, 47, 74, 0.95);
-    --bg-header: #353a55;
-    --bg-card: rgba(42, 47, 74, 0.9);
-    --bg-coming-soon: rgba(42, 47, 74, 0.95);
-    --bg-nav: rgba(0, 0, 0, 0.3);
-    --bg-surface-light: rgba(255, 255, 255, 0.05);
-    --bg-surface-hover: rgba(0, 102, 255, 0.2);
-    --bg-surface-active: rgba(153, 51, 255, 0.2);
+   /* === ФОНЫ === */
+    --bg-body: #1c1f36;             /* чуть темнее для контраста с неоном */
+    --bg-surface: #262b45;
+    --bg-elevated: #2a2f4a;
+    --bg-overlay: rgba(28,31,54,0.9);
+    --bg-overlay-light: rgba(28,31,54,0.95);
+    --bg-header: #262b45;
+    --bg-card: rgba(28,31,54,0.9);
+    --bg-coming-soon: rgba(28,31,54,0.95);
+    --bg-nav: rgba(0,0,0,0.3);
+    --bg-surface-light: rgba(255,255,255,0.05);
+    --bg-surface-hover: rgba(0,240,255,0.2);
+    --bg-surface-active: rgba(179,107,255,0.2);;
     
-    /* === ТЕКСТ ПО РОЛИ === */
+   /* === ТЕКСТ === */
     --text-primary: #ffffff;
     --text-secondary: #ccccff;
     --text-inverse: #000000;
-    --text-muted: rgba(255, 255, 255, 0.4);
-    --text-slot: rgba(255, 255, 255, 0.4);
+    --text-muted: rgba(255,255,255,0.4);
+    --text-slot: rgba(255,255,255,0.4);
+
     
-    /* === ГРАНИЦЫ ПО РОЛИ === */
+ /* === ГРАНИЦЫ === */
     --border-primary: #00f0ff;
     --border-secondary: #ff5fd2;
     --border-accent: #ffd966;
     --border-success: #2effc7;
     --border-info: #6aa8ff;
-    --border-muted: rgba(255, 255, 255, 0.3);
-    --border-dark: rgba(0, 0, 0, 0.2);
-    --border-dashed: rgba(255, 255, 255, 0.3);
-    --border-nav: rgba(0, 102, 255, 0.3);
+    --border-muted: rgba(255,255,255,0.3);
+    --border-dark: rgba(0,0,0,0.2);
+    --border-dashed: rgba(255,255,255,0.3);
+    --border-nav: rgba(0,102,255,0.3);
 
-    /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
+ /* Универсальные бордеры (можно оставить как есть) */
     --border-1: #00f0ff;
     --border-2: #ff5fd2;
     --border-3: #ffd966;
@@ -53,16 +54,16 @@
     --border-6: #b36bff;
     --border-7: #b36bff;
     
-    /* === ТЕНИ ПО РОЛИ === */
-    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.5);
-    --shadow-header: 0 0 30px rgba(0, 102, 255, 0.1);
-    --glow-primary: 0 0 25px rgba(0, 240, 255, 0.4);
-    --glow-secondary: 0 0 25px rgba(255, 95, 210, 0.4);
-    --glow-accent: 0 0 25px rgba(255, 217, 102, 0.4);
-    --glow-highlight: 0 0 25px rgba(179, 107, 255, 0.4);
-    --glow-success: 0 0 25px rgba(46, 255, 199, 0.4);
+  /* === ТЕНИ И GLOW === */
+    --shadow-sm: 0 2px 5px rgba(0,0,0,0.2);
+    --shadow-md: 0 10px 30px rgba(0,0,0,0.4);
+    --shadow-lg: 0 15px 40px rgba(0,0,0,0.5);
+    --shadow-header: 0 0 30px rgba(0,240,255,0.1);
+    --glow-primary: 0 0 25px rgba(0,240,255,0.6);
+    --glow-secondary: 0 0 25px rgba(255,95,210,0.6);
+    --glow-accent: 0 0 25px rgba(255,217,102,0.6);
+    --glow-highlight: 0 0 25px rgba(179,107,255,0.6);
+    --glow-success: 0 0 25px rgba(46,255,199,0.6);
 
     /* Переключатель тем */
     --theme-switcher-bg: var(--bg-nav);
@@ -75,6 +76,10 @@
     --theme-btn-active-text: var(--text-inverse);
     --theme-btn-active-border: var(--color-accent);
     --theme-btn-active-glow: var(--color-accent);
+
+
+     /* Названия блоков (новый неон) */
+    --text-block-title: var(--color-primary);
     
     /* === ГРАДИЕНТЫ === */
     --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-highlight));
@@ -161,5 +166,6 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
+
 
 
