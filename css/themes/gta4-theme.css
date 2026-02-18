@@ -32,15 +32,7 @@
     --text-muted: #95a5a6;
     --text-slot: rgba(236, 240, 241, 0.5);
 
-    /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
---border-1: #3498db;      /* яркий Liberty City синий */
---border-2: #7f8c8d;      /* мокрый асфальт */
---border-3: #f1c40f;      /* такси желтый */
---border-4: #2ecc71;      /* неон вывесок */
---border-5: #95a5a6;      /* бетон */
---border-6: #5d6d7e;      /* металлик */
---border-7: #f1c40f;      /* такси желтый (как accent) */
-    
+  
     /* === ГРАНИЦЫ ПО РОЛИ === */
     --border-primary: #3498db;
     --border-secondary: #7f8c8d;
@@ -51,6 +43,25 @@
     --border-dark: rgba(0, 0, 0, 0.5);
     --border-dashed: rgba(52, 152, 219, 0.4);
     --border-deck: #f1c40f;
+
+        /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
+    --border-1: #00f0ff;
+    --border-2: #ff5fd2;
+    --border-3: #ffd966;
+    --border-4: #2effc7;
+    --border-5: #6aa8ff;
+    --border-6: #b36bff;
+    --border-7: #b36bff;
+
+
+    /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
+    --text-1: #00f0ff;
+    --text-2: #ff5fd2;
+    --text-3: #ffd966;
+    --text-4: #2effc7;
+    --text-5: #6aa8ff;
+    --text-6: #b36bff;
+    --text-7: #b36bff;
 
     /* Переключатель тем для GTA 4 */
 --theme-switcher-bg: rgba(52, 152, 219, 0.2);
@@ -340,6 +351,7 @@ html, body {
         bottom: 15px;
     }
 }
+
 
 
 
