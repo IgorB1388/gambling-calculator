@@ -26,7 +26,7 @@
     "footerText": "GTA Casino Tools © 2024 | Created for gambling enthusiasts",
     
     "title": "POKER CALCULATOR",
-    "panelHandBoard": "YOUR HAND AND BOARD",
+    "panelHandBoard": "🎯 YOUR HAND AND BOARD",
     "yourHand": "⭐ YOUR HAND",
     "handSubtitle": "2 cards",
     "handWarning": "⚠️ Hand must have 2 cards",
@@ -85,4 +85,5 @@
     "faqContact": "Didn't find an answer to your question?",
     "faqContactAnswer": "If you have other questions or suggestions for improving the tools, please contact us through the project's GitHub repository."
 }
+
 
