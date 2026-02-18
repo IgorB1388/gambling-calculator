@@ -35,7 +35,7 @@
     "boardWarning": "⚠️ Board must have 0, 3, 4 or 5 cards",
     "panelSettings": "⚙️ SETTINGS",
     "opponentsLabel": "NUMBER OF OPPONENTS:",
-    "panelChooseCards": "🃏 CHOOSE CARDS",
+    "panelChooseCards": "🃏 DECK",
     "dropHint": "Click to select or drag between slots",
     "calculateBtn": "🎯 CALCULATE",
     "clearBtn": "🗑️ CLEAR ALL",
@@ -85,3 +85,4 @@
     "faqContact": "Didn't find an answer to your question?",
     "faqContactAnswer": "If you have other questions or suggestions for improving the tools, please contact us through the project's GitHub repository."
 }
+
