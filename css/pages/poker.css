@@ -1,6 +1,3 @@
-/* poker.css - ТОЛЬКО РАЗМЕРЫ И ПОЗИЦИОНИРОВАНИЕ */
-/* ЦВЕТА ЗАДАЮТСЯ ЧЕРЕЗ КЛАССЫ В HTML */
-
 .poker-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -24,9 +21,6 @@
 .poker-header h1 {
     font-size: 2.8rem;
     margin-bottom: 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    letter-spacing: 1px;
 }
 
 .main-area {
@@ -45,63 +39,67 @@
     padding: 25px;
     border-width: 2px;
     border-style: solid;
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
 }
 
 .panel:first-child {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
-.panel-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid;
-    text-transform: uppercase;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.hand-section, 
-.board-section {
+.hand-section, .board-section {
     border-radius: 12px;
-    padding: 20px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
     border-width: 2px;
     border-style: solid;
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 280px;
+    height: 250px; /* Фиксированная высота */
+    box-sizing: border-box;
 }
 
-.hand-section .section-title,
-.board-section .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 5px;
+.section-title {
+    margin-bottom: 3px;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     gap: 10px;
-    position: relative;
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0.5px;
     flex-shrink: 0;
+    height: 28px;
+    position: relative;
 }
 
-.hand-subtitle,
-.board-subtitle {
+.section-title::before {
+    content: "";
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.3s ease;
+    border-width: 2px;
+    border-style: solid;
+    z-index: 5;
+}
+
+.hand-section.active .section-title::before,
+.board-section.active .section-title::before {
+    opacity: 1;
+}
+
+.board-subtitle,
+.hand-subtitle {
     font-size: 0.9rem;
+    text-align: left;
     margin-bottom: 10px;
-    line-height: 1.4;
-    font-family: 'Open Sans', sans-serif;
-    opacity: 0.9;
     height: 20px;
     flex-shrink: 0;
+    line-height: 20px;
 }
 
 .section-content {
@@ -118,8 +116,9 @@
     gap: 15px;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
     margin: 0;
+    position: relative;
+    flex-wrap: nowrap;
 }
 
 .card-slot {
@@ -142,25 +141,6 @@
     transform: scale(1.05);
 }
 
-.warning {
-    font-size: 0.85rem;
-    text-align: center;
-    padding: 5px;
-    border-radius: 5px;
-    background: rgba(255, 107, 74, 0.1);
-    width: 100%;
-    height: 30px;
-    line-height: 20px;
-    flex-shrink: 0;
-    margin-top: 5px;
-    display: none;
-}
-
-.hand-section .warning,
-.board-section .warning {
-    display: block;
-}
-
 .real-card {
     border-radius: 8px;
     overflow: hidden;
@@ -174,14 +154,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: white;
     flex-shrink: 0;
 }
 
 .real-card:hover {
     transform: translateY(-3px) scale(1.03);
     z-index: 10;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card-content {
@@ -196,32 +174,45 @@
     line-height: 1.2;
 }
 
+.warning {
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 5px;
+    height: 25px;
+    line-height: 25px;
+    flex-shrink: 0;
+    display: none;
+}
+
+.hand-section .warning,
+.board-section .warning {
+    display: block;
+}
+
 .opponents-control {
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
     border-width: 2px;
     border-style: solid;
     height: 130px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
 }
 
 .opponents-label {
-    font-weight: 600;
-    margin-bottom: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
     text-align: center;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
     flex-shrink: 0;
 }
 
 .opponent-pills {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     flex: 1;
     align-content: center;
@@ -234,30 +225,30 @@
     border-width: 2px;
     border-style: solid;
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Montserrat', sans-serif;
 }
 
 .opponent-pill:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .deck-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
     gap: 6px;
-    margin: 0 0 20px 0;
+    margin: 20px 0;
     padding: 15px;
     border-radius: 12px;
     border-width: 2px;
     border-style: solid;
     height: 200px;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .deck-card {
@@ -268,21 +259,21 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
     border-width: 2px;
     border-style: solid;
-    font-weight: 600;
+    font-weight: bold;
     position: relative;
     overflow: hidden;
     border-color: transparent;
+    width: 100%;
+    height: auto;
     background: white;
-    font-family: 'Open Sans', sans-serif;
 }
 
 .deck-card:hover {
-    transform: scale(1.08);
+    transform: scale(1.1);
     z-index: 10;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .deck-card.selected {
@@ -318,19 +309,10 @@
     margin-top: 3px; 
 }
 
-.drop-hint {
-    font-size: 0.9rem;
-    text-align: center;
-    margin: 10px 0;
-    font-family: 'Open Sans', sans-serif;
-    font-style: italic;
-    height: 25px;
-}
-
 .controls {
     display: flex;
     gap: 15px;
-    margin-top: 10px;
+    margin-top: 25px;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -340,29 +322,26 @@
     border: none;
     border-radius: 8px;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
     min-width: 180px;
     position: relative;
     overflow: hidden;
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0.5px;
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
 }
 
-.btn-primary-bg {
-    background: linear-gradient(45deg, var(--color-2), var(--color-3));
-    color: white;
+.btn:active {
+    transform: scale(0.95);
 }
 
-.btn-secondary-bg {
-    background: transparent;
-    border: 2px solid;
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .results-panel {
@@ -393,50 +372,49 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    background: rgba(0, 0, 0, 0.2);
 }
 
 .result-percent {
     font-size: 3.5rem;
-    font-weight: 700;
+    font-weight: bold;
     margin: 15px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    font-family: 'Montserrat', sans-serif;
 }
 
-.section-title::before {
-    content: "";
-    position: absolute;
-    right: -8px;
-    top: -8px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.2s;
-    border-width: 2px;
-    border-style: solid;
-    z-index: 5;
-    background-color: var(--color-8);
-    border-color: white;
+.drop-hint {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 5px;
 }
 
-.hand-section.active .section-title::before,
-.board-section.active .section-title::before {
-    opacity: 1;
+.card-face {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
+.slot-empty {
+    font-size: 2.5rem;
+}
+
+/* Drag-over подсветки */
 .hand-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--color-1) !important;
     box-shadow: 0 0 20px var(--color-1) !important;
 }
 .board-section.drag-over:not(.drag-over-no-space) {
+    border-color: var(--color-2) !important;
     box-shadow: 0 0 20px var(--color-2) !important;
 }
 #deck.drag-over:not(.drag-over-no-space) {
-    box-shadow: 0 0 20px var(--color-6) !important;
+    border-color: var(--color-3) !important;
+    box-shadow: 0 0 20px var(--color-3) !important;
 }
 
 .hand-section .card-slot.drag-over {
@@ -448,12 +426,13 @@
     box-shadow: 0 0 15px var(--color-2) !important;
 }
 
+/* Адаптивность */
 @media (max-width: 768px) {
     .section-title::before {
-        width: 10px;
-        height: 10px;
-        right: -6px;
-        top: -6px;
+        width: 12px;
+        height: 12px;
+        right: -4px;
+        top: -4px;
     }
     
     .poker-header h1 {
@@ -461,13 +440,12 @@
     }
     
     .panel {
-        padding: 20px;
+        padding: 20px 15px;
     }
     
-    .hand-section, 
-    .board-section {
-        padding: 15px;
-        height: 260px;
+    .hand-section, .board-section {
+        height: 230px;
+        padding: 12px 15px;
     }
     
     .cards-row {
@@ -475,14 +453,14 @@
     }
     
     .card-slot {
-        width: 65px;
-        height: 95px;
+        width: 70px;
+        height: 100px;
         font-size: 2rem;
     }
     
     .real-card {
-        width: 65px;
-        height: 95px;
+        width: 70px;
+        height: 100px;
     }
     
     .card-content {
@@ -491,7 +469,7 @@
     
     .opponents-control {
         height: 120px;
-        padding: 15px;
+        padding: 12px;
     }
     
     .opponent-pill {
@@ -523,32 +501,40 @@
 }
 
 @media (max-width: 480px) {
+    .section-title::before {
+        width: 10px;
+        height: 10px;
+        right: -3px;
+        top: -3px;
+    }
+    
     .poker-header h1 {
         font-size: 1.8rem;
     }
     
-    .hand-section, 
-    .board-section {
-        height: 240px;
+    .hand-section, .board-section {
+        height: 210px;
+        padding: 10px 12px;
     }
     
     .card-slot {
-        width: 55px;
-        height: 80px;
-        font-size: 1.6rem;
+        width: 60px;
+        height: 85px;
+        font-size: 1.8rem;
     }
     
     .real-card {
-        width: 55px;
-        height: 80px;
+        width: 60px;
+        height: 85px;
     }
     
     .card-content {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
     }
     
     .opponents-control {
         height: 110px;
+        padding: 10px;
     }
     
     .opponent-pill {
@@ -567,14 +553,4 @@
         grid-template-columns: repeat(4, 1fr);
         height: 160px;
     }
-}
-
-@keyframes quick-flash {
-    0% { border-color: var(--color-4); }
-    50% { border-color: transparent; }
-    100% { border-color: var(--color-4); }
-}
-
-.results-panel.fresh-result {
-    animation: quick-flash 0.3s ease-in-out;
 }
