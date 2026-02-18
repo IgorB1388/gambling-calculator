@@ -1,326 +1,375 @@
+/* === ОСНОВНОЙ КОНТЕЙНЕР ПОКЕР-КАЛЬКУЛЯТОРА === */
 .poker-container {
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 1400px;  /* Максимальная ширина контейнера */
+    margin: 0 auto;      /* Центрирование по горизонтали */
 }
 
+/* === ЗАГОЛОВОК ПОКЕР-КАЛЬКУЛЯТОРА === */
 .poker-header {
-    text-align: center;
-    margin-bottom: 40px;
-    padding: 25px;
-    border-radius: 15px;
-    border-width: 2px;
-    border-style: solid;
-    position: relative;
+    text-align: center;      /* Текст по центру */
+    margin-bottom: 40px;     /* Отступ снизу */
+    padding: 25px;           /* Внутренние отступы */
+    border-radius: 15px;     /* Скругление углов */
+    border-width: 2px;       /* Толщина границы */
+    border-style: solid;     /* Стиль границы (сплошная) */
+    position: relative;      /* Для позиционирования псевдоэлементов */
 }
 
+/* === РЯД С МАСТЯМИ В ЗАГОЛОВКЕ === */
 .header-suits {
-    font-size: 2.8rem;
-    margin-bottom: 10px;
+    font-size: 2.8rem;       /* Размер шрифта */
+    margin-bottom: 10px;     /* Отступ снизу */
 }
 
+/* === ЗАГОЛОВОК H1 === */
 .poker-header h1 {
-    font-size: 2.8rem;
-    margin-bottom: 10px;
+    font-size: 2.8rem;       /* Размер шрифта */
+    margin-bottom: 10px;     /* Отступ снизу */
 }
 
+/* === ПОДЗАГОЛОВОК (НЕ ИСПОЛЬЗУЕТСЯ) === */
 .subtitle {
-    font-size: 1.1rem;
+    font-size: 1.1rem;       /* Размер шрифта */
 }
 
+/* === ОСНОВНАЯ ОБЛАСТЬ С ДВУМЯ КОЛОНКАМИ === */
 .main-area {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 30px;
-    margin-bottom: 40px;
+    display: grid;                           /* Сетка */
+    grid-template-columns: 1fr 1.2fr;        /* Две колонки: левая уже, правая шире */
+    gap: 30px;                                /* Расстояние между колонками */
+    margin-bottom: 40px;                      /* Отступ снизу */
 }
 
+/* === АДАПТИВНОСТЬ ДЛЯ СРЕДНИХ ЭКРАНОВ === */
 @media (max-width: 1100px) {
-    .main-area { grid-template-columns: 1fr; }
+    .main-area { 
+        grid-template-columns: 1fr;           /* Одна колонка на узких экранах */
+    }
 }
 
+/* === ПАНЕЛИ (ЛЕВАЯ И ПРАВАЯ) === */
 .panel {
-    border-radius: 15px;
-    padding: 25px;
-    border-width: 2px;
-    border-style: solid;
+    border-radius: 15px;       /* Скругление углов */
+    padding: 25px;             /* Внутренние отступы */
+    border-width: 2px;         /* Толщина границы */
+    border-style: solid;       /* Стиль границы */
 }
 
+/* === ЛЕВАЯ ПАНЕЛЬ (с рукой и бордом) === */
 .panel:first-child {
-    display: flex;
-    flex-direction: column;
+    display: flex;             /* Флекс-контейнер */
+    flex-direction: column;    /* Вертикальное расположение */
 }
 
+/* === СЕКЦИИ РУКИ И БОРДА === */
 .hand-section, .board-section {
-    border-radius: 12px;
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    border-width: 2px;
-    border-style: solid;
-    position: relative;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    border-radius: 12px;           /* Скругление углов */
+    padding: 15px 20px;            /* Внутренние отступы (вертикаль/горизонталь) */
+    margin-bottom: 15px;           /* Отступ снизу */
+    cursor: pointer;               /* Курсор-указатель при наведении */
+    transition: transform 0.3s, box-shadow 0.3s;  /* Плавные анимации */
+    border-width: 2px;             /* Толщина границы */
+    border-style: solid;           /* Стиль границы */
+    position: relative;            /* Для позиционирования псевдоэлементов */
+    min-height: 200px;             /* Минимальная высота */
+    display: flex;                 /* Флекс-контейнер */
+    flex-direction: column;        /* Вертикальное расположение */
+    flex: 1;                       /* Растягиваться на всю доступную высоту */
 }
 
-/* А для индикатора добавим свой transition */
+/* === ПСЕВДОЭЛЕМЕНТ ИНДИКАТОРА (КРАСНАЯ ТОЧКА) === */
 .section-title::before {
-    transition: opacity 0.3s, background-color 0.3s, box-shadow 0.3s;
+    transition: opacity 0.3s, background-color 0.3s, box-shadow 0.3s;  /* Плавность появления */
 }
 
+/* === ЗАГОЛОВОК СЕКЦИИ (ВАША РУКА / БОРД) === */
 .section-title {
-    margin-bottom: 3px;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    height: 28px;
-    position: relative;
+    margin-bottom: 3px;        /* Отступ снизу */
+    font-size: 1.2rem;         /* Размер шрифта */
+    display: flex;             /* Флекс-контейнер */
+    align-items: center;       /* Выравнивание по вертикали */
+    gap: 10px;                 /* Расстояние между элементами */
+    flex-shrink: 0;            /* Запрет сжиматься */
+    height: 28px;              /* Фиксированная высота */
+    position: relative;        /* Для позиционирования индикатора */
 }
 
+/* === ПОДЗАГОЛОВКИ (подсказки "2 карты" / "5 карт") === */
 .board-subtitle,
 .hand-subtitle {
-    font-size: 0.9rem;
-    text-align: center;
-    margin-bottom: 8px;
-    height: 20px;
-    flex-shrink: 0;
-    line-height: 20px;
+    font-size: 0.9rem;         /* Размер шрифта */
+    text-align: center;        /* Текст по центру */
+    margin-bottom: 8px;        /* Отступ снизу */
+    height: 20px;              /* Фиксированная высота */
+    flex-shrink: 0;            /* Запрет сжиматься */
+    line-height: 20px;         /* Высота строки = высота блока */
 }
 
+/* === КОНТЕНТ С КАРТАМИ === */
 .section-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
+    flex-grow: 1;              /* Растягиваться на всё свободное место */
+    display: flex;             /* Флекс-контейнер */
+    flex-direction: column;    /* Вертикальное расположение */
+    justify-content: center;   /* Центрирование по вертикали */
+    position: relative;        /* Для позиционирования */
 }
 
+/* === РЯД С КАРТАМИ === */
 .cards-row {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    justify-content: center;
-    min-height: 120px;
-    margin: 0;
-    position: relative;
+    display: flex;             /* Флекс-контейнер */
+    gap: 15px;                 /* Расстояние между картами */
+    align-items: center;       /* Выравнивание по вертикали */
+    justify-content: center;   /* Центрирование по горизонтали */
+    min-height: 120px;         /* Минимальная высота */
+    margin: 0;                 /* Отмена внешних отступов */
+    position: relative;        /* Для позиционирования */
 }
 
+/* === СЛОТ ДЛЯ КАРТЫ (ПУСТОЕ МЕСТО) === */
 .card-slot {
-    width: 80px;
-    height: 115px;
-    border-width: 2px;
-    border-style: dashed;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    position: relative;
-    transition: all 0.3s;
-    cursor: pointer;
+    width: 80px;               /* Фиксированная ширина */
+    height: 115px;             /* Фиксированная высота (соотношение ~2:3) */
+    border-width: 2px;         /* Толщина границы */
+    border-style: dashed;      /* Пунктирная граница */
+    border-radius: 10px;       /* Скругление углов */
+    display: flex;             /* Флекс-контейнер */
+    align-items: center;       /* Выравнивание по вертикали */
+    justify-content: center;   /* Центрирование по горизонтали */
+    font-size: 2.5rem;         /* Размер шрифта для символа "+" */
+    position: relative;        /* Для позиционирования */
+    transition: all 0.3s;      /* Плавная анимация */
+    cursor: pointer;           /* Курсор-указатель */
 }
 
+/* === СЛОТ В СОСТОЯНИИ ПЕРЕТАСКИВАНИЯ === */
 .card-slot.drag-over {
-    transform: scale(1.05);
+    transform: scale(1.05);    /* Увеличение при наведении */
 }
 
+/* === РЕАЛЬНАЯ КАРТА (ПОСЛЕ ПЕРЕТАСКИВАНИЯ) === */
 .real-card {
-    border-radius: 8px;
-    overflow: hidden;
-    border-width: 1px;
-    border-style: solid;
-    cursor: move;
-    position: relative;
-    transition: all 0.2s;
-    width: 80px;
-    height: 115px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 8px;            /* Скругление углов */
+    overflow: hidden;              /* Скрытие выступающего контента */
+    border-width: 1px;             /* Тонкая граница */
+    border-style: solid;           /* Стиль границы */
+    cursor: move;                  /* Курсор-перетаскивание */
+    position: relative;            /* Для позиционирования */
+    transition: all 0.2s;          /* Плавная анимация */
+    width: 80px;                   /* Фиксированная ширина */
+    height: 115px;                 /* Фиксированная высота */
+    display: flex;                 /* Флекс-контейнер */
+    align-items: center;           /* Выравнивание по вертикали */
+    justify-content: center;       /* Центрирование по горизонтали */
 }
 
+/* === РЕАЛЬНАЯ КАРТА ПРИ НАВЕДЕНИИ === */
 .real-card:hover {
-    transform: translateY(-3px) scale(1.03);
-    z-index: 10;
+    transform: translateY(-3px) scale(1.03);  /* Подъем и увеличение */
+    z-index: 10;                              /* Поверх других элементов */
 }
 
+/* === КОНТЕНТ КАРТЫ (РАНГ И МАСТЬ) === */
 .card-content {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    line-height: 1.2;
+    font-size: 2.5rem;           /* Размер шрифта */
+    font-weight: bold;           /* Жирное начертание */
+    text-align: center;          /* Текст по центру */
+    width: 100%;                 /* На всю ширину */
+    display: flex;               /* Флекс-контейнер */
+    flex-direction: column;      /* Вертикальное расположение (ранг над мастью) */
+    align-items: center;         /* Центрирование по горизонтали */
+    justify-content: center;     /* Центрирование по вертикали */
+    line-height: 1.2;            /* Межстрочный интервал */
 }
 
+/* === ПРЕДУПРЕЖДЕНИЯ (НЕПРАВИЛЬНОЕ КОЛИЧЕСТВО КАРТ) === */
 .warning {
-    font-size: 0.9rem;
-    text-align: center;
-    display: none;
-    position: absolute;
-    bottom: 5px;
-    left: 20px;
-    right: 20px;
-    height: 20px;
-    line-height: 20px;
-    z-index: 2;
+    font-size: 0.9rem;           /* Размер шрифта */
+    text-align: center;          /* Текст по центру */
+    display: none;               /* Скрыто по умолчанию */
+    position: absolute;          /* Абсолютное позиционирование */
+    bottom: 5px;                 /* Отступ снизу */
+    left: 20px;                  /* Отступ слева */
+    right: 20px;                 /* Отступ справа */
+    height: 20px;                /* Фиксированная высота */
+    line-height: 20px;           /* Высота строки = высота блока */
+    z-index: 2;                  /* Поверх других элементов */
 }
 
+/* === БЛОК УПРАВЛЕНИЯ ОППОНЕНТАМИ === */
 .opponents-control {
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border-width: 2px;
-    border-style: solid;
+    padding: 15px;               /* Внутренние отступы */
+    border-radius: 10px;         /* Скругление углов */
+    margin-bottom: 20px;         /* Отступ снизу */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
 }
 
+/* === ЗАГОЛОВОК БЛОКА ОППОНЕНТОВ === */
 .opponents-label {
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: center;
-    font-size: 1.1rem;
+    font-weight: bold;           /* Жирное начертание */
+    margin-bottom: 10px;         /* Отступ снизу */
+    text-align: center;          /* Текст по центру */
+    font-size: 1.1rem;           /* Размер шрифта */
 }
 
+/* === КОНТЕЙНЕР С КНОПКАМИ-ПИЛЮЛЯМИ === */
 .opponent-pills {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    display: flex;               /* Флекс-контейнер */
+    justify-content: center;     /* Центрирование по горизонтали */
+    gap: 8px;                    /* Расстояние между кнопками */
+    flex-wrap: wrap;             /* Перенос на новую строку */
 }
 
+/* === КНОПКА-ПИЛЮЛЯ ДЛЯ ВЫБОРА ОППОНЕНТОВ === */
 .opponent-pill {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border-width: 2px;
-    border-style: solid;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 45px;                 /* Фиксированная ширина */
+    height: 45px;                /* Фиксированная высота (круг) */
+    border-radius: 50%;          /* Круглая форма */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
+    font-size: 1.2rem;           /* Размер шрифта */
+    font-weight: bold;           /* Жирное начертание */
+    cursor: pointer;             /* Курсор-указатель */
+    transition: all 0.3s;        /* Плавная анимация */
+    display: flex;               /* Флекс-контейнер */
+    align-items: center;         /* Центрирование по вертикали */
+    justify-content: center;     /* Центрирование по горизонтали */
 }
 
+/* === КНОПКА-ПИЛЮЛЯ ПРИ НАВЕДЕНИИ === */
 .opponent-pill:hover {
-    transform: scale(1.1);
+    transform: scale(1.1);       /* Увеличение */
 }
 
+/* === СЕТКА КОЛОДЫ === */
 .deck-grid {
-    display: grid;
-    grid-template-columns: repeat(13, 1fr);
-    gap: 6px;
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
+    display: grid;                           /* Сетка */
+    grid-template-columns: repeat(13, 1fr);  /* 13 колонок (по числу рангов) */
+    gap: 6px;                                 /* Расстояние между картами */
+    margin: 20px 0;                           /* Отступы сверху и снизу */
+    padding: 15px;                            /* Внутренние отступы */
+    border-radius: 12px;                      /* Скругление углов */
+    border-width: 2px;                        /* Толщина границы */
+    border-style: solid;                      /* Стиль границы */
 }
 
+/* === КАРТА В КОЛОДЕ === */
 .deck-card {
-    aspect-ratio: 2/3;
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    border-width: 2px;
-    border-style: solid;
-    font-weight: bold;
-    position: relative;
-    overflow: hidden;
-    border-color: transparent;
+    aspect-ratio: 2/3;           /* Соотношение сторон как у игральной карты */
+    border-radius: 6px;          /* Скругление углов */
+    display: flex;               /* Флекс-контейнер */
+    flex-direction: column;      /* Вертикальное расположение */
+    align-items: center;         /* Центрирование по горизонтали */
+    justify-content: center;     /* Центрирование по вертикали */
+    cursor: pointer;             /* Курсор-указатель */
+    transition: all 0.3s;        /* Плавная анимация */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
+    font-weight: bold;           /* Жирное начертание */
+    position: relative;          /* Для позиционирования псевдоэлементов */
+    overflow: hidden;            /* Скрытие выступающего */
+    border-color: transparent;   /* Прозрачная граница по умолчанию */
 }
 
+/* === КАРТА В КОЛОДЕ ПРИ НАВЕДЕНИИ === */
 .deck-card:hover {
-    transform: scale(1.1);
-    z-index: 10;
+    transform: scale(1.1);       /* Увеличение */
+    z-index: 10;                 /* Поверх других карт */
 }
 
+/* === ВЫБРАННАЯ КАРТА (НЕЛЬЗЯ ПЕРЕТАСКИВАТЬ) === */
 .deck-card.selected {
-    cursor: default;
+    cursor: default;             /* Обычный курсор */
 }
 
 .deck-card.selected:hover {
-    transform: none;
+    transform: none;             /* Без увеличения */
 }
 
+/* === СКРЫТИЕ ЛИЦА ВЫБРАННОЙ КАРТЫ === */
 .deck-card.selected .card-face {
     display: none;
 }
 
+/* === КРЕСТИК НА ВЫБРАННОЙ КАРТЕ === */
 .deck-card.selected::after {
-    content: "✕";
-    font-size: 1.8rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    content: "✕";                            /* Символ крестика */
+    font-size: 1.8rem;                        /* Размер */
+    position: absolute;                       /* Абсолютное позиционирование */
+    top: 50%;                                 /* По центру по вертикали */
+    left: 50%;                                /* По центру по горизонтали */
+    transform: translate(-50%, -50%);         /* Смещение для точного центрирования */
 }
 
-.card-value { font-size: 1.2rem; margin-bottom: 3px; }
-.card-suit-large { font-size: 1.6rem; margin-top: 3px; }
+/* === РАНГ КАРТЫ === */
+.card-value { 
+    font-size: 1.2rem;           /* Размер шрифта */
+    margin-bottom: 3px;          /* Отступ снизу */
+}
 
+/* === МАСТЬ КАРТЫ (КРУПНАЯ) === */
+.card-suit-large { 
+    font-size: 1.6rem;           /* Размер шрифта */
+    margin-top: 3px;             /* Отступ сверху */
+}
+
+/* === КОНТЕЙНЕР КНОПОК УПРАВЛЕНИЯ === */
 .controls {
-    display: flex;
-    gap: 15px;
-    margin-top: 25px;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: flex;               /* Флекс-контейнер */
+    gap: 15px;                   /* Расстояние между кнопками */
+    margin-top: 25px;            /* Отступ сверху */
+    justify-content: center;     /* Центрирование по горизонтали */
+    flex-wrap: wrap;             /* Перенос на новую строку */
 }
 
+/* === БАЗОВЫЙ СТИЛЬ КНОПКИ === */
 .btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 180px;
-    position: relative;
-    overflow: hidden;
+    padding: 12px 25px;          /* Внутренние отступы */
+    border: none;                /* Без границы */
+    border-radius: 8px;          /* Скругление углов */
+    font-size: 1.1rem;           /* Размер шрифта */
+    font-weight: bold;           /* Жирное начертание */
+    cursor: pointer;             /* Курсор-указатель */
+    transition: all 0.3s;        /* Плавная анимация */
+    min-width: 180px;            /* Минимальная ширина */
+    position: relative;          /* Для позиционирования псевдоэлементов */
+    overflow: hidden;            /* Скрытие выступающего (для анимации) */
 }
 
+/* === КНОПКА ПРИ НАВЕДЕНИИ === */
 .btn:hover {
-    transform: translateY(-3px);
+    transform: translateY(-3px); /* Подъем вверх */
 }
 
+/* === КНОПКА ПРИ НАЖАТИИ === */
 .btn:active {
-    transform: scale(0.95);
+    transform: scale(0.95);      /* Уменьшение */
 }
 
+/* === ОСНОВНАЯ КНОПКА В НЕАКТИВНОМ СОСТОЯНИИ === */
 .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+    opacity: 0.5;                /* Полупрозрачность */
+    cursor: not-allowed;         /* Курсор "нельзя" */
+    transform: none;             /* Без трансформации */
 }
 
 .btn-primary:disabled:hover {
-    transform: none;
+    transform: none;             /* Без трансформации при наведении */
 }
 
-/* Анимации кнопок */
+/* === АНИМАЦИЯ КНОПКИ ПРИ КЛИКЕ === */
 .btn.clicked {
     animation: button-pulse 0.3s ease-in-out;
 }
 
+/* === КЛЮЧЕВЫЕ КАДРЫ ДЛЯ ПУЛЬСАЦИИ КНОПКИ === */
 @keyframes button-pulse {
     0% { transform: scale(1); }
     50% { transform: scale(0.95); }
     100% { transform: scale(1); }
 }
 
+/* === ПСЕВДОЭЛЕМЕНТ ДЛЯ ЭФФЕКТА ВОЛНЫ === */
 .btn::after {
     content: '';
     position: absolute;
@@ -334,10 +383,12 @@
     transform-origin: 50% 50%;
 }
 
+/* === ЗАПУСК АНИМАЦИИ ВОЛНЫ ПРИ НАЖАТИИ === */
 .btn:active::after {
     animation: ripple 0.6s ease-out;
 }
 
+/* === КЛЮЧЕВЫЕ КАДРЫ ДЛЯ ЭФФЕКТА ВОЛНЫ === */
 @keyframes ripple {
     0% {
         transform: scale(0, 0);
@@ -349,132 +400,146 @@
     }
 }
 
+/* === ПАНЕЛЬ РЕЗУЛЬТАТОВ === */
 .results-panel {
-    margin-top: 30px;
-    display: block !important;
-    position: relative;
-    border-radius: 15px;
-    padding: 25px;
-    border-width: 2px;
-    border-style: solid;
+    margin-top: 30px;            /* Отступ сверху */
+    display: block !important;   /* Принудительное отображение */
+    position: relative;          /* Для позиционирования */
+    border-radius: 15px;         /* Скругление углов */
+    padding: 25px;               /* Внутренние отступы */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
 }
 
+/* === СЕТКА РЕЗУЛЬТАТОВ (3 КОЛОНКИ) === */
 .results-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 10px;
+    display: grid;                           /* Сетка */
+    grid-template-columns: repeat(3, 1fr);   /* 3 равные колонки */
+    gap: 15px;                                /* Расстояние между карточками */
+    margin-bottom: 10px;                      /* Отступ снизу */
 }
 
+/* === КАРТОЧКА РЕЗУЛЬТАТА === */
 .result-card {
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    border-width: 2px;
-    border-style: solid;
-    min-height: 160px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
+    border-radius: 12px;          /* Скругление углов */
+    padding: 20px;                /* Внутренние отступы */
+    text-align: center;           /* Текст по центру */
+    border-width: 2px;            /* Толщина границы */
+    border-style: solid;          /* Стиль границы */
+    min-height: 160px;            /* Минимальная высота */
+    display: flex;                /* Флекс-контейнер */
+    flex-direction: column;       /* Вертикальное расположение */
+    justify-content: center;      /* Центрирование по вертикали */
+    position: relative;           /* Для позиционирования */
 }
 
+/* === ПРОЦЕНТ РЕЗУЛЬТАТА === */
 .result-percent {
-    font-size: 3.5rem;
-    font-weight: bold;
-    margin: 15px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    transition: color 0.1s ease-out;
+    font-size: 3.5rem;            /* Крупный шрифт */
+    font-weight: bold;            /* Жирное начертание */
+    margin: 15px 0;               /* Отступы сверху и снизу */
+    display: flex;                /* Флекс-контейнер */
+    align-items: center;          /* Центрирование по вертикали */
+    justify-content: center;      /* Центрирование по горизонтали */
+    flex-grow: 1;                 /* Растягивание */
+    transition: color 0.1s ease-out; /* Плавное изменение цвета */
 }
 
+/* === ПОДСКАЗКА ПО ПЕРЕТАСКИВАНИЮ === */
 .drop-hint {
-    font-size: 0.9rem;
-    text-align: center;
-    margin-top: 5px;
+    font-size: 0.9rem;            /* Размер шрифта */
+    text-align: center;           /* Текст по центру */
+    margin-top: 5px;              /* Отступ сверху */
 }
 
+/* === КОНТЕЙНЕР ДЛЯ ПРОГРЕСС-БАРА (НЕ ИСПОЛЬЗУЕТСЯ) === */
 .progress-container {
-    margin-top: 20px;
-    padding: 10px 15px;
-    border-radius: 10px;
-    border-width: 2px;
-    border-style: solid;
-    display: block;
+    margin-top: 20px;             /* Отступ сверху */
+    padding: 10px 15px;           /* Внутренние отступы */
+    border-radius: 10px;          /* Скругление углов */
+    border-width: 2px;            /* Толщина границы */
+    border-style: solid;          /* Стиль границы */
+    display: block;               /* Блочный элемент */
 }
 
+/* === ПРОГРЕСС-БАР (НЕ ИСПОЛЬЗУЕТСЯ) === */
 .progress-bar {
-    height: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 10px;
+    height: 20px;                 /* Высота */
+    border-radius: 10px;          /* Скругление */
+    overflow: hidden;             /* Скрытие выступающего */
+    margin-top: 10px;             /* Отступ сверху */
 }
 
+/* === ЗАПОЛНЕНИЕ ПРОГРЕСС-БАРА (НЕ ИСПОЛЬЗУЕТСЯ) === */
 .progress-fill {
-    height: 100%;
-    width: 0%;
-    transition: width 0.3s;
+    height: 100%;                 /* На всю высоту */
+    width: 0%;                    /* Начальная ширина 0 */
+    transition: width 0.3s;       /* Плавное изменение ширины */
 }
 
+/* === ЛИЦЕВАЯ СТОРОНА КАРТЫ (РАНГ И МАСТЬ) === */
 .card-face {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    display: flex;                /* Флекс-контейнер */
+    flex-direction: column;       /* Вертикальное расположение */
+    align-items: center;          /* Центрирование по горизонтали */
+    justify-content: center;      /* Центрирование по вертикали */
+    width: 100%;                  /* На всю ширину */
+    height: 100%;                 /* На всю высоту */
 }
 
+/* === СИМВОЛ В ПУСТОМ СЛОТЕ (+) === */
 .slot-empty {
-    font-size: 2.5rem;
+    font-size: 2.5rem;            /* Размер шрифта */
 }
 
+/* === ОПИСАНИЕ РУКИ (НЕ ИСПОЛЬЗУЕТСЯ) === */
 .hand-description {
-    font-size: 0.95rem;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 5px;
-    line-height: 1.3;
+    font-size: 0.95rem;           /* Размер шрифта */
+    min-height: 40px;             /* Минимальная высота */
+    display: flex;                /* Флекс-контейнер */
+    align-items: center;          /* Центрирование по вертикали */
+    justify-content: center;      /* Центрирование по горизонтали */
+    padding: 0 5px;               /* Горизонтальные отступы */
+    line-height: 1.3;             /* Межстрочный интервал */
 }
 
-/* Индикатор активного блока */
+/* === ИНДИКАТОР АКТИВНОГО БЛОКА (КРАСНАЯ ТОЧКА) === */
 .section-title::before {
     content: "";
     position: absolute;
-    right: -5px;
-    top: -5px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    opacity: 0;
-    transition: all 0.3s ease;
-    border-width: 2px;
-    border-style: solid;
-    z-index: 5;
+    right: -5px;                  /* Смещение вправо */
+    top: -5px;                    /* Смещение вверх */
+    width: 14px;                  /* Ширина точки */
+    height: 14px;                 /* Высота точки */
+    border-radius: 50%;           /* Круглая форма */
+    opacity: 0;                   /* Прозрачна по умолчанию */
+    transition: all 0.3s ease;    /* Плавное появление */
+    border-width: 2px;            /* Толщина границы */
+    border-style: solid;          /* Стиль границы */
+    z-index: 5;                   /* Поверх других элементов */
 }
 
+/* === ПОКАЗ ИНДИКАТОРА У АКТИВНОГО БЛОКА === */
 .hand-section.active .section-title::before,
 .board-section.active .section-title::before {
-    opacity: 1;
+    opacity: 1;                   /* Полная видимость */
 }
 
-/* Анимация результатов */
+/* === АНИМАЦИЯ РЕЗУЛЬТАТОВ (ПУСТАЯ) === */
 @keyframes quick-glow {
     0% { border-color: transparent; }
     50% { border-color: transparent; }
     100% { border-color: transparent; }
 }
 
+/* === ПРИМЕНЕНИЕ АНИМАЦИИ К СВЕЖИМ РЕЗУЛЬТАТАМ === */
 .results-panel.fresh-result {
     animation: quick-glow 0.25s ease-in-out;
 }
 
-/* Адаптивность покера */
+/* === АДАПТИВНОСТЬ ДЛЯ ПЛАНШЕТОВ (до 768px) === */
 @media (max-width: 768px) {
+    /* Уменьшение индикатора */
     .section-title::before {
         width: 12px;
         height: 12px;
@@ -482,86 +547,104 @@
         top: -4px;
     }
     
+    /* Уменьшение заголовка */
     .poker-header h1 {
         font-size: 2.2rem;
         margin-top: 10px;
     }
     
+    /* Уменьшение отступов в панелях */
     .panel {
         padding: 20px 15px;
     }
     
+    /* Уменьшение секций руки и борда */
     .hand-section, .board-section {
         min-height: 180px;
         padding: 12px;
         margin-bottom: 10px;
     }
     
+    /* Уменьшение слотов карт */
     .card-slot {
         width: 70px;
         height: 100px;
         font-size: 2rem;
     }
     
+    /* Уменьшение реальных карт */
     .real-card {
         width: 70px;
         height: 100px;
     }
     
+    /* Уменьшение контента карт */
     .card-content {
         font-size: 2rem;
     }
     
+    /* Сетка колоды 7 колонок */
     .deck-grid {
         grid-template-columns: repeat(7, 1fr);
         gap: 4px;
         padding: 10px;
     }
     
+    /* Соотношение сторон карт в колоде */
     .deck-card {
         aspect-ratio: 3/4;
     }
     
+    /* Уменьшение ранга */
     .card-value {
         font-size: 1rem;
     }
     
+    /* Уменьшение масти */
     .card-suit-large {
         font-size: 1.3rem;
     }
     
+    /* Уменьшение кнопок */
     .btn {
         min-width: 150px;
         padding: 10px 20px;
         font-size: 1rem;
     }
     
+    /* Уменьшение процентов */
     .result-percent {
         font-size: 2.8rem;
     }
     
+    /* Сетка результатов в одну колонку */
     .results-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
     
+    /* Уменьшение карточек результатов */
     .result-card {
         min-height: 140px;
         padding: 15px;
     }
     
+    /* Уменьшение кнопок-пилюль */
     .opponent-pill {
         width: 40px;
         height: 40px;
         font-size: 1.1rem;
     }
     
+    /* Уменьшение расстояния между кнопками */
     .controls {
         gap: 10px;
     }
 }
 
+/* === АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (до 480px) === */
 @media (max-width: 480px) {
+    /* Еще большее уменьшение индикатора */
     .section-title::before {
         width: 10px;
         height: 10px;
@@ -569,60 +652,71 @@
         top: -3px;
     }
     
+    /* Уменьшение заголовка */
     .poker-header h1 {
         font-size: 1.8rem;
     }
     
+    /* Уменьшение отступов в панелях */
     .panel {
         padding: 15px;
     }
     
+    /* Уменьшение секций */
     .hand-section, .board-section {
         min-height: 160px;
         padding: 10px;
     }
     
+    /* Уменьшение слотов */
     .card-slot {
         width: 60px;
         height: 85px;
         font-size: 1.8rem;
     }
     
+    /* Уменьшение реальных карт */
     .real-card {
         width: 60px;
         height: 85px;
     }
     
+    /* Уменьшение контента карт */
     .card-content {
         font-size: 1.8rem;
     }
     
+    /* Уменьшение кнопок */
     .btn {
         min-width: 130px;
         padding: 8px 15px;
         font-size: 0.9rem;
     }
     
+    /* Уменьшение процентов */
     .result-percent {
         font-size: 2.5rem;
     }
     
+    /* Уменьшение карточек результатов */
     .result-card {
         min-height: 130px;
     }
     
+    /* Сетка колоды 4 колонки */
     .deck-grid {
         grid-template-columns: repeat(4, 1fr);
     }
     
+    /* Уменьшение расстояния между пилюлями */
     .opponent-pills {
         gap: 5px;
     }
     
+    /* Уменьшение пилюль */
     .opponent-pill {
         width: 35px;
         height: 35px;
         font-size: 1rem;
     }
 }
-
