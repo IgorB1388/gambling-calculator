@@ -120,11 +120,20 @@ function getTranslation(key, params = {}) {
     return text;
 }
 
+// --- Функция ожидания загрузки переводов ---
+function waitForTranslations(callback) {
+    if (window.translations && Object.keys(window.translations).length > 0) {
+        callback();
+    } else {
+        setTimeout(() => waitForTranslations(callback), 50);
+    }
+}
+
 // --- Инициализация ---
 document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     updateTargetInputState();
-    createEnhancedStrategySelect();
+    waitForTranslations(createEnhancedStrategySelect);
 });
 
 // --- СОЗДАНИЕ УЛУЧШЕННОГО ВЫПАДАЮЩЕГО СПИСКА ---
@@ -278,7 +287,7 @@ function initEventListeners() {
             });
             this.classList.add('active');
             // Обновляем список стратегий при смене типа рулетки
-            createEnhancedStrategySelect();
+            waitForTranslations(createEnhancedStrategySelect);
         });
     });
 
@@ -287,6 +296,11 @@ function initEventListeners() {
     
     document.getElementById('simulateBtn').addEventListener('click', simulateStrategy);
     document.getElementById('resetBtn').addEventListener('click', resetSimulation);
+    
+    // Обновляем при смене языка
+    document.addEventListener('languageChanged', () => {
+        waitForTranslations(createEnhancedStrategySelect);
+    });
 }
 
 function updateTargetInputState() {
