@@ -83,14 +83,10 @@
     transform: translateY(-2px);
 }
 
-/* ПОДСВЕТКА АКТИВНОЙ КНОПКИ ТИПА РУЛЕТКИ */
 .option-pill.active {
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 10px var(--color-primary);
     transform: scale(1.05);
 }
 
-/* 🚩 ФЛАГИ ДЛЯ ТИПА РУЛЕТКИ */
 .roulette-flag {
     width: 24px;
     height: 18px;
@@ -99,7 +95,6 @@
     margin-right: 4px;
     border-width: 1px;
     border-style: solid;
-    border-color: var(--border-muted);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -130,7 +125,6 @@
     margin: 0;
 }
 
-/* СТИЛИ ДЛЯ ВЫПАДАЮЩИХ СПИСКОВ - ВСЕГДА ЧЕРНЫЙ ТЕКСТ НА БЕЛОМ */
 .settings-select {
     padding: 10px 12px;
     border-radius: 8px;
@@ -138,14 +132,16 @@
     border-style: solid;
     font-size: 1rem;
     width: 100%;
-    background: #ffffff !important;
-    color: #000000 !important;
     cursor: pointer;
+    background: transparent;
+}
+
+.settings-select optgroup {
+    font-weight: bold;
 }
 
 .settings-select option {
-    background: #ffffff !important;
-    color: #000000 !important;
+    padding: 5px;
 }
 
 .input-suffix {
@@ -219,7 +215,6 @@
     transform: scale(0.95);
 }
 
-/* ПРАВАЯ ПАНЕЛЬ - РЕЗУЛЬТАТЫ */
 .results-grid-compact {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -295,7 +290,6 @@
     justify-content: center;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     .panel {
         padding: 20px;
