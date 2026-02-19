@@ -120,26 +120,22 @@ function getTranslation(key, params = {}) {
     return text;
 }
 
-// --- Функция ожидания загрузки переводов ---
-function waitForTranslations(callback) {
-    if (window.translations && Object.keys(window.translations).length > 0) {
-        callback();
-    } else {
-        setTimeout(() => waitForTranslations(callback), 50);
-    }
-}
-
 // --- Инициализация ---
 document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     updateTargetInputState();
-    waitForTranslations(createEnhancedStrategySelect);
+    createEnhancedStrategySelect();
 });
 
-// --- СОЗДАНИЕ УЛУЧШЕННОГО ВЫПАДАЮЩЕГО СПИСКА ---
+// --- СОЗДАНИЕ УЛУЧШЕННОГО ВЫПАДАЮЩЕГО СПИСКА (с каскадным меню) ---
 function createEnhancedStrategySelect() {
     const select = document.getElementById('strategySelect');
+    if (!select) return;
+    
     const container = select.parentNode;
+    
+    // Сохраняем текущее значение если было
+    const currentValue = select.value;
     
     // Очищаем select
     select.innerHTML = '';
@@ -148,34 +144,23 @@ function createEnhancedStrategySelect() {
     const baseGroup = document.createElement('optgroup');
     baseGroup.label = getTranslation('strategyGroupBasic');
     
-    const redOption = createOption('red', getTranslation('strategyRed'));
-    baseGroup.appendChild(redOption);
-    
-    const blackOption = createOption('black', getTranslation('strategyBlack'));
-    baseGroup.appendChild(blackOption);
-    
-    const evenOption = createOption('even', getTranslation('strategyEven'));
-    baseGroup.appendChild(evenOption);
-    
-    const oddOption = createOption('odd', getTranslation('strategyOdd'));
-    baseGroup.appendChild(oddOption);
-    
-    const zeroOption = createOption('zero', getTranslation('strategyZero'));
-    baseGroup.appendChild(zeroOption);
+    addOption(baseGroup, 'red', getTranslation('strategyRed'));
+    addOption(baseGroup, 'black', getTranslation('strategyBlack'));
+    addOption(baseGroup, 'even', getTranslation('strategyEven'));
+    addOption(baseGroup, 'odd', getTranslation('strategyOdd'));
+    addOption(baseGroup, 'zero', getTranslation('strategyZero'));
     
     select.appendChild(baseGroup);
     
-    // 2. Группа конкретных цифр
+    // 2. Группа конкретных цифр (включая "Свои цифры")
     const numbersGroup = document.createElement('optgroup');
     numbersGroup.label = getTranslation('strategyGroupNumbers');
     
-    const customOption = createOption('custom', getTranslation('strategyCustom'));
-    numbersGroup.appendChild(customOption);
+    addOption(numbersGroup, 'custom', getTranslation('strategyCustom'));
     
     // Добавляем отдельные цифры 1-36
     for (let i = 1; i <= 36; i++) {
-        const numOption = createOption(`num_${i}`, getTranslation('strategyNumber', {number: i}));
-        numbersGroup.appendChild(numOption);
+        addOption(numbersGroup, `num_${i}`, getTranslation('strategyNumber', {number: i}));
     }
     
     select.appendChild(numbersGroup);
@@ -184,11 +169,8 @@ function createEnhancedStrategySelect() {
     const halvesGroup = document.createElement('optgroup');
     halvesGroup.label = getTranslation('strategyGroupHalves');
     
-    const lowOption = createOption('low', getTranslation('strategyLow'));
-    halvesGroup.appendChild(lowOption);
-    
-    const highOption = createOption('high', getTranslation('strategyHigh'));
-    halvesGroup.appendChild(highOption);
+    addOption(halvesGroup, 'low', getTranslation('strategyLow'));
+    addOption(halvesGroup, 'high', getTranslation('strategyHigh'));
     
     select.appendChild(halvesGroup);
     
@@ -196,14 +178,9 @@ function createEnhancedStrategySelect() {
     const dozensGroup = document.createElement('optgroup');
     dozensGroup.label = getTranslation('strategyGroupDozens');
     
-    const dozen1Option = createOption('dozen1', getTranslation('strategyDozen1'));
-    dozensGroup.appendChild(dozen1Option);
-    
-    const dozen2Option = createOption('dozen2', getTranslation('strategyDozen2'));
-    dozensGroup.appendChild(dozen2Option);
-    
-    const dozen3Option = createOption('dozen3', getTranslation('strategyDozen3'));
-    dozensGroup.appendChild(dozen3Option);
+    addOption(dozensGroup, 'dozen1', getTranslation('strategyDozen1'));
+    addOption(dozensGroup, 'dozen2', getTranslation('strategyDozen2'));
+    addOption(dozensGroup, 'dozen3', getTranslation('strategyDozen3'));
     
     select.appendChild(dozensGroup);
     
@@ -211,19 +188,47 @@ function createEnhancedStrategySelect() {
     const columnsGroup = document.createElement('optgroup');
     columnsGroup.label = getTranslation('strategyGroupColumns');
     
-    const column1Option = createOption('column1', getTranslation('strategyColumn1'));
-    columnsGroup.appendChild(column1Option);
-    
-    const column2Option = createOption('column2', getTranslation('strategyColumn2'));
-    columnsGroup.appendChild(column2Option);
-    
-    const column3Option = createOption('column3', getTranslation('strategyColumn3'));
-    columnsGroup.appendChild(column3Option);
+    addOption(columnsGroup, 'column1', getTranslation('strategyColumn1'));
+    addOption(columnsGroup, 'column2', getTranslation('strategyColumn2'));
+    addOption(columnsGroup, 'column3', getTranslation('strategyColumn3'));
     
     select.appendChild(columnsGroup);
     
-    // Находим или создаем контейнер для custom чисел
+    // Восстанавливаем выбранное значение если возможно
+    if (currentValue && select.querySelector(`option[value="${currentValue}"]`)) {
+        select.value = currentValue;
+    }
+    
+    // Обработчик изменения выбора
+    select.addEventListener('change', function(e) {
+        const container = document.getElementById('customNumbersContainer');
+        if (container) {
+            if (this.value === 'custom') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+                customNumbers = [];
+            }
+        }
+    });
+    
+    // Создаем или обновляем контейнер для custom чисел
+    updateCustomNumbersContainer(select);
+}
+
+// --- Вспомогательная функция добавления option ---
+function addOption(group, value, text) {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = text;
+    group.appendChild(option);
+    return option;
+}
+
+// --- Создание/обновление контейнера для своих цифр ---
+function updateCustomNumbersContainer(select) {
     let customContainer = document.getElementById('customNumbersContainer');
+    
     if (!customContainer) {
         customContainer = document.createElement('div');
         customContainer.id = 'customNumbersContainer';
@@ -241,7 +246,7 @@ function createEnhancedStrategySelect() {
         customHint.className = 'text-muted';
         customHint.style.fontSize = '0.85rem';
         customHint.style.marginTop = '5px';
-        customHint.setAttribute('data-i18n', 'customNumbersHint');
+        customHint.textContent = getTranslation('customNumbersHint');
         
         customContainer.appendChild(customInput);
         customContainer.appendChild(customHint);
@@ -251,31 +256,14 @@ function createEnhancedStrategySelect() {
         customInput.addEventListener('input', function() {
             const value = this.value.trim();
             if (value) {
-                customNumbers = value.split(',').map(num => parseInt(num.trim())).filter(num => !isNaN(num) && num >= 0 && num <= 36);
+                customNumbers = value.split(',')
+                    .map(num => parseInt(num.trim()))
+                    .filter(num => !isNaN(num) && num >= 0 && num <= 36);
             } else {
                 customNumbers = [];
             }
         });
     }
-    
-    // Обработчик изменения выбора
-    select.addEventListener('change', function() {
-        const container = document.getElementById('customNumbersContainer');
-        if (this.value === 'custom') {
-            container.style.display = 'block';
-        } else {
-            container.style.display = 'none';
-            customNumbers = [];
-        }
-    });
-}
-
-// --- Вспомогательная функция создания option ---
-function createOption(value, text) {
-    const option = document.createElement('option');
-    option.value = value;
-    option.textContent = text;
-    return option;
 }
 
 // --- Обработчики событий ---
@@ -287,7 +275,7 @@ function initEventListeners() {
             });
             this.classList.add('active');
             // Обновляем список стратегий при смене типа рулетки
-            waitForTranslations(createEnhancedStrategySelect);
+            createEnhancedStrategySelect();
         });
     });
 
@@ -299,7 +287,7 @@ function initEventListeners() {
     
     // Обновляем при смене языка
     document.addEventListener('languageChanged', () => {
-        waitForTranslations(createEnhancedStrategySelect);
+        createEnhancedStrategySelect();
     });
 }
 
@@ -501,7 +489,7 @@ function drawSimpleChart(distribution) {
     if (!chartContainer) return;
     
     if (distribution.length === 0) {
-        chartContainer.innerHTML = '<span class="text-muted" data-i18n="noData"></span>';
+        chartContainer.innerHTML = '<span class="text-muted">' + getTranslation('noData') + '</span>';
         return;
     }
     
@@ -511,7 +499,7 @@ function drawSimpleChart(distribution) {
     chartContainer.innerHTML = `
         <div style="width: 100%; padding: 10px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span class="text-medium" data-i18n="profitableSessions"></span>
+                <span class="text-medium">${getTranslation('profitableSessions')}</span>
                 <span class="text-success">${positivePercent.toFixed(1)}%</span>
             </div>
             <div style="width: 100%; height: 20px; background: var(--bg-elevated); border-radius: 10px; overflow: hidden;">
@@ -550,7 +538,7 @@ function resetSimulation() {
     
     const chartContainer = document.querySelector('.chart-placeholder');
     if (chartContainer) {
-        chartContainer.innerHTML = '<span class="text-muted" data-i18n="chartPlaceholder"></span>';
+        chartContainer.innerHTML = '<span class="text-muted">' + getTranslation('chartPlaceholder') + '</span>';
     }
 }
 
