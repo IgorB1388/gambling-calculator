@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -78,7 +79,7 @@
                 <!-- ===== ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ СТРАТЕГИИ ===== -->
                 <div class="panel bg-surface border-primary shadow-default">
                     <!-- Заголовок панели настроек -->
-                    <div class="panel-title text-5" data-i18n="rouletteSettingsTitle"></div>
+                    <div class="panel-title text-light" data-i18n="rouletteSettingsTitle"></div>
                     
                     <!-- БЛОК ВЫБОРА ТИПА РУЛЕТКИ (с флагами PNG) -->
                     <div class="settings-group">
@@ -101,7 +102,7 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="bankrollLabel"></div>
                         <div class="input-wrapper">
-                            <input type="number" id="startingBankroll" class="settings-input bg-elevated border-muted text-5" value="1000" min="1" step="1">
+                            <input type="number" id="startingBankroll" class="settings-input bg-elevated border-muted text-light" value="1000" min="1" step="1">
                             <span class="input-suffix text-medium">$</span> <!-- Валюта после поля -->
                         </div>
                     </div>
@@ -110,22 +111,17 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="betSizeLabel"></div>
                         <div class="input-wrapper">
-                            <input type="number" id="betAmount" class="settings-input bg-elevated border-muted text-5" value="10" min="1" step="1">
+                            <input type="number" id="betAmount" class="settings-input bg-elevated border-muted text-light" value="10" min="1" step="1">
                             <span class="input-suffix text-medium">$</span> <!-- Валюта после поля -->
                         </div>
                     </div>
 
-                    <!-- БЛОК ВЫБОРА СТРАТЕГИИ (теперь с расширенными опциями) -->
+                    <!-- БЛОК ВЫБОРА СТРАТЕГИИ (заполняется через JS) -->
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="strategyLabel"></div>
-                        <select id="strategySelect" class="settings-select bg-surface border-muted text-5">
-                            <!-- Будет заполнен через JS -->
+                        <select id="strategySelect" class="settings-select bg-surface border-muted text-light">
+                            <!-- JS будет заполнять опции -->
                         </select>
-                        <!-- Контейнер для ввода своих цифр (появляется при выборе "Свои цифры") -->
-                        <div id="customNumbersContainer" style="margin-top: 10px; display: none;">
-                            <input type="text" id="customNumbersInput" class="settings-input bg-elevated border-muted text-5" style="width: 100%;" placeholder="Например: 7,14,21,33">
-                            <div class="text-muted" style="font-size: 0.85rem; margin-top: 5px;" data-i18n="customNumbersHint"></div>
-                        </div>
                     </div>
 
                     <!-- БЛОК НАСТРОЙКИ УСЛОВИЯ АКТИВАЦИИ СТРАТЕГИИ -->
@@ -133,12 +129,12 @@
                         <div class="settings-label text-accent" data-i18n="triggerLabel"></div>
                         <div class="trigger-builder">
                             <!-- Тип условия: пропуск/выпадение -->
-                            <select id="triggerType" class="settings-select bg-surface border-muted text-5" style="width: 40%;">
+                            <select id="triggerType" class="settings-select bg-surface border-muted text-light" style="width: 40%;">
                                 <option value="missed" data-i18n="triggerMissed"></option> <!-- Не выпало -->
                                 <option value="hit" data-i18n="triggerHit"></option> <!-- Выпало -->
                             </select>
                             <!-- Количество раз -->
-                            <input type="number" id="triggerCount" class="settings-input bg-elevated border-muted text-5" value="3" min="1" max="10" step="1" style="width: 25%;">
+                            <input type="number" id="triggerCount" class="settings-input bg-elevated border-muted text-light" value="3" min="1" max="10" step="1" style="width: 25%;">
                             <span class="text-medium" data-i18n="triggerTimes"></span> <!-- "раз" -->
                         </div>
                         <!-- Пример условия (подсказка) -->
@@ -162,7 +158,7 @@
                         </div>
                         <!-- Поле ввода целевой суммы (отключено пока чекбокс не активен) -->
                         <div class="input-wrapper" style="margin-left: 25px; margin-top: 5px;">
-                            <input type="number" id="targetAmount" class="settings-input bg-elevated border-muted text-5" value="2000" min="1" step="1" disabled>
+                            <input type="number" id="targetAmount" class="settings-input bg-elevated border-muted text-light" value="2000" min="1" step="1" disabled>
                             <span class="input-suffix text-medium">$</span>
                         </div>
                         
@@ -173,7 +169,7 @@
                         </div>
                         <!-- Поле ввода максимального количества спинов -->
                         <div class="input-wrapper" style="margin-left: 25px; margin-top: 5px;">
-                            <input type="number" id="maxSpins" class="settings-input bg-elevated border-muted text-5" value="100" min="1" step="1">
+                            <input type="number" id="maxSpins" class="settings-input bg-elevated border-muted text-light" value="100" min="1" step="1">
                         </div>
                     </div>
 
@@ -181,7 +177,7 @@
                     <div class="settings-group">
                         <div class="settings-label text-accent" data-i18n="sessionsLabel"></div>
                         <div class="input-wrapper">
-                            <input type="number" id="sessionCount" class="settings-input bg-elevated border-muted text-5" value="500" min="1" max="10000" step="1">
+                            <input type="number" id="sessionCount" class="settings-input bg-elevated border-muted text-light" value="500" min="1" max="10000" step="1">
                         </div>
                         <!-- Подсказка -->
                         <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
@@ -201,7 +197,7 @@
                 <!-- ===== ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ ===== -->
                 <div class="panel bg-surface border-primary shadow-default">
                     <!-- Заголовок панели результатов -->
-                    <div class="panel-title text-5" data-i18n="rouletteResultsTitle"></div>
+                    <div class="panel-title text-light" data-i18n="rouletteResultsTitle"></div>
                     
                     <!-- ОСНОВНЫЕ ПОКАЗАТЕЛИ (компактная сетка) -->
                     <div class="results-grid-compact">
@@ -227,32 +223,32 @@
                         <!-- Количество симулированных сессий -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="sessionsSimulated"></span>
-                            <span class="text-5" id="sessionsSimulated">0</span>
+                            <span class="text-light" id="sessionsSimulated">0</span>
                         </div>
                         <!-- Успешные сессии -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="successfulSessions"></span>
-                            <span class="text-5" id="successfulSessions">0</span>
+                            <span class="text-light" id="successfulSessions">0</span>
                         </div>
                         <!-- Сессии с банкротством -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="bankruptSessions"></span>
-                            <span class="text-5" id="bankruptSessions">0</span>
+                            <span class="text-light" id="bankruptSessions">0</span>
                         </div>
                         <!-- Среднее количество спинов -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="avgSpins"></span>
-                            <span class="text-5" id="avgSpins">0</span>
+                            <span class="text-light" id="avgSpins">0</span>
                         </div>
                         <!-- Максимальная прибыль -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="maxProfit"></span>
-                            <span class="text-5 text-success" id="maxProfit">$0</span>
+                            <span class="text-light text-success" id="maxProfit">$0</span>
                         </div>
                         <!-- Максимальный убыток -->
                         <div class="stats-row">
                             <span class="text-medium" data-i18n="maxLoss"></span>
-                            <span class="text-5 text-danger" id="maxLoss">$0</span>
+                            <span class="text-light text-danger" id="maxLoss">$0</span>
                         </div>
                     </div>
 
