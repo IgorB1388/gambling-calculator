@@ -196,15 +196,5 @@ document.addEventListener('DOMContentLoaded', initLanguageSystem);
 window.changeLanguage = changeLanguage;
 window.getCurrentLanguage = () => currentLanguage;
 window.reloadTranslationsForNewContent = reloadTranslationsForNewContent;
-
-// Улучшенная функция getTranslation с поддержкой параметров
-window.getTranslation = (key, params = {}) => {
-    let text = translations[key] || key;
-    // Замена параметров вида {number}
-    Object.keys(params).forEach(param => {
-        text = text.replace(`{${param}}`, params[param]);
-    });
-    return text;
-};
-
+window.getTranslation = (key) => translations[key] || key;
 window.translations = translations; // Экспортируем объект переводов
