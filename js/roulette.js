@@ -283,6 +283,13 @@ function renderConditions() {
         }
         
         // ===== ПОЛЕ ПРОЦЕНТА =====
+        // Создаем обертку для процента и символа %
+        const percentWrapper = document.createElement('div');
+        percentWrapper.className = 'percent-wrapper';
+        percentWrapper.style.display = 'flex';
+        percentWrapper.style.alignItems = 'center';
+        percentWrapper.style.gap = '4px';
+        
         const percentInput = document.createElement('input');
         percentInput.type = 'number';
         percentInput.className = 'condition-percent settings-input bg-elevated border-muted text-light';
@@ -295,25 +302,34 @@ function renderConditions() {
         percentInput.addEventListener('input', () => {
             if (!percentActive) return;
             let val = parseFloat(percentInput.value);
-            if (isNaN(val)) val = 0;
-            if (val > 100) val = 100;
-            if (val < 0) val = 0;
-            conditions[index].percent = val;
-            percentInput.value = val;
+            if (isNaN(val)) {
+                conditions[index].percent = 0;
+                percentInput.value = 0;
+            } else {
+                // Не обрезаем автоматически, просто сохраняем как есть
+                conditions[index].percent = val;
+            }
             calculateTotalBet();
         });
         
         percentInput.addEventListener('blur', () => {
             if (!percentActive) return;
             let val = parseFloat(percentInput.value) || 0;
-            val = Math.min(100, Math.max(0, val));
+            // Округляем до 1 знака только при потере фокуса
             val = Math.round(val * 10) / 10;
             conditions[index].percent = val;
             percentInput.value = val;
             calculateTotalBet();
         });
         
-        row.appendChild(percentInput);
+        percentWrapper.appendChild(percentInput);
+        
+        const percentSymbol = document.createElement('span');
+        percentSymbol.className = 'text-medium';
+        percentSymbol.textContent = '%';
+        percentWrapper.appendChild(percentSymbol);
+        
+        row.appendChild(percentWrapper);
         
         // ===== КНОПКА УДАЛЕНИЯ =====
         if (conditions.length > 1) {
