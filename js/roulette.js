@@ -99,6 +99,7 @@ const BetDefinitions = {
 let isSimulating = false;
 let conditions = [];
 const MAX_CONDITIONS = 5;
+let percentActive = true; // Общий флаг для процентов
 
 // --- Инициализация ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -203,17 +204,11 @@ function renderConditions() {
         // Получаем текущий тип рулетки для зеро
         const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
         
-        // СВОИ ЦИФРЫ - ПЕРВЫМ В СПИСКЕ
+        // СВОИ ЦИФРЫ - ПЕРВЫМ В СПИСКЕ (без разделителя)
         const customOption = document.createElement('option');
         customOption.value = 'custom';
         customOption.setAttribute('data-i18n', 'customNumbersTitle');
         select.appendChild(customOption);
-        
-        // Разделитель (опционально)
-        const separatorOption = document.createElement('option');
-        separatorOption.disabled = true;
-        separatorOption.textContent = '──────────';
-        select.appendChild(separatorOption);
         
         // Зеро в зависимости от типа
         if (rouletteType === 'european') {
@@ -287,46 +282,38 @@ function renderConditions() {
             row.appendChild(customInput);
         }
         
-        // ===== ЧЕКБОКС ДЛЯ ПРОЦЕНТА (ВКЛ/ВЫКЛ) =====
-        const percentActiveDiv = document.createElement('div');
-        percentActiveDiv.className = 'condition-percent-active';
-        
-        const percentCheckbox = document.createElement('input');
-        percentCheckbox.type = 'checkbox';
-        percentCheckbox.id = `percent_active_${index}`;
-        percentCheckbox.checked = cond.percentActive !== false;
-        percentCheckbox.addEventListener('change', () => {
-            conditions[index].percentActive = percentCheckbox.checked;
-            renderConditions();
-            calculateTotalBet();
-        });
-        
-        const percentLabel = document.createElement('label');
-        percentLabel.htmlFor = `percent_active_${index}`;
-        percentLabel.textContent = '%';
-        
-        percentActiveDiv.appendChild(percentCheckbox);
-        percentActiveDiv.appendChild(percentLabel);
-        row.appendChild(percentActiveDiv);
-        
-        // ===== ПОЛЕ ПРОЦЕНТА =====
-        const percentInput = document.createElement('input');
-        percentInput.type = 'number';
-        percentInput.className = 'condition-percent settings-input bg-elevated border-muted text-light';
-        percentInput.value = cond.percent || 0;
-        percentInput.min = '0';
-        percentInput.max = '100';
-        percentInput.step = '1';
-        percentInput.disabled = cond.percentActive === false;
-        
-        percentInput.addEventListener('input', () => {
-            let val = parseInt(percentInput.value) || 0;
-            val = Math.min(100, Math.max(0, val));
-            conditions[index].percent = val;
-            percentInput.value = val;
-            calculateTotalBet();
-        });
-        row.appendChild(percentInput);
+        // ===== ПОЛЕ ПРОЦЕНТА (отображается только если percentActive = true) =====
+        if (percentActive) {
+            const percentInput = document.createElement('input');
+            percentInput.type = 'number';
+            percentInput.className = 'condition-percent settings-input bg-elevated border-muted text-light';
+            percentInput.value = cond.percent || 0;
+            percentInput.min = '0';
+            percentInput.max = '100';
+            percentInput.step = '0.1'; // Поддержка десятых долей
+            
+            percentInput.addEventListener('input', () => {
+                let val = parseFloat(percentInput.value);
+                if (isNaN(val)) val = 0;
+                if (val > 100) val = 100; // Не даем ввести больше 100
+                if (val < 0) val = 0;
+                conditions[index].percent = val;
+                percentInput.value = val;
+                calculateTotalBet();
+            });
+            
+            percentInput.addEventListener('blur', () => {
+                // При потере фокуса округляем до 1 знака
+                let val = parseFloat(percentInput.value) || 0;
+                val = Math.min(100, Math.max(0, val));
+                val = Math.round(val * 10) / 10;
+                conditions[index].percent = val;
+                percentInput.value = val;
+                calculateTotalBet();
+            });
+            
+            row.appendChild(percentInput);
+        }
         
         // ===== КНОПКА УДАЛЕНИЯ (только если условий больше 1) =====
         if (conditions.length > 1) {
@@ -342,6 +329,30 @@ function renderConditions() {
         
         container.appendChild(row);
     });
+    
+    // Добавляем подсказку о сумме процентов, если проценты активны
+    updatePercentWarning();
+}
+
+// --- Обновление предупреждения о процентах ---
+function updatePercentWarning() {
+    // Удаляем старую подсказку если есть
+    const oldWarning = document.getElementById('percentWarning');
+    if (oldWarning) oldWarning.remove();
+    
+    if (!percentActive) return;
+    
+    const totalPercent = conditions.reduce((sum, cond) => sum + (cond.percent || 0), 0);
+    
+    if (Math.abs(totalPercent - 100) > 0.1) { // Погрешность 0.1%
+        const warningDiv = document.createElement('div');
+        warningDiv.id = 'percentWarning';
+        warningDiv.className = 'percent-warning text-warning';
+        warningDiv.textContent = `⚠️ Сумма процентов: ${totalPercent.toFixed(1)}% (должна быть 100%)`;
+        
+        const container = document.getElementById('conditionsContainer');
+        container.parentNode.insertBefore(warningDiv, container.nextSibling);
+    }
 }
 
 // --- Добавить новое условие ---
@@ -355,8 +366,7 @@ function addCondition() {
         not: false,
         type: 'custom',
         customNumbers: '',
-        percent: 0,
-        percentActive: false
+        percent: 0
     });
     
     renderConditions();
@@ -414,20 +424,18 @@ function calculateTotalBet() {
     // Сортируем
     finalNumbers.sort((a, b) => a - b);
     
-    // Считаем сумму процентов (только активные)
+    // Считаем сумму процентов (только если активны)
     let totalPercent = 0;
-    conditions.forEach(cond => {
-        if (cond.percentActive !== false) {
-            totalPercent += cond.percent || 0;
-        }
-    });
+    if (percentActive) {
+        totalPercent = conditions.reduce((sum, cond) => sum + (cond.percent || 0), 0);
+    }
     
-    // Формируем текст для отображения (компактно)
+    // Формируем текст для отображения
     let displayText = '';
     if (finalNumbers.length === 0) {
         displayText = getTranslation('noCommonNumbers');
     } else {
-        // Показываем числа компактно: если больше 10, то "1,2,3,...,50"
+        // Показываем числа компактно
         let numbersStr = '';
         if (finalNumbers.length <= 10) {
             numbersStr = finalNumbers.join(', ');
@@ -435,14 +443,15 @@ function calculateTotalBet() {
             numbersStr = finalNumbers.slice(0, 8).join(', ') + '...' + finalNumbers.slice(-2).join(', ');
         }
         
-        if (totalPercent > 0) {
-            displayText = `${numbersStr} = ${totalPercent}%`;
+        if (percentActive) {
+            displayText = `${numbersStr} = ${totalPercent.toFixed(1)}%`;
         } else {
             displayText = numbersStr;
         }
     }
     
     document.getElementById('totalBetText').textContent = displayText;
+    updatePercentWarning();
     
     return { finalNumbers, totalPercent };
 }
@@ -456,7 +465,7 @@ function initEventListeners() {
                 b.classList.remove('active');
             });
             this.classList.add('active');
-            renderConditions(); // Перерендериваем с новым типом (для зеро)
+            renderConditions();
             calculateTotalBet();
         });
     });
@@ -473,6 +482,16 @@ function initEventListeners() {
     const addBtn = document.getElementById('addConditionBtn');
     if (addBtn) {
         addBtn.addEventListener('click', addCondition);
+    }
+    
+    // Общий чекбокс для процентов
+    const percentToggle = document.getElementById('percentToggle');
+    if (percentToggle) {
+        percentToggle.addEventListener('change', function() {
+            percentActive = this.checked;
+            renderConditions();
+            calculateTotalBet();
+        });
     }
     
     // Обновление при смене языка
@@ -519,8 +538,8 @@ async function simulateStrategy() {
         return;
     }
     
-    if (totalPercent !== 100 && totalPercent > 0) {
-        alert('Сумма активных процентов должна быть 100%!');
+    if (percentActive && Math.abs(totalPercent - 100) > 0.1) {
+        alert('Сумма процентов должна быть 100%!');
         return;
     }
     
@@ -581,7 +600,6 @@ function simulateSession(config, startingBankroll, betAmount, targetNumbers, tri
                 bankroll -= betAmount;
                 
                 if (isWin) {
-                    // Для нескольких чисел ставка распределяется поровну
                     const payout = 35; // straight up
                     bankroll += betAmount + (betAmount * payout);
                 }
