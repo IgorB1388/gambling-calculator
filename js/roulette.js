@@ -119,10 +119,39 @@ function getTranslation(key, params = {}) {
     return text;
 }
 
+// --- Парсинг своих чисел с поддержкой диапазонов (тире) ---
+function parseCustomNumbers(input) {
+    if (!input || input.trim() === '') return [];
+    
+    const parts = input.split(',').map(s => s.trim());
+    let numbers = [];
+    
+    parts.forEach(part => {
+        if (part.includes('-')) {
+            // Диапазон вида "1-5"
+            const [start, end] = part.split('-').map(n => parseInt(n.trim()));
+            if (!isNaN(start) && !isNaN(end) && start <= end) {
+                for (let i = start; i <= end; i++) {
+                    if (i >= 0 && i <= 36) numbers.push(i);
+                }
+            }
+        } else {
+            // Отдельное число
+            const num = parseInt(part);
+            if (!isNaN(num) && num >= 0 && num <= 36) {
+                numbers.push(num);
+            }
+        }
+    });
+    
+    // Убираем дубликаты и сортируем
+    return [...new Set(numbers)].sort((a, b) => a - b);
+}
+
 // --- Инициализация условий (одно по умолчанию) ---
 function initConditions() {
     conditions = [
-        { not: false, type: 'red', customNumbers: '', percent: 100 }
+        { not: false, type: 'custom', customNumbers: '', percent: 100 }
     ];
     renderConditions();
     calculateTotalBet();
@@ -139,6 +168,12 @@ function renderConditions() {
         const row = document.createElement('div');
         row.className = 'condition-row';
         row.setAttribute('data-condition-index', index);
+        
+        // ===== НОМЕР УСЛОВИЯ =====
+        const numberDiv = document.createElement('div');
+        numberDiv.className = 'condition-number';
+        numberDiv.textContent = index + 1;
+        row.appendChild(numberDiv);
         
         // ===== ЧЕКБОКС "НЕ" =====
         const notDiv = document.createElement('div');
@@ -167,6 +202,18 @@ function renderConditions() {
         
         // Получаем текущий тип рулетки для зеро
         const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
+        
+        // СВОИ ЦИФРЫ - ПЕРВЫМ В СПИСКЕ
+        const customOption = document.createElement('option');
+        customOption.value = 'custom';
+        customOption.setAttribute('data-i18n', 'customNumbersTitle');
+        select.appendChild(customOption);
+        
+        // Разделитель (опционально)
+        const separatorOption = document.createElement('option');
+        separatorOption.disabled = true;
+        separatorOption.textContent = '──────────';
+        select.appendChild(separatorOption);
         
         // Зеро в зависимости от типа
         if (rouletteType === 'european') {
@@ -213,11 +260,10 @@ function renderConditions() {
             select.appendChild(option);
         });
         
-        // Свои цифры
-        const customOption = document.createElement('option');
-        customOption.value = 'custom';
-        customOption.setAttribute('data-i18n', 'customNumbersTitle');
-        select.appendChild(customOption);
+        // !!! ВАЖНО: Применяем переводы ПОСЛЕ добавления всех опций !!!
+        if (window.reloadTranslationsForNewContent) {
+            window.reloadTranslationsForNewContent(select);
+        }
         
         select.value = cond.type;
         select.addEventListener('change', () => {
@@ -226,11 +272,6 @@ function renderConditions() {
             calculateTotalBet();
         });
         row.appendChild(select);
-        
-        // Применяем переводы к select
-        if (window.reloadTranslationsForNewContent) {
-            window.reloadTranslationsForNewContent(select);
-        }
         
         // ===== ПОЛЕ ДЛЯ СВОИХ ЧИСЕЛ (только если выбран тип custom) =====
         if (cond.type === 'custom') {
@@ -246,22 +287,43 @@ function renderConditions() {
             row.appendChild(customInput);
         }
         
+        // ===== ЧЕКБОКС ДЛЯ ПРОЦЕНТА (ВКЛ/ВЫКЛ) =====
+        const percentActiveDiv = document.createElement('div');
+        percentActiveDiv.className = 'condition-percent-active';
+        
+        const percentCheckbox = document.createElement('input');
+        percentCheckbox.type = 'checkbox';
+        percentCheckbox.id = `percent_active_${index}`;
+        percentCheckbox.checked = cond.percentActive !== false;
+        percentCheckbox.addEventListener('change', () => {
+            conditions[index].percentActive = percentCheckbox.checked;
+            renderConditions();
+            calculateTotalBet();
+        });
+        
+        const percentLabel = document.createElement('label');
+        percentLabel.htmlFor = `percent_active_${index}`;
+        percentLabel.textContent = '%';
+        
+        percentActiveDiv.appendChild(percentCheckbox);
+        percentActiveDiv.appendChild(percentLabel);
+        row.appendChild(percentActiveDiv);
+        
         // ===== ПОЛЕ ПРОЦЕНТА =====
         const percentInput = document.createElement('input');
         percentInput.type = 'number';
         percentInput.className = 'condition-percent settings-input bg-elevated border-muted text-light';
-        percentInput.value = cond.percent;
+        percentInput.value = cond.percent || 0;
         percentInput.min = '0';
         percentInput.max = '100';
         percentInput.step = '1';
+        percentInput.disabled = cond.percentActive === false;
+        
         percentInput.addEventListener('input', () => {
             let val = parseInt(percentInput.value) || 0;
             val = Math.min(100, Math.max(0, val));
             conditions[index].percent = val;
             percentInput.value = val;
-            
-            // Пересчитываем проценты, чтобы сумма была 100%
-            normalizePercents(index);
             calculateTotalBet();
         });
         row.appendChild(percentInput);
@@ -282,47 +344,6 @@ function renderConditions() {
     });
 }
 
-// --- Нормализация процентов (чтобы сумма была 100%) ---
-function normalizePercents(changedIndex) {
-    const total = 100;
-    const currentSum = conditions.reduce((sum, cond) => sum + cond.percent, 0);
-    
-    if (currentSum === total) return;
-    
-    // Если изменили одно поле, подгоняем остальные
-    const otherConditions = conditions.filter((_, i) => i !== changedIndex);
-    const otherSum = otherConditions.reduce((sum, cond) => sum + cond.percent, 0);
-    
-    if (otherSum === 0) {
-        // Если у других 0, равномерно распределяем
-        const equalShare = Math.floor(total / conditions.length);
-        let remainder = total - (equalShare * conditions.length);
-        
-        conditions.forEach((cond, i) => {
-            cond.percent = equalShare + (i < remainder ? 1 : 0);
-        });
-    } else {
-        // Масштабируем остальные
-        const targetOtherSum = total - conditions[changedIndex].percent;
-        const scale = targetOtherSum / otherSum;
-        
-        conditions.forEach((cond, i) => {
-            if (i !== changedIndex) {
-                cond.percent = Math.round(cond.percent * scale);
-            }
-        });
-        
-        // Корректируем погрешность округления
-        const newSum = conditions.reduce((sum, cond) => sum + cond.percent, 0);
-        if (newSum !== total) {
-            conditions[0].percent += (total - newSum);
-        }
-    }
-    
-    // Перерендериваем для обновления значений в полях
-    renderConditions();
-}
-
 // --- Добавить новое условие ---
 function addCondition() {
     if (conditions.length >= MAX_CONDITIONS) {
@@ -332,12 +353,12 @@ function addCondition() {
     
     conditions.push({
         not: false,
-        type: 'red',
+        type: 'custom',
         customNumbers: '',
-        percent: 0
+        percent: 0,
+        percentActive: false
     });
     
-    normalizePercents(conditions.length - 1);
     renderConditions();
     calculateTotalBet();
 }
@@ -346,7 +367,6 @@ function addCondition() {
 function removeCondition(index) {
     if (conditions.length <= 1) return;
     conditions.splice(index, 1);
-    normalizePercents(0);
     renderConditions();
     calculateTotalBet();
 }
@@ -359,11 +379,8 @@ function getNumbersForCondition(cond) {
     let numbers = [];
     
     if (cond.type === 'custom') {
-        // Парсим свои числа из строки (поддерживаем запятые и пробелы)
-        const parts = cond.customNumbers.split(',').map(s => s.trim());
-        numbers = parts
-            .map(p => parseInt(p))
-            .filter(n => !isNaN(n) && n >= 0 && n <= 36);
+        // Парсим свои числа с поддержкой диапазонов
+        numbers = parseCustomNumbers(cond.customNumbers);
     } else {
         // Берем из BetDefinitions
         numbers = BetDefinitions[cond.type]?.numbers || [];
@@ -397,16 +414,32 @@ function calculateTotalBet() {
     // Сортируем
     finalNumbers.sort((a, b) => a - b);
     
-    // Считаем сумму процентов
-    const totalPercent = conditions.reduce((sum, cond) => sum + cond.percent, 0);
+    // Считаем сумму процентов (только активные)
+    let totalPercent = 0;
+    conditions.forEach(cond => {
+        if (cond.percentActive !== false) {
+            totalPercent += cond.percent || 0;
+        }
+    });
     
-    // Формируем текст для отображения (ВСЕ ЦИФРЫ)
+    // Формируем текст для отображения (компактно)
     let displayText = '';
     if (finalNumbers.length === 0) {
         displayText = getTranslation('noCommonNumbers');
     } else {
-        // Показываем ВСЕ числа через запятую
-        displayText = finalNumbers.join(', ') + ' = ' + totalPercent + '%';
+        // Показываем числа компактно: если больше 10, то "1,2,3,...,50"
+        let numbersStr = '';
+        if (finalNumbers.length <= 10) {
+            numbersStr = finalNumbers.join(', ');
+        } else {
+            numbersStr = finalNumbers.slice(0, 8).join(', ') + '...' + finalNumbers.slice(-2).join(', ');
+        }
+        
+        if (totalPercent > 0) {
+            displayText = `${numbersStr} = ${totalPercent}%`;
+        } else {
+            displayText = numbersStr;
+        }
     }
     
     document.getElementById('totalBetText').textContent = displayText;
@@ -486,8 +519,8 @@ async function simulateStrategy() {
         return;
     }
     
-    if (totalPercent !== 100) {
-        alert('Сумма процентов должна быть 100%!');
+    if (totalPercent !== 100 && totalPercent > 0) {
+        alert('Сумма активных процентов должна быть 100%!');
         return;
     }
     
