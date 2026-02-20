@@ -150,7 +150,7 @@
     "customNumbersRequired": "Введите хотя бы одну цифру для ставки!",
     "betTooLarge": "Ставка не может быть больше банка!",
     
-    "addCondition": "➕ Добавить условие",
+   "addCondition": "➕ Добавить условие",
     "not": "НЕ",
     "customNumbersTitle": "✏️ Свои числа",
     "totalBet": "📊 ИТОГО:",
@@ -159,8 +159,10 @@
     "percent": "%",
     "totalBetNumbers": "Всего чисел: {count} | Сумма процентов: {total}%",
     "noCommonNumbers": "❌ Нет общих чисел",
-    "enablePercent": "🔢 Распределение процентов"
+    "enablePercent": "🔢 Распределение процентов",
+    "conditionsLabel": "🎯 УСЛОВИЯ СТАВКИ",
+    "strategyZero": "0 (Зеро)",
+    "strategyDoubleZero": "00 (Двойное зеро)"
 }
-
 
 
