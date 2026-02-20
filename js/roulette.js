@@ -104,11 +104,10 @@ const MAX_CONDITIONS = 5;
 document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     updateTargetInputState();
-    updateStrategyOptions();
     initConditions();
 });
 
-// --- Функция для получения перевода ---
+// --- Функция для получения перевода (с поддержкой параметров) ---
 function getTranslation(key, params = {}) {
     let text = window.translations && window.translations[key] ? window.translations[key] : key;
     
@@ -166,44 +165,59 @@ function renderConditions() {
         const select = document.createElement('select');
         select.className = 'condition-select settings-select bg-surface border-muted text-light';
         
-        // Группа основных ставок
-        const baseGroup = document.createElement('optgroup');
-        baseGroup.label = getTranslation('strategyGroupBasic');
-        addOption(baseGroup, 'red', getTranslation('strategyRed'));
-        addOption(baseGroup, 'black', getTranslation('strategyBlack'));
-        addOption(baseGroup, 'even', getTranslation('strategyEven'));
-        addOption(baseGroup, 'odd', getTranslation('strategyOdd'));
-        addOption(baseGroup, 'zero', getTranslation('strategyZero'));
-        select.appendChild(baseGroup);
+        // Получаем текущий тип рулетки для зеро
+        const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
         
-        // Группа половин
-        const halvesGroup = document.createElement('optgroup');
-        halvesGroup.label = getTranslation('strategyGroupHalves');
-        addOption(halvesGroup, 'low', getTranslation('strategyLow'));
-        addOption(halvesGroup, 'high', getTranslation('strategyHigh'));
-        select.appendChild(halvesGroup);
+        // Зеро в зависимости от типа
+        if (rouletteType === 'european') {
+            const zeroOption = document.createElement('option');
+            zeroOption.value = 'zero';
+            zeroOption.setAttribute('data-i18n', 'strategyZero');
+            select.appendChild(zeroOption);
+        } else {
+            const zeroOption = document.createElement('option');
+            zeroOption.value = 'zero';
+            zeroOption.setAttribute('data-i18n', 'strategyZero');
+            select.appendChild(zeroOption);
+            
+            const doubleZeroOption = document.createElement('option');
+            doubleZeroOption.value = 'doublezero';
+            doubleZeroOption.setAttribute('data-i18n', 'strategyDoubleZero');
+            select.appendChild(doubleZeroOption);
+        }
         
-        // Группа дюжин
-        const dozensGroup = document.createElement('optgroup');
-        dozensGroup.label = getTranslation('strategyGroupDozens');
-        addOption(dozensGroup, 'dozen1', getTranslation('strategyDozen1'));
-        addOption(dozensGroup, 'dozen2', getTranslation('strategyDozen2'));
-        addOption(dozensGroup, 'dozen3', getTranslation('strategyDozen3'));
-        select.appendChild(dozensGroup);
+        // Базовые ставки (красное, черное и т.д.)
+        const baseKeys = ['red', 'black', 'even', 'odd', 'low', 'high'];
+        baseKeys.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
+            select.appendChild(option);
+        });
         
-        // Группа колонн
-        const columnsGroup = document.createElement('optgroup');
-        columnsGroup.label = getTranslation('strategyGroupColumns');
-        addOption(columnsGroup, 'column1', getTranslation('strategyColumn1'));
-        addOption(columnsGroup, 'column2', getTranslation('strategyColumn2'));
-        addOption(columnsGroup, 'column3', getTranslation('strategyColumn3'));
-        select.appendChild(columnsGroup);
+        // Дюжины
+        const dozenKeys = ['dozen1', 'dozen2', 'dozen3'];
+        dozenKeys.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
+            select.appendChild(option);
+        });
         
-        // Группа своих чисел
-        const customGroup = document.createElement('optgroup');
-        customGroup.label = '--- ✏️ ---';
-        addOption(customGroup, 'custom', getTranslation('customNumbersTitle'));
-        select.appendChild(customGroup);
+        // Колонны
+        const columnKeys = ['column1', 'column2', 'column3'];
+        columnKeys.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
+            select.appendChild(option);
+        });
+        
+        // Свои цифры
+        const customOption = document.createElement('option');
+        customOption.value = 'custom';
+        customOption.setAttribute('data-i18n', 'customNumbersTitle');
+        select.appendChild(customOption);
         
         select.value = cond.type;
         select.addEventListener('change', () => {
@@ -212,6 +226,11 @@ function renderConditions() {
             calculateTotalBet();
         });
         row.appendChild(select);
+        
+        // Применяем переводы к select
+        if (window.reloadTranslationsForNewContent) {
+            window.reloadTranslationsForNewContent(select);
+        }
         
         // ===== ПОЛЕ ДЛЯ СВОИХ ЧИСЕЛ (только если выбран тип custom) =====
         if (cond.type === 'custom') {
@@ -261,15 +280,6 @@ function renderConditions() {
         
         container.appendChild(row);
     });
-}
-
-// --- Вспомогательная функция добавления option ---
-function addOption(group, value, text) {
-    const option = document.createElement('option');
-    option.value = value;
-    option.textContent = text;
-    group.appendChild(option);
-    return option;
 }
 
 // --- Нормализация процентов (чтобы сумма была 100%) ---
@@ -390,80 +400,18 @@ function calculateTotalBet() {
     // Считаем сумму процентов
     const totalPercent = conditions.reduce((sum, cond) => sum + cond.percent, 0);
     
-    // Формируем текст для отображения
+    // Формируем текст для отображения (ВСЕ ЦИФРЫ)
     let displayText = '';
     if (finalNumbers.length === 0) {
         displayText = getTranslation('noCommonNumbers');
     } else {
-        // Показываем первые 10 чисел, если больше - добавляем "..."
-        const numbersStr = finalNumbers.length <= 10 
-            ? finalNumbers.join(', ')
-            : finalNumbers.slice(0, 10).join(', ') + '...';
-        
-        displayText = `${numbersStr} = ${totalPercent}%`;
+        // Показываем ВСЕ числа через запятую
+        displayText = finalNumbers.join(', ') + ' = ' + totalPercent + '%';
     }
     
     document.getElementById('totalBetText').textContent = displayText;
     
     return { finalNumbers, totalPercent };
-}
-
-// --- Обновление выпадающего списка стратегий (старый) ---
-function updateStrategyOptions() {
-    const select = document.getElementById('strategySelect');
-    const type = document.querySelector('[data-type].active')?.dataset.type || 'european';
-    
-    select.innerHTML = '';
-    
-    // Зеро в зависимости от типа
-    if (type === 'european') {
-        const zeroOption = document.createElement('option');
-        zeroOption.value = 'zero';
-        zeroOption.setAttribute('data-i18n', 'strategyZero');
-        select.appendChild(zeroOption);
-    } else {
-        const zeroOption = document.createElement('option');
-        zeroOption.value = 'zero';
-        zeroOption.setAttribute('data-i18n', 'strategyZero');
-        select.appendChild(zeroOption);
-        
-        const doubleZeroOption = document.createElement('option');
-        doubleZeroOption.value = 'doublezero';
-        doubleZeroOption.setAttribute('data-i18n', 'strategyDoubleZero');
-        select.appendChild(doubleZeroOption);
-    }
-    
-    // Базовые ставки
-    const baseKeys = ['red', 'black', 'even', 'odd', 'low', 'high'];
-    baseKeys.forEach(key => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
-        select.appendChild(option);
-    });
-    
-    // Дюжины
-    const dozenKeys = ['dozen1', 'dozen2', 'dozen3'];
-    dozenKeys.forEach(key => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
-        select.appendChild(option);
-    });
-    
-    // Колонны
-    const columnKeys = ['column1', 'column2', 'column3'];
-    columnKeys.forEach(key => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
-        select.appendChild(option);
-    });
-    
-    // Применяем переводы
-    if (window.reloadTranslationsForNewContent) {
-        window.reloadTranslationsForNewContent(select);
-    }
 }
 
 // --- Обработчики событий ---
@@ -475,8 +423,8 @@ function initEventListeners() {
                 b.classList.remove('active');
             });
             this.classList.add('active');
-            updateStrategyOptions();
-            calculateTotalBet(); // Пересчитываем для нового типа
+            renderConditions(); // Перерендериваем с новым типом (для зеро)
+            calculateTotalBet();
         });
     });
 
@@ -496,7 +444,6 @@ function initEventListeners() {
     
     // Обновление при смене языка
     document.addEventListener('languageChanged', () => {
-        updateStrategyOptions();
         renderConditions();
         calculateTotalBet();
     });
@@ -519,7 +466,6 @@ async function simulateStrategy() {
     
     const startingBankroll = parseInt(document.getElementById('startingBankroll').value) || 1000;
     const betAmount = parseInt(document.getElementById('betAmount').value) || 10;
-    const strategy = document.getElementById('strategySelect').value; // Пока оставляем для совместимости
     
     const triggerType = document.getElementById('triggerType').value;
     const triggerCount = parseInt(document.getElementById('triggerCount').value) || 3;
@@ -570,7 +516,7 @@ async function simulateStrategy() {
     }, 50);
 }
 
-// --- Функция симуляции одной сессии (обновленная) ---
+// --- Функция симуляции одной сессии ---
 function simulateSession(config, startingBankroll, betAmount, targetNumbers, triggerType, triggerCount, stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins) {
     let bankroll = startingBankroll;
     let spins = 0;
@@ -603,7 +549,6 @@ function simulateSession(config, startingBankroll, betAmount, targetNumbers, tri
                 
                 if (isWin) {
                     // Для нескольких чисел ставка распределяется поровну
-                    const numbersCount = targetNumbers.length;
                     const payout = 35; // straight up
                     bankroll += betAmount + (betAmount * payout);
                 }
@@ -623,7 +568,7 @@ function simulateSession(config, startingBankroll, betAmount, targetNumbers, tri
     };
 }
 
-// --- Функция запуска множества сессий (обновленная) ---
+// --- Функция запуска множества сессий ---
 function runSimulation(config, startingBankroll, betAmount, targetNumbers, triggerType, triggerCount, stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins, sessionCount) {
     const sessions = [];
     
