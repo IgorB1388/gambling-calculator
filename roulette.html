@@ -97,7 +97,7 @@
                 <!-- ===== ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ СТРАТЕГИИ ===== -->
                 <!-- panel - базовая карточка, bg-surface - фон, border-primary - рамка, shadow-default - тень -->
                 <div class="panel bg-surface border-primary shadow-default">
-                    <!-- panel-title - заголовок панели, text-light - цвет текста, data-i18n - ключ перевода -->
+                    <!-- panel-title - заголовок панели, text-4 - цвет текста, data-i18n - ключ перевода -->
                     <div class="panel-title text-4" data-i18n="rouletteSettingsTitle"></div>
                     
                     <!-- ===== БЛОК ВЫБОРА ТИПА РУЛЕТКИ ===== -->
@@ -147,6 +147,27 @@
                         <select id="strategySelect" class="settings-select bg-surface border-muted text-light">
                             <!-- JS заполнит опции -->
                         </select>
+                    </div>
+
+                    <!-- ===== БЛОК УСЛОВИЙ СТАВКИ (НОВЫЙ) ===== -->
+                    <div class="settings-group">
+                        <div class="settings-label text-accent" data-i18n="conditionsLabel">🎯 УСЛОВИЯ СТАВКИ</div>
+                        
+                        <!-- Контейнер для динамических условий -->
+                        <div id="conditionsContainer" class="conditions-container">
+                            <!-- JS будет добавлять условия сюда -->
+                        </div>
+                        
+                        <!-- Кнопка добавления нового условия -->
+                        <button id="addConditionBtn" class="btn-add-condition border-5 text-opponent">
+                            <i class="fas fa-plus-circle"></i> <span data-i18n="addCondition">➕ Добавить условие</span>
+                        </button>
+                        
+                        <!-- Итоговая строка с выбранными числами -->
+                        <div id="totalBetDisplay" class="total-bet-display border-4">
+                            <span class="text-medium" data-i18n="totalBet">📊 ИТОГО:</span>
+                            <span class="text-light" id="totalBetText">—</span>
+                        </div>
                     </div>
 
                     <!-- ===== БЛОК НАСТРОЙКИ УСЛОВИЯ АКТИВАЦИИ ===== -->
@@ -306,4 +327,3 @@
     <script src="js/theme-switcher.js"></script>
 </body>
 </html>
-
