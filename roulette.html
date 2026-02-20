@@ -139,26 +139,34 @@
                         </div>
                     </div>
 
-                    <!-- ===== БЛОК УСЛОВИЙ СТАВКИ ===== -->
-                    <div class="settings-group">
-                        <div class="settings-label text-accent" data-i18n="conditionsLabel">🎯 УСЛОВИЯ СТАВКИ</div>
-                        
-                        <!-- Контейнер для динамических условий -->
-                        <div id="conditionsContainer" class="conditions-container">
-                            <!-- JS будет добавлять условия сюда -->
-                        </div>
-                        
-                        <!-- Кнопка добавления нового условия -->
-                        <button id="addConditionBtn" class="btn-add-condition border-5 text-opponent">
-                            <i class="fas fa-plus-circle"></i> <span data-i18n="addCondition">➕ Добавить условие</span>
-                        </button>
-                        
-                        <!-- Итоговая строка с выбранными числами -->
-                        <div id="totalBetDisplay" class="total-bet-display border-4">
-                            <span class="text-medium" data-i18n="totalBet">📊 ИТОГО:</span>
-                            <span class="text-light" id="totalBetText">—</span>
-                        </div>
-                    </div>
+                  <!-- ===== БЛОК УСЛОВИЙ СТАВКИ ===== -->
+<div class="settings-group">
+    <div class="settings-label text-accent" data-i18n="conditionsLabel">🎯 УСЛОВИЯ СТАВКИ</div>
+    
+    <!-- Контейнер для динамических условий -->
+    <div id="conditionsContainer" class="conditions-container">
+        <!-- JS будет добавлять условия сюда -->
+    </div>
+    
+    <!-- Общий чекбокс для процентов -->
+    <div class="percent-toggle-wrapper" style="margin-bottom: 10px;">
+        <label class="checkbox-item">
+            <input type="checkbox" id="percentToggle" checked>
+            <span class="text-medium" data-i18n="enablePercent">🔢 Распределение процентов</span>
+        </label>
+    </div>
+    
+    <!-- Кнопка добавления нового условия -->
+    <button id="addConditionBtn" class="btn-add-condition border-5 text-opponent">
+        <i class="fas fa-plus-circle"></i> <span data-i18n="addCondition">➕ Добавить условие</span>
+    </button>
+    
+    <!-- Итоговая строка с выбранными числами -->
+    <div id="totalBetDisplay" class="total-bet-display border-4">
+        <span class="text-medium" data-i18n="totalBet">📊 ИТОГО:</span>
+        <span class="text-light" id="totalBetText">—</span>
+    </div>
+</div>
 
                     <!-- ===== БЛОК НАСТРОЙКИ УСЛОВИЯ АКТИВАЦИИ ===== -->
                     <div class="settings-group">
@@ -317,3 +325,4 @@
     <script src="js/theme-switcher.js"></script>
 </body>
 </html>
+
