@@ -125,17 +125,17 @@ function updateStrategyOptions() {
     if (type === 'european') {
         const zeroOption = document.createElement('option');
         zeroOption.value = 'zero';
-        zeroOption.textContent = '0 (Зеро)';
+        zeroOption.textContent = '0';
         select.appendChild(zeroOption);
     } else {
         const zeroOption = document.createElement('option');
         zeroOption.value = 'zero';
-        zeroOption.textContent = '0 (Зеро)';
+        zeroOption.textContent = '0';
         select.appendChild(zeroOption);
         
         const doubleZeroOption = document.createElement('option');
         doubleZeroOption.value = 'doublezero';
-        doubleZeroOption.textContent = '00 (Двойное зеро)';
+        doubleZeroOption.textContent = '00';
         select.appendChild(doubleZeroOption);
     }
     
@@ -407,3 +407,4 @@ function resetSimulation() {
 }
 
 window.simulateStrategy = simulateStrategy;
+
