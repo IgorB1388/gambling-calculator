@@ -145,7 +145,7 @@
     "strategyCustom": "✏️ Свои цифры...",
     "strategyNumber": "Цифра {number}",
     
-    "customNumbersPlaceholder": "Например: 7,14,21,33",
+    "customNumbersPlaceholder": "Например: 7,14-17,33",
     "customNumbersHint": "Введите цифры через запятую (можно без пробелов)",
     "customNumbersRequired": "Введите хотя бы одну цифру для ставки!",
     "betTooLarge": "Ставка не может быть больше банка!",
@@ -160,3 +160,4 @@
     "totalBetNumbers": "Всего чисел: {count} | Сумма процентов: {total}%",
     "noCommonNumbers": "❌ Нет общих чисел"
 }
+
