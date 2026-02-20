@@ -158,8 +158,9 @@
     "removeCondition": "Удалить условие",
     "percent": "%",
     "totalBetNumbers": "Всего чисел: {count} | Сумма процентов: {total}%",
-    "noCommonNumbers": "❌ Нет общих чисел"
+    "noCommonNumbers": "❌ Нет общих чисел",
     "enablePercent": "🔢 Распределение процентов"
 }
+
 
 
