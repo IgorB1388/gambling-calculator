@@ -166,6 +166,12 @@
     color: #000000 !important;       /* Черный текст для опций */
 }
 
+.settings-select optgroup {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-weight: bold;
+}
+
 /* === СУФФИКС (ВАЛЮТА ПОСЛЕ ПОЛЯ) === */
 .input-suffix {
     font-size: 1rem;           /* Размер шрифта */
@@ -358,7 +364,22 @@
     border-left: 3px solid var(--border-4); /* Цветная полоска слева */
 }
 
-/* === БЛОК ЧЕКБОКСА "НЕ" === */
+/* === НОМЕР УСЛОВИЯ === */
+.condition-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 2px solid var(--border-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-light);
+    flex-shrink: 0;
+}
+
+/* === ЧЕКБОКС "НЕ" === */
 .condition-not {
     display: flex;               /* Флекс-контейнер */
     align-items: center;         /* Выравнивание по вертикали */
@@ -402,6 +423,26 @@
     color: var(--text-light);     /* Цвет текста из темы */
 }
 
+/* === ЧЕКБОКС АКТИВАЦИИ ПРОЦЕНТА === */
+.condition-percent-active {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 50px;
+}
+
+.condition-percent-active input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.condition-percent-active label {
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
 /* === ПОЛЕ ПРОЦЕНТА === */
 .condition-percent {
     width: 80px;                 /* Фиксированная ширина */
@@ -412,6 +453,11 @@
     background: var(--bg-elevated); /* Фон из темы */
     color: var(--text-light);     /* Цвет текста из темы */
     text-align: center;          /* Текст по центру */
+}
+
+.condition-percent:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
 /* === КНОПКА УДАЛЕНИЯ УСЛОВИЯ === */
@@ -484,6 +530,8 @@
     font-weight: bold;           /* Жирное начертание */
     font-size: 1.1rem;           /* Размер шрифта */
     text-align: right;           /* Текст справа */
+    max-width: 70%;              /* Ограничение ширины */
+    word-break: break-word;      /* Перенос длинных строк */
 }
 
 /* ============================================ */
@@ -524,6 +572,13 @@
         align-items: stretch;     /* Растянуть по ширине */
     }
     
+    .condition-number {
+        width: 25px;
+        height: 25px;
+        font-size: 0.9rem;
+        align-self: flex-start;
+    }
+    
     .condition-not {
         justify-content: flex-start; /* Прижать к левому краю */
     }
@@ -536,6 +591,11 @@
     
     .condition-remove {
         align-self: flex-end;     /* Прижать к правому краю */
+    }
+    
+    #totalBetText {
+        max-width: 60%;           /* Еще меньше на мобильных */
+        font-size: 1rem;
     }
 }
 
@@ -561,5 +621,10 @@
     .roulette-flag {
         width: 18px;              /* Еще меньше флаг */
         height: 14px;
+    }
+    
+    #totalBetText {
+        max-width: 50%;           /* Совсем мало места */
+        font-size: 0.9rem;
     }
 }
