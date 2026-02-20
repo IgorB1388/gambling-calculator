@@ -134,9 +134,29 @@
     "faqQuestion4": "Адаптирован ли сайт для мобильных устройств?",
     "faqAnswer4": "Да, все инструменты полностью адаптированы для использования на смартфонах и планшетах.",
     "faqContact": "Не нашли ответ на свой вопрос?",
-    "faqContactAnswer": "Если у вас есть другие вопросы или предложения по улучшению инструментов, свяжитесь с нами через репозиторий GitHub проекта."
+    "faqContactAnswer": "Если у вас есть другие вопросы или предложения по улучшению инструментов, свяжитесь с нами через репозиторий GitHub проекта.",
+    
+    "strategyGroupBasic": "--- ОСНОВНЫЕ СТАВКИ ---",
+    "strategyGroupNumbers": "--- КОНКРЕТНЫЕ ЦИФРЫ ---",
+    "strategyGroupHalves": "--- ПОЛОВИНЫ ---",
+    "strategyGroupDozens": "--- ДЮЖИНЫ ---",
+    "strategyGroupColumns": "--- КОЛОННЫ ---",
+    
+    "strategyCustom": "✏️ Свои цифры...",
+    "strategyNumber": "Цифра {number}",
+    
+    "customNumbersPlaceholder": "Например: 7,14,21,33",
+    "customNumbersHint": "Введите цифры через запятую (можно без пробелов)",
+    "customNumbersRequired": "Введите хотя бы одну цифру для ставки!",
+    "betTooLarge": "Ставка не может быть больше банка!",
+    
+    "addCondition": "➕ Добавить условие",
+    "not": "НЕ",
+    "customNumbersTitle": "✏️ Свои числа",
+    "totalBet": "📊 ИТОГО:",
+    "maxConditions": "Максимум 5 условий",
+    "removeCondition": "Удалить условие",
+    "percent": "%",
+    "totalBetNumbers": "Всего чисел: {count} | Сумма процентов: {total}%",
+    "noCommonNumbers": "❌ Нет общих чисел"
 }
-
-
-
-
