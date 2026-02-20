@@ -74,20 +74,8 @@
     "triggerTimes": "раз подряд",
     "triggerExample": "например: ставить на красное, если оно не выпало 3 раза подряд",
 
+  
    
-    "addCondition": "➕ Добавить условие",
-    "not": "НЕ",
-    "customNumbers": "✏️ Свои числа",
-    "customNumbersPlaceholder": "1,4,7,22",
-    "customNumbersHint": "Введите числа через запятую (можно несколько)",
-    "totalBet": "📊 ИТОГО:",
-    "noConditions": "Нажмите «Добавить условие»",
-    "maxConditions": "Максимум 5 условий",
-    "removeCondition": "Удалить условие",
-    "percent": "%",
-    "totalBetNumbers": "Всего чисел: {count} | Сумма процентов: {total}%"
-
-    
     "stopConditionsLabel": "УСЛОВИЯ ОСТАНОВКИ:",
     "stopBankrupt": "Остановить при банкротстве",
     "stopTarget": "Достижение целевого банка:",
@@ -148,6 +136,7 @@
     "faqContact": "Не нашли ответ на свой вопрос?",
     "faqContactAnswer": "Если у вас есть другие вопросы или предложения по улучшению инструментов, свяжитесь с нами через репозиторий GitHub проекта."
 }
+
 
 
 
