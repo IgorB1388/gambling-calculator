@@ -154,11 +154,12 @@
     "percent": "%",
     "totalBetNumbers": "Всего чисел: {count} | Сумма процентов: {total}%",
     "noCommonNumbers": "❌ Нет общих чисел",
-    "enablePercent": "🔢 Распределение процентов",
+    "enablePercent": "Проценты",
     "conditionsLabel": "🎯 УСЛОВИЯ СТАВКИ",
     "strategyZero": "0 (Зеро)",
     "strategyDoubleZero": "00 (Двойное зеро)"
 }
+
 
 
 
