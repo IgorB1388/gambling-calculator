@@ -1,351 +1,565 @@
-/* roulette.css - только позиционирование, никаких цветов! */
+/* ============================================ */
+/* roulette.css - АНАЛИЗАТОР РУЛЕТКИ            */
+/* ТОЛЬКО позиционирование и размеры!           */
+/* Цвета задаются через классы из color-classes */
+/* ============================================ */
 
+/* === ОСНОВНОЙ КОНТЕЙНЕР === */
 .roulette-analyzer-container {
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 1400px;        /* Максимальная ширина контейнера */
+    margin: 0 auto;            /* Центрирование по горизонтали */
 }
 
+/* === ЗАГОЛОВОК СТРАНИЦЫ === */
 .roulette-header {
-    text-align: center;
-    margin-bottom: 40px;
-    padding: 25px;
-    border-radius: 15px;
-    border-width: 2px;
-    border-style: solid;
-    position: relative;
+    text-align: center;        /* Текст по центру */
+    margin-bottom: 40px;       /* Отступ снизу */
+    padding: 25px;             /* Внутренние отступы */
+    border-radius: 15px;       /* Скругление углов */
+    border-width: 2px;         /* Толщина границы */
+    border-style: solid;       /* Стиль границы (сплошная) */
+    position: relative;        /* Для позиционирования псевдоэлементов */
 }
 
+/* === ОСНОВНАЯ ОБЛАСТЬ С ДВУМЯ КОЛОНКАМИ === */
 .analyzer-main-area {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 40px;
+    display: grid;                           /* Сетка */
+    grid-template-columns: 1fr 1fr;          /* Две равные колонки */
+    gap: 30px;                                /* Расстояние между колонками */
+    margin-bottom: 40px;                      /* Отступ снизу */
 }
 
+/* === АДАПТИВНОСТЬ ДЛЯ ПЛАНШЕТОВ === */
 @media (max-width: 1100px) {
     .analyzer-main-area {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr;           /* Одна колонка на узких экранах */
     }
 }
 
+/* === БАЗОВАЯ ПАНЕЛЬ (левая и правая) === */
 .panel {
-    border-radius: 15px;
-    padding: 25px;
-    border-width: 2px;
-    border-style: solid;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    border-radius: 15px;       /* Скругление углов */
+    padding: 25px;             /* Внутренние отступы */
+    border-width: 2px;         /* Толщина границы */
+    border-style: solid;       /* Стиль границы */
+    display: flex;             /* Флекс-контейнер */
+    flex-direction: column;    /* Вертикальное расположение */
+    gap: 20px;                 /* Расстояние между элементами внутри панели */
 }
 
+/* === ЗАГОЛОВОК ПАНЕЛИ (НАСТРОЙКИ / РЕЗУЛЬТАТЫ) === */
 .panel-title {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
+    font-size: 1.4rem;         /* Размер шрифта */
+    font-weight: bold;         /* Жирное начертание */
+    margin-bottom: 10px;       /* Отступ снизу */
+    padding-bottom: 10px;      /* Внутренний отступ снизу (для линии) */
+    border-bottom-width: 2px;  /* Толщина линии под заголовком */
+    border-bottom-style: solid; /* Стиль линии (сплошная) */
+    /* Цвет линии наследуется от color (из класса text-*) */
 }
 
+/* === ГРУППА НАСТРОЕК (обертка для логических блоков) === */
 .settings-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 5px;
+    display: flex;             /* Флекс-контейнер */
+    flex-direction: column;    /* Вертикальное расположение */
+    gap: 8px;                  /* Расстояние между элементами внутри группы */
+    margin-bottom: 5px;        /* Отступ снизу */
 }
 
+/* === ЗАГОЛОВОК ГРУППЫ (подпись) === */
 .settings-label {
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 1rem;           /* Размер шрифта */
+    font-weight: bold;         /* Жирное начертание */
 }
 
+/* === КОНТЕЙНЕР ДЛЯ КНОПОК-ПИЛЮЛЬ (тип рулетки) === */
 .option-pills {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    display: flex;             /* Флекс-контейнер */
+    gap: 10px;                 /* Расстояние между кнопками */
+    flex-wrap: wrap;           /* Перенос на новую строку */
 }
 
+/* === КНОПКА-ПИЛЮЛЯ (европейская/американская) === */
 .option-pill {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border-width: 2px;
-    border-style: solid;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    padding: 8px 16px;         /* Внутренние отступы */
+    border-radius: 20px;       /* Сильное скругление (пилюля) */
+    border-width: 2px;         /* Толщина границы */
+    border-style: solid;       /* Стиль границы */
+    font-size: 1rem;           /* Размер шрифта */
+    font-weight: 600;          /* Полужирное начертание */
+    cursor: pointer;           /* Курсор-указатель */
+    transition: all 0.3s;      /* Плавная анимация */
+    display: flex;             /* Флекс-контейнер */
+    align-items: center;       /* Выравнивание по вертикали */
+    gap: 6px;                  /* Расстояние между флагом и текстом */
 }
 
 .option-pill:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* Легкий подъем при наведении */
 }
 
-/* ПОДСВЕТКА АКТИВНОЙ КНОПКИ ТИПА РУЛЕТКИ */
+/* === ПОДСВЕТКА АКТИВНОЙ КНОПКИ ТИПА РУЛЕТКИ === */
 .option-pill.active {
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 10px var(--color-primary);
-    transform: scale(1.05);
+    border-color: var(--color-primary) !important; /* Цвет рамки из темы */
+    box-shadow: 0 0 10px var(--color-primary);     /* Свечение */
+    transform: scale(1.05);                         /* Небольшое увеличение */
 }
 
-/* 🚩 ФЛАГИ ДЛЯ ТИПА РУЛЕТКИ */
+/* === ФЛАГИ ДЛЯ ТИПА РУЛЕТКИ === */
 .roulette-flag {
-    width: 24px;
-    height: 18px;
-    object-fit: cover;
-    border-radius: 3px;
-    margin-right: 4px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: var(--border-muted);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 24px;               /* Ширина флага */
+    height: 18px;              /* Высота флага */
+    object-fit: cover;         /* Сохраняет пропорции */
+    border-radius: 3px;        /* Легкое скругление */
+    margin-right: 4px;         /* Отступ справа */
+    border-width: 1px;         /* Тонкая рамка */
+    border-style: solid;       /* Стиль рамки */
+    border-color: var(--border-muted); /* Цвет рамки из темы */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Легкая тень */
 }
 
+/* === ОБЕРТКА ДЛЯ ПОЛЯ ВВОДА С ВАЛЮТОЙ === */
 .input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
+    display: flex;             /* Флекс-контейнер */
+    align-items: center;       /* Выравнивание по вертикали */
+    gap: 8px;                  /* Расстояние между полем и валютой */
+    width: 100%;               /* На всю ширину */
 }
 
+/* === ПОЛЕ ВВОДА (числовое) === */
 .settings-input {
-    padding: 10px 12px;
-    border-radius: 8px;
-    border-width: 2px;
-    border-style: solid;
-    font-size: 1rem;
-    width: 150px;
-    background: transparent;
+    padding: 10px 12px;        /* Внутренние отступы */
+    border-radius: 8px;        /* Скругление углов */
+    border-width: 2px;         /* Толщина границы */
+    border-style: solid;       /* Стиль границы */
+    font-size: 1rem;           /* Размер шрифта */
+    width: 150px;              /* Фиксированная ширина */
+    background: transparent;    /* Прозрачный фон (цвет из класса bg-*) */
 }
 
+/* === УБИРАЕМ СТРЕЛКИ У ЧИСЛОВЫХ ПОЛЕЙ === */
 .settings-input[type="number"] {
-    -moz-appearance: textfield;
+    -moz-appearance: textfield;  /* Для Firefox */
 }
 
 .settings-input::-webkit-outer-spin-button,
 .settings-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
+    -webkit-appearance: none;    /* Для Chrome/Safari */
     margin: 0;
 }
 
-/* СТИЛИ ДЛЯ ВЫПАДАЮЩИХ СПИСКОВ - ВСЕГДА ЧЕРНЫЙ ТЕКСТ НА БЕЛОМ */
+/* === ВЫПАДАЮЩИЙ СПИСОК (SELECT) === */
 .settings-select {
-    padding: 10px 12px;
-    border-radius: 8px;
-    border-width: 2px;
-    border-style: solid;
-    font-size: 1rem;
-    width: 100%;
-    background: #ffffff !important;
-    color: #000000 !important;
-    cursor: pointer;
+    padding: 10px 12px;        /* Внутренние отступы */
+    border-radius: 8px;        /* Скругление углов */
+    border-width: 2px;         /* Толщина границы */
+    border-style: solid;       /* Стиль границы */
+    font-size: 1rem;           /* Размер шрифта */
+    width: 100%;               /* На всю ширину */
+    background: #ffffff !important;  /* Белый фон (принудительно) */
+    color: #000000 !important;       /* Черный текст (принудительно) */
+    cursor: pointer;           /* Курсор-указатель */
 }
 
 .settings-select option {
-    background: #ffffff !important;
-    color: #000000 !important;
+    background: #ffffff !important;  /* Белый фон для опций */
+    color: #000000 !important;       /* Черный текст для опций */
 }
 
+/* === СУФФИКС (ВАЛЮТА ПОСЛЕ ПОЛЯ) === */
 .input-suffix {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1rem;           /* Размер шрифта */
+    font-weight: 600;          /* Полужирное начертание */
 }
 
+/* === КОНСТРУКТОР УСЛОВИЯ АКТИВАЦИИ === */
 .trigger-builder {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+    display: flex;             /* Флекс-контейнер */
+    align-items: center;       /* Выравнивание по вертикали */
+    gap: 10px;                 /* Расстояние между элементами */
+    flex-wrap: wrap;           /* Перенос на новую строку */
 }
 
+/* === ПРИМЕР УСЛОВИЯ (ПОДСКАЗКА) === */
 .trigger-example {
-    font-size: 0.85rem;
-    font-style: italic;
-    padding: 5px 0;
+    font-size: 0.85rem;        /* Мелкий шрифт */
+    font-style: italic;        /* Курсив */
+    padding: 5px 0;            /* Отступы */
 }
 
+/* === ЭЛЕМЕНТ ЧЕКБОКСА === */
 .checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
+    display: flex;             /* Флекс-контейнер */
+    align-items: center;       /* Выравнивание по вертикали */
+    gap: 10px;                 /* Расстояние между чекбоксом и текстом */
+    margin-bottom: 5px;        /* Отступ снизу */
 }
 
 .checkbox-item input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+    width: 18px;               /* Ширина чекбокса */
+    height: 18px;              /* Высота чекбокса */
+    cursor: pointer;           /* Курсор-указатель */
 }
 
 .checkbox-item label {
-    cursor: pointer;
+    cursor: pointer;           /* Курсор-указатель */
 }
 
+/* === ПОДСКАЗКА ПОД ПОЛЕМ === */
 .setting-hint {
-    font-size: 0.8rem;
-    margin-top: 2px;
+    font-size: 0.8rem;         /* Мелкий шрифт */
+    margin-top: 2px;           /* Отступ сверху */
 }
 
+/* === КОНТЕЙНЕР КНОПОК УПРАВЛЕНИЯ === */
 .controls {
-    display: flex;
-    gap: 15px;
-    margin-top: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: flex;             /* Флекс-контейнер */
+    gap: 15px;                 /* Расстояние между кнопками */
+    margin-top: 15px;          /* Отступ сверху */
+    justify-content: center;    /* Центрирование по горизонтали */
+    flex-wrap: wrap;           /* Перенос на новую строку */
 }
 
+/* === БАЗОВЫЙ СТИЛЬ КНОПКИ === */
 .btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    padding: 12px 25px;        /* Внутренние отступы */
+    border: none;              /* Без границы */
+    border-radius: 8px;        /* Скругление углов */
+    font-size: 1.1rem;         /* Размер шрифта */
+    font-weight: bold;         /* Жирное начертание */
+    cursor: pointer;           /* Курсор-указатель */
+    transition: all 0.3s;      /* Плавная анимация */
+    min-width: 180px;          /* Минимальная ширина */
+    display: flex;             /* Флекс-контейнер */
+    align-items: center;       /* Выравнивание по вертикали */
+    justify-content: center;    /* Центрирование по горизонтали */
+    gap: 10px;                 /* Расстояние между иконкой и текстом */
 }
 
 .btn:hover {
-    transform: translateY(-3px);
+    transform: translateY(-3px); /* Подъем при наведении */
 }
 
 .btn:active {
-    transform: scale(0.95);
+    transform: scale(0.95);      /* Уменьшение при нажатии */
 }
 
-/* ПРАВАЯ ПАНЕЛЬ - РЕЗУЛЬТАТЫ */
+/* ============================================ */
+/* === ПРАВАЯ ПАНЕЛЬ - РЕЗУЛЬТАТЫ ============= */
+/* ============================================ */
+
+/* === СЕТКА ИЗ ТРЕХ КАРТОЧЕК (ОСНОВНЫЕ ПОКАЗАТЕЛИ) === */
 .results-grid-compact {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
+    display: grid;                           /* Сетка */
+    grid-template-columns: repeat(3, 1fr);   /* 3 равные колонки */
+    gap: 15px;                                /* Расстояние между карточками */
+    margin-bottom: 25px;                      /* Отступ снизу */
 }
 
+/* === КАРТОЧКА СТАТИСТИКИ === */
 .stat-card {
-    padding: 15px;
-    border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    padding: 15px;               /* Внутренние отступы */
+    border-radius: 12px;         /* Скругление углов */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
+    display: flex;               /* Флекс-контейнер */
+    flex-direction: column;      /* Вертикальное расположение */
+    align-items: center;         /* Центрирование по горизонтали */
+    text-align: center;          /* Текст по центру */
 }
 
+/* === ПОДПИСЬ В КАРТОЧКЕ === */
 .stat-label {
-    font-size: 0.9rem;
-    margin-bottom: 8px;
+    font-size: 0.9rem;           /* Мелкий шрифт */
+    margin-bottom: 8px;          /* Отступ снизу */
 }
 
+/* === ЗНАЧЕНИЕ В КАРТОЧКЕ (КРУПНОЕ) === */
 .stat-value {
-    font-size: 1.8rem;
-    font-weight: bold;
+    font-size: 1.8rem;           /* Крупный шрифт */
+    font-weight: bold;           /* Жирное начертание */
 }
 
+/* === ДЕТАЛЬНАЯ СТАТИСТИКА (ТАБЛИЦА) === */
 .stats-detailed {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 25px;
-    padding: 15px;
-    border-radius: 12px;
-    border-width: 1px;
-    border-style: solid;
+    display: flex;               /* Флекс-контейнер */
+    flex-direction: column;      /* Вертикальное расположение */
+    gap: 12px;                   /* Расстояние между строками */
+    margin-bottom: 25px;         /* Отступ снизу */
+    padding: 15px;               /* Внутренние отступы */
+    border-radius: 12px;         /* Скругление углов */
+    border-width: 1px;           /* Тонкая граница */
+    border-style: solid;         /* Стиль границы */
 }
 
+/* === СТРОКА В ДЕТАЛЬНОЙ СТАТИСТИКЕ === */
 .stats-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
+    display: flex;               /* Флекс-контейнер */
+    justify-content: space-between; /* Равномерное распределение */
+    align-items: center;         /* Выравнивание по вертикали */
+    padding: 4px 0;              /* Вертикальные отступы */
 }
 
 .stats-row span:first-child {
-    font-size: 0.95rem;
+    font-size: 0.95rem;          /* Размер подписи */
 }
 
 .stats-row span:last-child {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.1rem;           /* Размер значения */
+    font-weight: 600;            /* Полужирное */
 }
 
+/* === КОНТЕЙНЕР ДЛЯ ГРАФИКА === */
 .chart-container {
-    margin-top: 10px;
-    padding: 15px;
-    border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
-    min-height: 150px;
+    margin-top: 10px;            /* Отступ сверху */
+    padding: 15px;               /* Внутренние отступы */
+    border-radius: 12px;         /* Скругление углов */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
+    min-height: 150px;           /* Минимальная высота */
 }
 
+/* === ЗАГЛУШКА ГРАФИКА (ПОКА НЕТ ДАННЫХ) === */
 .chart-placeholder {
-    width: 100%;
-    height: 120px;
-    border-radius: 8px;
-    border-width: 1px;
-    border-style: dashed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;                 /* На всю ширину */
+    height: 120px;               /* Фиксированная высота */
+    border-radius: 8px;          /* Скругление углов */
+    border-width: 1px;           /* Тонкая граница */
+    border-style: dashed;        /* Пунктирная граница */
+    display: flex;               /* Флекс-контейнер */
+    align-items: center;         /* Центрирование по вертикали */
+    justify-content: center;      /* Центрирование по горизонтали */
 }
 
-/* Адаптивность */
+/* ============================================ */
+/* === НОВЫЕ СТИЛИ ДЛЯ УСЛОВИЙ СТАВКИ ========= */
+/* ============================================ */
+
+/* === КОНТЕЙНЕР ДЛЯ ВСЕХ УСЛОВИЙ === */
+.conditions-container {
+    display: flex;               /* Флекс-контейнер */
+    flex-direction: column;      /* Вертикальное расположение */
+    gap: 12px;                   /* Расстояние между условиями */
+    margin-bottom: 15px;         /* Отступ снизу */
+    max-height: 400px;           /* Максимальная высота (для скролла) */
+    overflow-y: auto;            /* Вертикальный скролл при необходимости */
+    padding-right: 5px;          /* Отступ справа для скролла */
+}
+
+/* === СТРОКА ОДНОГО УСЛОВИЯ === */
+.condition-row {
+    display: flex;               /* Флекс-контейнер */
+    flex-wrap: wrap;             /* Перенос элементов на новую строку */
+    gap: 8px;                    /* Расстояние между элементами внутри строки */
+    align-items: center;         /* Выравнивание по вертикали */
+    padding: 12px;               /* Внутренние отступы */
+    background: var(--bg-elevated); /* Фон из темы */
+    border-radius: 8px;          /* Скругление углов */
+    border-left: 3px solid var(--border-4); /* Цветная полоска слева */
+}
+
+/* === БЛОК ЧЕКБОКСА "НЕ" === */
+.condition-not {
+    display: flex;               /* Флекс-контейнер */
+    align-items: center;         /* Выравнивание по вертикали */
+    gap: 4px;                    /* Расстояние между чекбоксом и текстом */
+    min-width: 50px;             /* Минимальная ширина */
+}
+
+.condition-not input[type="checkbox"] {
+    width: 16px;                 /* Ширина чекбокса */
+    height: 16px;                /* Высота чекбокса */
+    cursor: pointer;             /* Курсор-указатель */
+}
+
+.condition-not label {
+    font-size: 0.9rem;           /* Размер шрифта */
+    cursor: pointer;             /* Курсор-указатель */
+    color: var(--text-secondary); /* Цвет из темы */
+}
+
+/* === ВЫПАДАЮЩИЙ СПИСОК В УСЛОВИИ === */
+.condition-select {
+    flex: 2;                     /* Занимает больше места */
+    min-width: 150px;            /* Минимальная ширина */
+    padding: 8px;                /* Внутренние отступы */
+    border-radius: 6px;          /* Скругление углов */
+    border-width: 1px;           /* Тонкая граница */
+    border-style: solid;         /* Стиль границы */
+    background: var(--bg-surface); /* Фон из темы */
+    color: var(--text-light);     /* Цвет текста из темы */
+}
+
+/* === ПОЛЕ ДЛЯ СВОИХ ЧИСЕЛ === */
+.condition-custom-input {
+    flex: 2;                     /* Занимает больше места */
+    min-width: 150px;            /* Минимальная ширина */
+    padding: 8px;                /* Внутренние отступы */
+    border-radius: 6px;          /* Скругление углов */
+    border-width: 1px;           /* Тонкая граница */
+    border-style: solid;         /* Стиль границы */
+    background: var(--bg-elevated); /* Фон из темы */
+    color: var(--text-light);     /* Цвет текста из темы */
+}
+
+/* === ПОЛЕ ПРОЦЕНТА === */
+.condition-percent {
+    width: 80px;                 /* Фиксированная ширина */
+    padding: 8px;                /* Внутренние отступы */
+    border-radius: 6px;          /* Скругление углов */
+    border-width: 1px;           /* Тонкая граница */
+    border-style: solid;         /* Стиль границы */
+    background: var(--bg-elevated); /* Фон из темы */
+    color: var(--text-light);     /* Цвет текста из темы */
+    text-align: center;          /* Текст по центру */
+}
+
+/* === КНОПКА УДАЛЕНИЯ УСЛОВИЯ === */
+.condition-remove {
+    width: 30px;                 /* Ширина кнопки */
+    height: 30px;                /* Высота кнопки (круглая) */
+    border-radius: 50%;          /* Круглая форма */
+    border: 1px solid var(--color-danger); /* Красная рамка */
+    background: rgba(255, 51, 102, 0.1); /* Полупрозрачный красный фон */
+    color: var(--color-danger);   /* Красный цвет крестика */
+    display: flex;               /* Флекс-контейнер */
+    align-items: center;         /* Центрирование по вертикали */
+    justify-content: center;      /* Центрирование по горизонтали */
+    cursor: pointer;             /* Курсор-указатель */
+    transition: all 0.3s;        /* Плавная анимация */
+    font-size: 1.2rem;           /* Размер крестика */
+}
+
+.condition-remove:hover {
+    background: var(--color-danger); /* Красный фон при наведении */
+    color: white;                    /* Белый крестик */
+    transform: scale(1.1);           /* Увеличение */
+}
+
+.condition-remove:disabled {
+    opacity: 0.3;                /* Полупрозрачность */
+    cursor: not-allowed;         /* Курсор "нельзя" */
+}
+
+/* === КНОПКА ДОБАВЛЕНИЯ УСЛОВИЯ === */
+.btn-add-condition {
+    width: 100%;                 /* На всю ширину */
+    padding: 10px;               /* Внутренние отступы */
+    border-radius: 8px;          /* Скругление углов */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
+    background: transparent;      /* Прозрачный фон */
+    display: flex;               /* Флекс-контейнер */
+    align-items: center;         /* Выравнивание по вертикали */
+    justify-content: center;      /* Центрирование по горизонтали */
+    gap: 8px;                    /* Расстояние между иконкой и текстом */
+    cursor: pointer;             /* Курсор-указатель */
+    transition: all 0.3s;        /* Плавная анимация */
+    margin-bottom: 15px;         /* Отступ снизу */
+}
+
+.btn-add-condition:hover {
+    transform: translateY(-2px);  /* Легкий подъем */
+    box-shadow: 0 0 15px currentColor; /* Свечение */
+}
+
+.btn-add-condition i {
+    font-size: 1.1rem;           /* Размер иконки */
+}
+
+/* === ИТОГОВАЯ СТРОКА С ЧИСЛАМИ === */
+.total-bet-display {
+    padding: 15px;               /* Внутренние отступы */
+    border-radius: 8px;          /* Скругление углов */
+    border-width: 2px;           /* Толщина границы */
+    border-style: solid;         /* Стиль границы */
+    background: var(--bg-elevated); /* Фон из темы */
+    display: flex;               /* Флекс-контейнер */
+    justify-content: space-between; /* Равномерное распределение */
+    align-items: center;         /* Выравнивание по вертикали */
+    margin-top: 10px;            /* Отступ сверху */
+}
+
+#totalBetText {
+    font-weight: bold;           /* Жирное начертание */
+    font-size: 1.1rem;           /* Размер шрифта */
+    text-align: right;           /* Текст справа */
+}
+
+/* ============================================ */
+/* === АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ === */
+/* ============================================ */
+
 @media (max-width: 768px) {
     .panel {
-        padding: 20px;
+        padding: 20px;           /* Уменьшенные отступы */
     }
     
     .results-grid-compact {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Одна колонка */
     }
     
     .trigger-builder {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: column;   /* Вертикальное расположение */
+        align-items: flex-start;  /* Прижать к левому краю */
     }
     
     .settings-input {
-        width: 120px;
+        width: 120px;            /* Уменьшенная ширина */
     }
     
     .btn {
-        min-width: 150px;
-        padding: 10px 20px;
+        min-width: 150px;        /* Уменьшенная минимальная ширина */
+        padding: 10px 20px;      /* Уменьшенные отступы */
     }
     
     .roulette-flag {
-        width: 20px;
+        width: 20px;             /* Уменьшенный флаг */
         height: 15px;
+    }
+    
+    /* === АДАПТИВНОСТЬ ДЛЯ УСЛОВИЙ === */
+    .condition-row {
+        flex-direction: column;   /* Вертикальное расположение */
+        align-items: stretch;     /* Растянуть по ширине */
+    }
+    
+    .condition-not {
+        justify-content: flex-start; /* Прижать к левому краю */
+    }
+    
+    .condition-select,
+    .condition-custom-input,
+    .condition-percent {
+        width: 100%;              /* На всю ширину */
+    }
+    
+    .condition-remove {
+        align-self: flex-end;     /* Прижать к правому краю */
     }
 }
 
 @media (max-width: 480px) {
     .option-pills {
-        flex-direction: column;
+        flex-direction: column;   /* Вертикальное расположение */
         width: 100%;
     }
     
     .option-pill {
-        width: 100%;
-        justify-content: center;
+        width: 100%;              /* На всю ширину */
+        justify-content: center;   /* Текст по центру */
     }
     
     .controls {
-        flex-direction: column;
+        flex-direction: column;   /* Вертикальное расположение */
     }
     
     .btn {
-        width: 100%;
+        width: 100%;              /* На всю ширину */
     }
     
     .roulette-flag {
-        width: 18px;
+        width: 18px;              /* Еще меньше флаг */
         height: 14px;
     }
 }
