@@ -191,7 +191,7 @@ function renderConditions() {
         
         const notLabel = document.createElement('label');
         notLabel.htmlFor = `not_${index}`;
-        notLabel.textContent = getTranslation('not'); // "НЕ" из JSON
+        notLabel.setAttribute('data-i18n', 'not'); // Вместо getTranslation
         
         notDiv.appendChild(notCheckbox);
         notDiv.appendChild(notLabel);
@@ -273,7 +273,7 @@ function renderConditions() {
             const customInput = document.createElement('input');
             customInput.type = 'text';
             customInput.className = 'condition-custom-input settings-input bg-elevated border-muted text-light';
-            customInput.placeholder = getTranslation('customNumbersPlaceholder');
+            customInput.setAttribute('data-i18n-placeholder', 'customNumbersPlaceholder'); // Вместо getTranslation
             customInput.value = cond.customNumbers;
             customInput.addEventListener('input', () => {
                 conditions[index].customNumbers = customInput.value;
@@ -326,7 +326,7 @@ function renderConditions() {
         
         const percentSymbol = document.createElement('span');
         percentSymbol.className = 'text-medium';
-        percentSymbol.textContent = '%';
+        percentSymbol.setAttribute('data-i18n', 'percent'); // "%" из JSON
         percentWrapper.appendChild(percentSymbol);
         
         row.appendChild(percentWrapper);
@@ -336,7 +336,7 @@ function renderConditions() {
             const removeBtn = document.createElement('button');
             removeBtn.className = 'condition-remove';
             removeBtn.innerHTML = '✕';
-            removeBtn.title = getTranslation('removeCondition');
+            removeBtn.setAttribute('data-i18n-title', 'removeCondition'); // Вместо title через getTranslation
             removeBtn.addEventListener('click', () => {
                 removeCondition(index);
             });
@@ -346,7 +346,17 @@ function renderConditions() {
         container.appendChild(row);
     });
     
+    // Применяем переводы ко всем новым элементам
+    if (window.reloadTranslationsForNewContent) {
+        window.reloadTranslationsForNewContent(container);
+    }
+    
     updatePercentWarning();
+    
+    // Пересчитываем итог после применения переводов
+    setTimeout(() => {
+        calculateTotalBet();
+    }, 50);
 }
 
 // --- Обновление предупреждения о процентах ---
@@ -362,7 +372,7 @@ function updatePercentWarning() {
         const warningDiv = document.createElement('div');
         warningDiv.id = 'percentWarning';
         warningDiv.className = 'percent-warning text-warning';
-        warningDiv.textContent = `⚠️ Сумма процентов: ${totalPercent.toFixed(1)}% (должна быть 100%)`;
+        warningDiv.textContent = `⚠️ ${getTranslation('totalPercentWarning')?.replace('{total}', totalPercent.toFixed(1)) || `Сумма процентов: ${totalPercent.toFixed(1)}% (должна быть 100%)`}`;
         
         const container = document.getElementById('conditionsContainer');
         container.parentNode.insertBefore(warningDiv, container.nextSibling);
@@ -449,7 +459,7 @@ function calculateTotalBet() {
     // Формируем текст с заменой 37 на "00"
     let displayText = '';
     if (finalNumbers.length === 0) {
-        displayText = getTranslation('noCommonNumbers');
+        displayText = getTranslation('noCommonNumbers'); // ✅ "❌ Нет общих чисел"
     } else {
         let displayNumbers = finalNumbers.map(num => {
             if (num === 37) return '00';
@@ -547,12 +557,12 @@ async function simulateStrategy() {
     const { finalNumbers, totalPercent } = calculateTotalBet();
     
     if (finalNumbers.length === 0) {
-        alert('Нет чисел для ставки! Проверьте условия.');
+        alert(getTranslation('noCommonNumbers')); // ✅ "❌ Нет общих чисел"
         return;
     }
     
     if (percentActive && Math.abs(totalPercent - 100) > 0.1) {
-        alert('Сумма процентов должна быть 100%!');
+        alert(getTranslation('percentTotalError') || 'Сумма процентов должна быть 100%!');
         return;
     }
     
@@ -563,7 +573,7 @@ async function simulateStrategy() {
     
     isSimulating = true;
     document.getElementById('simulateBtn').disabled = true;
-    document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>' + getTranslation('simulating') + '</span>';
+    document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span data-i18n="simulating"></span>';
     
     setTimeout(() => {
         const results = runSimulation(
@@ -577,7 +587,12 @@ async function simulateStrategy() {
         
         isSimulating = false;
         document.getElementById('simulateBtn').disabled = false;
-        document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-cogs"></i> <span>' + getTranslation('simulateBtn') + '</span>';
+        document.getElementById('simulateBtn').innerHTML = '<i class="fas fa-cogs"></i> <span data-i18n="simulateBtn"></span>';
+        
+        // Обновляем переводы после возврата кнопки в исходное состояние
+        if (window.reloadTranslationsForNewContent) {
+            window.reloadTranslationsForNewContent(document.getElementById('simulateBtn'));
+        }
     }, 50);
 }
 
@@ -688,7 +703,7 @@ function drawSimpleChart(distribution) {
     if (!chartContainer) return;
     
     if (distribution.length === 0) {
-        chartContainer.innerHTML = '<span class="text-muted">' + getTranslation('noData') + '</span>';
+        chartContainer.innerHTML = '<span class="text-muted" data-i18n="noData"></span>';
         return;
     }
     
@@ -698,7 +713,7 @@ function drawSimpleChart(distribution) {
     chartContainer.innerHTML = `
         <div style="width: 100%; padding: 10px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span class="text-medium">${getTranslation('profitableSessions')}</span>
+                <span class="text-medium" data-i18n="profitableSessions"></span>
                 <span class="text-success">${positivePercent.toFixed(1)}%</span>
             </div>
             <div style="width: 100%; height: 20px; background: var(--bg-elevated); border-radius: 10px; overflow: hidden;">
@@ -737,7 +752,7 @@ function resetSimulation() {
     
     const chartContainer = document.querySelector('.chart-placeholder');
     if (chartContainer) {
-        chartContainer.innerHTML = '<span class="text-muted">' + getTranslation('chartPlaceholder') + '</span>';
+        chartContainer.innerHTML = '<span class="text-muted" data-i18n="chartPlaceholder"></span>';
     }
     
     initConditions();
