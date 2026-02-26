@@ -86,64 +86,6 @@
     transform: scale(1.1);
 }
 
-/* ===== СТИЛИ ДЛЯ СТРОКИ СУММА + СТРАТЕГИЯ ===== */
-.stake-strategy-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.input-wrapper {
-    flex: 2;
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.input-wrapper .settings-input {
-    width: 100%;
-    padding-right: 40px; /* Место для валюты */
-}
-
-.input-suffix {
-    position: absolute;
-    right: 10px;
-    font-weight: bold;
-}
-
-/* Компактные кнопки стратегии */
-.strategy-mini-pills {
-    display: flex;
-    gap: 5px;
-    flex: 1;
-}
-
-.strategy-mini-btn {
-    padding: 8px 10px;
-    border-radius: 20px;
-    border-width: 2px;
-    border-style: solid;
-    font-size: 0.85rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    background: transparent;
-    flex: 1;
-    white-space: nowrap;
-    text-align: center;
-}
-
-.strategy-mini-btn:hover {
-    transform: translateY(-2px);
-}
-
-.strategy-mini-btn.active {
-    background: var(--color-info) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--color-info) !important;
-    box-shadow: 0 0 10px var(--color-info) !important;
-}
-
 /* 
 ==================================================
     ТАБЛИЦА КОЭФФИЦИЕНТОВ (НОВАЯ ВЕРСИЯ)
@@ -270,6 +212,11 @@
     line-height: 1;
 }
 
+/* Убираем возможный ховер-эффект если не нужен */
+/* .add-bk-btn:hover {
+    transform: scale(1.02);
+} */
+
 /* Индикатор вилки */
 .arb-indicator {
     display: flex;
@@ -364,7 +311,7 @@
     padding-top: 8px;
     border-top-width: 2px;
     border-top-style: solid;
-    border-top-color: inherit;  /* наследует цвет родительского элемента */
+    border-top-color: currentColor;  /* наследует цвет текста */
 }
 
 /* Подсказка */
@@ -430,25 +377,6 @@
         height: 20px;
     }
     
-    /* Адаптация строки сумма+стратегия */
-    .stake-strategy-row {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .input-wrapper {
-        width: 100%;
-    }
-    
-    .strategy-mini-pills {
-        width: 100%;
-    }
-    
-    .strategy-mini-btn {
-        padding: 8px 5px;
-        font-size: 0.8rem;
-    }
-    
     .table-header,
     .table-row {
         grid-template-columns: 1.5fr 1fr 1.2fr 1.2fr;
@@ -510,11 +438,6 @@
         padding: 5px 0;
     }
     
-    .strategy-mini-btn {
-        font-size: 0.75rem;
-        padding: 6px 3px;
-    }
-    
     .table-header,
     .table-row {
         grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
@@ -548,3 +471,6 @@
 .odds-input[type=number] {
     -moz-appearance: textfield;
 }
+
+
+
