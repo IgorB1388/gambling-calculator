@@ -107,14 +107,24 @@
                         </div>
                     </div>
 
-                    <!-- БЛОК ВВОДА ОБЩЕЙ СУММЫ СТАВКИ -->
+                    <!-- ===== БЛОК СУММЫ СТАВКИ И СТРАТЕГИИ ===== -->
                     <div class="settings-group">
-                        <div class="settings-label text-3" data-i18n="arbsStakeLabel"></div>
-                        <div class="input-wrapper">
-                            <!-- Поле ввода числа -->
-                            <input type="number" id="totalStake" class="settings-input bg-elevated border-5 text-1" value="1000" min="1" step="1">
-                            <!-- Валюта после поля -->
-                            <span class="input-suffix text-2">₽</span>
+                        <div class="settings-label text-3" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <span data-i18n="arbsStakeLabel"></span>
+                            <span class="text-3" data-i18n="arbsStrategyLabel" style="font-size: 0.9rem; opacity: 0.9;"></span>
+                        </div>
+                        <div class="stake-strategy-row">
+                            <!-- Поле ввода суммы -->
+                            <div class="input-wrapper">
+                                <input type="number" id="totalStake" class="settings-input bg-elevated border-5 text-1" value="1000" min="1" step="1">
+                                <span class="input-suffix text-2">₽</span>
+                            </div>
+                            
+                            <!-- Компактные кнопки стратегии -->
+                            <div class="strategy-mini-pills">
+                                <button class="strategy-mini-btn opponent-bg border-5 text-5 active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed">Гарант</button>
+                                <button class="strategy-mini-btn opponent-bg border-5 text-5" data-strategy="max" data-i18n="arbsStrategyMax">Макс</button>
+                            </div>
                         </div>
                     </div>
 
@@ -153,7 +163,7 @@
                     <!-- ТАБЛИЦА РАСПРЕДЕЛЕНИЯ СТАВОК -->
                     <div class="distribution-table border-1" id="distributionTable">
                         <!-- Заголовок таблицы -->
-                        <div class="table-header border-1">  <!-- ← Добавлен класс border-1 -->
+                        <div class="table-header border-1">
                             <span class="text-2" data-i18n="arbsOutcome"></span>
                             <span class="text-2" data-i18n="arbsOdds"></span>
                             <span class="text-2" data-i18n="arbsStake"></span>
