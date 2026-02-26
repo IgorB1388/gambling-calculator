@@ -122,6 +122,9 @@
     "arbsTotalPayout": "Общая выплата:",
     "arbsNetProfit": "Чистая прибыль:",
     "arbsHint": "Вводите лучшие коэффициенты из разных букмекерских контор. Прибыль считается от общей суммы ставки.",
+    "arbsStrategyLabel": "СТРАТЕГИЯ РАСЧЕТА:",
+    "arbsStrategyGuaranteed": "Гарантированная прибыль",
+    "arbsStrategyMax": "Максимальная прибыль с возвратом",
     
     "faqTitle": "ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ",
     "faqSubtitle": "Ответы на популярные вопросы о GTA Casino Tools",
@@ -159,6 +162,7 @@
     "strategyZero": "0 (Зеро)",
     "strategyDoubleZero": "00 (Двойное зеро)"
 }
+
 
 
 
