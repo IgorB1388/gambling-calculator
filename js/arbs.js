@@ -71,7 +71,8 @@ function renderOddsTable() {
     for (let o = 0; o < outcomeCount; o++) {
         const header = document.createElement('div');
         header.className = 'odds-header text-2';
-        header.textContent = `${getTranslation('arbsOutcome')} ${o + 1}`;
+        // Используем глобальную функцию getTranslation из language.js
+        header.textContent = `${window.getTranslation('arbsOutcome')} ${o + 1}`;
         headerRow.appendChild(header);
     }
     
@@ -88,7 +89,7 @@ function renderOddsTable() {
         
         const labelText = document.createElement('span');
         labelText.className = 'text-3';
-        labelText.textContent = `${getTranslation('bk')} ${b + 1}`;
+        labelText.textContent = `${window.getTranslation('bk')} ${b + 1}`;
         labelCell.appendChild(labelText);
         
         if (bkCount > 2) {
@@ -481,7 +482,7 @@ function displayResults(data) {
         let payoutDisplay = data.payouts[i].toFixed(2) + ' ₽';
         
         row.innerHTML = `
-            <span class="text-2">${getTranslation('arbsOutcome')} ${i+1}</span>
+            <span class="text-2">${window.getTranslation('arbsOutcome')} ${i+1}</span>
             <span class="text-1">${odd.toFixed(2)}</span>
             <span class="text-1">${data.stakes[i].toFixed(2)} ₽</span>
             <span class="text-1">${payoutDisplay}</span>
@@ -565,20 +566,6 @@ function loadLastCalculation() {
             console.log('Ошибка загрузки сохранения');
         }
     }
-}
-
-// Временная заглушка для getTranslation (пока не импортирована из language.js)
-function getTranslation(key) {
-    // Если функция уже существует в window, используем её
-    if (window.getTranslation) {
-        return window.getTranslation(key);
-    }
-    // Иначе возвращаем заглушку
-    const translations = {
-        'arbsOutcome': 'Исход',
-        'bk': 'БК'
-    };
-    return translations[key] || key;
 }
 
 // Экспорт для отладки
