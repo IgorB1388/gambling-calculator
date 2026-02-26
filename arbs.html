@@ -107,23 +107,21 @@
                         </div>
                     </div>
 
-                    <!-- БЛОК ВВОДА ОБЩЕЙ СУММЫ СТАВКИ -->
+                    <!-- ===== БЛОК СУММЫ СТАВКИ И СТРАТЕГИИ В ОДНУ СТРОКУ ===== -->
                     <div class="settings-group">
                         <div class="settings-label text-3" data-i18n="arbsStakeLabel"></div>
-                        <div class="input-wrapper">
-                            <!-- Поле ввода числа -->
-                            <input type="number" id="totalStake" class="settings-input bg-elevated border-5 text-1" value="1000" min="1" step="1">
-                            <!-- Валюта после поля -->
-                            <span class="input-suffix text-2">₽</span>
-                        </div>
-                    </div>
-
-                    <!-- ===== НОВЫЙ БЛОК: ВЫБОР СТРАТЕГИИ ===== -->
-                    <div class="settings-group">
-                        <div class="settings-label text-3" data-i18n="arbsStrategyLabel"></div>
-                        <div class="strategy-pills">
-                            <button class="strategy-btn opponent-bg border-5 text-5 active strategy-active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed">Гарантированная прибыль</button>
-                            <button class="strategy-btn opponent-bg border-5 text-5" data-strategy="max" data-i18n="arbsStrategyMax">Максимальная с возвратом</button>
+                        <div class="stake-strategy-row">
+                            <!-- Поле ввода суммы -->
+                            <div class="input-wrapper">
+                                <input type="number" id="totalStake" class="settings-input bg-elevated border-5 text-1" value="1000" min="1" step="1">
+                                <span class="input-suffix text-2">₽</span>
+                            </div>
+                            
+                            <!-- Компактные кнопки стратегии -->
+                            <div class="strategy-mini-pills">
+                                <button class="strategy-mini-btn opponent-bg border-5 text-5 active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed">Гарант</button>
+                                <button class="strategy-mini-btn opponent-bg border-5 text-5" data-strategy="max" data-i18n="arbsStrategyMax">Макс</button>
+                            </div>
                         </div>
                     </div>
 
