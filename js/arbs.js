@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     loadLastCalculation();
     updateOutcomePillsActive(outcomeCount);
+    updateStrategyPillsActive(strategy);
 });
 
 // --- Инициализация состояния ---
@@ -41,6 +42,18 @@ function updateOutcomePillsActive(count) {
             btn.classList.add('active', 'opponent-active');
         } else {
             btn.classList.remove('active', 'opponent-active');
+        }
+    });
+}
+
+// --- Обновление подсветки кнопок стратегии ---
+function updateStrategyPillsActive(activeStrategy) {
+    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
+        const btnStrategy = btn.dataset.strategy;
+        if (btnStrategy === activeStrategy) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
         }
     });
 }
@@ -89,6 +102,7 @@ function renderOddsTable() {
         
         const labelText = document.createElement('span');
         labelText.className = 'text-3';
+        // Исправлено: используем ключ 'bk' из переводов
         labelText.textContent = `${window.getTranslation('bk')} ${b + 1}`;
         labelCell.appendChild(labelText);
         
@@ -237,14 +251,7 @@ function changeStrategy(newStrategy) {
     strategy = newStrategy;
     
     // Обновляем подсветку кнопок стратегии
-    document.querySelectorAll('.strategy-btn').forEach(btn => {
-        const btnStrategy = btn.dataset.strategy;
-        if (btnStrategy === strategy) {
-            btn.classList.add('active', 'strategy-active');
-        } else {
-            btn.classList.remove('active', 'strategy-active');
-        }
-    });
+    updateStrategyPillsActive(newStrategy);
     
     // Если есть результаты, пересчитываем с новой стратегией
     if (lastCalculation) {
@@ -262,8 +269,8 @@ function initEventListeners() {
         });
     });
     
-    // Кнопки стратегии
-    document.querySelectorAll('.strategy-btn').forEach(btn => {
+    // Кнопки стратегии (мини)
+    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const newStrategy = this.dataset.strategy;
             changeStrategy(newStrategy);
@@ -473,7 +480,7 @@ function displayResults(data) {
         profitCard.style.display = 'none';
     }
 
-    // Таблица распределения
+    // Таблица распределения - ИСПРАВЛЕНО: используем ключ 'arbsOutcome'
     tableBody.innerHTML = '';
     data.bestOdds.forEach((odd, i) => {
         const row = document.createElement('div');
@@ -500,11 +507,6 @@ function displayResults(data) {
         profitRow.style.display = 'flex';
         const profit = data.guaranteedPayout - data.totalStake;
         netProfit.textContent = profit.toFixed(2) + ' ₽';
-        
-        // Если стратегия максимальная, показываем комментарий
-        if (data.strategy === 'max' && data.maxOddIndex !== undefined) {
-            // Можно добавить подсказку, что это максимальная прибыль при выигрыше исхода X
-        }
     } else {
         totalPayout.textContent = '0 ₽';
         profitRow.style.display = 'none';
@@ -533,13 +535,7 @@ function resetCalculator() {
     
     // Сброс подсветки кнопок
     updateOutcomePillsActive(2);
-    document.querySelectorAll('.strategy-btn').forEach(btn => {
-        if (btn.dataset.strategy === 'guaranteed') {
-            btn.classList.add('active', 'strategy-active');
-        } else {
-            btn.classList.remove('active', 'strategy-active');
-        }
-    });
+    updateStrategyPillsActive('guaranteed');
     
     lastCalculation = null;
     localStorage.removeItem('arbLastCalculation');
