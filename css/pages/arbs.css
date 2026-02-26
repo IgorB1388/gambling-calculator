@@ -184,26 +184,29 @@
     margin-top: 10px;
 }
 
+/* Ячейка с плюсиком - теперь по центру колонки БК */
 .odds-add-bk {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;  /* Изменено с flex-start на center */
+    width: 100%;
 }
 
 .add-bk-btn {
     background: transparent;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.5rem;  /* Увеличен размер плюсика */
     cursor: pointer;
     padding: 8px 12px;
     border-radius: 20px;
     display: flex;
     align-items: center;
+    justify-content: center;  /* Центрируем сам плюсик внутри кнопки */
     gap: 5px;
     transition: all 0.2s;
     font-weight: 500;
+    line-height: 1;  /* Убираем лишний межстрочный интервал */
 }
-
 
 /* Индикатор вилки */
 .arb-indicator {
@@ -349,7 +352,7 @@
     }
     
     .add-bk-btn {
-        font-size: 0.9rem;
+        font-size: 1.3rem;  /* Чуть меньше на мобилках, но всё ещё крупный */
         padding: 6px 10px;
     }
     
@@ -411,7 +414,7 @@
     }
     
     .add-bk-btn {
-        font-size: 0.8rem;
+        font-size: 1.2rem;  /* Ещё меньше на совсем маленьких */
         padding: 5px 8px;
     }
     
@@ -448,5 +451,3 @@
 .odds-input[type=number] {
     -moz-appearance: textfield;
 }
-
-
