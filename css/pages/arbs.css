@@ -193,7 +193,7 @@
 .add-bk-btn {
     background: transparent;
     border: none;
-    font-size: 1rem;
+    font-size: 1.5rem;
     cursor: pointer;
     padding: 8px 12px;
     border-radius: 20px;
@@ -448,4 +448,5 @@
 .odds-input[type=number] {
     -moz-appearance: textfield;
 }
+
 
