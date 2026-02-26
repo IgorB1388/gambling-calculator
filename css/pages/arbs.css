@@ -198,7 +198,7 @@
 .add-bk-btn {
     background: transparent;
     border: 2px solid;
-    border-color: inherit;  /* Цвет из класса text-1 */
+    border-color: var(--text-5);
     font-size: 1.5rem;
     cursor: pointer;
     padding: 8px 0;
@@ -470,3 +470,4 @@
 .odds-input[type=number] {
     -moz-appearance: textfield;
 }
+
