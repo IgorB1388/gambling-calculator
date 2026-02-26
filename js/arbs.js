@@ -1,10 +1,11 @@
 // arbs.js - Анализатор вилок (арбитражный калькулятор)
-// Новая версия: БК как строки, динамические исходы как колонки
+// Новая версия: БК как строки, исходы как колонки
 
 // --- Состояние приложения ---
 let bkCount = 2;              // количество БК (строк) от 2 до 5
 let outcomeCount = 2;         // количество исходов (колонок) от 2 до 5
 let oddsValues = [];          // 2D массив значений [БК][исход]
+let strategy = 'guaranteed';  // 'guaranteed' или 'max'
 
 let lastCalculation = null;
 
@@ -17,14 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     renderOddsTable();
     initEventListeners();
     loadLastCalculation();
-    
-    // Убеждаемся что активная кнопка исходов подсвечена
     updateOutcomePillsActive(outcomeCount);
 });
 
 // --- Инициализация состояния ---
 function initState() {
-    // Создаем массив bkCount x outcomeCount с дефолтными значениями
     oddsValues = [];
     for (let b = 0; b < bkCount; b++) {
         const row = [];
@@ -60,23 +58,20 @@ function renderOddsTable() {
     const container = document.getElementById('oddsTable');
     container.innerHTML = '';
     
-    // Устанавливаем CSS-переменную для количества колонок
     container.style.setProperty('--outcome-count', outcomeCount);
     
-    // Заголовки исходов (номера колонок)
+    // Заголовки исходов
     const headerRow = document.createElement('div');
     headerRow.className = 'odds-header-row';
     
-    // Пустая ячейка в углу (над метками БК)
     const emptyCell = document.createElement('div');
     emptyCell.className = 'odds-corner';
     headerRow.appendChild(emptyCell);
     
-    // Заголовки исходов
     for (let o = 0; o < outcomeCount; o++) {
         const header = document.createElement('div');
         header.className = 'odds-header text-2';
-        header.textContent = `Исход ${o + 1}`;
+        header.textContent = `${getTranslation('arbsOutcome')} ${o + 1}`;
         headerRow.appendChild(header);
     }
     
@@ -88,16 +83,14 @@ function renderOddsTable() {
         row.className = 'odds-row';
         row.dataset.bkIndex = b;
         
-        // Метка БК с номером и кнопкой удаления (если БК > 2)
         const labelCell = document.createElement('div');
         labelCell.className = 'odds-bk-label';
         
         const labelText = document.createElement('span');
         labelText.className = 'text-3';
-        labelText.textContent = `БК ${b + 1}`;
+        labelText.textContent = `${getTranslation('bk')} ${b + 1}`;
         labelCell.appendChild(labelText);
         
-        // Кнопка удаления (только если БК больше 2)
         if (bkCount > 2) {
             const removeBtn = document.createElement('span');
             removeBtn.className = 'remove-bk text-7';
@@ -112,7 +105,6 @@ function renderOddsTable() {
         
         row.appendChild(labelCell);
         
-        // Поля ввода для каждого исхода
         for (let o = 0; o < outcomeCount; o++) {
             const input = document.createElement('input');
             input.type = 'number';
@@ -123,7 +115,6 @@ function renderOddsTable() {
             input.step = '0.01';
             input.value = oddsValues[b][o].toFixed(2);
             
-            // Сохраняем значение при изменении
             input.addEventListener('input', (e) => {
                 const val = parseFloat(e.target.value);
                 if (!isNaN(val) && val >= 1.01) {
@@ -131,7 +122,6 @@ function renderOddsTable() {
                 }
             });
             
-            // Форматирование при потере фокуса
             input.addEventListener('blur', (e) => {
                 const formatted = formatToTwoDecimals(e.target.value);
                 e.target.value = formatted;
@@ -144,23 +134,22 @@ function renderOddsTable() {
         container.appendChild(row);
     }
     
-    // Строка с кнопкой добавления БК (если БК < 5) - ТОЛЬКО ПЛЮС, БЕЗ ТЕКСТА
+    // Строка с кнопкой добавления БК
     if (bkCount < 5) {
         const addRow = document.createElement('div');
-        addRow.className = 'odds-row add-bk-row';
+        addRow.className = 'add-bk-row';
         
         const addCell = document.createElement('div');
         addCell.className = 'odds-add-bk';
         
         const addBtn = document.createElement('button');
-        addBtn.className = 'add-bk-btn text-1';
-        addBtn.textContent = '➕';  // Только плюс, без текста
+        addBtn.className = 'add-bk-btn';
+        addBtn.textContent = '➕';
         addBtn.addEventListener('click', addBookmaker);
         
         addCell.appendChild(addBtn);
         addRow.appendChild(addCell);
         
-        // Пустые ячейки для выравнивания
         for (let o = 0; o < outcomeCount; o++) {
             const emptyCell = document.createElement('div');
             addRow.appendChild(emptyCell);
@@ -169,7 +158,6 @@ function renderOddsTable() {
         container.appendChild(addRow);
     }
     
-    // Обновляем подсветку кнопок исходов
     updateOutcomePillsActive(outcomeCount);
 }
 
@@ -177,10 +165,8 @@ function renderOddsTable() {
 function addBookmaker() {
     if (bkCount >= 5) return;
     
-    // Собираем текущие значения из полей
     collectOddsValuesFromDom();
     
-    // Добавляем новую строку с дефолтными значениями
     const newRow = [];
     for (let o = 0; o < outcomeCount; o++) {
         newRow.push(DEFAULT_ODDS[o]);
@@ -195,10 +181,8 @@ function addBookmaker() {
 function removeBookmaker(index) {
     if (bkCount <= 2) return;
     
-    // Собираем текущие значения
     collectOddsValuesFromDom();
     
-    // Удаляем строку
     oddsValues.splice(index, 1);
     bkCount--;
     
@@ -224,19 +208,15 @@ function collectOddsValuesFromDom() {
 function changeOutcomeCount(newCount) {
     if (newCount < 2 || newCount > 5 || newCount === outcomeCount) return;
     
-    // Собираем текущие значения из полей (ВАЖНО!)
     collectOddsValuesFromDom();
     
-    // Создаем новый массив с новым размером
     const newOddsValues = [];
     for (let b = 0; b < bkCount; b++) {
         const newRow = [];
         for (let o = 0; o < newCount; o++) {
             if (o < outcomeCount) {
-                // Существующий исход - берем старое значение
                 newRow.push(oddsValues[b][o]);
             } else {
-                // Новый исход - дефолт по индексу
                 newRow.push(DEFAULT_ODDS[o]);
             }
         }
@@ -246,10 +226,29 @@ function changeOutcomeCount(newCount) {
     oddsValues = newOddsValues;
     outcomeCount = newCount;
     
-    // Обновляем подсветку кнопок
     updateOutcomePillsActive(newCount);
-    
     renderOddsTable();
+}
+
+// --- Изменение стратегии ---
+function changeStrategy(newStrategy) {
+    if (newStrategy === strategy) return;
+    strategy = newStrategy;
+    
+    // Обновляем подсветку кнопок стратегии
+    document.querySelectorAll('.strategy-btn').forEach(btn => {
+        const btnStrategy = btn.dataset.strategy;
+        if (btnStrategy === strategy) {
+            btn.classList.add('active', 'strategy-active');
+        } else {
+            btn.classList.remove('active', 'strategy-active');
+        }
+    });
+    
+    // Если есть результаты, пересчитываем с новой стратегией
+    if (lastCalculation) {
+        calculateArbitrage();
+    }
 }
 
 // --- Обработчики событий ---
@@ -261,6 +260,14 @@ function initEventListeners() {
             changeOutcomeCount(outcomes);
         });
     });
+    
+    // Кнопки стратегии
+    document.querySelectorAll('.strategy-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const newStrategy = this.dataset.strategy;
+            changeStrategy(newStrategy);
+        });
+    });
 
     // Кнопка расчета
     document.getElementById('calculateArbBtn').addEventListener('click', calculateArbitrage);
@@ -269,12 +276,121 @@ function initEventListeners() {
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 }
 
+// --- ПОЛУЧЕНИЕ ЛУЧШИХ КОЭФФИЦИЕНТОВ ---
+function getBestOdds() {
+    const bestOdds = [];
+    for (let o = 0; o < outcomeCount; o++) {
+        let maxOdd = 0;
+        for (let b = 0; b < bkCount; b++) {
+            if (oddsValues[b][o] > maxOdd) {
+                maxOdd = oddsValues[b][o];
+            }
+        }
+        bestOdds.push(maxOdd);
+    }
+    return bestOdds;
+}
+
+// --- СТРАТЕГИЯ 1: ГАРАНТИРОВАННАЯ ПРИБЫЛЬ (ОДИНАКОВАЯ ВЫПЛАТА) ---
+function calculateGuaranteedStrategy(bestOdds, totalStake) {
+    // Сумма обратных величин
+    let sumInverse = 0;
+    bestOdds.forEach(odd => {
+        sumInverse += 1 / odd;
+    });
+    
+    const isArb = sumInverse < 1;
+    const profitPercent = isArb ? ((1 / sumInverse - 1) * 100) : 0;
+    
+    // Распределение ставок для равной выплаты
+    const stakes = [];
+    bestOdds.forEach(odd => {
+        stakes.push((totalStake * (1 / odd)) / sumInverse);
+    });
+    
+    // Выплата (одинаковая для всех исходов)
+    const payout = stakes[0] * bestOdds[0];
+    
+    return {
+        stakes,
+        payouts: stakes.map((stake, i) => stake * bestOdds[i]),
+        guaranteedPayout: payout,
+        isArb,
+        profitPercent,
+        sumInverse
+    };
+}
+
+// --- СТРАТЕГИЯ 2: МАКСИМАЛЬНАЯ ПРИБЫЛЬ С ВОЗВРАТОМ ---
+function calculateMaxStrategy(bestOdds, totalStake) {
+    // Находим индекс максимального коэффициента
+    let maxOddIndex = 0;
+    for (let i = 1; i < bestOdds.length; i++) {
+        if (bestOdds[i] > bestOdds[maxOddIndex]) {
+            maxOddIndex = i;
+        }
+    }
+    
+    // Рассчитываем ставки для возврата на всех, кроме максимального
+    const stakes = new Array(bestOdds.length).fill(0);
+    let remainingStake = totalStake;
+    
+    // Сначала распределяем на страховочные исходы (чтобы получить возврат)
+    for (let i = 0; i < bestOdds.length; i++) {
+        if (i !== maxOddIndex) {
+            // Ставим столько, чтобы при выигрыше получить обратно totalStake
+            stakes[i] = totalStake / bestOdds[i];
+            remainingStake -= stakes[i];
+        }
+    }
+    
+    // Остаток ставим на максимальный коэффициент
+    if (remainingStake > 0) {
+        stakes[maxOddIndex] = remainingStake;
+    } else {
+        // Если остаток отрицательный, значит стратегия невозможна
+        return calculateGuaranteedStrategy(bestOdds, totalStake);
+    }
+    
+    // Проверяем, что все ставки положительные
+    for (let i = 0; i < stakes.length; i++) {
+        if (stakes[i] < 0) {
+            return calculateGuaranteedStrategy(bestOdds, totalStake);
+        }
+    }
+    
+    // Выплаты по каждому исходу
+    const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
+    
+    // Проверяем, является ли ситуация вилкой
+    let sumInverse = 0;
+    bestOdds.forEach(odd => {
+        sumInverse += 1 / odd;
+    });
+    
+    const isArb = sumInverse < 1;
+    
+    // Процент прибыли считаем по максимальному исходу
+    const profit = payouts[maxOddIndex] - totalStake;
+    const profitPercent = (profit / totalStake) * 100;
+    
+    return {
+        stakes,
+        payouts,
+        guaranteedPayout: payouts[maxOddIndex],
+        isArb,
+        profitPercent,
+        sumInverse,
+        maxOddIndex
+    };
+}
+
 // --- ОСНОВНАЯ ФУНКЦИЯ РАСЧЕТА ---
 function calculateArbitrage() {
     // Собираем актуальные значения из полей
     collectOddsValuesFromDom();
     
-    // Форматируем все поля ввода (приводим к сотым)
+    // Форматируем все поля ввода
     for (let b = 0; b < bkCount; b++) {
         for (let o = 0; o < outcomeCount; o++) {
             const input = document.getElementById(`odds-${b}-${o}`);
@@ -286,56 +402,36 @@ function calculateArbitrage() {
         }
     }
     
-    // Для каждого исхода берем максимальный кэф среди всех БК
-    const bestOdds = [];
-    for (let o = 0; o < outcomeCount; o++) {
-        let maxOdd = 0;
-        for (let b = 0; b < bkCount; b++) {
-            if (oddsValues[b][o] > maxOdd) {
-                maxOdd = oddsValues[b][o];
-            }
-        }
-        bestOdds.push(maxOdd);
-    }
-
+    // Получаем лучшие коэффициенты
+    const bestOdds = getBestOdds();
+    
     const totalStake = parseFloat(document.getElementById('totalStake').value);
     if (isNaN(totalStake) || totalStake <= 0) {
         alert('Введите корректную сумму ставки');
         return;
     }
-
-    // Расчет суммы вероятностей (V)
-    let sumInverse = 0;
-    bestOdds.forEach(odd => {
-        sumInverse += 1 / odd;
-    });
-
-    const isArb = sumInverse < 1;
-    const profitPercent = isArb ? ((1 / sumInverse - 1) * 100) : 0;
-
-    // Расчет распределения ставок
-    const stakes = [];
-    bestOdds.forEach(odd => {
-        stakes.push((totalStake * (1 / odd)) / sumInverse);
-    });
-
-    // Расчет выплат
-    const payouts = [];
-    stakes.forEach((stake, i) => {
-        payouts.push(stake * bestOdds[i]);
-    });
-
+    
+    // Расчет по выбранной стратегии
+    let result;
+    if (strategy === 'guaranteed') {
+        result = calculateGuaranteedStrategy(bestOdds, totalStake);
+    } else {
+        result = calculateMaxStrategy(bestOdds, totalStake);
+    }
+    
     // Сохраняем результат
     lastCalculation = {
         bestOdds,
-        stakes,
-        payouts,
+        stakes: result.stakes,
+        payouts: result.payouts,
         totalStake,
-        sumInverse,
-        isArb,
-        profitPercent
+        sumInverse: result.sumInverse,
+        isArb: result.isArb,
+        profitPercent: result.profitPercent,
+        strategy,
+        guaranteedPayout: result.guaranteedPayout
     };
-
+    
     // Отображаем результаты
     displayResults(lastCalculation);
     saveLastCalculation();
@@ -381,24 +477,35 @@ function displayResults(data) {
     data.bestOdds.forEach((odd, i) => {
         const row = document.createElement('div');
         row.className = 'table-row';
+        
+        let payoutDisplay = data.payouts[i].toFixed(2) + ' ₽';
+        
         row.innerHTML = `
-            <span class="text-2">Исход ${i+1}</span>
+            <span class="text-2">${getTranslation('arbsOutcome')} ${i+1}</span>
             <span class="text-1">${odd.toFixed(2)}</span>
             <span class="text-1">${data.stakes[i].toFixed(2)} ₽</span>
-            <span class="text-1">${data.payouts[i].toFixed(2)} ₽</span>
+            <span class="text-1">${payoutDisplay}</span>
         `;
         tableBody.appendChild(row);
     });
 
     // Итоги
-    const totalPayoutValue = data.payouts.reduce((a, b) => a + b, 0);
     totalStakeDisplay.textContent = data.totalStake.toFixed(2) + ' ₽';
-    totalPayout.textContent = totalPayoutValue.toFixed(2) + ' ₽';
-
+    
     if (data.isArb) {
+        // Показываем гарантированную выплату (одинаковую для всех исходов)
+        totalPayout.textContent = data.guaranteedPayout.toFixed(2) + ' ₽';
+        
         profitRow.style.display = 'flex';
-        netProfit.textContent = (totalPayoutValue - data.totalStake).toFixed(2) + ' ₽';
+        const profit = data.guaranteedPayout - data.totalStake;
+        netProfit.textContent = profit.toFixed(2) + ' ₽';
+        
+        // Если стратегия максимальная, показываем комментарий
+        if (data.strategy === 'max' && data.maxOddIndex !== undefined) {
+            // Можно добавить подсказку, что это максимальная прибыль при выигрыше исхода X
+        }
     } else {
+        totalPayout.textContent = '0 ₽';
         profitRow.style.display = 'none';
     }
 }
@@ -407,6 +514,7 @@ function displayResults(data) {
 function resetCalculator() {
     bkCount = 2;
     outcomeCount = 2;
+    strategy = 'guaranteed';
     initState();
     renderOddsTable();
     
@@ -422,8 +530,15 @@ function resetCalculator() {
     document.getElementById('totalPayout').textContent = '0 ₽';
     document.getElementById('profitRow').style.display = 'none';
     
-    // Обновляем подсветку кнопок исходов
+    // Сброс подсветки кнопок
     updateOutcomePillsActive(2);
+    document.querySelectorAll('.strategy-btn').forEach(btn => {
+        if (btn.dataset.strategy === 'guaranteed') {
+            btn.classList.add('active', 'strategy-active');
+        } else {
+            btn.classList.remove('active', 'strategy-active');
+        }
+    });
     
     lastCalculation = null;
     localStorage.removeItem('arbLastCalculation');
@@ -442,6 +557,9 @@ function loadLastCalculation() {
     if (saved) {
         try {
             lastCalculation = JSON.parse(saved);
+            if (lastCalculation.strategy) {
+                strategy = lastCalculation.strategy;
+            }
             displayResults(lastCalculation);
         } catch (e) {
             console.log('Ошибка загрузки сохранения');
@@ -449,7 +567,22 @@ function loadLastCalculation() {
     }
 }
 
+// Временная заглушка для getTranslation (пока не импортирована из language.js)
+function getTranslation(key) {
+    // Если функция уже существует в window, используем её
+    if (window.getTranslation) {
+        return window.getTranslation(key);
+    }
+    // Иначе возвращаем заглушку
+    const translations = {
+        'arbsOutcome': 'Исход',
+        'bk': 'БК'
+    };
+    return translations[key] || key;
+}
+
 // Экспорт для отладки
 window.calculateArbitrage = calculateArbitrage;
 window.addBookmaker = addBookmaker;
 window.removeBookmaker = removeBookmaker;
+window.changeStrategy = changeStrategy;
