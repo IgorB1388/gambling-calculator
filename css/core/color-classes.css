@@ -150,6 +150,22 @@
     box-shadow: 0 0 15px var(--color-info) !important;
 }
 
+/* 👥 КНОПКИ КОЛИЧЕСТВА ИСХОДОВ (для анализатора вилок) */
+.outcome-pill {
+    border-color: var(--color-info) !important;
+    background: rgba(106, 168, 255, 0.1) !important;
+    color: var(--color-info) !important;
+}
+.outcome-pill:hover {
+    background: rgba(106, 168, 255, 0.3) !important;
+}
+.outcome-pill.active {
+    background: var(--color-info) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--color-info) !important;
+    box-shadow: 0 0 15px var(--color-info) !important;
+}
+
 /* === ЛОГОТИП === */
 .logo-gradient { background: linear-gradient(135deg, var(--color-primary), var(--color-highlight)); }
 .logo-text-gradient { 
@@ -285,5 +301,6 @@
     border-color: var(--color-secondary) !important;
     box-shadow: 0 0 15px var(--color-secondary) !important;
 }
+
 
 
