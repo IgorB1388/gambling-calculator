@@ -86,37 +86,62 @@
     transform: scale(1.1);
 }
 
-/* ===== НОВЫЕ СТИЛИ ДЛЯ КНОПОК СТРАТЕГИИ ===== */
-.strategy-pills {
+/* ===== СТИЛИ ДЛЯ СТРОКИ СУММА + СТРАТЕГИЯ ===== */
+.stake-strategy-row {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
+    align-items: center;
 }
 
-.strategy-btn {
-    padding: 10px 15px;
+.input-wrapper {
+    flex: 2;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper .settings-input {
+    width: 100%;
+    padding-right: 40px; /* Место для валюты */
+}
+
+.input-suffix {
+    position: absolute;
+    right: 10px;
+    font-weight: bold;
+}
+
+/* Компактные кнопки стратегии */
+.strategy-mini-pills {
+    display: flex;
+    gap: 5px;
+    flex: 1;
+}
+
+.strategy-mini-btn {
+    padding: 8px 10px;
     border-radius: 20px;
     border-width: 2px;
     border-style: solid;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
     background: transparent;
     flex: 1;
-    min-width: 150px;
+    white-space: nowrap;
+    text-align: center;
 }
 
-.strategy-btn:hover {
+.strategy-mini-btn:hover {
     transform: translateY(-2px);
 }
 
-.strategy-btn.active {
+.strategy-mini-btn.active {
     background: var(--color-info) !important;
     color: var(--text-primary) !important;
     border-color: var(--color-info) !important;
-    box-shadow: 0 0 15px var(--color-info) !important;
+    box-shadow: 0 0 10px var(--color-info) !important;
 }
 
 /* 
@@ -405,10 +430,23 @@
         height: 20px;
     }
     
-    .strategy-btn {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-        min-width: 130px;
+    /* Адаптация строки сумма+стратегия */
+    .stake-strategy-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .input-wrapper {
+        width: 100%;
+    }
+    
+    .strategy-mini-pills {
+        width: 100%;
+    }
+    
+    .strategy-mini-btn {
+        padding: 8px 5px;
+        font-size: 0.8rem;
     }
     
     .table-header,
@@ -472,16 +510,9 @@
         padding: 5px 0;
     }
     
-    .strategy-pills {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .strategy-btn {
-        width: 100%;
-        min-width: auto;
-        padding: 8px 10px;
-        font-size: 0.85rem;
+    .strategy-mini-btn {
+        font-size: 0.75rem;
+        padding: 6px 3px;
     }
     
     .table-header,
