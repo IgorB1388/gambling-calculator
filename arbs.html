@@ -118,6 +118,15 @@
                         </div>
                     </div>
 
+                    <!-- ===== НОВЫЙ БЛОК: ВЫБОР СТРАТЕГИИ ===== -->
+                    <div class="settings-group">
+                        <div class="settings-label text-3" data-i18n="arbsStrategyLabel"></div>
+                        <div class="strategy-pills">
+                            <button class="strategy-btn opponent-bg border-5 text-5 active strategy-active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed">Гарантированная прибыль</button>
+                            <button class="strategy-btn opponent-bg border-5 text-5" data-strategy="max" data-i18n="arbsStrategyMax">Максимальная с возвратом</button>
+                        </div>
+                    </div>
+
                     <!-- КНОПКИ УПРАВЛЕНИЯ -->
                     <div class="controls">
                         <button class="btn btn-primary-bg btn-primary-text" id="calculateArbBtn">
@@ -153,7 +162,7 @@
                     <!-- ТАБЛИЦА РАСПРЕДЕЛЕНИЯ СТАВОК -->
                     <div class="distribution-table border-1" id="distributionTable">
                         <!-- Заголовок таблицы -->
-                        <div class="table-header border-1">  <!-- ← Добавлен класс border-1 -->
+                        <div class="table-header border-1">
                             <span class="text-2" data-i18n="arbsOutcome"></span>
                             <span class="text-2" data-i18n="arbsOdds"></span>
                             <span class="text-2" data-i18n="arbsStake"></span>
