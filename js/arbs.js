@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
     loadLastCalculation();
     updateOutcomePillsActive(outcomeCount);
-    updateStrategyPillsActive(strategy);
 });
 
 // --- Инициализация состояния ---
@@ -42,18 +41,6 @@ function updateOutcomePillsActive(count) {
             btn.classList.add('active', 'opponent-active');
         } else {
             btn.classList.remove('active', 'opponent-active');
-        }
-    });
-}
-
-// --- Обновление подсветки кнопок стратегии ---
-function updateStrategyPillsActive(activeStrategy) {
-    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
-        const btnStrategy = btn.dataset.strategy;
-        if (btnStrategy === activeStrategy) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
         }
     });
 }
@@ -84,8 +71,7 @@ function renderOddsTable() {
     for (let o = 0; o < outcomeCount; o++) {
         const header = document.createElement('div');
         header.className = 'odds-header text-2';
-        // Используем глобальную функцию getTranslation из language.js
-        header.textContent = `${window.getTranslation('arbsOutcome')} ${o + 1}`;
+        header.textContent = `${getTranslation('arbsOutcome')} ${o + 1}`;
         headerRow.appendChild(header);
     }
     
@@ -102,8 +88,7 @@ function renderOddsTable() {
         
         const labelText = document.createElement('span');
         labelText.className = 'text-3';
-        // Исправлено: используем ключ 'bk' из переводов
-        labelText.textContent = `${window.getTranslation('bk')} ${b + 1}`;
+        labelText.textContent = `${getTranslation('bk')} ${b + 1}`;
         labelCell.appendChild(labelText);
         
         if (bkCount > 2) {
@@ -251,7 +236,14 @@ function changeStrategy(newStrategy) {
     strategy = newStrategy;
     
     // Обновляем подсветку кнопок стратегии
-    updateStrategyPillsActive(newStrategy);
+    document.querySelectorAll('.strategy-btn').forEach(btn => {
+        const btnStrategy = btn.dataset.strategy;
+        if (btnStrategy === strategy) {
+            btn.classList.add('active', 'strategy-active');
+        } else {
+            btn.classList.remove('active', 'strategy-active');
+        }
+    });
     
     // Если есть результаты, пересчитываем с новой стратегией
     if (lastCalculation) {
@@ -269,8 +261,8 @@ function initEventListeners() {
         });
     });
     
-    // Кнопки стратегии (мини)
-    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
+    // Кнопки стратегии
+    document.querySelectorAll('.strategy-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const newStrategy = this.dataset.strategy;
             changeStrategy(newStrategy);
@@ -480,7 +472,7 @@ function displayResults(data) {
         profitCard.style.display = 'none';
     }
 
-    // Таблица распределения - ИСПРАВЛЕНО: используем ключ 'arbsOutcome'
+    // Таблица распределения
     tableBody.innerHTML = '';
     data.bestOdds.forEach((odd, i) => {
         const row = document.createElement('div');
@@ -489,7 +481,7 @@ function displayResults(data) {
         let payoutDisplay = data.payouts[i].toFixed(2) + ' ₽';
         
         row.innerHTML = `
-            <span class="text-2">${window.getTranslation('arbsOutcome')} ${i+1}</span>
+            <span class="text-2">${getTranslation('arbsOutcome')} ${i+1}</span>
             <span class="text-1">${odd.toFixed(2)}</span>
             <span class="text-1">${data.stakes[i].toFixed(2)} ₽</span>
             <span class="text-1">${payoutDisplay}</span>
@@ -507,6 +499,11 @@ function displayResults(data) {
         profitRow.style.display = 'flex';
         const profit = data.guaranteedPayout - data.totalStake;
         netProfit.textContent = profit.toFixed(2) + ' ₽';
+        
+        // Если стратегия максимальная, показываем комментарий
+        if (data.strategy === 'max' && data.maxOddIndex !== undefined) {
+            // Можно добавить подсказку, что это максимальная прибыль при выигрыше исхода X
+        }
     } else {
         totalPayout.textContent = '0 ₽';
         profitRow.style.display = 'none';
@@ -535,7 +532,13 @@ function resetCalculator() {
     
     // Сброс подсветки кнопок
     updateOutcomePillsActive(2);
-    updateStrategyPillsActive('guaranteed');
+    document.querySelectorAll('.strategy-btn').forEach(btn => {
+        if (btn.dataset.strategy === 'guaranteed') {
+            btn.classList.add('active', 'strategy-active');
+        } else {
+            btn.classList.remove('active', 'strategy-active');
+        }
+    });
     
     lastCalculation = null;
     localStorage.removeItem('arbLastCalculation');
@@ -562,6 +565,20 @@ function loadLastCalculation() {
             console.log('Ошибка загрузки сохранения');
         }
     }
+}
+
+// Временная заглушка для getTranslation (пока не импортирована из language.js)
+function getTranslation(key) {
+    // Если функция уже существует в window, используем её
+    if (window.getTranslation) {
+        return window.getTranslation(key);
+    }
+    // Иначе возвращаем заглушку
+    const translations = {
+        'arbsOutcome': 'Исход',
+        'bk': 'БК'
+    };
+    return translations[key] || key;
 }
 
 // Экспорт для отладки
