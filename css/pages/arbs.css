@@ -204,9 +204,6 @@
     font-weight: 500;
 }
 
-.add-bk-btn:hover {
-    transform: translateX(5px);
-}
 
 /* Индикатор вилки */
 .arb-indicator {
@@ -451,3 +448,4 @@
 .odds-input[type=number] {
     -moz-appearance: textfield;
 }
+
