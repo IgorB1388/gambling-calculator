@@ -6,15 +6,7 @@
     <!-- Заголовок страницы подгружается из файлов локализации data-i18n -->
     <title data-i18n="siteTitle"></title>
     
-    <!-- 
-        ==================================================
-        ПОДКЛЮЧЕНИЕ СТИЛЕЙ
-        ==================================================
-        color-classes.css - ТОЛЬКО ЦВЕТА (текст, фон, границы, тени)
-        layout.css - ТОЛЬКО РАЗМЕТКА (отступы, сетки, позиционирование)
-        arbs.css - специфичные стили для страницы вилок
-        base-theme.css - базовые переменные темы "Неон"
-    -->
+    <!-- Подключение стилей -->
     <link rel="stylesheet" href="css/core/color-classes.css">
     <link rel="stylesheet" href="css/core/layout.css">
     <link rel="stylesheet" href="css/pages/arbs.css">
@@ -26,73 +18,39 @@
     <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<!-- 
-    Класс bg-body задает цвет фона из color-classes.css 
-    ЧЕРЕЗ ТЕМЫ: переопределяется в каждой теме через --bg-body
--->
+<!-- Класс bg-body задает цвет фона из color-classes.css -->
 <body class="bg-body">
-    <!-- 
-        site-container - общий контейнер для всего контента (из layout.css)
-        Ограничивает максимальную ширину и центрирует контент
-    -->
+    <!-- site-container - общий контейнер для всего контента (из layout.css) -->
     <div class="site-container">
         
-        <!-- 
-            ==================================================
-            ШАПКА САЙТА (HEADER)
-            ==================================================
-            Классы:
-            - bg-header: фон шапки (переменная --bg-header)
-            - border-primary: граница цвета primary (--border-primary)
-            - shadow-default: стандартная тень (--shadow-md)
-        -->
+        <!-- ===== ШАПКА САЙТА ===== -->
         <header class="site-header bg-header border-primary shadow-default">
             <div class="header-content">
-                <!-- 
-                    ЛОГОТИП 
-                    logo-gradient: градиентный фон для иконки
-                    logo-text-gradient: градиентный текст для GTA CASINO
-                -->
+                <!-- Логотип -->
                 <div class="logo">
                     <div class="logo-icon logo-gradient">
                         <i class="fas fa-chart-line"></i> <!-- Иконка графика для арбитража -->
                     </div>
                     <div class="logo-text">
                         <span class="logo-main logo-text-gradient">GTA CASINO</span>
-                        <span class="logo-sub text-secondary">TOOLS</span> <!-- text-secondary = --color-secondary -->
+                        <span class="logo-sub text-secondary">TOOLS</span>
                     </div>
                 </div>
                 
-                <!-- 
-                    НАВИГАЦИОННОЕ МЕНЮ
-                    nav-bg: фон навигации (--bg-nav)
-                    border-primary: граница цвета primary
-                -->
+                <!-- Навигационное меню -->
                 <nav class="main-nav">
                     <ul class="nav-list nav-bg border-primary">
-                        <!-- 
-                            nav-link-bg: фон ссылки (градиент)
-                            text-medium: текст второстепенного цвета (--text-secondary)
-                            active nav-link-active: активная ссылка с градиентом
-                        -->
                         <li><a href="index.html" class="nav-link nav-link-bg text-medium" data-i18n="navHome"><i class="fas fa-home"></i></a></li>
                         <li><a href="poker.html" class="nav-link nav-link-bg text-medium" data-i18n="navPoker"><i class="fas fa-club"></i></a></li>
                         <li><a href="roulette.html" class="nav-link nav-link-bg text-medium" data-i18n="navRoulette"><i class="fas fa-dice"></i></a></li>
-                        <!-- Текущая страница - активная -->
                         <li><a href="arbs.html" class="nav-link nav-link-bg text-medium active nav-link-active" data-i18n="navArbs"><i class="fas fa-chart-line"></i></a></li>
                         <li><a href="faq.html" class="nav-link nav-link-bg text-medium" data-i18n="navFaq"><i class="fas fa-question-circle"></i></a></li>
                     </ul>
                 </nav>
                 
-                <!-- 
-                    ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ
-                    bg-surface: фон поверхности (--bg-surface)
-                    border-accent: граница акцентного цвета (--border-accent)
-                -->
+                <!-- Переключатель языков -->
                 <div class="language-switcher-header bg-surface border-accent">
-                    <!-- lang-btn: кнопка языка, data-lang определяет язык -->
                     <div class="lang-btn" data-lang="ru" title="Русский">
-                        <!-- border-muted: приглушенная граница для флага -->
                         <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
                     </div>
                     <div class="lang-btn" data-lang="en" title="English">
@@ -105,112 +63,62 @@
             </div>
         </header>
 
-        <!-- 
-            ==================================================
-            ОСНОВНОЙ КОНТЕНТ - АНАЛИЗАТОР ВИЛОК
-            ==================================================
-        -->
+        <!-- ===== АНАЛИЗАТОР ВИЛОК ===== -->
         <div class="arbitrage-container">
             
-            <!-- 
-                ЗАГОЛОВОК СТРАНИЦЫ
-                bg-surface: фон поверхности
-                border-secondary: граница вторичным цветом (--border-secondary)
-                text-gradient: градиентный текст
-            -->
+            <!-- ЗАГОЛОВОК СТРАНИЦЫ -->
             <div class="arbitrage-header bg-surface border-secondary shadow-default">
                 <h1 class="text-gradient" data-i18n="arbsTitle"></h1>
             </div>
 
-            <!-- 
-                Основная область с двумя колонками
-                grid-template-columns: 1fr 1fr в arbs.css
-            -->
+            <!-- Основная область с двумя колонками -->
             <div class="arbitrage-main-area">
                 
-                <!-- 
-                    ==================================================
-                    ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ И ВВОД
-                    ==================================================
-                    panel: базовая панель с padding и скруглением
-                    bg-surface: фон панели
-                    border-1: граница цветом primary (переменная --border-1)
-                    shadow-default: стандартная тень
-                -->
+                <!-- ===== ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ И ВВОД ===== -->
                 <div class="panel bg-surface border-1 shadow-default">
-                    
-                    <!-- 
-                        ЗАГОЛОВОК ПАНЕЛИ НАСТРОЕК
-                        text-1: текст цветом primary (--text-1)
-                        border-bottom: 2px solid var(--border-1) - линия под заголовком
-                    -->
+                    <!-- Заголовок панели настроек -->
                     <div class="panel-title text-1" style="border-bottom: 2px solid var(--border-1);" data-i18n="arbsSettingsTitle"></div>
                     
-                    <!-- 
-                        БЛОК ВЫБОРА КОЛИЧЕСТВА ИСХОДОВ
-                    -->
+                    <!-- БЛОК ВЫБОРА КОЛИЧЕСТВА ИСХОДОВ -->
                     <div class="settings-group">
-                        <!-- text-3: текст акцентным цветом (--text-3) -->
                         <div class="settings-label text-3" data-i18n="arbsOutcomesLabel"></div>
                         <div class="outcome-pills" id="outcomeCountPills">
-                            <!-- 
-                                Кнопки-пилюли для выбора кол-ва исходов (2-6)
-                                opponent-bg: фон для кнопок оппонентов
-                                border-5: граница цветом info (--border-5)
-                                text-5: текст цветом info (--text-5)
-                                active opponent-active: активная кнопка
-                            -->
+                            <!-- Кнопки-пилюли для выбора кол-ва исходов (2-5) -->
                             <button class="outcome-pill opponent-bg border-5 text-5 active opponent-active" data-outcomes="2">2</button>
                             <button class="outcome-pill opponent-bg border-5 text-5" data-outcomes="3">3</button>
                             <button class="outcome-pill opponent-bg border-5 text-5" data-outcomes="4">4</button>
                             <button class="outcome-pill opponent-bg border-5 text-5" data-outcomes="5">5</button>
-                            <button class="outcome-pill opponent-bg border-5 text-5" data-outcomes="6">6</button>
                         </div>
                     </div>
 
-                    <!-- 
-                        БЛОК ВВОДА КОЭФФИЦИЕНТОВ
-                        Здесь JS динамически генерирует поля ввода
-                        Структура одной строки:
-                        <div class="odds-row">
-                            <div class="odds-index text-2">1</div>  // номер исхода (text-2 = secondary)
-                            <input type="number" class="odds-input bg-elevated border-5 text-1">  // поле БК1
-                            <input type="number" class="odds-input bg-elevated border-5 text-1">  // поле БК2
-                        </div>
-                    -->
+                    <!-- БЛОК ВВОДА КОЭФФИЦИЕНТОВ -->
                     <div class="settings-group">
                         <div class="settings-label text-3" data-i18n="arbsOddsLabel"></div>
+                        <!-- 
+                            НОВАЯ СТРУКТУРА: 
+                            БК как строки, исходы как колонки
+                            JS будет генерировать:
+                            - заголовки исходов
+                            - строки для каждой БК с крестиками
+                            - строку с кнопкой "+ БК"
+                        -->
                         <div class="odds-table" id="oddsTable">
-                            <!-- Сюда JS будет генерировать поля для ввода коэффициентов -->
+                            <!-- Сюда JS будет генерировать таблицу коэффициентов -->
                         </div>
                     </div>
 
-                    <!-- 
-                        БЛОК ВВОДА ОБЩЕЙ СУММЫ СТАВКИ
-                    -->
+                    <!-- БЛОК ВВОДА ОБЩЕЙ СУММЫ СТАВКИ -->
                     <div class="settings-group">
                         <div class="settings-label text-3" data-i18n="arbsStakeLabel"></div>
                         <div class="input-wrapper">
-                            <!-- 
-                                Поле ввода числа
-                                bg-elevated: приподнятый фон (--bg-elevated)
-                                border-5: граница цветом info
-                                text-1: текст цветом primary
-                            -->
+                            <!-- Поле ввода числа -->
                             <input type="number" id="totalStake" class="settings-input bg-elevated border-5 text-1" value="1000" min="1" step="1">
-                            <!-- input-suffix: текст после поля (валюта) - text-2 = secondary -->
+                            <!-- Валюта после поля -->
                             <span class="input-suffix text-2">₽</span>
                         </div>
                     </div>
 
-                    <!-- 
-                        КНОПКИ УПРАВЛЕНИЯ
-                        btn-primary-bg: градиентный фон для основной кнопки
-                        btn-primary-text: белый текст
-                        btn-secondary-bg: прозрачный фон для второстепенной кнопки
-                        btn-secondary-border: граница цветом primary
-                        btn-secondary-text: текст цветом primary
-                    -->
+                    <!-- КНОПКИ УПРАВЛЕНИЯ -->
                     <div class="controls">
                         <button class="btn btn-primary-bg btn-primary-text" id="calculateArbBtn">
                             <i class="fas fa-calculator"></i> <span data-i18n="arbsCalculateBtn"></span>
@@ -221,87 +129,47 @@
                     </div>
                 </div>
 
-                <!-- 
-                    ==================================================
-                    ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ
-                    ==================================================
-                -->
+                <!-- ===== ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ ===== -->
                 <div class="panel bg-surface border-1 shadow-default">
-                    
-                    <!-- 
-                        ЗАГОЛОВОК ПАНЕЛИ РЕЗУЛЬТАТОВ
-                        text-4: текст цветом success (--text-4)
-                        border-bottom линия под заголовком
-                    -->
+                    <!-- Заголовок панели результатов -->
                     <div class="panel-title text-4" style="border-bottom: 2px solid var(--border-4);" data-i18n="arbsResultsTitle"></div>
                     
-                    <!-- 
-                        ИНДИКАТОР ВИЛКИ (круглый светофор)
-                        arb-indicator: контейнер с flex
-                        border-1: граница цветом primary
-                    -->
+                    <!-- ИНДИКАТОР ВИЛКИ (круглый светофор) -->
                     <div class="arb-indicator border-1" id="arbIndicator">
-                        <!-- Круг-индикатор - цвет фона меняется через JS классами bg-success-solid / bg-danger-solid -->
+                        <!-- Круг-индикатор -->
                         <div class="indicator-circle" id="indicatorCircle"></div>
                         <div class="indicator-text">
-                            <!-- text-2: текст второстепенный для подписи "Статус:" -->
                             <span class="text-2" data-i18n="arbsStatusLabel"></span>
-                            <!-- text-1: текст статуса (primary) - обновляется через JS -->
                             <span class="text-1" id="arbStatus">—</span>
                         </div>
                     </div>
 
-                    <!-- 
-                        КАРТОЧКА С ПРОЦЕНТОМ ПРИБЫЛИ (скрыта по умолчанию)
-                        profit-card: карточка с flex
-                        bg-elevated: приподнятый фон
-                        border-4: граница цветом success
-                    -->
+                    <!-- КАРТОЧКА С ПРОЦЕНТОМ ПРИБЫЛИ (скрыта по умолчанию) -->
                     <div class="profit-card bg-elevated border-4" id="profitCard" style="display: none;">
                         <div class="profit-label text-2" data-i18n="arbsProfitPercent"></div>
-                        <!-- text-4: текст цветом success для процента -->
                         <div class="profit-value text-4" id="profitPercent">0.00%</div>
                     </div>
 
-                    <!-- 
-                        ТАБЛИЦА РАСПРЕДЕЛЕНИЯ СТАВОК
-                        distribution-table: контейнер таблицы
-                        border-1: граница цветом primary
-                    -->
+                    <!-- ТАБЛИЦА РАСПРЕДЕЛЕНИЯ СТАВОК -->
                     <div class="distribution-table border-1" id="distributionTable">
                         <!-- Заголовок таблицы -->
                         <div class="table-header">
-                            <!-- text-2: второстепенный цвет для заголовков -->
-                            <span class="text-2" data-i18n="arbsOutcome"></span> <!-- Исход -->
-                            <span class="text-2" data-i18n="arbsOdds"></span> <!-- Коэф -->
-                            <span class="text-2" data-i18n="arbsStake"></span> <!-- Ставка -->
-                            <span class="text-2" data-i18n="arbsPayout"></span> <!-- Выплата -->
+                            <span class="text-2" data-i18n="arbsOutcome"></span>
+                            <span class="text-2" data-i18n="arbsOdds"></span>
+                            <span class="text-2" data-i18n="arbsStake"></span>
+                            <span class="text-2" data-i18n="arbsPayout"></span>
                         </div>
                         <!-- Тело таблицы (заполняется JS) -->
                         <div class="table-body" id="tableBody">
-                            <!-- 
-                                JS будет генерировать строки вида:
-                                <div class="table-row">
-                                    <span class="text-2">Исход 1</span>
-                                    <span class="text-1">2.10</span>
-                                    <span class="text-1">500.00 ₽</span>
-                                    <span class="text-1">1050.00 ₽</span>
-                                </div>
-                            -->
+                            <!-- Сюда JS будет генерировать строки таблицы результатов -->
                         </div>
                     </div>
 
-                    <!-- 
-                        БЛОК ИТОГОВЫХ СУММ
-                        totals: контейнер
-                        border-1: граница цветом primary
-                    -->
+                    <!-- БЛОК ИТОГОВЫХ СУММ -->
                     <div class="totals border-1">
                         <!-- Общая сумма ставки -->
                         <div class="total-row">
-                            <!-- text-5: подпись цветом info -->
                             <span class="text-5" data-i18n="arbsTotalStake"></span>
-                            <!-- text-6: значение цветом highlight/warning -->
                             <span class="text-6" id="totalStakeDisplay">0 ₽</span>
                         </div>
                         <!-- Общая выплата -->
@@ -312,41 +180,23 @@
                         <!-- Чистая прибыль (скрыта по умолчанию) -->
                         <div class="total-row profit-row" id="profitRow" style="display: none;">
                             <span class="text-5" data-i18n="arbsNetProfit"></span>
-                            <!-- text-6: прибыль цветом highlight/warning (можно заменить на text-4 success) -->
                             <span class="text-6" id="netProfit">0 ₽</span>
                         </div>
                     </div>
 
-                    <!-- 
-                        ПОДСКАЗКА ПО ИСПОЛЬЗОВАНИЮ
-                        text-muted: приглушенный текст
-                    -->
+                    <!-- ПОДСКАЗКА ПО ИСПОЛЬЗОВАНИЮ -->
                     <div class="arb-hint text-muted" data-i18n="arbsHint"></div>
                 </div>
             </div>
         </div>
 
-        <!-- 
-            ==================================================
-            ФУТЕР
-            ==================================================
-            footer-bg: фон футера (--bg-surface)
-            border-primary: граница сверху цветом primary
-        -->
+        <!-- ===== ФУТЕР ===== -->
         <footer class="site-footer footer-bg border-primary">
-            <p class="footer-text text-secondary" data-i18n="footerText"></p> <!-- text-secondary для текста футера -->
+            <p class="footer-text" data-i18n="footerText"></p>
         </footer>
     </div>
 
-    <!-- 
-        ==================================================
-        ПОДКЛЮЧЕНИЕ СКРИПТОВ
-        ==================================================
-        language.js - система переводов
-        main.js - основные функции
-        arbs.js - логика анализатора вилок
-        theme-switcher.js - переключение тем
-    -->
+    <!-- Подключение скриптов -->
     <script src="js/language.js"></script>
     <script src="js/main.js"></script>
     <script src="js/arbs.js"></script>
