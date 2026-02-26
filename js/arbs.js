@@ -1,14 +1,228 @@
 // arbs.js - Анализатор вилок (арбитражный калькулятор)
+// Новая версия: БК как строки, динамические исходы как колонки
 
-let currentOutcomes = 2;
+// --- Состояние приложения ---
+let bkCount = 2;              // количество БК (строк) от 2 до 5
+let outcomeCount = 2;         // количество исходов (колонок) от 2 до 5
+let oddsValues = [];          // 2D массив значений [БК][исход]
+
 let lastCalculation = null;
+
+// Дефолтные значения для новых исходов в зависимости от индекса
+const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
 
 // --- Инициализация ---
 document.addEventListener('DOMContentLoaded', () => {
-    generateOddsInputs(2);
+    initState();
+    renderOddsTable();
     initEventListeners();
     loadLastCalculation();
 });
+
+// --- Инициализация состояния ---
+function initState() {
+    // Создаем массив bkCount x outcomeCount с дефолтными значениями
+    oddsValues = [];
+    for (let b = 0; b < bkCount; b++) {
+        const row = [];
+        for (let o = 0; o < outcomeCount; o++) {
+            row.push(DEFAULT_ODDS[o]);
+        }
+        oddsValues.push(row);
+    }
+}
+
+// --- Отрисовка таблицы коэффициентов ---
+function renderOddsTable() {
+    const container = document.getElementById('oddsTable');
+    container.innerHTML = '';
+    
+    // Устанавливаем CSS-переменную для количества колонок
+    container.style.setProperty('--outcome-count', outcomeCount);
+    
+    // Заголовки исходов (номера колонок)
+    const headerRow = document.createElement('div');
+    headerRow.className = 'odds-header-row';
+    
+    // Пустая ячейка в углу (над метками БК)
+    const emptyCell = document.createElement('div');
+    emptyCell.className = 'odds-corner';
+    headerRow.appendChild(emptyCell);
+    
+    // Заголовки исходов
+    for (let o = 0; o < outcomeCount; o++) {
+        const header = document.createElement('div');
+        header.className = 'odds-header text-2';
+        header.textContent = `Исход ${o + 1}`;
+        headerRow.appendChild(header);
+    }
+    
+    container.appendChild(headerRow);
+    
+    // Строки для каждой БК
+    for (let b = 0; b < bkCount; b++) {
+        const row = document.createElement('div');
+        row.className = 'odds-row';
+        row.dataset.bkIndex = b;
+        
+        // Метка БК с номером и кнопкой удаления (если БК > 2)
+        const labelCell = document.createElement('div');
+        labelCell.className = 'odds-bk-label';
+        
+        const labelText = document.createElement('span');
+        labelText.className = 'text-3';
+        labelText.textContent = `БК ${b + 1}`;
+        labelCell.appendChild(labelText);
+        
+        // Кнопка удаления (только если БК больше 2)
+        if (bkCount > 2) {
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'remove-bk text-7';
+            removeBtn.textContent = '✖️';
+            removeBtn.setAttribute('data-bk-index', b);
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeBookmaker(b);
+            });
+            labelCell.appendChild(removeBtn);
+        }
+        
+        row.appendChild(labelCell);
+        
+        // Поля ввода для каждого исхода
+        for (let o = 0; o < outcomeCount; o++) {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.id = `odds-${b}-${o}`;
+            input.className = 'odds-input bg-elevated border-5 text-1';
+            input.placeholder = '2.50';
+            input.min = '1.01';
+            input.step = '0.01';
+            input.value = oddsValues[b][o].toFixed(2);
+            
+            // Сохраняем значение при изменении
+            input.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                if (!isNaN(val) && val >= 1.01) {
+                    oddsValues[b][o] = val;
+                }
+            });
+            
+            row.appendChild(input);
+        }
+        
+        container.appendChild(row);
+    }
+    
+    // Строка с кнопкой добавления БК (если БК < 5)
+    if (bkCount < 5) {
+        const addRow = document.createElement('div');
+        addRow.className = 'odds-row add-bk-row';
+        
+        const addCell = document.createElement('div');
+        addCell.className = 'odds-add-bk';
+        
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-bk-btn text-1';
+        addBtn.textContent = '➕ Добавить БК';
+        addBtn.addEventListener('click', addBookmaker);
+        
+        addCell.appendChild(addBtn);
+        addRow.appendChild(addCell);
+        
+        // Пустые ячейки для выравнивания
+        for (let o = 0; o < outcomeCount; o++) {
+            const emptyCell = document.createElement('div');
+            addRow.appendChild(emptyCell);
+        }
+        
+        container.appendChild(addRow);
+    }
+}
+
+// --- Добавление БК ---
+function addBookmaker() {
+    if (bkCount >= 5) return;
+    
+    // Собираем текущие значения из полей (на случай если пользователь менял, но не ушел с поля)
+    collectOddsValuesFromDom();
+    
+    // Добавляем новую строку с дефолтными значениями
+    const newRow = [];
+    for (let o = 0; o < outcomeCount; o++) {
+        newRow.push(DEFAULT_ODDS[o]);
+    }
+    oddsValues.push(newRow);
+    
+    bkCount++;
+    renderOddsTable();
+}
+
+// --- Удаление БК ---
+function removeBookmaker(index) {
+    if (bkCount <= 2) return; // минимум 2 БК
+    
+    // Собираем текущие значения
+    collectOddsValuesFromDom();
+    
+    // Удаляем строку
+    oddsValues.splice(index, 1);
+    bkCount--;
+    
+    renderOddsTable();
+}
+
+// --- Сбор значений из DOM в массив oddsValues ---
+function collectOddsValuesFromDom() {
+    for (let b = 0; b < bkCount; b++) {
+        for (let o = 0; o < outcomeCount; o++) {
+            const input = document.getElementById(`odds-${b}-${o}`);
+            if (input) {
+                const val = parseFloat(input.value);
+                if (!isNaN(val) && val >= 1.01) {
+                    oddsValues[b][o] = val;
+                }
+            }
+        }
+    }
+}
+
+// --- Изменение количества исходов ---
+function changeOutcomeCount(newCount) {
+    if (newCount < 2 || newCount > 5 || newCount === outcomeCount) return;
+    
+    // Собираем текущие значения
+    collectOddsValuesFromDom();
+    
+    // Создаем новый массив с новым размером
+    const newOddsValues = [];
+    for (let b = 0; b < bkCount; b++) {
+        const newRow = [];
+        for (let o = 0; o < newCount; o++) {
+            if (o < outcomeCount) {
+                // Существующий исход - берем старое значение
+                newRow.push(oddsValues[b][o]);
+            } else {
+                // Новый исход - дефолт по индексу
+                newRow.push(DEFAULT_ODDS[o]);
+            }
+        }
+        newOddsValues.push(newRow);
+    }
+    
+    oddsValues = newOddsValues;
+    outcomeCount = newCount;
+    
+    // Обновляем активную кнопку исходов
+    document.querySelectorAll('.outcome-pill').forEach(btn => {
+        btn.classList.remove('active', 'opponent-active');
+        if (parseInt(btn.dataset.outcomes) === newCount) {
+            btn.classList.add('active', 'opponent-active');
+        }
+    });
+    
+    renderOddsTable();
+}
 
 // --- Обработчики событий ---
 function initEventListeners() {
@@ -16,15 +230,7 @@ function initEventListeners() {
     document.querySelectorAll('.outcome-pill').forEach(btn => {
         btn.addEventListener('click', function() {
             const outcomes = parseInt(this.dataset.outcomes);
-            if (outcomes === currentOutcomes) return;
-            
-            document.querySelectorAll('.outcome-pill').forEach(b => {
-                b.classList.remove('active', 'opponent-active');
-            });
-            this.classList.add('active', 'opponent-active');
-            
-            currentOutcomes = outcomes;
-            generateOddsInputs(outcomes);
+            changeOutcomeCount(outcomes);
         });
     });
 
@@ -35,38 +241,21 @@ function initEventListeners() {
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 }
 
-// --- Генерация полей для коэффициентов ---
-function generateOddsInputs(count) {
-    const container = document.getElementById('oddsTable');
-    container.innerHTML = '';
-    
-    for (let i = 1; i <= count; i++) {
-        const row = document.createElement('div');
-        row.className = 'odds-row';
-        row.innerHTML = `
-            <div class="odds-index text-2">${i}</div>  <!-- text-medium → text-2 -->
-            <input type="number" id="odds-${i}-1" class="odds-input bg-elevated border-5 text-1" placeholder="2.50" min="1.01" step="0.01" value="2.00">
-            <input type="number" id="odds-${i}-2" class="odds-input bg-elevated border-5 text-1" placeholder="2.50" min="1.01" step="0.01" value="2.00">
-        `;
-        container.appendChild(row);
-    }
-}
-
 // --- ОСНОВНАЯ ФУНКЦИЯ РАСЧЕТА ---
 function calculateArbitrage() {
-    // Собираем коэффициенты
-    const odds = [];
-    for (let i = 1; i <= currentOutcomes; i++) {
-        const odd1 = parseFloat(document.getElementById(`odds-${i}-1`).value);
-        const odd2 = parseFloat(document.getElementById(`odds-${i}-2`).value);
-        
-        if (isNaN(odd1) || isNaN(odd2) || odd1 < 1.01 || odd2 < 1.01) {
-            alert('Пожалуйста, введите корректные коэффициенты (минимум 1.01)');
-            return;
+    // Собираем актуальные значения из полей
+    collectOddsValuesFromDom();
+    
+    // Для каждого исхода берем максимальный кэф среди всех БК
+    const bestOdds = [];
+    for (let o = 0; o < outcomeCount; o++) {
+        let maxOdd = 0;
+        for (let b = 0; b < bkCount; b++) {
+            if (oddsValues[b][o] > maxOdd) {
+                maxOdd = oddsValues[b][o];
+            }
         }
-        
-        // Берем лучший коэффициент
-        odds.push(Math.max(odd1, odd2));
+        bestOdds.push(maxOdd);
     }
 
     const totalStake = parseFloat(document.getElementById('totalStake').value);
@@ -77,7 +266,7 @@ function calculateArbitrage() {
 
     // Расчет суммы вероятностей (V)
     let sumInverse = 0;
-    odds.forEach(odd => {
+    bestOdds.forEach(odd => {
         sumInverse += 1 / odd;
     });
 
@@ -86,19 +275,19 @@ function calculateArbitrage() {
 
     // Расчет распределения ставок
     const stakes = [];
-    odds.forEach(odd => {
+    bestOdds.forEach(odd => {
         stakes.push((totalStake * (1 / odd)) / sumInverse);
     });
 
     // Расчет выплат
     const payouts = [];
     stakes.forEach((stake, i) => {
-        payouts.push(stake * odds[i]);
+        payouts.push(stake * bestOdds[i]);
     });
 
     // Сохраняем результат
     lastCalculation = {
-        odds,
+        bestOdds,
         stakes,
         payouts,
         totalStake,
@@ -124,19 +313,19 @@ function displayResults(data) {
     const profitRow = document.getElementById('profitRow');
     const netProfit = document.getElementById('netProfit');
 
-    // Индикатор через классы
+    // Индикатор
     if (data.isArb) {
         indicatorCircle.classList.remove('bg-danger-solid');
         indicatorCircle.classList.add('bg-success-solid');
         
         arbStatus.textContent = '✅ Вилка найдена!';
-        arbStatus.className = 'text-4';  // text-success → text-4
+        arbStatus.className = 'text-4';
     } else {
         indicatorCircle.classList.remove('bg-success-solid');
         indicatorCircle.classList.add('bg-danger-solid');
         
         arbStatus.textContent = '❌ Вилки нет';
-        arbStatus.className = 'text-7';  // text-danger → text-7
+        arbStatus.className = 'text-7';
     }
 
     // Процент прибыли
@@ -147,16 +336,16 @@ function displayResults(data) {
         profitCard.style.display = 'none';
     }
 
-    // Таблица распределения - ИСПРАВЛЕНО: добавляем классы text-1 и text-2
+    // Таблица распределения
     tableBody.innerHTML = '';
-    data.odds.forEach((odd, i) => {
+    data.bestOdds.forEach((odd, i) => {
         const row = document.createElement('div');
         row.className = 'table-row';
         row.innerHTML = `
-            <span class="text-2">Исход ${i+1}</span>              <!-- text-light → text-2 -->
-            <span class="text-1">${odd.toFixed(2)}</span>         <!-- text-light → text-1 -->
-            <span class="text-1">${data.stakes[i].toFixed(2)} ₽</span>  <!-- text-light → text-1 -->
-            <span class="text-1">${data.payouts[i].toFixed(2)} ₽</span> <!-- text-light → text-1 -->
+            <span class="text-2">Исход ${i+1}</span>
+            <span class="text-1">${odd.toFixed(2)}</span>
+            <span class="text-1">${data.stakes[i].toFixed(2)} ₽</span>
+            <span class="text-1">${data.payouts[i].toFixed(2)} ₽</span>
         `;
         tableBody.appendChild(row);
     });
@@ -176,27 +365,30 @@ function displayResults(data) {
 
 // --- Сброс калькулятора ---
 function resetCalculator() {
-    generateOddsInputs(2);
+    bkCount = 2;
+    outcomeCount = 2;
+    initState();
+    renderOddsTable();
+    
     document.getElementById('totalStake').value = 1000;
     
     // Сброс индикатора
     document.getElementById('indicatorCircle').classList.remove('bg-success-solid', 'bg-danger-solid');
     document.getElementById('arbStatus').textContent = '—';
-    document.getElementById('arbStatus').className = 'text-1';  // text-light → text-1
+    document.getElementById('arbStatus').className = 'text-1';
     document.getElementById('profitCard').style.display = 'none';
     document.getElementById('tableBody').innerHTML = '';
     document.getElementById('totalStakeDisplay').textContent = '0 ₽';
     document.getElementById('totalPayout').textContent = '0 ₽';
     document.getElementById('profitRow').style.display = 'none';
     
-    // Сброс активной кнопки
+    // Сброс активной кнопки исходов
     document.querySelectorAll('.outcome-pill').forEach(btn => {
         btn.classList.remove('active', 'opponent-active');
         if (btn.dataset.outcomes === '2') {
             btn.classList.add('active', 'opponent-active');
         }
     });
-    currentOutcomes = 2;
     
     lastCalculation = null;
     localStorage.removeItem('arbLastCalculation');
@@ -215,17 +407,7 @@ function loadLastCalculation() {
     if (saved) {
         try {
             lastCalculation = JSON.parse(saved);
-            currentOutcomes = lastCalculation.odds.length;
-            
-            document.querySelectorAll('.outcome-pill').forEach(btn => {
-                btn.classList.remove('active', 'opponent-active');
-                if (parseInt(btn.dataset.outcomes) === currentOutcomes) {
-                    btn.classList.add('active', 'opponent-active');
-                }
-            });
-            
-            generateOddsInputs(currentOutcomes);
-            document.getElementById('totalStake').value = lastCalculation.totalStake;
+            // Восстанавливаем только отображение, но не таблицу ввода
             displayResults(lastCalculation);
         } catch (e) {
             console.log('Ошибка загрузки сохранения');
@@ -235,3 +417,5 @@ function loadLastCalculation() {
 
 // Экспорт для отладки
 window.calculateArbitrage = calculateArbitrage;
+window.addBookmaker = addBookmaker;
+window.removeBookmaker = removeBookmaker;
