@@ -86,6 +86,39 @@
     transform: scale(1.1);
 }
 
+/* ===== НОВЫЕ СТИЛИ ДЛЯ КНОПОК СТРАТЕГИИ ===== */
+.strategy-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.strategy-btn {
+    padding: 10px 15px;
+    border-radius: 20px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+    flex: 1;
+    min-width: 150px;
+}
+
+.strategy-btn:hover {
+    transform: translateY(-2px);
+}
+
+.strategy-btn.active {
+    background: var(--color-info) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--color-info) !important;
+    box-shadow: 0 0 15px var(--color-info) !important;
+}
+
 /* 
 ==================================================
     ТАБЛИЦА КОЭФФИЦИЕНТОВ (НОВАЯ ВЕРСИЯ)
@@ -211,11 +244,6 @@
     font-weight: 500;
     line-height: 1;
 }
-
-/* Убираем возможный ховер-эффект если не нужен */
-/* .add-bk-btn:hover {
-    transform: scale(1.02);
-} */
 
 /* Индикатор вилки */
 .arb-indicator {
@@ -377,6 +405,12 @@
         height: 20px;
     }
     
+    .strategy-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        min-width: 130px;
+    }
+    
     .table-header,
     .table-row {
         grid-template-columns: 1.5fr 1fr 1.2fr 1.2fr;
@@ -438,6 +472,18 @@
         padding: 5px 0;
     }
     
+    .strategy-pills {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .strategy-btn {
+        width: 100%;
+        min-width: auto;
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+    
     .table-header,
     .table-row {
         grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
@@ -471,8 +517,3 @@
 .odds-input[type=number] {
     -moz-appearance: textfield;
 }
-
-
-
-
-
