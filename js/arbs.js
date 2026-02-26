@@ -44,9 +44,9 @@ function generateOddsInputs(count) {
         const row = document.createElement('div');
         row.className = 'odds-row';
         row.innerHTML = `
-            <div class="odds-index text-medium">${i}</div>
-            <input type="number" id="odds-${i}-1" class="odds-input bg-elevated border-muted text-light" placeholder="2.50" min="1.01" step="0.01" value="2.00">
-            <input type="number" id="odds-${i}-2" class="odds-input bg-elevated border-muted text-light" placeholder="2.50" min="1.01" step="0.01" value="2.00">
+            <div class="odds-index text-2">${i}</div>  <!-- text-medium → text-2 -->
+            <input type="number" id="odds-${i}-1" class="odds-input bg-elevated border-5 text-1" placeholder="2.50" min="1.01" step="0.01" value="2.00">
+            <input type="number" id="odds-${i}-2" class="odds-input bg-elevated border-5 text-1" placeholder="2.50" min="1.01" step="0.01" value="2.00">
         `;
         container.appendChild(row);
     }
@@ -112,7 +112,7 @@ function calculateArbitrage() {
     saveLastCalculation();
 }
 
-// --- Отображение результатов (ИСПРАВЛЕНО: через классы, а не style) ---
+// --- Отображение результатов ---
 function displayResults(data) {
     const indicatorCircle = document.getElementById('indicatorCircle');
     const arbStatus = document.getElementById('arbStatus');
@@ -124,23 +124,19 @@ function displayResults(data) {
     const profitRow = document.getElementById('profitRow');
     const netProfit = document.getElementById('netProfit');
 
-    // ✅ Индикатор через классы, а не style
+    // Индикатор через классы
     if (data.isArb) {
-        // Убираем старые классы фона
-        indicatorCircle.classList.remove('bg-danger-solid', 'bg-warning-solid');
-        // Добавляем зеленый фон
+        indicatorCircle.classList.remove('bg-danger-solid');
         indicatorCircle.classList.add('bg-success-solid');
         
         arbStatus.textContent = '✅ Вилка найдена!';
-        arbStatus.className = 'text-success';
+        arbStatus.className = 'text-4';  // text-success → text-4
     } else {
-        // Убираем старые классы фона
-        indicatorCircle.classList.remove('bg-success-solid', 'bg-warning-solid');
-        // Добавляем красный фон
+        indicatorCircle.classList.remove('bg-success-solid');
         indicatorCircle.classList.add('bg-danger-solid');
         
         arbStatus.textContent = '❌ Вилки нет';
-        arbStatus.className = 'text-danger';
+        arbStatus.className = 'text-7';  // text-danger → text-7
     }
 
     // Процент прибыли
@@ -151,16 +147,16 @@ function displayResults(data) {
         profitCard.style.display = 'none';
     }
 
-    // Таблица распределения
+    // Таблица распределения - ИСПРАВЛЕНО: добавляем классы text-1 и text-2
     tableBody.innerHTML = '';
     data.odds.forEach((odd, i) => {
         const row = document.createElement('div');
         row.className = 'table-row';
         row.innerHTML = `
-            <span class="text-light">Исход ${i+1}</span>
-            <span class="text-light">${odd.toFixed(2)}</span>
-            <span class="text-light">${data.stakes[i].toFixed(2)} ₽</span>
-            <span class="text-light">${data.payouts[i].toFixed(2)} ₽</span>
+            <span class="text-2">Исход ${i+1}</span>              <!-- text-light → text-2 -->
+            <span class="text-1">${odd.toFixed(2)}</span>         <!-- text-light → text-1 -->
+            <span class="text-1">${data.stakes[i].toFixed(2)} ₽</span>  <!-- text-light → text-1 -->
+            <span class="text-1">${data.payouts[i].toFixed(2)} ₽</span> <!-- text-light → text-1 -->
         `;
         tableBody.appendChild(row);
     });
@@ -178,15 +174,15 @@ function displayResults(data) {
     }
 }
 
-// --- Сброс калькулятора (ИСПРАВЛЕНО) ---
+// --- Сброс калькулятора ---
 function resetCalculator() {
     generateOddsInputs(2);
     document.getElementById('totalStake').value = 1000;
     
-    // ✅ Сброс через классы
-    document.getElementById('indicatorCircle').classList.remove('bg-success-solid', 'bg-danger-solid', 'bg-warning-solid');
+    // Сброс индикатора
+    document.getElementById('indicatorCircle').classList.remove('bg-success-solid', 'bg-danger-solid');
     document.getElementById('arbStatus').textContent = '—';
-    document.getElementById('arbStatus').className = 'text-light';
+    document.getElementById('arbStatus').className = 'text-1';  // text-light → text-1
     document.getElementById('profitCard').style.display = 'none';
     document.getElementById('tableBody').innerHTML = '';
     document.getElementById('totalStakeDisplay').textContent = '0 ₽';
@@ -219,10 +215,8 @@ function loadLastCalculation() {
     if (saved) {
         try {
             lastCalculation = JSON.parse(saved);
-            // Восстанавливаем интерфейс
             currentOutcomes = lastCalculation.odds.length;
             
-            // Активируем нужную кнопку
             document.querySelectorAll('.outcome-pill').forEach(btn => {
                 btn.classList.remove('active', 'opponent-active');
                 if (parseInt(btn.dataset.outcomes) === currentOutcomes) {
@@ -230,14 +224,7 @@ function loadLastCalculation() {
                 }
             });
             
-            // Генерируем поля и заполняем
             generateOddsInputs(currentOutcomes);
-            
-            // Заполняем коэффициенты
-            for (let i = 1; i <= currentOutcomes; i++) {
-                // Просто для демо - в реальном приложении нужно сохранять исходные коэффициенты
-            }
-            
             document.getElementById('totalStake').value = lastCalculation.totalStake;
             displayResults(lastCalculation);
         } catch (e) {
