@@ -179,34 +179,43 @@
     transform: scale(1.02);
 }
 
-/* Строка с кнопкой добавления БК */
+/* ===== СТРОКА С КНОПКОЙ ДОБАВЛЕНИЯ БК ===== */
 .add-bk-row {
     margin-top: 10px;
+    display: grid;
+    grid-template-columns: 100px repeat(var(--outcome-count, 2), 1fr);
+    gap: 10px;
+    align-items: center;
 }
 
-/* Ячейка с плюсиком - теперь по центру колонки БК */
+/* Ячейка с кнопкой добавления */
 .odds-add-bk {
-    display: flex;
-    align-items: center;
-    justify-content: center;  /* Изменено с flex-start на center */
+    grid-column: 1;  /* Занимает первую колонку */
     width: 100%;
 }
 
+/* Прямоугольная кнопка добавления БК */
 .add-bk-btn {
     background: transparent;
-    border: none;
-    font-size: 1.5rem;  /* Увеличен размер плюсика */
+    border: 2px solid;
+    border-color: inherit;  /* Цвет из класса text-1 */
+    font-size: 1.5rem;
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 20px;
+    padding: 8px 0;
+    border-radius: 8px;
+    width: 100%;  /* На всю ширину колонки */
     display: flex;
     align-items: center;
-    justify-content: center;  /* Центрируем сам плюсик внутри кнопки */
-    gap: 5px;
+    justify-content: center;
     transition: all 0.2s;
     font-weight: 500;
-    line-height: 1;  /* Убираем лишний межстрочный интервал */
+    line-height: 1;
 }
+
+/* Убираем возможный ховер-эффект если не нужен */
+/* .add-bk-btn:hover {
+    transform: scale(1.02);
+} */
 
 /* Индикатор вилки */
 .arb-indicator {
@@ -337,6 +346,11 @@
         grid-template-columns: 70px repeat(var(--outcome-count, 2), 1fr);
         gap: 5px;
     }
+
+    .add-bk-row {
+        grid-template-columns: 70px repeat(var(--outcome-count, 2), 1fr);
+        gap: 5px;
+    }
     
     .odds-bk-label {
         font-size: 0.9rem;
@@ -352,8 +366,8 @@
     }
     
     .add-bk-btn {
-        font-size: 1.3rem;  /* Чуть меньше на мобилках, но всё ещё крупный */
-        padding: 6px 10px;
+        font-size: 1.3rem;
+        padding: 6px 0;
     }
     
     .remove-bk {
@@ -399,6 +413,11 @@
         grid-template-columns: 60px repeat(var(--outcome-count, 2), 1fr);
         gap: 3px;
     }
+
+    .add-bk-row {
+        grid-template-columns: 60px repeat(var(--outcome-count, 2), 1fr);
+        gap: 3px;
+    }
     
     .odds-bk-label {
         font-size: 0.8rem;
@@ -414,8 +433,8 @@
     }
     
     .add-bk-btn {
-        font-size: 1.2rem;  /* Ещё меньше на совсем маленьких */
-        padding: 5px 8px;
+        font-size: 1.2rem;
+        padding: 5px 0;
     }
     
     .table-header,
