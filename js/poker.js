@@ -113,7 +113,6 @@ const HandEvaluator = {
         for(let i=0;i<=uniqueRanks.length-5;i++){
             if(uniqueRanks[i]-uniqueRanks[i+4]===4) return uniqueRanks[i];
         }
-        // wheel (A-2-3-4-5)
         if(uniqueRanks.includes(12)&&uniqueRanks.includes(0)&&uniqueRanks.includes(1)&&uniqueRanks.includes(2)&&uniqueRanks.includes(3)) return 3;
         return -1;
     },
@@ -159,7 +158,6 @@ function compareHands(h1,h2){
     return 0;
 }
 
-
 // --- Переменные состояния ---
 let activeBlock='hand';
 const selectedCards=new Map();
@@ -191,14 +189,12 @@ function createDeck(){
     deckGrid.innerHTML='';
     const suits=[{code:'s',symbol:'♠',color:'black'},{code:'h',symbol:'♥',color:'red'},{code:'c',symbol:'♣',color:'black'},{code:'d',symbol:'♦',color:'red'}];
     const values=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-    
     suits.forEach(suit=>values.forEach(value=>{
         const cardCode=value+suit.code;
         const deckCard=document.createElement('div');
         deckCard.className=`deck-card bg-deck-card deck-card-border deck-card-shadow ${suit.color==='red' ? 'text-red' : 'text-black'}`;
         deckCard.dataset.card=cardCode;
         deckCard.draggable=true;
-        
         deckCard.addEventListener('dragstart',e=>{
             if(deckCard.classList.contains('selected')){e.preventDefault();return;}
             currentDragSource='deck';
@@ -206,19 +202,16 @@ function createDeck(){
             e.dataTransfer.setData('text/plain',cardCode);
             deckCard.style.opacity='0.5';
         });
-        
         const cardFace=document.createElement('div');
         cardFace.className='card-face';
         cardFace.innerHTML=`<div class="card-value">${value}</div><div class="card-suit-large">${suit.symbol}</div>`;
         deckCard.appendChild(cardFace);
         deckGrid.appendChild(deckCard);
-        
         deckCard.addEventListener('click',()=>{
             if(deckCard.classList.contains('selected')) return;
             handleCardClick(cardCode);
         });
     }));
-    
     deckGrid.addEventListener('selectstart',e=>e.preventDefault());
 }
 
@@ -254,7 +247,6 @@ function initDragAndDrop(){
             }
         }
     });
-    
     document.addEventListener('dragend',()=>{
         document.querySelectorAll('.deck-card, .real-card').forEach(el=>el.style.opacity='1');
         document.querySelectorAll('.card-slot').forEach(s=>s.classList.remove('drag-over'));
@@ -266,37 +258,31 @@ function initDragAndDrop(){
         currentDragOverSection=null;
         if(dragOverTimer){clearTimeout(dragOverTimer);dragOverTimer=null;}
     });
-    
-    document.querySelectorAll('.card-slot').forEach(slot => {
-        slot.addEventListener('dragover', e => {
+    document.querySelectorAll('.card-slot').forEach(slot=>{
+        slot.addEventListener('dragover',e=>{
             e.preventDefault();
             slot.classList.add('drag-over');
         });
-        
-        slot.addEventListener('dragleave', () => {
+        slot.addEventListener('dragleave',()=>{
             slot.classList.remove('drag-over');
         });
-        
-        slot.addEventListener('drop', e => {
+        slot.addEventListener('drop',e=>{
             e.preventDefault();
             slot.classList.remove('drag-over');
-            
-            const data = e.dataTransfer.getData('text/plain');
-            if (!data) return;
-            
-            const targetSlotId = slot.dataset.slot;
-            
-            try {
-                const parsed = JSON.parse(data);
-                if (parsed.fromSlot && parsed.fromSlot !== targetSlotId) {
-                    moveCardBetweenSlots(parsed.fromSlot, targetSlotId);
+            const data=e.dataTransfer.getData('text/plain');
+            if(!data) return;
+            const targetSlotId=slot.dataset.slot;
+            try{
+                const parsed=JSON.parse(data);
+                if(parsed.fromSlot && parsed.fromSlot!==targetSlotId){
+                    moveCardBetweenSlots(parsed.fromSlot,targetSlotId);
                     return;
                 }
             } catch {
-                const cardCode = data;
-                if (usedCards.has(cardCode)) return;
-                if (selectedCards.has(targetSlotId)) return;
-                addCardToSlot(cardCode, targetSlotId);
+                const cardCode=data;
+                if(usedCards.has(cardCode)) return;
+                if(selectedCards.has(targetSlotId)) return;
+                addCardToSlot(cardCode,targetSlotId);
             }
         });
     });
@@ -312,25 +298,21 @@ function initSectionDrop(){
             if(currentDragOverSection && currentDragOverSection!==section){
                 currentDragOverSection.classList.remove('drag-over','drag-over-no-space');
             }
-            
             let hasFreeSlots;
             if(section.id==='deck'){
-                hasFreeSlots = currentDragSource==='slot';
+                hasFreeSlots=currentDragSource==='slot';
             } else {
-                hasFreeSlots = hasFreeSlotsInSection(section.id);
+                hasFreeSlots=hasFreeSlotsInSection(section.id);
             }
-            
             section.classList.toggle('drag-over',hasFreeSlots);
             section.classList.toggle('drag-over-no-space',!hasFreeSlots);
             currentDragOverSection=section;
-            
             dragOverTimer=setTimeout(()=>{
                 if(!section.contains(document.elementFromPoint(e.clientX,e.clientY))){
                     section.classList.remove('drag-over','drag-over-no-space');
                 }
             },50);
         });
-        
         section.addEventListener('dragleave',e=>{
             if(dragOverTimer) clearTimeout(dragOverTimer);
             dragOverTimer=setTimeout(()=>{
@@ -340,25 +322,20 @@ function initSectionDrop(){
                 }
             },100);
         });
-        
         section.addEventListener('drop',e=>{
             e.preventDefault();
             section.classList.remove('drag-over','drag-over-no-space');
             currentDragOverSection=null;
             if(dragOverTimer){clearTimeout(dragOverTimer);dragOverTimer=null;}
             if(!currentDragCard) return;
-            
             const cardCode=currentDragCard.cardCode;
-            
             if(section.id==='deck'){
                 if(currentDragSource==='slot' && currentDragCard.fromSlot){
                     removeCardFromSlot(currentDragCard.fromSlot);
                 }
                 return;
             }
-            
             if(usedCards.has(cardCode) && currentDragSource!=='slot') return;
-            
             const sectionType=section.id==='handSection'?'hand':'board';
             let freeSlot=null;
             const max=sectionType==='hand'?2:5;
@@ -366,7 +343,6 @@ function initSectionDrop(){
                 const slotId=`${sectionType==='hand'?'hero':'board'}-${i}`;
                 if(!selectedCards.has(slotId)){freeSlot=slotId;break;}
             }
-            
             if(freeSlot){
                 if(currentDragSource==='deck'){
                     addCardToSlot(cardCode,freeSlot);
@@ -385,23 +361,22 @@ function hasFreeSlotsInSection(sectionId){
     return false;
 }
 
-function getFirstFreeSlotInHand() {
-    for (let i = 1; i <= 2; i++) {
-        const slotId = `hero-${i}`;
-        if (!selectedCards.has(slotId)) return slotId;
+function getFirstFreeSlotInHand(){
+    for(let i=1;i<=2;i++){
+        const slotId=`hero-${i}`;
+        if(!selectedCards.has(slotId)) return slotId;
     }
     return null;
 }
 
-function getFirstFreeSlotInBoard() {
-    for (let i = 1; i <= 5; i++) {
-        const slotId = `board-${i}`;
-        if (!selectedCards.has(slotId)) return slotId;
+function getFirstFreeSlotInBoard(){
+    for(let i=1;i<=5;i++){
+        const slotId=`board-${i}`;
+        if(!selectedCards.has(slotId)) return slotId;
     }
     return null;
 }
 
-// --- Управление картами ---
 function addCardToSlot(cardCode,slotId){
     const value=cardCode.slice(0,-1), suitCode=cardCode.slice(-1), suitSymbols={h:'♥',d:'♦',s:'♠',c:'♣'};
     selectedCards.set(slotId,{code:cardCode,value,suit:suitSymbols[suitCode],suitCode,rank:HandEvaluator.ranks[value]});
@@ -429,7 +404,6 @@ function removeCardFromSlot(slotId){
     }
 }
 
-// --- Отображение карт ---
 function updateCardDisplay(){
     document.querySelectorAll('.card-slot').forEach(slot=>{
         const slotId=slot.dataset.slot;
@@ -445,14 +419,12 @@ function updateCardDisplay(){
             slot.innerHTML='<div class="slot-empty text-slot">+</div>';
         }
     });
-    
     document.querySelectorAll('.deck-card').forEach(deckCard=>{
         const isUsed=usedCards.has(deckCard.dataset.card);
         deckCard.classList.toggle('selected',isUsed);
         deckCard.draggable=!isUsed;
         deckCard.style.cursor=isUsed?'default':'pointer';
-        deckCard.classList.add('bg-deck-card', 'deck-card-border', 'deck-card-shadow');
-        
+        deckCard.classList.add('bg-deck-card','deck-card-border','deck-card-shadow');
         const cardCode=deckCard.dataset.card;
         const suitCode=cardCode.slice(-1);
         const isRedSuit=suitCode==='h'||suitCode==='d';
@@ -461,9 +433,8 @@ function updateCardDisplay(){
     });
 }
 
-// --- Проверки и статус ---
 function updateStatus(){
-    document.getElementById('calculateBtn').disabled=!(checkHandValidity() && checkBoardValidity() && !isCalculating);
+    document.getElementById('calculateBtn').disabled=!(checkHandValidity()&&checkBoardValidity()&&!isCalculating);
 }
 function checkHandValidity(){
     const w=document.getElementById('handWarning');
@@ -479,7 +450,6 @@ function checkBoardValidity(){
     return valid;
 }
 
-// --- Переключение блоков ---
 function selectHandBlock(){
     activeBlock='hand';
     document.getElementById('handSection').classList.add('active');
@@ -493,8 +463,8 @@ function selectBoardBlock(){
 function checkAndSwitchActiveBlock(){
     const handCount=getHandCardsCount();
     const boardCount=getBoardCardsCount();
-    if(activeBlock==='hand' && handCount>=2 && boardCount<5) selectBoardBlock();
-    if(activeBlock==='board' && boardCount>=5 && handCount<2) selectHandBlock();
+    if(activeBlock==='hand'&&handCount>=2&&boardCount<5) selectBoardBlock();
+    if(activeBlock==='board'&&boardCount>=5&&handCount<2) selectHandBlock();
 }
 function activateBlockBySlotId(slotId){
     if(slotId.startsWith('hero')) selectHandBlock();
@@ -504,27 +474,25 @@ function activateBlockBySlotId(slotId){
 function getHandCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('hero')).length;}
 function getBoardCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('board')).length;}
 
-// --- Обработка клика по карте ---
-function handleCardClick(cardCode) {
-    if (usedCards.has(cardCode)) return;
-    
-    if (activeBlock === 'hand') {
-        const freeSlot = getFirstFreeSlotInHand();
-        if (freeSlot) {
-            addCardToSlot(cardCode, freeSlot);
-        } else if (getBoardCardsCount() < 5) {
+function handleCardClick(cardCode){
+    if(usedCards.has(cardCode)) return;
+    if(activeBlock==='hand'){
+        const freeSlot=getFirstFreeSlotInHand();
+        if(freeSlot){
+            addCardToSlot(cardCode,freeSlot);
+        } else if(getBoardCardsCount()<5){
             selectBoardBlock();
-            const freeBoardSlot = getFirstFreeSlotInBoard();
-            if (freeBoardSlot) addCardToSlot(cardCode, freeBoardSlot);
+            const freeBoardSlot=getFirstFreeSlotInBoard();
+            if(freeBoardSlot) addCardToSlot(cardCode,freeBoardSlot);
         }
     } else {
-        const freeSlot = getFirstFreeSlotInBoard();
-        if (freeSlot) {
-            addCardToSlot(cardCode, freeSlot);
-        } else if (getHandCardsCount() < 2) {
+        const freeSlot=getFirstFreeSlotInBoard();
+        if(freeSlot){
+            addCardToSlot(cardCode,freeSlot);
+        } else if(getHandCardsCount()<2){
             selectHandBlock();
-            const freeHandSlot = getFirstFreeSlotInHand();
-            if (freeHandSlot) addCardToSlot(cardCode, freeHandSlot);
+            const freeHandSlot=getFirstFreeSlotInHand();
+            if(freeHandSlot) addCardToSlot(cardCode,freeHandSlot);
         }
     }
 }
@@ -549,7 +517,6 @@ function moveCardBetweenSlots(fromSlot,toSlot){
     checkAndSwitchActiveBlock();
 }
 
-// --- Оппоненты ---
 function setOpponents(count){
     opponentsCount=count;
     document.querySelectorAll('.opponent-pill').forEach(pill=>{
@@ -558,12 +525,10 @@ function setOpponents(count){
     resetResults();
 }
 
-// --- Очистка ---
 function clearAll(){
     const clearBtn=document.getElementById('clearAllBtn');
     clearBtn.classList.add('clicked');
     setTimeout(()=>clearBtn.classList.remove('clicked'),300);
-    
     selectedCards.clear();
     usedCards.clear();
     updateCardDisplay();
@@ -577,7 +542,6 @@ function clearAll(){
     selectHandBlock();
 }
 
-// --- Сброс результатов ---
 function resetResults(){
     if(hasCalculatedResults){
         document.getElementById('resultHero').textContent='—';
@@ -587,111 +551,103 @@ function resetResults(){
     }
 }
 
-// --- Форматирование процента ---
-function fmt(n){
-    if(n >= 100) return '100%';
-    if(n <= 0) return '0%';
-    return (Math.round(n * 10) / 10).toFixed(1) + '%';
+// --- Форматирование: count=кол-во раздач этого исхода, total=всего раздач ---
+function fmt(n, count, total){
+    if(count===0) return '0%';
+    if(count===total) return '100%';
+    const r=Math.round(n*10)/10;
+    if(r<=0) return '0.1%';
+    if(r>=100) return '99.9%';
+    return r.toFixed(1)+'%';
 }
 
 // --- Расчет эквити ---
-function calculateEquity() {
-    if (isCalculating) return;
+function calculateEquity(){
+    if(isCalculating) return;
 
-    const heroCards = Array.from(selectedCards.entries())
-        .filter(([s]) => s.startsWith('hero'))
-        .map(([, c]) => c);
+    const heroCards=Array.from(selectedCards.entries())
+        .filter(([s])=>s.startsWith('hero'))
+        .map(([,c])=>c);
 
-    const boardCards = Array.from(selectedCards.entries())
-        .filter(([s]) => s.startsWith('board'))
-        .map(([, c]) => c);
+    const boardCards=Array.from(selectedCards.entries())
+        .filter(([s])=>s.startsWith('board'))
+        .map(([,c])=>c);
 
-    if (!checkHandValidity() || !checkBoardValidity()) return;
+    if(!checkHandValidity()||!checkBoardValidity()) return;
 
-    isCalculating = true;
-    document.getElementById('calculateBtn').disabled = true;
+    isCalculating=true;
+    document.getElementById('calculateBtn').disabled=true;
 
-    const SIMULATIONS = 20000;
+    const SIMULATIONS=20000;
+    let heroWins=0, oppWins=0, tieRuns=0, actualRuns=0;
 
-    // heroWins, oppWins, ties — считаем в "очках" от 0 до 1 за каждую раздачу
-    // heroWins: 1 за победу, 0 за проигрыш, 1/tieCount за ничью
-    // ties: считаем раздачи где была ничья (для отображения)
-    // Но правильнее: считаем три независимых счётчика честно
-    let heroWins = 0;   // чистые победы (герой лучше всех)
-    let oppWins = 0;    // чистые проигрыши (хоть один оппонент лучше)
-    let tieRuns = 0;    // раздачи где ничья (никто не бьёт героя, но есть равные)
-    let actualRuns = 0;
+    const suits=['s','h','c','d'];
+    const values=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
 
-    const suits = ['s','h','c','d'];
-    const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+    const fullDeck=[];
+    for(const v of values)
+        for(const s of suits)
+            fullDeck.push({code:v+s,value:v,suitCode:s});
 
-    const fullDeck = [];
-    for (const v of values)
-        for (const s of suits)
-            fullDeck.push({code:v+s, value:v, suitCode:s});
+    const usedCardCodes=new Set(Array.from(usedCards));
+    const neededBoardCards=5-boardCards.length;
+    const totalCardsNeeded=neededBoardCards+opponentsCount*2;
 
-    const usedCardCodes = new Set(Array.from(usedCards));
-    const neededBoardCards = 5 - boardCards.length;
-    const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
-
-    for (let i = 0; i < SIMULATIONS; i++) {
-        const deck = fullDeck.filter(c => !usedCardCodes.has(c.code));
-        if (deck.length < totalCardsNeeded) continue;
+    for(let i=0;i<SIMULATIONS;i++){
+        const deck=fullDeck.filter(c=>!usedCardCodes.has(c.code));
+        if(deck.length<totalCardsNeeded) continue;
         actualRuns++;
 
-        // Тасуем (Fisher-Yates)
-        for (let j = deck.length - 1; j > 0; j--) {
-            const k = Math.floor(Math.random() * (j + 1));
-            [deck[j], deck[k]] = [deck[k], deck[j]];
+        for(let j=deck.length-1;j>0;j--){
+            const k=Math.floor(Math.random()*(j+1));
+            [deck[j],deck[k]]=[deck[k],deck[j]];
         }
 
-        // Формируем борд
-        const fullBoard = [...boardCards];
-        for (let j = 0; j < neededBoardCards; j++)
+        const fullBoard=[...boardCards];
+        for(let j=0;j<neededBoardCards;j++)
             fullBoard.push(deck[j]);
 
-        let index = neededBoardCards;
-        const heroScore = HandEvaluator.evaluateDetailed([...heroCards, ...fullBoard]);
+        let index=neededBoardCards;
+        const heroScore=HandEvaluator.evaluateDetailed([...heroCards,...fullBoard]);
 
-        let heroBeaten = false;
-        let hasTie = false;
+        let heroBeaten=false;
+        let hasTie=false;
 
-        for (let o = 0; o < opponentsCount; o++) {
-            const oppScore = HandEvaluator.evaluateDetailed([deck[index], deck[index+1], ...fullBoard]);
-            index += 2;
-            const cmp = compareHands(heroScore, oppScore);
-            if (cmp < 0) { heroBeaten = true; break; }
-            if (cmp === 0) { hasTie = true; }
+        for(let o=0;o<opponentsCount;o++){
+            const oppScore=HandEvaluator.evaluateDetailed([deck[index],deck[index+1],...fullBoard]);
+            index+=2;
+            const cmp=compareHands(heroScore,oppScore);
+            if(cmp<0){heroBeaten=true;break;}
+            if(cmp===0){hasTie=true;}
         }
 
-        if (heroBeaten) {
-            oppWins++;
-        } else if (hasTie) {
-            tieRuns++;
-        } else {
-            heroWins++;
-        }
+        if(heroBeaten) oppWins++;
+        else if(hasTie) tieRuns++;
+        else heroWins++;
     }
 
-    if (actualRuns === 0) { isCalculating = false; updateStatus(); return; }
+    if(actualRuns===0){isCalculating=false;updateStatus();return;}
 
+    // Метод наибольших остатков с защитой строгих нулей и соток
     const heroPercent=(heroWins/actualRuns)*100;
     const oppPercent=(oppWins/actualRuns)*100;
     const tiePercent=(tieRuns/actualRuns)*100;
 
     const vals=[
-        {key:'hero',exact:heroPercent,isZero:heroWins===0,is100:heroWins===actualRuns},
-        {key:'opp', exact:oppPercent, isZero:oppWins===0, is100:oppWins===actualRuns},
-        {key:'tie', exact:tiePercent, isZero:tieRuns===0, is100:tieRuns===actualRuns},
+        {key:'hero',exact:heroPercent,count:heroWins},
+        {key:'opp', exact:oppPercent, count:oppWins},
+        {key:'tie', exact:tiePercent, count:tieRuns},
     ];
 
+    // Фиксируем строгие нули и сотки, остальным floor
     vals.forEach(v=>{
-        if(v.isZero) v.rounded=0;
-        else if(v.is100) v.rounded=100;
+        if(v.count===0) v.rounded=0;
+        else if(v.count===actualRuns) v.rounded=100;
         else v.rounded=Math.floor(v.exact*10)/10;
     });
 
-    const free=vals.filter(v=>!v.isZero&&!v.is100);
+    // Остаток до 100 отдаём нефиксированным по убыванию дробной части
+    const free=vals.filter(v=>v.count>0&&v.count<actualRuns);
     const sum=vals.reduce((a,v)=>a+v.rounded,0);
     let remainder=Math.round((100-sum)*10)/10;
 
@@ -705,27 +661,25 @@ function calculateEquity() {
     const result={};
     vals.forEach(v=>result[v.key]=v.rounded);
 
-    document.getElementById('resultHero').textContent=fmt(result.hero);
-    document.getElementById('resultOpponent').textContent=fmt(result.opp);
-    document.getElementById('resultTie').textContent=fmt(result.tie);
+    document.getElementById('resultHero').textContent=fmt(result.hero,heroWins,actualRuns);
+    document.getElementById('resultOpponent').textContent=fmt(result.opp,oppWins,actualRuns);
+    document.getElementById('resultTie').textContent=fmt(result.tie,tieRuns,actualRuns);
 
-    hasCalculatedResults = true;
-    isCalculating = false;
+    hasCalculatedResults=true;
+    isCalculating=false;
     updateStatus();
 }
 
-
-// --- Смена темы: пересоздаем колоду ---
-document.addEventListener('themeChanged', () => {
+// --- Смена темы ---
+document.addEventListener('themeChanged',()=>{
     createDeck();
     updateCardDisplay();
 });
 
 // --- Экспорт для отладки ---
-window.getHandCardsCount = getHandCardsCount;
-window.getBoardCardsCount = getBoardCardsCount;
-window.checkHandValidity = checkHandValidity;
-window.checkBoardValidity = checkBoardValidity;
-window.hasFreeSlotsInSection = hasFreeSlotsInSection;
-window.activateBlockBySlotId = activateBlockBySlotId;
-
+window.getHandCardsCount=getHandCardsCount;
+window.getBoardCardsCount=getBoardCardsCount;
+window.checkHandValidity=checkHandValidity;
+window.checkBoardValidity=checkBoardValidity;
+window.hasFreeSlotsInSection=hasFreeSlotsInSection;
+window.activateBlockBySlotId=activateBlockBySlotId;
