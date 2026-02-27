@@ -693,11 +693,10 @@ async function calculateEquity() {
 
             const heroPercent = (heroTotal / actualRuns) * 100;
             const oppPercent  = (oppTotal  / actualRuns) * 100;
-            const tiePercent  = (tieTotal  / actualRuns) * 100;
 
             const heroRounded = Math.round(heroPercent * 10) / 10;
             const oppRounded  = Math.round(oppPercent  * 10) / 10;
-            const tieRounded  = Math.round(tiePercent  * 10) / 10;
+            const tieRounded  = Math.max(0, Math.round((100 - heroPercent - oppPercent) * 10) / 10);
 
             document.getElementById('resultHero').textContent     = heroRounded.toFixed(1) + '%';
             document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1)  + '%';
@@ -726,3 +725,4 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
