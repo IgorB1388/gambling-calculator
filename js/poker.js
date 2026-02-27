@@ -3,87 +3,86 @@ const HandEvaluator = {
     ranks: { '2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'10':8,'J':9,'Q':10,'K':11,'A':12 },
     suits: { 's':0,'h':1,'c':2,'d':3 },
 
-evaluateDetailed(cards){
-    if(cards.length<5) return {rank:0,mainCards:[],kickers:[]};
+    evaluateDetailed(cards){
+        if(cards.length<5) return {rank:0,mainCards:[],kickers:[]};
 
-    const formatted = cards.map(c=>({
-        rank:this.ranks[c.value],
-        suit:this.suits[c.suitCode],
-        originalValue:c.value
-    })).sort((a,b)=>b.rank-a.rank);
+        const formatted = cards.map(c=>({
+            rank:this.ranks[c.value],
+            suit:this.suits[c.suitCode],
+            originalValue:c.value
+        })).sort((a,b)=>b.rank-a.rank);
 
-    const counts = {};
-    formatted.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
+        const counts = {};
+        formatted.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
 
-    const flushSuit = this.getFlushSuit(formatted);
-    const straightHigh = this.getStraightValue(formatted);
+        const flushSuit = this.getFlushSuit(formatted);
+        const straightHigh = this.getStraightValue(formatted);
 
-    // --- Стрит-флеш ---
-    if(flushSuit!==-1){
-        const straightFlushCards = this.getStraightFlushCards(formatted,flushSuit);
-        if(straightFlushCards.length===5){
-            const isRoyal = straightFlushCards.some(c=>c.rank===12);
-            return {rank:isRoyal?9:8, mainCards:straightFlushCards.map(c=>c.originalValue), kickers:[]};
+        // --- Стрит-флеш ---
+        if(flushSuit!==-1){
+            const straightFlushCards = this.getStraightFlushCards(formatted,flushSuit);
+            if(straightFlushCards.length===5){
+                const isRoyal = straightFlushCards.some(c=>c.rank===12);
+                return {rank:isRoyal?9:8, mainCards:straightFlushCards.map(c=>c.originalValue), kickers:[]};
+            }
         }
-    }
 
-    // --- Каре ---
-    const quadRank = this.getRankOfCount(counts,4);
-    if(quadRank!==-1){
-        const kicker = this.getKickersByRanks(formatted,[quadRank],1);
-        return {rank:7, mainCards:[this.rankToValue(quadRank)], kickers:kicker.map(r=>this.rankToValue(r))};
-    }
+        // --- Каре ---
+        const quadRank = this.getRankOfCount(counts,4);
+        if(quadRank!==-1){
+            const kicker = this.getKickersByRanks(formatted,[quadRank],1);
+            return {rank:7, mainCards:[this.rankToValue(quadRank)], kickers:kicker.map(r=>this.rankToValue(r))};
+        }
 
-    // --- Фулл-хаус ---
-    const tripsRanks = this.getRanksOfCount(counts,3).sort((a,b)=>b-a);
-    const pairRanks = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
+        // --- Фулл-хаус ---
+        const tripsRanks = this.getRanksOfCount(counts,3).sort((a,b)=>b-a);
+        const pairRanks = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
 
-    if(tripsRanks.length>=1 && (pairRanks.length>=1 || tripsRanks.length>1)){
-        const trips = tripsRanks[0];
-        let pair = pairRanks.find(r=>r!==trips);
-        if(pair===undefined && tripsRanks.length>1) pair = tripsRanks[1];
-        return {rank:6, mainCards:[this.rankToValue(trips),this.rankToValue(pair)], kickers:[]};
-    }
+        if(tripsRanks.length>=1 && (pairRanks.length>=1 || tripsRanks.length>1)){
+            const trips = tripsRanks[0];
+            let pair = pairRanks.find(r=>r!==trips);
+            if(pair===undefined && tripsRanks.length>1) pair = tripsRanks[1];
+            return {rank:6, mainCards:[this.rankToValue(trips),this.rankToValue(pair)], kickers:[]};
+        }
 
-    // --- Флеш ---
-    if(flushSuit!==-1){
-        const flushCards = formatted.filter(c=>c.suit===flushSuit).slice(0,5);
-        return {rank:5, mainCards:flushCards.map(c=>c.originalValue), kickers:[]};
-    }
+        // --- Флеш ---
+        if(flushSuit!==-1){
+            const flushCards = formatted.filter(c=>c.suit===flushSuit).slice(0,5);
+            return {rank:5, mainCards:flushCards.map(c=>c.originalValue), kickers:[]};
+        }
 
-    // --- Стрит ---
-    if(straightHigh!==-1){
-        const mainCards = this.getStraightCards(formatted,straightHigh);
-        return {rank:4, mainCards:mainCards.map(c=>c.originalValue), kickers:[]};
-    }
+        // --- Стрит ---
+        if(straightHigh!==-1){
+            const mainCards = this.getStraightCards(formatted,straightHigh);
+            return {rank:4, mainCards:mainCards.map(c=>c.originalValue), kickers:[]};
+        }
 
-    // --- Тройка ---
-    if(tripsRanks.length>=1){
-        const trips = tripsRanks[0];
-        const kickers = this.getKickersByRanks(formatted,[trips],2);
-        return {rank:3, mainCards:[this.rankToValue(trips)], kickers:kickers.map(r=>this.rankToValue(r))};
-    }
+        // --- Тройка ---
+        if(tripsRanks.length>=1){
+            const trips = tripsRanks[0];
+            const kickers = this.getKickersByRanks(formatted,[trips],2);
+            return {rank:3, mainCards:[this.rankToValue(trips)], kickers:kickers.map(r=>this.rankToValue(r))};
+        }
 
-    // --- Две пары ---
-    const pairs = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
-    if(pairs.length>=2){
-        const topPairs = pairs.slice(0,2);
-        const kicker = this.getKickersByRanks(formatted,topPairs,1);
-        return {rank:2, mainCards:topPairs.map(r=>this.rankToValue(r)), kickers:kicker.map(r=>this.rankToValue(r))};
-    }
+        // --- Две пары ---
+        const pairs = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
+        if(pairs.length>=2){
+            const topPairs = pairs.slice(0,2);
+            const kicker = this.getKickersByRanks(formatted,topPairs,1);
+            return {rank:2, mainCards:topPairs.map(r=>this.rankToValue(r)), kickers:kicker.map(r=>this.rankToValue(r))};
+        }
 
-    // --- Пара ---
-    if(pairs.length===1){
-        const pair = pairs[0];
-        const kickers = this.getKickersByRanks(formatted,[pair],3);
-        return {rank:1, mainCards:[this.rankToValue(pair)], kickers:kickers.map(r=>this.rankToValue(r))};
-    }
+        // --- Пара ---
+        if(pairs.length===1){
+            const pair = pairs[0];
+            const kickers = this.getKickersByRanks(formatted,[pair],3);
+            return {rank:1, mainCards:[this.rankToValue(pair)], kickers:kickers.map(r=>this.rankToValue(r))};
+        }
 
-    // --- Старшая карта ---
-    const topCards = formatted.slice(0,5);
-    return {rank:0, mainCards:topCards.map(c=>c.originalValue), kickers:[]};
-},
-
+        // --- Старшая карта ---
+        const topCards = formatted.slice(0,5);
+        return {rank:0, mainCards:topCards.map(c=>c.originalValue), kickers:[]};
+    },
 
     getFlushSuit(cards){
         const suitsCount = [0,0,0,0];
@@ -92,11 +91,14 @@ evaluateDetailed(cards){
         return idx;
     },
 
+    // ФИКС: возвращаем старший ранг, а не первый попавшийся
     getRankOfCount(counts,count,exclude=-1){
+        let best = -1;
         for(const [r,c] of Object.entries(counts)){
-            if(c===count && parseInt(r)!==exclude) return parseInt(r);
+            const rank = parseInt(r);
+            if(c===count && rank!==exclude && rank>best) best=rank;
         }
-        return -1;
+        return best;
     },
 
     getRanksOfCount(counts,count){
@@ -112,7 +114,7 @@ evaluateDetailed(cards){
         for(let i=0;i<=uniqueRanks.length-5;i++){
             if(uniqueRanks[i]-uniqueRanks[i+4]===4) return uniqueRanks[i];
         }
-        // wheel
+        // wheel (A-2-3-4-5)
         if(uniqueRanks.includes(12)&&uniqueRanks.includes(0)&&uniqueRanks.includes(1)&&uniqueRanks.includes(2)&&uniqueRanks.includes(3)) return 3;
         return -1;
     },
@@ -127,9 +129,11 @@ evaluateDetailed(cards){
         return result;
     },
 
+    // ФИКС: если стрита в масти нет — возвращаем пустой массив
     getStraightFlushCards(cards,suit){
         const suitCards = cards.filter(c=>c.suit===suit);
         const high = this.getStraightValue(suitCards);
+        if(high===-1) return [];
         return this.getStraightCards(suitCards,high);
     },
 
@@ -265,7 +269,6 @@ function initDragAndDrop(){
         if(dragOverTimer){clearTimeout(dragOverTimer);dragOverTimer=null;}
     });
     
-    // Обработчики для слотов
     document.querySelectorAll('.card-slot').forEach(slot => {
         slot.addEventListener('dragover', e => {
             e.preventDefault();
@@ -588,7 +591,7 @@ function resetResults(){
     }
 }
 
-// --- Полностью рабочий расчет эквити ---
+// --- Расчет эквити (ИСПРАВЛЕННЫЙ) ---
 async function calculateEquity() {
     if (isCalculating) return;
 
@@ -606,91 +609,107 @@ async function calculateEquity() {
     document.getElementById('calculateBtn').disabled = true;
 
     const SIMULATIONS = 30000;
-    let heroTotal = 0, oppTotal = 0, tieHands = 0, actualRuns = 0;
+    let heroTotal = 0, oppTotal = 0, tieTotal = 0, actualRuns = 0;
 
     const suits = ['s','h','c','d'];
     const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
 
-    // Полная колода
     const fullDeck = [];
     for (const v of values)
         for (const s of suits)
-            fullDeck.push({code:v+s, value:v, suit:s});
+            fullDeck.push({code:v+s, value:v, suitCode:s});
 
     const usedCardCodes = new Set(Array.from(usedCards));
     const neededBoardCards = 5 - boardCards.length;
     const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
 
-    for (let i = 0; i < SIMULATIONS; i++) {
-        let deck = fullDeck.filter(c => !usedCardCodes.has(c.code));
-        if (deck.length < totalCardsNeeded) continue;
-        actualRuns++;
+    // Разбиваем на чанки чтобы не блокировать UI
+    const CHUNK_SIZE = 500;
+    let i = 0;
 
-        // тасуем
-        for (let j = deck.length - 1; j > 0; j--) {
-            const k = Math.floor(Math.random() * (j + 1));
-            [deck[j], deck[k]] = [deck[k], deck[j]];
-        }
+    const runChunk = () => {
+        const end = Math.min(i + CHUNK_SIZE, SIMULATIONS);
 
-        // формируем борд
-        const fullBoard = [...boardCards];
-        for (let j = 0; j < neededBoardCards; j++)
-            fullBoard.push(deck[j]);
+        for (; i < end; i++) {
+            let deck = fullDeck.filter(c => !usedCardCodes.has(c.code));
+            if (deck.length < totalCardsNeeded) continue;
+            actualRuns++;
 
-        let index = neededBoardCards;
-        const heroHand = [...heroCards, ...fullBoard];
-        const heroScore = HandEvaluator.evaluateDetailed(heroHand); // ✅ должна возвращать {rank, mainCards, kickers}
+            // Тасуем
+            for (let j = deck.length - 1; j > 0; j--) {
+                const k = Math.floor(Math.random() * (j + 1));
+                [deck[j], deck[k]] = [deck[k], deck[j]];
+            }
 
-        let bestOpponentScore = null;
-        let tyingOpponents = 0;
+            // Формируем борд
+            const fullBoard = [...boardCards];
+            for (let j = 0; j < neededBoardCards; j++)
+                fullBoard.push(deck[j]);
 
-        for (let o = 0; o < opponentsCount; o++) {
-            const oppHand = [deck[index], deck[index + 1]];
-            index += 2;
-            const oppScore = HandEvaluator.evaluateDetailed([...oppHand, ...fullBoard]);
+            let index = neededBoardCards;
+            const heroScore = HandEvaluator.evaluateDetailed([...heroCards, ...fullBoard]);
 
-            const cmp = compareHands(heroScore, oppScore);
-            if (cmp < 0) {
-                // оппонент лучше
-                if (!bestOpponentScore || compareHands(oppScore, bestOpponentScore) > 0) {
-                    bestOpponentScore = oppScore;
-                    tyingOpponents = 1;
-                } else if (compareHands(oppScore, bestOpponentScore) === 0) {
-                    tyingOpponents++;
+            // ИСПРАВЛЕННАЯ логика определения победителя
+            let heroBeaten = false;  // хоть один оппонент бьёт героя
+            let tieCount = 1;        // сколько игроков делят банк (герой + тае-оппоненты)
+
+            for (let o = 0; o < opponentsCount; o++) {
+                const oppCard1 = deck[index];
+                const oppCard2 = deck[index + 1];
+                index += 2;
+                const oppScore = HandEvaluator.evaluateDetailed([oppCard1, oppCard2, ...fullBoard]);
+                const cmp = compareHands(heroScore, oppScore);
+
+                if (cmp < 0) {
+                    // Оппонент бьёт героя — стоп
+                    heroBeaten = true;
+                    break;
+                } else if (cmp === 0) {
+                    // Ничья с этим оппонентом
+                    tieCount++;
                 }
+                // cmp > 0: герой бьёт этого оппонента — продолжаем
+            }
+
+            if (heroBeaten) {
+                // Герой проиграл
+                oppTotal++;
+            } else if (tieCount === 1) {
+                // Герой выиграл у всех
+                heroTotal++;
+            } else {
+                // Ничья: делим банк между tieCount игроками
+                tieTotal++;
+                heroTotal += 1 / tieCount;
+                oppTotal += (tieCount - 1) / tieCount;
             }
         }
 
-        const cmpFinal = bestOpponentScore ? compareHands(heroScore, bestOpponentScore) : 1;
+        if (i < SIMULATIONS) {
+            setTimeout(runChunk, 0);
+        } else {
+            // Финальный расчёт
+            if (actualRuns === 0) { isCalculating = false; updateStatus(); return; }
 
-        if (cmpFinal > 0) heroTotal++;
-        else if (cmpFinal < 0) oppTotal++;
-        else {
-            tieHands++;
-            const split = 1 / (tyingOpponents + 1);
-            heroTotal += split;
-            oppTotal += tyingOpponents * split;
+            const heroPercent = (heroTotal / actualRuns) * 100;
+            const oppPercent  = (oppTotal  / actualRuns) * 100;
+            const tiePercent  = (tieTotal  / actualRuns) * 100;
+
+            const heroRounded = Math.round(heroPercent * 10) / 10;
+            const oppRounded  = Math.round(oppPercent  * 10) / 10;
+            const tieRounded  = Math.round(tiePercent  * 10) / 10;
+
+            document.getElementById('resultHero').textContent     = heroRounded.toFixed(1) + '%';
+            document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1)  + '%';
+            document.getElementById('resultTie').textContent      = tieRounded.toFixed(1)  + '%';
+
+            hasCalculatedResults = true;
+            isCalculating = false;
+            updateStatus();
         }
-    }
+    };
 
-    if (actualRuns === 0) { isCalculating = false; updateStatus(); return; }
-
-    let heroPercent = (heroTotal / actualRuns) * 100;
-    let oppPercent = (oppTotal / actualRuns) * 100;
-    let tiePercent = (tieHands / actualRuns) * 100;
-
-    let heroRounded = Math.round(heroPercent * 10) / 10;
-    let oppRounded = Math.round(oppPercent * 10) / 10;
-    let tieRounded = 100 - heroRounded - oppRounded;
-    if (tieRounded < 0) tieRounded = 0;
-
-    document.getElementById('resultHero').textContent = heroRounded.toFixed(1) + '%';
-    document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1) + '%';
-    document.getElementById('resultTie').textContent = tieRounded.toFixed(1) + '%';
-
-    hasCalculatedResults = true;
-    isCalculating = false;
-    updateStatus();
+    setTimeout(runChunk, 0);
 }
 
 
@@ -707,10 +726,3 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
-
-
-
-
-
-
-
