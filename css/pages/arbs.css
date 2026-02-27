@@ -364,7 +364,7 @@
     padding-top: 8px;
     border-top-width: 2px;
     border-top-style: solid;
-    border-top-color: inherit;  /* наследует цвет текста */
+    border-top-color: inherit;  /* наследует цвет границ блока */
 }
 
 /* Подсказка */
@@ -548,4 +548,5 @@
 .odds-input[type=number] {
     -moz-appearance: textfield;
 }
+
 
