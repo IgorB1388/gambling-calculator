@@ -1,722 +1,728 @@
-/* === ОСНОВНОЙ КОНТЕЙНЕР ПОКЕР-КАЛЬКУЛЯТОРА === */
-.poker-container {
-    max-width: 1400px;  /* Максимальная ширина контейнера */
-    margin: 0 auto;      /* Центрирование по горизонтали */
-}
+// --- HandEvaluator ---
+const HandEvaluator = {
+    ranks: { '2':0,'3':1,'4':2,'5':3,'6':4,'7':5,'8':6,'9':7,'10':8,'J':9,'Q':10,'K':11,'A':12 },
+    suits: { 's':0,'h':1,'c':2,'d':3 },
 
-/* === ЗАГОЛОВОК ПОКЕР-КАЛЬКУЛЯТОРА === */
-.poker-header {
-    text-align: center;      /* Текст по центру */
-    margin-bottom: 40px;     /* Отступ снизу */
-    padding: 25px;           /* Внутренние отступы */
-    border-radius: 15px;     /* Скругление углов */
-    border-width: 2px;       /* Толщина границы */
-    border-style: solid;     /* Стиль границы (сплошная) */
-    position: relative;      /* Для позиционирования псевдоэлементов */
-}
+    evaluateDetailed(cards){
+        if(cards.length<5) return {rank:0,mainCards:[],kickers:[]};
 
-/* === РЯД С МАСТЯМИ В ЗАГОЛОВКЕ === */
-.header-suits {
-    font-size: 2.8rem;       /* Размер шрифта */
-    margin-bottom: 10px;     /* Отступ снизу */
-}
+        const formatted = cards.map(c=>({
+            rank:this.ranks[c.value],
+            suit:this.suits[c.suitCode],
+            originalValue:c.value
+        })).sort((a,b)=>b.rank-a.rank);
 
-/* === ЗАГОЛОВОК H1 === */
-.poker-header h1 {
-    font-size: 2.8rem;       /* Размер шрифта */
-    margin-bottom: 10px;     /* Отступ снизу */
-}
+        const counts = {};
+        formatted.forEach(c=>counts[c.rank]=(counts[c.rank]||0)+1);
 
-/* === ПОДЗАГОЛОВОК (НЕ ИСПОЛЬЗУЕТСЯ) === */
-.subtitle {
-    font-size: 1.1rem;       /* Размер шрифта */
-}
+        const flushSuit = this.getFlushSuit(formatted);
+        const straightHigh = this.getStraightValue(formatted);
 
-/* === ОСНОВНАЯ ОБЛАСТЬ С ДВУМЯ КОЛОНКАМИ === */
-.main-area {
-    display: grid;                           /* Сетка */
-    grid-template-columns: 1fr 1.2fr;        /* Две колонки: левая уже, правая шире */
-    gap: 30px;                                /* Расстояние между колонками */
-    margin-bottom: 40px;                      /* Отступ снизу */
-}
+        // --- Стрит-флеш ---
+        if(flushSuit!==-1){
+            const straightFlushCards = this.getStraightFlushCards(formatted,flushSuit);
+            if(straightFlushCards.length===5){
+                const isRoyal = straightFlushCards.some(c=>c.rank===12);
+                return {rank:isRoyal?9:8, mainCards:straightFlushCards.map(c=>c.originalValue), kickers:[]};
+            }
+        }
 
-/* === АДАПТИВНОСТЬ ДЛЯ СРЕДНИХ ЭКРАНОВ === */
-@media (max-width: 1100px) {
-    .main-area { 
-        grid-template-columns: 1fr;           /* Одна колонка на узких экранах */
+        // --- Каре ---
+        const quadRank = this.getRankOfCount(counts,4);
+        if(quadRank!==-1){
+            const kicker = this.getKickersByRanks(formatted,[quadRank],1);
+            return {rank:7, mainCards:[this.rankToValue(quadRank)], kickers:kicker.map(r=>this.rankToValue(r))};
+        }
+
+        // --- Фулл-хаус ---
+        const tripsRanks = this.getRanksOfCount(counts,3).sort((a,b)=>b-a);
+        const pairRanks = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
+
+        if(tripsRanks.length>=1 && (pairRanks.length>=1 || tripsRanks.length>1)){
+            const trips = tripsRanks[0];
+            let pair = pairRanks.find(r=>r!==trips);
+            if(pair===undefined && tripsRanks.length>1) pair = tripsRanks[1];
+            return {rank:6, mainCards:[this.rankToValue(trips),this.rankToValue(pair)], kickers:[]};
+        }
+
+        // --- Флеш ---
+        if(flushSuit!==-1){
+            const flushCards = formatted.filter(c=>c.suit===flushSuit).slice(0,5);
+            return {rank:5, mainCards:flushCards.map(c=>c.originalValue), kickers:[]};
+        }
+
+        // --- Стрит ---
+        if(straightHigh!==-1){
+            const mainCards = this.getStraightCards(formatted,straightHigh);
+            return {rank:4, mainCards:mainCards.map(c=>c.originalValue), kickers:[]};
+        }
+
+        // --- Тройка ---
+        if(tripsRanks.length>=1){
+            const trips = tripsRanks[0];
+            const kickers = this.getKickersByRanks(formatted,[trips],2);
+            return {rank:3, mainCards:[this.rankToValue(trips)], kickers:kickers.map(r=>this.rankToValue(r))};
+        }
+
+        // --- Две пары ---
+        const pairs = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
+        if(pairs.length>=2){
+            const topPairs = pairs.slice(0,2);
+            const kicker = this.getKickersByRanks(formatted,topPairs,1);
+            return {rank:2, mainCards:topPairs.map(r=>this.rankToValue(r)), kickers:kicker.map(r=>this.rankToValue(r))};
+        }
+
+        // --- Пара ---
+        if(pairs.length===1){
+            const pair = pairs[0];
+            const kickers = this.getKickersByRanks(formatted,[pair],3);
+            return {rank:1, mainCards:[this.rankToValue(pair)], kickers:kickers.map(r=>this.rankToValue(r))};
+        }
+
+        // --- Старшая карта ---
+        const topCards = formatted.slice(0,5);
+        return {rank:0, mainCards:topCards.map(c=>c.originalValue), kickers:[]};
+    },
+
+    getFlushSuit(cards){
+        const suitsCount = [0,0,0,0];
+        cards.forEach(c=>suitsCount[c.suit]++);
+        const idx = suitsCount.findIndex(c=>c>=5);
+        return idx;
+    },
+
+    // ФИКС: возвращаем старший ранг, а не первый попавшийся
+    getRankOfCount(counts,count,exclude=-1){
+        let best = -1;
+        for(const [r,c] of Object.entries(counts)){
+            const rank = parseInt(r);
+            if(c===count && rank!==exclude && rank>best) best=rank;
+        }
+        return best;
+    },
+
+    getRanksOfCount(counts,count){
+        return Object.entries(counts).filter(([r,c])=>c===count).map(([r])=>parseInt(r));
+    },
+
+    getKickersByRanks(cards,excludeRanks,count){
+        return cards.filter(c=>!excludeRanks.includes(c.rank)).map(c=>c.rank).slice(0,count);
+    },
+
+    getStraightValue(cards){
+        const uniqueRanks=[...new Set(cards.map(c=>c.rank))].sort((a,b)=>b-a);
+        for(let i=0;i<=uniqueRanks.length-5;i++){
+            if(uniqueRanks[i]-uniqueRanks[i+4]===4) return uniqueRanks[i];
+        }
+        // wheel (A-2-3-4-5)
+        if(uniqueRanks.includes(12)&&uniqueRanks.includes(0)&&uniqueRanks.includes(1)&&uniqueRanks.includes(2)&&uniqueRanks.includes(3)) return 3;
+        return -1;
+    },
+
+    getStraightCards(cards,high){
+        const ranks=[high,high-1,high-2,high-3,high-4].map(r=>r<0?12:r);
+        const result=[];
+        for(const r of ranks){
+            const c = cards.find(c=>c.rank===r && !result.includes(c));
+            if(c) result.push(c);
+        }
+        return result;
+    },
+
+    // ФИКС: если стрита в масти нет — возвращаем пустой массив
+    getStraightFlushCards(cards,suit){
+        const suitCards = cards.filter(c=>c.suit===suit);
+        const high = this.getStraightValue(suitCards);
+        if(high===-1) return [];
+        return this.getStraightCards(suitCards,high);
+    },
+
+    rankToValue(rank){
+        return Object.keys(this.ranks).find(k=>this.ranks[k]===rank);
     }
-}
+};
 
-/* === ПАНЕЛИ (ЛЕВАЯ И ПРАВАЯ) === */
-.panel {
-    border-radius: 15px;       /* Скругление углов */
-    padding: 25px;             /* Внутренние отступы */
-    border-width: 2px;         /* Толщина границы */
-    border-style: solid;       /* Стиль границы */
-}
-
-/* === ЛЕВАЯ ПАНЕЛЬ (с рукой и бордом) === */
-.panel:first-child {
-    display: flex;             /* Флекс-контейнер */
-    flex-direction: column;    /* Вертикальное расположение */
-}
-
-/* === СЕКЦИИ РУКИ И БОРДА === */
-.hand-section, .board-section {
-    border-radius: 12px;           /* Скругление углов */
-    padding: 15px 20px;            /* Внутренние отступы (вертикаль/горизонталь) */
-    margin-bottom: 15px;           /* Отступ снизу */
-    cursor: pointer;               /* Курсор-указатель при наведении */
-    transition: transform 0.3s, box-shadow 0.3s;  /* Плавные анимации */
-    border-width: 2px;             /* Толщина границы */
-    border-style: solid;           /* Стиль границы */
-    position: relative;            /* Для позиционирования псевдоэлементов */
-    min-height: 200px;             /* Минимальная высота */
-    display: flex;                 /* Флекс-контейнер */
-    flex-direction: column;        /* Вертикальное расположение */
-    flex: 1;                       /* Растягиваться на всю доступную высоту */
-}
-
-/* === ПСЕВДОЭЛЕМЕНТ ИНДИКАТОРА (КРАСНАЯ ТОЧКА) === */
-.section-title::before {
-    transition: opacity 0.3s, background-color 0.3s, box-shadow 0.3s;  /* Плавность появления */
-}
-
-/* === ЗАГОЛОВОК СЕКЦИИ (ВАША РУКА / БОРД) === */
-.section-title {
-    margin-bottom: 3px;        /* Отступ снизу */
-    font-size: 1.2rem;         /* Размер шрифта */
-    display: flex;             /* Флекс-контейнер */
-    align-items: center;       /* Выравнивание по вертикали */
-    gap: 10px;                 /* Расстояние между элементами */
-    flex-shrink: 0;            /* Запрет сжиматься */
-    height: 28px;              /* Фиксированная высота */
-    position: relative;        /* Для позиционирования индикатора */
-}
-
-/* === ПОДЗАГОЛОВКИ (подсказки "2 карты" / "5 карт") === */
-.board-subtitle,
-.hand-subtitle {
-    font-size: 0.9rem;         /* Размер шрифта */
-    text-align: center;        /* Текст по центру */
-    margin-bottom: 8px;        /* Отступ снизу */
-    height: 20px;              /* Фиксированная высота */
-    flex-shrink: 0;            /* Запрет сжиматься */
-    line-height: 20px;         /* Высота строки = высота блока */
-}
-
-/* === КОНТЕНТ С КАРТАМИ === */
-.section-content {
-    flex-grow: 1;              /* Растягиваться на всё свободное место */
-    display: flex;             /* Флекс-контейнер */
-    flex-direction: column;    /* Вертикальное расположение */
-    justify-content: center;   /* Центрирование по вертикали */
-    position: relative;        /* Для позиционирования */
-}
-
-/* === РЯД С КАРТАМИ === */
-.cards-row {
-    display: flex;             /* Флекс-контейнер */
-    gap: 15px;                 /* Расстояние между картами */
-    align-items: center;       /* Выравнивание по вертикали */
-    justify-content: center;   /* Центрирование по горизонтали */
-    min-height: 120px;         /* Минимальная высота */
-    margin: 0;                 /* Отмена внешних отступов */
-    position: relative;        /* Для позиционирования */
-}
-
-/* === СЛОТ ДЛЯ КАРТЫ (ПУСТОЕ МЕСТО) === */
-.card-slot {
-    width: 80px;               /* Фиксированная ширина */
-    height: 115px;             /* Фиксированная высота (соотношение ~2:3) */
-    border-width: 2px;         /* Толщина границы */
-    border-style: dashed;      /* Пунктирная граница */
-    border-radius: 10px;       /* Скругление углов */
-    display: flex;             /* Флекс-контейнер */
-    align-items: center;       /* Выравнивание по вертикали */
-    justify-content: center;   /* Центрирование по горизонтали */
-    font-size: 2.5rem;         /* Размер шрифта для символа "+" */
-    position: relative;        /* Для позиционирования */
-    transition: all 0.3s;      /* Плавная анимация */
-    cursor: pointer;           /* Курсор-указатель */
-}
-
-/* === СЛОТ В СОСТОЯНИИ ПЕРЕТАСКИВАНИЯ === */
-.card-slot.drag-over {
-    transform: scale(1.05);    /* Увеличение при наведении */
-}
-
-/* === РЕАЛЬНАЯ КАРТА (ПОСЛЕ ПЕРЕТАСКИВАНИЯ) === */
-.real-card {
-    border-radius: 8px;            /* Скругление углов */
-    overflow: hidden;              /* Скрытие выступающего контента */
-    border-width: 1px;             /* Тонкая граница */
-    border-style: solid;           /* Стиль границы */
-    cursor: move;                  /* Курсор-перетаскивание */
-    position: relative;            /* Для позиционирования */
-    transition: all 0.2s;          /* Плавная анимация */
-    width: 80px;                   /* Фиксированная ширина */
-    height: 115px;                 /* Фиксированная высота */
-    display: flex;                 /* Флекс-контейнер */
-    align-items: center;           /* Выравнивание по вертикали */
-    justify-content: center;       /* Центрирование по горизонтали */
-}
-
-/* === РЕАЛЬНАЯ КАРТА ПРИ НАВЕДЕНИИ === */
-.real-card:hover {
-    transform: translateY(-3px) scale(1.03);  /* Подъем и увеличение */
-    z-index: 10;                              /* Поверх других элементов */
-}
-
-/* === КОНТЕНТ КАРТЫ (РАНГ И МАСТЬ) === */
-.card-content {
-    font-size: 2.5rem;           /* Размер шрифта */
-    font-weight: bold;           /* Жирное начертание */
-    text-align: center;          /* Текст по центру */
-    width: 100%;                 /* На всю ширину */
-    display: flex;               /* Флекс-контейнер */
-    flex-direction: column;      /* Вертикальное расположение (ранг над мастью) */
-    align-items: center;         /* Центрирование по горизонтали */
-    justify-content: center;     /* Центрирование по вертикали */
-    line-height: 1.2;            /* Межстрочный интервал */
-}
-
-/* === ПРЕДУПРЕЖДЕНИЯ (НЕПРАВИЛЬНОЕ КОЛИЧЕСТВО КАРТ) === */
-.warning {
-    font-size: 0.9rem;           /* Размер шрифта */
-    text-align: center;          /* Текст по центру */
-    display: none;               /* Скрыто по умолчанию */
-    position: absolute;          /* Абсолютное позиционирование */
-    bottom: 5px;                 /* Отступ снизу */
-    left: 20px;                  /* Отступ слева */
-    right: 20px;                 /* Отступ справа */
-    height: 20px;                /* Фиксированная высота */
-    line-height: 20px;           /* Высота строки = высота блока */
-    z-index: 2;                  /* Поверх других элементов */
-}
-
-/* === БЛОК УПРАВЛЕНИЯ ОППОНЕНТАМИ === */
-.opponents-control {
-    padding: 15px;               /* Внутренние отступы */
-    border-radius: 10px;         /* Скругление углов */
-    margin-bottom: 20px;         /* Отступ снизу */
-    border-width: 2px;           /* Толщина границы */
-    border-style: solid;         /* Стиль границы */
-}
-
-/* === ЗАГОЛОВОК БЛОКА ОППОНЕНТОВ === */
-.opponents-label {
-    font-weight: bold;           /* Жирное начертание */
-    margin-bottom: 10px;         /* Отступ снизу */
-    text-align: center;          /* Текст по центру */
-    font-size: 1.1rem;           /* Размер шрифта */
-}
-
-/* === КОНТЕЙНЕР С КНОПКАМИ-ПИЛЮЛЯМИ === */
-.opponent-pills {
-    display: flex;               /* Флекс-контейнер */
-    justify-content: center;     /* Центрирование по горизонтали */
-    gap: 8px;                    /* Расстояние между кнопками */
-    flex-wrap: wrap;             /* Перенос на новую строку */
-}
-
-/* === КНОПКА-ПИЛЮЛЯ ДЛЯ ВЫБОРА ОППОНЕНТОВ === */
-.opponent-pill {
-    width: 45px;                 /* Фиксированная ширина */
-    height: 45px;                /* Фиксированная высота (круг) */
-    border-radius: 50%;          /* Круглая форма */
-    border-width: 2px;           /* Толщина границы */
-    border-style: solid;         /* Стиль границы */
-    font-size: 1.2rem;           /* Размер шрифта */
-    font-weight: bold;           /* Жирное начертание */
-    cursor: pointer;             /* Курсор-указатель */
-    transition: all 0.3s;        /* Плавная анимация */
-    display: flex;               /* Флекс-контейнер */
-    align-items: center;         /* Центрирование по вертикали */
-    justify-content: center;     /* Центрирование по горизонтали */
-}
-
-/* === КНОПКА-ПИЛЮЛЯ ПРИ НАВЕДЕНИИ === */
-.opponent-pill:hover {
-    transform: scale(1.1);       /* Увеличение */
-}
-
-/* === СЕТКА КОЛОДЫ === */
-.deck-grid {
-    display: grid;                           /* Сетка */
-    grid-template-columns: repeat(13, 1fr);  /* 13 колонок (по числу рангов) */
-    gap: 6px;                                 /* Расстояние между картами */
-    margin: 20px 0;                           /* Отступы сверху и снизу */
-    padding: 15px;                            /* Внутренние отступы */
-    border-radius: 12px;                      /* Скругление углов */
-    border-width: 2px;                        /* Толщина границы */
-    border-style: solid;                      /* Стиль границы */
-}
-
-/* === КАРТА В КОЛОДЕ === */
-.deck-card {
-    aspect-ratio: 2/3;           /* Соотношение сторон как у игральной карты */
-    border-radius: 6px;          /* Скругление углов */
-    display: flex;               /* Флекс-контейнер */
-    flex-direction: column;      /* Вертикальное расположение */
-    align-items: center;         /* Центрирование по горизонтали */
-    justify-content: center;     /* Центрирование по вертикали */
-    cursor: pointer;             /* Курсор-указатель */
-    transition: all 0.3s;        /* Плавная анимация */
-    border-width: 2px;           /* Толщина границы */
-    border-style: solid;         /* Стиль границы */
-    font-weight: bold;           /* Жирное начертание */
-    position: relative;          /* Для позиционирования псевдоэлементов */
-    overflow: hidden;            /* Скрытие выступающего */
-    border-color: transparent;   /* Прозрачная граница по умолчанию */
-}
-
-/* === КАРТА В КОЛОДЕ ПРИ НАВЕДЕНИИ === */
-.deck-card:hover {
-    transform: scale(1.1);       /* Увеличение */
-    z-index: 10;                 /* Поверх других карт */
-}
-
-/* === ВЫБРАННАЯ КАРТА (НЕЛЬЗЯ ПЕРЕТАСКИВАТЬ) === */
-.deck-card.selected {
-    cursor: default;             /* Обычный курсор */
-}
-
-.deck-card.selected:hover {
-    transform: none;             /* Без увеличения */
-}
-
-/* === СКРЫТИЕ ЛИЦА ВЫБРАННОЙ КАРТЫ === */
-.deck-card.selected .card-face {
-    display: none;
-}
-
-/* === КРЕСТИК НА ВЫБРАННОЙ КАРТЕ === */
-.deck-card.selected::after {
-    content: "✕";                            /* Символ крестика */
-    font-size: 1.8rem;                        /* Размер */
-    position: absolute;                       /* Абсолютное позиционирование */
-    top: 50%;                                 /* По центру по вертикали */
-    left: 50%;                                /* По центру по горизонтали */
-    transform: translate(-50%, -50%);         /* Смещение для точного центрирования */
-}
-
-/* === РАНГ КАРТЫ === */
-.card-value { 
-    font-size: 1.2rem;           /* Размер шрифта */
-    margin-bottom: 3px;          /* Отступ снизу */
-}
-
-/* === МАСТЬ КАРТЫ (КРУПНАЯ) === */
-.card-suit-large { 
-    font-size: 1.6rem;           /* Размер шрифта */
-    margin-top: 3px;             /* Отступ сверху */
-}
-
-/* === КОНТЕЙНЕР КНОПОК УПРАВЛЕНИЯ === */
-.controls {
-    display: flex;               /* Флекс-контейнер */
-    gap: 15px;                   /* Расстояние между кнопками */
-    margin-top: 25px;            /* Отступ сверху */
-    justify-content: center;     /* Центрирование по горизонтали */
-    flex-wrap: wrap;             /* Перенос на новую строку */
-}
-
-/* === БАЗОВЫЙ СТИЛЬ КНОПКИ === */
-.btn {
-    padding: 12px 25px;          /* Внутренние отступы */
-    border: none;                /* Без границы */
-    border-radius: 8px;          /* Скругление углов */
-    font-size: 1.1rem;           /* Размер шрифта */
-    font-weight: bold;           /* Жирное начертание */
-    cursor: pointer;             /* Курсор-указатель */
-    transition: all 0.3s;        /* Плавная анимация */
-    min-width: 180px;            /* Минимальная ширина */
-    position: relative;          /* Для позиционирования псевдоэлементов */
-    overflow: hidden;            /* Скрытие выступающего (для анимации) */
-}
-
-/* === КНОПКА ПРИ НАВЕДЕНИИ === */
-.btn:hover {
-    transform: translateY(-3px); /* Подъем вверх */
-}
-
-/* === КНОПКА ПРИ НАЖАТИИ === */
-.btn:active {
-    transform: scale(0.95);      /* Уменьшение */
-}
-
-/* === ОСНОВНАЯ КНОПКА В НЕАКТИВНОМ СОСТОЯНИИ === */
-.btn-primary:disabled {
-    opacity: 0.5;                /* Полупрозрачность */
-    cursor: not-allowed;         /* Курсор "нельзя" */
-    transform: none;             /* Без трансформации */
-}
-
-.btn-primary:disabled:hover {
-    transform: none;             /* Без трансформации при наведении */
-}
-
-/* === АНИМАЦИЯ КНОПКИ ПРИ КЛИКЕ === */
-.btn.clicked {
-    animation: button-pulse 0.3s ease-in-out;
-}
-
-/* === КЛЮЧЕВЫЕ КАДРЫ ДЛЯ ПУЛЬСАЦИИ КНОПКИ === */
-@keyframes button-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(0.95); }
-    100% { transform: scale(1); }
-}
-
-/* === ПСЕВДОЭЛЕМЕНТ ДЛЯ ЭФФЕКТА ВОЛНЫ === */
-.btn::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 5px;
-    height: 5px;
-    opacity: 0;
-    border-radius: 100%;
-    transform: scale(1, 1) translate(-50%, -50%);
-    transform-origin: 50% 50%;
-}
-
-/* === ЗАПУСК АНИМАЦИИ ВОЛНЫ ПРИ НАЖАТИИ === */
-.btn:active::after {
-    animation: ripple 0.6s ease-out;
-}
-
-/* === КЛЮЧЕВЫЕ КАДРЫ ДЛЯ ЭФФЕКТА ВОЛНЫ === */
-@keyframes ripple {
-    0% {
-        transform: scale(0, 0);
-        opacity: 0.5;
+// --- Сравнение рук ---
+function compareHands(h1,h2){
+    if(h1.rank>h2.rank) return 1;
+    if(h1.rank<h2.rank) return -1;
+    for(let i=0;i<h1.mainCards.length;i++){
+        const r1=HandEvaluator.ranks[h1.mainCards[i]];
+        const r2=HandEvaluator.ranks[h2.mainCards[i]];
+        if(r1>r2) return 1;
+        if(r1<r2) return -1;
     }
-    100% {
-        transform: scale(20, 20);
-        opacity: 0;
+    for(let i=0;i<h1.kickers.length;i++){
+        const r1=HandEvaluator.ranks[h1.kickers[i]];
+        const r2=HandEvaluator.ranks[h2.kickers[i]];
+        if(r1>r2) return 1;
+        if(r1<r2) return -1;
     }
+    return 0;
 }
 
-/* === ПАНЕЛЬ РЕЗУЛЬТАТОВ === */
-.results-panel {
-    margin-top: 30px;            /* Отступ сверху */
-    display: block !important;   /* Принудительное отображение */
-    position: relative;          /* Для позиционирования */
-    border-radius: 15px;         /* Скругление углов */
-    padding: 25px;               /* Внутренние отступы */
-    border-width: 2px;           /* Толщина границы */
-    border-style: solid;         /* Стиль границы */
-}
 
-/* === СЕТКА РЕЗУЛЬТАТОВ (3 КОЛОНКИ) === */
-.results-grid {
-    display: grid;                           /* Сетка */
-    grid-template-columns: repeat(3, 1fr);   /* 3 равные колонки */
-    gap: 15px;                                /* Расстояние между карточками */
-    margin-bottom: 10px;                      /* Отступ снизу */
-}
+// --- Переменные состояния ---
+let activeBlock='hand';
+const selectedCards=new Map();
+const usedCards=new Set();
+let opponentsCount=1;
+let isCalculating=false;
+let hasCalculatedResults=false;
 
-/* === КАРТОЧКА РЕЗУЛЬТАТА === */
-.result-card {
-    border-radius: 12px;          /* Скругление углов */
-    padding: 20px;                /* Внутренние отступы */
-    text-align: center;           /* Текст по центру */
-    border-width: 2px;            /* Толщина границы */
-    border-style: solid;          /* Стиль границы */
-    min-height: 160px;            /* Минимальная высота */
-    display: flex;                /* Флекс-контейнер */
-    flex-direction: column;       /* Вертикальное расположение */
-    justify-content: center;      /* Центрирование по вертикали */
-    position: relative;           /* Для позиционирования */
-}
+let currentDragSource=null;
+let currentDragCard=null;
+let currentDragOverSection=null;
+let dragOverTimer=null;
 
-/* === ПРОЦЕНТ РЕЗУЛЬТАТА === */
-.result-percent {
-    font-size: 3.5rem;            /* Крупный шрифт */
-    font-weight: bold;            /* Жирное начертание */
-    margin: 15px 0;               /* Отступы сверху и снизу */
-    display: flex;                /* Флекс-контейнер */
-    align-items: center;          /* Центрирование по вертикали */
-    justify-content: center;      /* Центрирование по горизонтали */
-    flex-grow: 1;                 /* Растягивание */
-    transition: color 0.1s ease-out; /* Плавное изменение цвета */
-}
+// --- Инициализация ---
+document.addEventListener('DOMContentLoaded',()=>{
+    createDeck();
+    initEventListeners();
+    initDragAndDrop();
+    initSectionDrop();
+    updateStatus();
+    checkBoardValidity();
+    checkHandValidity();
+    selectHandBlock();
+});
 
-/* === ПОДСКАЗКА ПО ПЕРЕТАСКИВАНИЮ === */
-.drop-hint {
-    font-size: 0.9rem;            /* Размер шрифта */
-    text-align: center;           /* Текст по центру */
-    margin-top: 5px;              /* Отступ сверху */
-}
-
-/* === КОНТЕЙНЕР ДЛЯ ПРОГРЕСС-БАРА (НЕ ИСПОЛЬЗУЕТСЯ) === */
-.progress-container {
-    margin-top: 20px;             /* Отступ сверху */
-    padding: 10px 15px;           /* Внутренние отступы */
-    border-radius: 10px;          /* Скругление углов */
-    border-width: 2px;            /* Толщина границы */
-    border-style: solid;          /* Стиль границы */
-    display: block;               /* Блочный элемент */
-}
-
-/* === ПРОГРЕСС-БАР (НЕ ИСПОЛЬЗУЕТСЯ) === */
-.progress-bar {
-    height: 20px;                 /* Высота */
-    border-radius: 10px;          /* Скругление */
-    overflow: hidden;             /* Скрытие выступающего */
-    margin-top: 10px;             /* Отступ сверху */
-}
-
-/* === ЗАПОЛНЕНИЕ ПРОГРЕСС-БАРА (НЕ ИСПОЛЬЗУЕТСЯ) === */
-.progress-fill {
-    height: 100%;                 /* На всю высоту */
-    width: 0%;                    /* Начальная ширина 0 */
-    transition: width 0.3s;       /* Плавное изменение ширины */
-}
-
-/* === ЛИЦЕВАЯ СТОРОНА КАРТЫ (РАНГ И МАСТЬ) === */
-.card-face {
-    display: flex;                /* Флекс-контейнер */
-    flex-direction: column;       /* Вертикальное расположение */
-    align-items: center;          /* Центрирование по горизонтали */
-    justify-content: center;      /* Центрирование по вертикали */
-    width: 100%;                  /* На всю ширину */
-    height: 100%;                 /* На всю высоту */
-}
-
-/* === СИМВОЛ В ПУСТОМ СЛОТЕ (+) === */
-.slot-empty {
-    font-size: 2.5rem;            /* Размер шрифта */
-}
-
-/* === ОПИСАНИЕ РУКИ (НЕ ИСПОЛЬЗУЕТСЯ) === */
-.hand-description {
-    font-size: 0.95rem;           /* Размер шрифта */
-    min-height: 40px;             /* Минимальная высота */
-    display: flex;                /* Флекс-контейнер */
-    align-items: center;          /* Центрирование по вертикали */
-    justify-content: center;      /* Центрирование по горизонтали */
-    padding: 0 5px;               /* Горизонтальные отступы */
-    line-height: 1.3;             /* Межстрочный интервал */
-}
-
-/* === ИНДИКАТОР АКТИВНОГО БЛОКА (КРАСНАЯ ТОЧКА) === */
-.section-title::before {
-    content: "";
-    position: absolute;
-    right: -5px;                  /* Смещение вправо */
-    top: -5px;                    /* Смещение вверх */
-    width: 14px;                  /* Ширина точки */
-    height: 14px;                 /* Высота точки */
-    border-radius: 50%;           /* Круглая форма */
-    opacity: 0;                   /* Прозрачна по умолчанию */
-    transition: all 0.3s ease;    /* Плавное появление */
-    border-width: 2px;            /* Толщина границы */
-    border-style: solid;          /* Стиль границы */
-    z-index: 5;                   /* Поверх других элементов */
-}
-
-/* === ПОКАЗ ИНДИКАТОРА У АКТИВНОГО БЛОКА === */
-.hand-section.active .section-title::before,
-.board-section.active .section-title::before {
-    opacity: 1;                   /* Полная видимость */
-}
-
-/* === АНИМАЦИЯ РЕЗУЛЬТАТОВ (ПУСТАЯ) === */
-@keyframes quick-glow {
-    0% { border-color: transparent; }
-    50% { border-color: transparent; }
-    100% { border-color: transparent; }
-}
-
-/* === ПРИМЕНЕНИЕ АНИМАЦИИ К СВЕЖИМ РЕЗУЛЬТАТАМ === */
-.results-panel.fresh-result {
-    animation: quick-glow 0.25s ease-in-out;
-}
-
-/* === АДАПТИВНОСТЬ ДЛЯ ПЛАНШЕТОВ (до 768px) === */
-@media (max-width: 768px) {
-    /* Уменьшение индикатора */
-    .section-title::before {
-        width: 12px;
-        height: 12px;
-        right: -4px;
-        top: -4px;
-    }
+// --- Создание колоды ---
+function createDeck(){
+    const deckGrid=document.getElementById('deck');
+    deckGrid.innerHTML='';
+    const suits=[{code:'s',symbol:'♠',color:'black'},{code:'h',symbol:'♥',color:'red'},{code:'c',symbol:'♣',color:'black'},{code:'d',symbol:'♦',color:'red'}];
+    const values=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
     
-    /* Уменьшение заголовка */
-    .poker-header h1 {
-        font-size: 2.2rem;
-        margin-top: 10px;
-    }
+    suits.forEach(suit=>values.forEach(value=>{
+        const cardCode=value+suit.code;
+        const deckCard=document.createElement('div');
+        deckCard.className=`deck-card bg-deck-card deck-card-border deck-card-shadow ${suit.color==='red' ? 'text-red' : 'text-black'}`;
+        deckCard.dataset.card=cardCode;
+        deckCard.draggable=true;
+        
+        deckCard.addEventListener('dragstart',e=>{
+            if(deckCard.classList.contains('selected')){e.preventDefault();return;}
+            currentDragSource='deck';
+            currentDragCard={cardCode};
+            e.dataTransfer.setData('text/plain',cardCode);
+            deckCard.style.opacity='0.5';
+        });
+        
+        const cardFace=document.createElement('div');
+        cardFace.className='card-face';
+        cardFace.innerHTML=`<div class="card-value">${value}</div><div class="card-suit-large">${suit.symbol}</div>`;
+        deckCard.appendChild(cardFace);
+        deckGrid.appendChild(deckCard);
+        
+        deckCard.addEventListener('click',()=>{
+            if(deckCard.classList.contains('selected')) return;
+            handleCardClick(cardCode);
+        });
+    }));
     
-    /* Уменьшение отступов в панелях */
-    .panel {
-        padding: 20px 15px;
-    }
+    deckGrid.addEventListener('selectstart',e=>e.preventDefault());
+}
+
+// --- Обработчики ---
+function initEventListeners(){
+    document.getElementById('handSection').addEventListener('click',selectHandBlock);
+    document.getElementById('boardSection').addEventListener('click',selectBoardBlock);
+    document.getElementById('calculateBtn').addEventListener('click',calculateEquity);
+    document.getElementById('clearAllBtn').addEventListener('click',clearAll);
+    document.querySelectorAll('.opponent-pill').forEach(pill=>{
+        pill.addEventListener('click',()=>setOpponents(parseInt(pill.dataset.opponents)));
+    });
+    document.querySelectorAll('.card-slot').forEach(slot=>{
+        slot.addEventListener('click',e=>{
+            const realCard=e.target.closest('.real-card');
+            if(realCard) removeCardFromSlot(slot.dataset.slot);
+        });
+    });
+}
+
+// --- Drag & Drop для слотов ---
+function initDragAndDrop(){
+    document.addEventListener('dragstart',e=>{
+        const realCard=e.target.closest('.real-card');
+        if(realCard){
+            const slot=realCard.parentElement;
+            const card=selectedCards.get(slot.dataset.slot);
+            if(card){
+                currentDragSource='slot';
+                currentDragCard={cardCode:card.code,fromSlot:slot.dataset.slot};
+                e.dataTransfer.setData('text/plain',JSON.stringify(currentDragCard));
+                realCard.style.opacity='0.5';
+            }
+        }
+    });
     
-    /* Уменьшение секций руки и борда */
-    .hand-section, .board-section {
-        min-height: 180px;
-        padding: 12px;
-        margin-bottom: 10px;
-    }
+    document.addEventListener('dragend',()=>{
+        document.querySelectorAll('.deck-card, .real-card').forEach(el=>el.style.opacity='1');
+        document.querySelectorAll('.card-slot').forEach(s=>s.classList.remove('drag-over'));
+        document.querySelectorAll('.hand-section, .board-section, #deck').forEach(el=>{
+            el.classList.remove('drag-over','drag-over-no-space');
+        });
+        currentDragCard=null;
+        currentDragSource=null;
+        currentDragOverSection=null;
+        if(dragOverTimer){clearTimeout(dragOverTimer);dragOverTimer=null;}
+    });
     
-    /* Уменьшение слотов карт */
-    .card-slot {
-        width: 70px;
-        height: 100px;
-        font-size: 2rem;
+    document.querySelectorAll('.card-slot').forEach(slot => {
+        slot.addEventListener('dragover', e => {
+            e.preventDefault();
+            slot.classList.add('drag-over');
+        });
+        
+        slot.addEventListener('dragleave', () => {
+            slot.classList.remove('drag-over');
+        });
+        
+        slot.addEventListener('drop', e => {
+            e.preventDefault();
+            slot.classList.remove('drag-over');
+            
+            const data = e.dataTransfer.getData('text/plain');
+            if (!data) return;
+            
+            const targetSlotId = slot.dataset.slot;
+            
+            try {
+                const parsed = JSON.parse(data);
+                if (parsed.fromSlot && parsed.fromSlot !== targetSlotId) {
+                    moveCardBetweenSlots(parsed.fromSlot, targetSlotId);
+                    return;
+                }
+            } catch {
+                const cardCode = data;
+                if (usedCards.has(cardCode)) return;
+                if (selectedCards.has(targetSlotId)) return;
+                addCardToSlot(cardCode, targetSlotId);
+            }
+        });
+    });
+}
+
+// --- Секция Drop ---
+function initSectionDrop(){
+    const sections=[document.getElementById('handSection'),document.getElementById('boardSection'),document.getElementById('deck')];
+    sections.forEach(section=>{
+        section.addEventListener('dragover',e=>{
+            e.preventDefault();
+            if(dragOverTimer){clearTimeout(dragOverTimer);}
+            if(currentDragOverSection && currentDragOverSection!==section){
+                currentDragOverSection.classList.remove('drag-over','drag-over-no-space');
+            }
+            
+            let hasFreeSlots;
+            if(section.id==='deck'){
+                hasFreeSlots = currentDragSource==='slot';
+            } else {
+                hasFreeSlots = hasFreeSlotsInSection(section.id);
+            }
+            
+            section.classList.toggle('drag-over',hasFreeSlots);
+            section.classList.toggle('drag-over-no-space',!hasFreeSlots);
+            currentDragOverSection=section;
+            
+            dragOverTimer=setTimeout(()=>{
+                if(!section.contains(document.elementFromPoint(e.clientX,e.clientY))){
+                    section.classList.remove('drag-over','drag-over-no-space');
+                }
+            },50);
+        });
+        
+        section.addEventListener('dragleave',e=>{
+            if(dragOverTimer) clearTimeout(dragOverTimer);
+            dragOverTimer=setTimeout(()=>{
+                if(!section.contains(e.relatedTarget)){
+                    section.classList.remove('drag-over','drag-over-no-space');
+                    currentDragOverSection=null;
+                }
+            },100);
+        });
+        
+        section.addEventListener('drop',e=>{
+            e.preventDefault();
+            section.classList.remove('drag-over','drag-over-no-space');
+            currentDragOverSection=null;
+            if(dragOverTimer){clearTimeout(dragOverTimer);dragOverTimer=null;}
+            if(!currentDragCard) return;
+            
+            const cardCode=currentDragCard.cardCode;
+            
+            if(section.id==='deck'){
+                if(currentDragSource==='slot' && currentDragCard.fromSlot){
+                    removeCardFromSlot(currentDragCard.fromSlot);
+                }
+                return;
+            }
+            
+            if(usedCards.has(cardCode) && currentDragSource!=='slot') return;
+            
+            const sectionType=section.id==='handSection'?'hand':'board';
+            let freeSlot=null;
+            const max=sectionType==='hand'?2:5;
+            for(let i=1;i<=max;i++){
+                const slotId=`${sectionType==='hand'?'hero':'board'}-${i}`;
+                if(!selectedCards.has(slotId)){freeSlot=slotId;break;}
+            }
+            
+            if(freeSlot){
+                if(currentDragSource==='deck'){
+                    addCardToSlot(cardCode,freeSlot);
+                } else if(currentDragSource==='slot'){
+                    moveCardBetweenSlots(currentDragCard.fromSlot,freeSlot);
+                }
+                activateBlockBySlotId(freeSlot);
+            }
+        });
+    });
+}
+
+function hasFreeSlotsInSection(sectionId){
+    if(sectionId==='handSection') return getHandCardsCount()<2;
+    if(sectionId==='boardSection') return getBoardCardsCount()<5;
+    return false;
+}
+
+// --- Вспомогательные для поиска свободных слотов ---
+function getFirstFreeSlotInHand() {
+    for (let i = 1; i <= 2; i++) {
+        const slotId = `hero-${i}`;
+        if (!selectedCards.has(slotId)) return slotId;
     }
-    
-    /* Уменьшение реальных карт */
-    .real-card {
-        width: 70px;
-        height: 100px;
+    return null;
+}
+
+function getFirstFreeSlotInBoard() {
+    for (let i = 1; i <= 5; i++) {
+        const slotId = `board-${i}`;
+        if (!selectedCards.has(slotId)) return slotId;
     }
-    
-    /* Уменьшение контента карт */
-    .card-content {
-        font-size: 2rem;
-    }
-    
-    /* Сетка колоды 7 колонок */
-    .deck-grid {
-        grid-template-columns: repeat(7, 1fr);
-        gap: 4px;
-        padding: 10px;
-    }
-    
-    /* Соотношение сторон карт в колоде */
-    .deck-card {
-        aspect-ratio: 3/4;
-    }
-    
-    /* Уменьшение ранга */
-    .card-value {
-        font-size: 1rem;
-    }
-    
-    /* Уменьшение масти */
-    .card-suit-large {
-        font-size: 1.3rem;
-    }
-    
-    /* Уменьшение кнопок */
-    .btn {
-        min-width: 150px;
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-    
-    /* Уменьшение процентов */
-    .result-percent {
-        font-size: 2.8rem;
-    }
-    
-    /* Сетка результатов в одну колонку */
-    .results-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    /* Уменьшение карточек результатов */
-    .result-card {
-        min-height: 140px;
-        padding: 15px;
-    }
-    
-    /* Уменьшение кнопок-пилюль */
-    .opponent-pill {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-    
-    /* Уменьшение расстояния между кнопками */
-    .controls {
-        gap: 10px;
+    return null;
+}
+
+// --- Управление картами ---
+function addCardToSlot(cardCode,slotId){
+    const value=cardCode.slice(0,-1), suitCode=cardCode.slice(-1), suitSymbols={h:'♥',d:'♦',s:'♠',c:'♣'};
+    selectedCards.set(slotId,{code:cardCode,value,suit:suitSymbols[suitCode],suitCode,rank:HandEvaluator.ranks[value]});
+    usedCards.add(cardCode);
+    activateBlockBySlotId(slotId);
+    resetResults();
+    updateCardDisplay();
+    updateStatus();
+    checkBoardValidity();
+    checkHandValidity();
+    checkAndSwitchActiveBlock();
+}
+
+function removeCardFromSlot(slotId){
+    if(selectedCards.has(slotId)){
+        const card=selectedCards.get(slotId);
+        usedCards.delete(card.code);
+        selectedCards.delete(slotId);
+        resetResults();
+        updateCardDisplay();
+        updateStatus();
+        checkBoardValidity();
+        checkHandValidity();
+        checkAndSwitchActiveBlock();
     }
 }
 
-/* === АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (до 480px) === */
-@media (max-width: 480px) {
-    /* Еще большее уменьшение индикатора */
-    .section-title::before {
-        width: 10px;
-        height: 10px;
-        right: -3px;
-        top: -3px;
-    }
+// --- Отображение карт ---
+function updateCardDisplay(){
+    document.querySelectorAll('.card-slot').forEach(slot=>{
+        const slotId=slot.dataset.slot;
+        if(selectedCards.has(slotId)){
+            const card=selectedCards.get(slotId);
+            const isRed=card.suit==='♥'||card.suit==='♦';
+            slot.innerHTML=`
+                <div class="real-card bg-card-white border-card-light shadow-card ${isRed ? 'text-red' : 'text-black'}" draggable="true">
+                    <div class="card-content">${card.value}<br>${card.suit}</div>
+                </div>
+            `;
+        } else {
+            slot.innerHTML='<div class="slot-empty text-slot">+</div>';
+        }
+    });
     
-    /* Уменьшение заголовка */
-    .poker-header h1 {
-        font-size: 1.8rem;
-    }
+    document.querySelectorAll('.deck-card').forEach(deckCard=>{
+        const isUsed=usedCards.has(deckCard.dataset.card);
+        deckCard.classList.toggle('selected',isUsed);
+        deckCard.draggable=!isUsed;
+        deckCard.style.cursor=isUsed?'default':'pointer';
+        deckCard.classList.add('bg-deck-card', 'deck-card-border', 'deck-card-shadow');
+        
+        const cardCode=deckCard.dataset.card;
+        const suitCode=cardCode.slice(-1);
+        const isRedSuit=suitCode==='h'||suitCode==='d';
+        deckCard.classList.remove('text-red','text-black');
+        deckCard.classList.add(isRedSuit?'text-red':'text-black');
+    });
+}
+
+// --- Проверки и статус ---
+function updateStatus(){
+    document.getElementById('calculateBtn').disabled=!(checkHandValidity() && checkBoardValidity() && !isCalculating);
+}
+function checkHandValidity(){
+    const w=document.getElementById('handWarning');
+    const valid=getHandCardsCount()===2;
+    w.style.display=valid?'none':'block';
+    return valid;
+}
+function checkBoardValidity(){
+    const w=document.getElementById('boardWarning');
+    const count=getBoardCardsCount();
+    const valid=count===0||count===3||count===4||count===5;
+    w.style.display=(count===1||count===2)?'block':'none';
+    return valid;
+}
+
+// --- Переключение блоков ---
+function selectHandBlock(){
+    activeBlock='hand';
+    document.getElementById('handSection').classList.add('active');
+    document.getElementById('boardSection').classList.remove('active');
+}
+function selectBoardBlock(){
+    activeBlock='board';
+    document.getElementById('boardSection').classList.add('active');
+    document.getElementById('handSection').classList.remove('active');
+}
+function checkAndSwitchActiveBlock(){
+    const handCount=getHandCardsCount();
+    const boardCount=getBoardCardsCount();
+    if(activeBlock==='hand' && handCount>=2 && boardCount<5) selectBoardBlock();
+    if(activeBlock==='board' && boardCount>=5 && handCount<2) selectHandBlock();
+}
+function activateBlockBySlotId(slotId){
+    if(slotId.startsWith('hero')) selectHandBlock();
+    else selectBoardBlock();
+}
+
+// --- Вспомогательные ---
+function getHandCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('hero')).length;}
+function getBoardCardsCount(){return Array.from(selectedCards.keys()).filter(k=>k.startsWith('board')).length;}
+
+// --- Обработка клика по карте ---
+function handleCardClick(cardCode) {
+    if (usedCards.has(cardCode)) return;
     
-    /* Уменьшение отступов в панелях */
-    .panel {
-        padding: 15px;
-    }
-    
-    /* Уменьшение секций */
-    .hand-section, .board-section {
-        min-height: 160px;
-        padding: 10px;
-    }
-    
-    /* Уменьшение слотов */
-    .card-slot {
-        width: 60px;
-        height: 85px;
-        font-size: 1.8rem;
-    }
-    
-    /* Уменьшение реальных карт */
-    .real-card {
-        width: 60px;
-        height: 85px;
-    }
-    
-    /* Уменьшение контента карт */
-    .card-content {
-        font-size: 1.8rem;
-    }
-    
-    /* Уменьшение кнопок */
-    .btn {
-        min-width: 130px;
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
-    
-    /* Уменьшение процентов */
-    .result-percent {
-        font-size: 2.5rem;
-    }
-    
-    /* Уменьшение карточек результатов */
-    .result-card {
-        min-height: 130px;
-    }
-    
-    /* Сетка колоды 4 колонки */
-    .deck-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    /* Уменьшение расстояния между пилюлями */
-    .opponent-pills {
-        gap: 5px;
-    }
-    
-    /* Уменьшение пилюль */
-    .opponent-pill {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
+    if (activeBlock === 'hand') {
+        const freeSlot = getFirstFreeSlotInHand();
+        if (freeSlot) {
+            addCardToSlot(cardCode, freeSlot);
+        } else if (getBoardCardsCount() < 5) {
+            selectBoardBlock();
+            const freeBoardSlot = getFirstFreeSlotInBoard();
+            if (freeBoardSlot) addCardToSlot(cardCode, freeBoardSlot);
+        }
+    } else {
+        const freeSlot = getFirstFreeSlotInBoard();
+        if (freeSlot) {
+            addCardToSlot(cardCode, freeSlot);
+        } else if (getHandCardsCount() < 2) {
+            selectHandBlock();
+            const freeHandSlot = getFirstFreeSlotInHand();
+            if (freeHandSlot) addCardToSlot(cardCode, freeHandSlot);
+        }
     }
 }
+
+function moveCardBetweenSlots(fromSlot,toSlot){
+    if(!selectedCards.has(fromSlot)) return;
+    const card=selectedCards.get(fromSlot);
+    if(selectedCards.has(toSlot)){
+        const tempCard=selectedCards.get(toSlot);
+        selectedCards.set(toSlot,card);
+        selectedCards.set(fromSlot,tempCard);
+    } else {
+        selectedCards.set(toSlot,card);
+        selectedCards.delete(fromSlot);
+    }
+    activateBlockBySlotId(toSlot);
+    resetResults();
+    updateCardDisplay();
+    updateStatus();
+    checkBoardValidity();
+    checkHandValidity();
+    checkAndSwitchActiveBlock();
+}
+
+// --- Оппоненты ---
+function setOpponents(count){
+    opponentsCount=count;
+    document.querySelectorAll('.opponent-pill').forEach(pill=>{
+        pill.classList.toggle('active',parseInt(pill.dataset.opponents)===count);
+    });
+    resetResults();
+}
+
+// --- Очистка ---
+function clearAll(){
+    const clearBtn=document.getElementById('clearAllBtn');
+    clearBtn.classList.add('clicked');
+    setTimeout(()=>clearBtn.classList.remove('clicked'),300);
+    
+    selectedCards.clear();
+    usedCards.clear();
+    updateCardDisplay();
+    document.getElementById('resultHero').textContent='—';
+    document.getElementById('resultOpponent').textContent='—';
+    document.getElementById('resultTie').textContent='—';
+    hasCalculatedResults=false;
+    updateStatus();
+    checkBoardValidity();
+    checkHandValidity();
+    selectHandBlock();
+}
+
+// --- Сброс результатов ---
+function resetResults(){
+    if(hasCalculatedResults){
+        document.getElementById('resultHero').textContent='—';
+        document.getElementById('resultOpponent').textContent='—';
+        document.getElementById('resultTie').textContent='—';
+        hasCalculatedResults=false;
+    }
+}
+
+// --- Расчет эквити (ИСПРАВЛЕННЫЙ) ---
+async function calculateEquity() {
+    if (isCalculating) return;
+
+    const heroCards = Array.from(selectedCards.entries())
+        .filter(([s]) => s.startsWith('hero'))
+        .map(([, c]) => c);
+
+    const boardCards = Array.from(selectedCards.entries())
+        .filter(([s]) => s.startsWith('board'))
+        .map(([, c]) => c);
+
+    if (!checkHandValidity() || !checkBoardValidity()) return;
+
+    isCalculating = true;
+    document.getElementById('calculateBtn').disabled = true;
+
+    const SIMULATIONS = 30000;
+    let heroTotal = 0, oppTotal = 0, tieTotal = 0, actualRuns = 0;
+
+    const suits = ['s','h','c','d'];
+    const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+
+    const fullDeck = [];
+    for (const v of values)
+        for (const s of suits)
+            fullDeck.push({code:v+s, value:v, suitCode:s});
+
+    const usedCardCodes = new Set(Array.from(usedCards));
+    const neededBoardCards = 5 - boardCards.length;
+    const totalCardsNeeded = neededBoardCards + opponentsCount * 2;
+
+    // Разбиваем на чанки чтобы не блокировать UI
+    const CHUNK_SIZE = 500;
+    let i = 0;
+
+    const runChunk = () => {
+        const end = Math.min(i + CHUNK_SIZE, SIMULATIONS);
+
+        for (; i < end; i++) {
+            let deck = fullDeck.filter(c => !usedCardCodes.has(c.code));
+            if (deck.length < totalCardsNeeded) continue;
+            actualRuns++;
+
+            // Тасуем
+            for (let j = deck.length - 1; j > 0; j--) {
+                const k = Math.floor(Math.random() * (j + 1));
+                [deck[j], deck[k]] = [deck[k], deck[j]];
+            }
+
+            // Формируем борд
+            const fullBoard = [...boardCards];
+            for (let j = 0; j < neededBoardCards; j++)
+                fullBoard.push(deck[j]);
+
+            let index = neededBoardCards;
+            const heroScore = HandEvaluator.evaluateDetailed([...heroCards, ...fullBoard]);
+
+            // ИСПРАВЛЕННАЯ логика определения победителя
+            let heroBeaten = false;  // хоть один оппонент бьёт героя
+            let tieCount = 1;        // сколько игроков делят банк (герой + тае-оппоненты)
+
+            for (let o = 0; o < opponentsCount; o++) {
+                const oppCard1 = deck[index];
+                const oppCard2 = deck[index + 1];
+                index += 2;
+                const oppScore = HandEvaluator.evaluateDetailed([oppCard1, oppCard2, ...fullBoard]);
+                const cmp = compareHands(heroScore, oppScore);
+
+                if (cmp < 0) {
+                    // Оппонент бьёт героя — стоп
+                    heroBeaten = true;
+                    break;
+                } else if (cmp === 0) {
+                    // Ничья с этим оппонентом
+                    tieCount++;
+                }
+                // cmp > 0: герой бьёт этого оппонента — продолжаем
+            }
+
+            if (heroBeaten) {
+                // Герой проиграл
+                oppTotal++;
+            } else if (tieCount === 1) {
+                // Герой выиграл у всех
+                heroTotal++;
+            } else {
+                // Ничья: делим банк между tieCount игроками
+                tieTotal++;
+                heroTotal += 1 / tieCount;
+                oppTotal += (tieCount - 1) / tieCount;
+            }
+        }
+
+        if (i < SIMULATIONS) {
+            setTimeout(runChunk, 0);
+        } else {
+            // Финальный расчёт
+            if (actualRuns === 0) { isCalculating = false; updateStatus(); return; }
+
+            const heroPercent = (heroTotal / actualRuns) * 100;
+            const oppPercent  = (oppTotal  / actualRuns) * 100;
+            const tiePercent  = (tieTotal  / actualRuns) * 100;
+
+            const heroRounded = Math.round(heroPercent * 10) / 10;
+            const oppRounded  = Math.round(oppPercent  * 10) / 10;
+            const tieRounded  = Math.round(tiePercent  * 10) / 10;
+
+            document.getElementById('resultHero').textContent     = heroRounded.toFixed(1) + '%';
+            document.getElementById('resultOpponent').textContent = oppRounded.toFixed(1)  + '%';
+            document.getElementById('resultTie').textContent      = tieRounded.toFixed(1)  + '%';
+
+            hasCalculatedResults = true;
+            isCalculating = false;
+            updateStatus();
+        }
+    };
+
+    setTimeout(runChunk, 0);
+}
+
+
+// --- Смена темы: пересоздаем колоду ---
+document.addEventListener('themeChanged', () => {
+    createDeck();
+    updateCardDisplay();
+});
+
+// --- Экспорт для отладки ---
+window.getHandCardsCount = getHandCardsCount;
+window.getBoardCardsCount = getBoardCardsCount;
+window.checkHandValidity = checkHandValidity;
+window.checkBoardValidity = checkBoardValidity;
+window.hasFreeSlotsInSection = hasFreeSlotsInSection;
+window.activateBlockBySlotId = activateBlockBySlotId;
