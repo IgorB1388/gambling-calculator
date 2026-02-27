@@ -675,13 +675,39 @@ function calculateEquity() {
 
     if (actualRuns === 0) { isCalculating = false; updateStatus(); return; }
 
-    const heroPercent = (heroWins / actualRuns) * 100;
-    const oppPercent  = (oppWins  / actualRuns) * 100;
-    const tiePercent  = (tieRuns  / actualRuns) * 100;
+    const heroPercent=(heroWins/actualRuns)*100;
+    const oppPercent=(oppWins/actualRuns)*100;
+    const tiePercent=(tieRuns/actualRuns)*100;
 
-    document.getElementById('resultHero').textContent     = fmt(heroPercent);
-    document.getElementById('resultOpponent').textContent = fmt(oppPercent);
-    document.getElementById('resultTie').textContent      = fmt(tiePercent);
+    const vals=[
+        {key:'hero',exact:heroPercent,isZero:heroWins===0,is100:heroWins===actualRuns},
+        {key:'opp', exact:oppPercent, isZero:oppWins===0, is100:oppWins===actualRuns},
+        {key:'tie', exact:tiePercent, isZero:tieRuns===0, is100:tieRuns===actualRuns},
+    ];
+
+    vals.forEach(v=>{
+        if(v.isZero) v.rounded=0;
+        else if(v.is100) v.rounded=100;
+        else v.rounded=Math.floor(v.exact*10)/10;
+    });
+
+    const free=vals.filter(v=>!v.isZero&&!v.is100);
+    const sum=vals.reduce((a,v)=>a+v.rounded,0);
+    let remainder=Math.round((100-sum)*10)/10;
+
+    free.sort((a,b)=>(b.exact*10%1)-(a.exact*10%1));
+    for(const v of free){
+        if(remainder<=0) break;
+        v.rounded=Math.round((v.rounded+0.1)*10)/10;
+        remainder=Math.round((remainder-0.1)*10)/10;
+    }
+
+    const result={};
+    vals.forEach(v=>result[v.key]=v.rounded);
+
+    document.getElementById('resultHero').textContent=fmt(result.hero);
+    document.getElementById('resultOpponent').textContent=fmt(result.opp);
+    document.getElementById('resultTie').textContent=fmt(result.tie);
 
     hasCalculatedResults = true;
     isCalculating = false;
@@ -702,3 +728,4 @@ window.checkHandValidity = checkHandValidity;
 window.checkBoardValidity = checkBoardValidity;
 window.hasFreeSlotsInSection = hasFreeSlotsInSection;
 window.activateBlockBySlotId = activateBlockBySlotId;
+
