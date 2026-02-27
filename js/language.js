@@ -181,12 +181,19 @@ async function initLanguageSystem() {
 function reloadTranslationsForNewContent(container) {
     if (!container || !translations) return;
     
-    // Применяем переводы ко всем элементам внутри контейнера
     container.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
-        if (translations[key]) {
-            element.textContent = translations[key];
-        }
+        if (translations[key]) element.textContent = translations[key];
+    });
+    
+    container.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (translations[key]) element.placeholder = translations[key];
+    });
+    
+    container.querySelectorAll('[data-i18n-title]').forEach(element => {
+        const key = element.getAttribute('data-i18n-title');
+        if (translations[key]) element.title = translations[key];
     });
 }
 
@@ -205,5 +212,6 @@ window.getTranslation = (key, params = {}) => {
     return text;
 }
 window.translations = translations; // Экспортируем объект переводов
+
 
 
