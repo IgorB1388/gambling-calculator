@@ -86,6 +86,7 @@ function applyCurrentLanguage() {
             element.alt = translations[key];
         }
     });
+    window.translations = translations;
 }
 
 // Обновляет все переключатели языка на странице
@@ -204,4 +205,5 @@ window.getTranslation = (key, params = {}) => {
     return text;
 }
 window.translations = translations; // Экспортируем объект переводов
+
 
