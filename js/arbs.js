@@ -1,6 +1,5 @@
 // arbs.js - Анализатор вилок (арбитражный калькулятор)
 
-// --- Состояние приложения ---
 let bkCount = 2;
 let outcomeCount = 2;
 let oddsValues = [];
@@ -10,13 +9,21 @@ let lastCalculation = null;
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
 
 // --- Инициализация ---
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
     initState();
     renderOddsTable();
     initEventListeners();
     loadLastCalculation();
     updateOutcomePillsActive(outcomeCount);
     updateStrategyPillsActive(strategy);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.translationsReady) {
+        initApp();
+    } else {
+        document.addEventListener('translationsReady', initApp, { once: true });
+    }
 });
 
 function initState() {
@@ -49,7 +56,6 @@ function formatToTwoDecimals(value) {
     return num.toFixed(2);
 }
 
-// --- Отрисовка таблицы ---
 function renderOddsTable() {
     const container = document.getElementById('oddsTable');
     container.innerHTML = '';
@@ -58,9 +64,7 @@ function renderOddsTable() {
     // Заголовки
     const headerRow = document.createElement('div');
     headerRow.className = 'odds-header-row';
-    const emptyCell = document.createElement('div');
-    emptyCell.className = 'odds-corner';
-    headerRow.appendChild(emptyCell);
+    headerRow.appendChild(Object.assign(document.createElement('div'), { className: 'odds-corner' }));
 
     for (let o = 0; o < outcomeCount; o++) {
         const header = document.createElement('div');
@@ -88,11 +92,7 @@ function renderOddsTable() {
             const removeBtn = document.createElement('span');
             removeBtn.className = 'remove-bk text-7';
             removeBtn.textContent = '✖️';
-            removeBtn.setAttribute('data-bk-index', b);
-            removeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                removeBookmaker(b);
-            });
+            removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeBookmaker(b); });
             labelCell.appendChild(removeBtn);
         }
 
@@ -107,18 +107,15 @@ function renderOddsTable() {
             input.min = '1.01';
             input.step = '0.01';
             input.value = oddsValues[b][o].toFixed(2);
-
             input.addEventListener('input', (e) => {
                 const val = parseFloat(e.target.value);
                 if (!isNaN(val) && val >= 1.01) oddsValues[b][o] = val;
             });
-
             input.addEventListener('blur', (e) => {
                 const formatted = formatToTwoDecimals(e.target.value);
                 e.target.value = formatted;
                 oddsValues[b][o] = parseFloat(formatted);
             });
-
             row.appendChild(input);
         }
 
@@ -129,22 +126,15 @@ function renderOddsTable() {
     if (bkCount < 5) {
         const addRow = document.createElement('div');
         addRow.className = 'add-bk-row';
-
         const addCell = document.createElement('div');
         addCell.className = 'odds-add-bk';
-
         const addBtn = document.createElement('button');
         addBtn.className = 'add-bk-btn';
         addBtn.textContent = '➕';
         addBtn.addEventListener('click', addBookmaker);
-
         addCell.appendChild(addBtn);
         addRow.appendChild(addCell);
-
-        for (let o = 0; o < outcomeCount; o++) {
-            addRow.appendChild(document.createElement('div'));
-        }
-
+        for (let o = 0; o < outcomeCount; o++) addRow.appendChild(document.createElement('div'));
         container.appendChild(addRow);
     }
 
@@ -207,15 +197,11 @@ function changeStrategy(newStrategy) {
 
 function initEventListeners() {
     document.querySelectorAll('.outcome-pill').forEach(btn => {
-        btn.addEventListener('click', function() {
-            changeOutcomeCount(parseInt(this.dataset.outcomes));
-        });
+        btn.addEventListener('click', function() { changeOutcomeCount(parseInt(this.dataset.outcomes)); });
     });
 
     document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            changeStrategy(this.dataset.strategy);
-        });
+        btn.addEventListener('click', function() { changeStrategy(this.dataset.strategy); });
     });
 
     document.getElementById('calculateArbBtn').addEventListener('click', calculateArbitrage);
@@ -261,7 +247,6 @@ function calculateMaxStrategy(bestOdds, totalStake) {
 
     const stakes = new Array(bestOdds.length).fill(0);
     let remainingStake = totalStake;
-
     for (let i = 0; i < bestOdds.length; i++) {
         if (i !== maxOddIndex) {
             stakes[i] = totalStake / bestOdds[i];
@@ -275,7 +260,6 @@ function calculateMaxStrategy(bestOdds, totalStake) {
     const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
     const guaranteedPayout = payouts[maxOddIndex];
     const profitPercent = ((guaranteedPayout - totalStake) / totalStake) * 100;
-
     return { stakes, payouts, guaranteedPayout, isArb: true, profitPercent, sumInverse, maxOddIndex };
 }
 
@@ -297,7 +281,7 @@ function calculateArbitrage() {
     const totalStake = parseFloat(document.getElementById('totalStake').value);
 
     if (isNaN(totalStake) || totalStake <= 0) {
-        alert('Введите корректную сумму ставки');
+        alert(window.getTranslation('invalidStake') || 'Введите корректную сумму ставки');
         return;
     }
 
@@ -320,29 +304,20 @@ function displayResults(data) {
     const indicatorCircle = document.getElementById('indicatorCircle');
     const arbStatus = document.getElementById('arbStatus');
     const profitCard = document.getElementById('profitCard');
-    const profitPercent = document.getElementById('profitPercent');
     const tableBody = document.getElementById('tableBody');
-    const totalStakeDisplay = document.getElementById('totalStakeDisplay');
-    const totalPayout = document.getElementById('totalPayout');
-    const profitRow = document.getElementById('profitRow');
-    const netProfit = document.getElementById('netProfit');
 
     if (data.isArb) {
         indicatorCircle.classList.remove('bg-danger-solid');
         indicatorCircle.classList.add('bg-success-solid');
         arbStatus.textContent = window.getTranslation('arbsFound');
         arbStatus.className = 'text-4';
+        profitCard.style.display = 'flex';
+        document.getElementById('profitPercent').textContent = data.profitPercent.toFixed(2) + '%';
     } else {
         indicatorCircle.classList.remove('bg-success-solid');
         indicatorCircle.classList.add('bg-danger-solid');
         arbStatus.textContent = window.getTranslation('arbsNotFound');
         arbStatus.className = 'text-7';
-    }
-
-    if (data.isArb) {
-        profitCard.style.display = 'flex';
-        profitPercent.textContent = data.profitPercent.toFixed(2) + '%';
-    } else {
         profitCard.style.display = 'none';
     }
 
@@ -359,15 +334,15 @@ function displayResults(data) {
         tableBody.appendChild(row);
     });
 
-    totalStakeDisplay.textContent = data.totalStake.toFixed(2) + ' ₽';
+    document.getElementById('totalStakeDisplay').textContent = data.totalStake.toFixed(2) + ' ₽';
 
     if (data.isArb) {
-        totalPayout.textContent = data.guaranteedPayout.toFixed(2) + ' ₽';
-        profitRow.style.display = 'flex';
-        netProfit.textContent = (data.guaranteedPayout - data.totalStake).toFixed(2) + ' ₽';
+        document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' ₽';
+        document.getElementById('profitRow').style.display = 'flex';
+        document.getElementById('netProfit').textContent = (data.guaranteedPayout - data.totalStake).toFixed(2) + ' ₽';
     } else {
-        totalPayout.textContent = '0 ₽';
-        profitRow.style.display = 'none';
+        document.getElementById('totalPayout').textContent = '0 ₽';
+        document.getElementById('profitRow').style.display = 'none';
     }
 }
 
