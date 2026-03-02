@@ -6,59 +6,47 @@ class ThemeManager {
         this.themeNames = {
             'base': 'Неон (базовый)',
             'vice-city': 'Vice City',
-            'san-andreas': 'San Andreas', 
+            'san-andreas': 'San Andreas',
             'gta4': 'GTA 4'
         };
         this.currentTheme = this.getSavedTheme() || 'base';
         this.themeLink = null;
     }
-    
+
     getSavedTheme() {
         return localStorage.getItem('gta-casino-theme');
     }
-    
+
     saveTheme(theme) {
         localStorage.setItem('gta-casino-theme', theme);
     }
-    
+
     loadThemeCSS(theme) {
-        console.log(`Загружаем тему: ${theme}`);
-        
-        // Удаляем старую тему
         const oldThemeLink = document.getElementById('theme-style');
-        if (oldThemeLink) {
-            oldThemeLink.remove();
-        }
-        
-        // Создаем новую ссылку на CSS темы
-   
+        if (oldThemeLink) oldThemeLink.remove();
+
         const link = document.createElement('link');
         link.id = 'theme-style';
         link.rel = 'stylesheet';
         link.href = `css/themes/${theme}-theme.css`;
         document.head.appendChild(link);
         this.themeLink = link;
-        
+
         this.currentTheme = theme;
         this.saveTheme(theme);
-        
-        // Обновляем кнопки
         this.updateThemeButtons();
-        
-        // Обновляем класс body
         this.updateBodyClass(theme);
-        
-        // Отправляем событие о смене темы
+
         document.dispatchEvent(new CustomEvent('themeChanged', {
             detail: { theme: theme }
         }));
     }
-    
+
     updateBodyClass(theme) {
         document.body.classList.remove(...this.themes);
         document.body.classList.add(theme);
     }
-    
+
     updateThemeButtons() {
         document.querySelectorAll('.theme-btn').forEach(btn => {
             const theme = btn.dataset.theme;
@@ -67,16 +55,16 @@ class ThemeManager {
             btn.title = this.themeNames[theme] + (isActive ? ' ✓' : '');
         });
     }
-    
+
     addThemeSwitcherToHeader() {
-        const header = document.querySelector('.header-content');
-        if (!header) return;
+        const controls = document.querySelector('.header-controls');
+        if (!controls) return;
         if (document.querySelector('.theme-switcher')) return;
-        
+
         const themeSwitcher = document.createElement('div');
         themeSwitcher.className = 'theme-switcher';
         themeSwitcher.innerHTML = `
-            <button class="theme-btn active" data-theme="base" title="Неон (базовый)">
+            <button class="theme-btn" data-theme="base" title="Неон (базовый)">
                 <i class="fas fa-star"></i>
             </button>
             <button class="theme-btn" data-theme="vice-city" title="Vice City">
@@ -89,22 +77,19 @@ class ThemeManager {
                 <i class="fas fa-building"></i>
             </button>
         `;
-        
-        const langSwitcher = document.querySelector('.language-switcher-header');
-        if (langSwitcher) {
-            langSwitcher.parentNode.insertBefore(themeSwitcher, langSwitcher.nextSibling);
-        } else {
-            header.appendChild(themeSwitcher);
-        }
-        
+
+        controls.appendChild(themeSwitcher);
+
         themeSwitcher.querySelectorAll('.theme-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.loadThemeCSS(btn.dataset.theme);
             });
         });
+
+        this.updateThemeButtons();
     }
-    
+
     init() {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -115,7 +100,7 @@ class ThemeManager {
             this.addThemeSwitcherToHeader();
             this.loadThemeCSS(this.currentTheme);
         }
-        
+
         new MutationObserver(() => this.addThemeSwitcherToHeader())
             .observe(document.body, { childList: true, subtree: true });
     }
@@ -124,5 +109,3 @@ class ThemeManager {
 const themeManager = new ThemeManager();
 themeManager.init();
 window.themeManager = themeManager;
-
-
