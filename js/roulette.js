@@ -26,38 +26,44 @@ const RouletteConfig = {
     }
 };
 
-// --- Ставки и их условия (числовые множества) ---
 const BetDefinitions = {
-    red:     { numbers: [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36] },
-    black:   { numbers: [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35] },
-    even:    { numbers: Array.from({length: 36}, (_, i) => i + 1).filter(n => n % 2 === 0) },
-    odd:     { numbers: Array.from({length: 36}, (_, i) => i + 1).filter(n => n % 2 === 1) },
-    low:     { numbers: Array.from({length: 18}, (_, i) => i + 1) },
-    high:    { numbers: Array.from({length: 18}, (_, i) => i + 19) },
-    zero:    { numbers: [0] },
+    red:        { numbers: [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36] },
+    black:      { numbers: [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35] },
+    even:       { numbers: Array.from({length: 36}, (_, i) => i + 1).filter(n => n % 2 === 0) },
+    odd:        { numbers: Array.from({length: 36}, (_, i) => i + 1).filter(n => n % 2 === 1) },
+    low:        { numbers: Array.from({length: 18}, (_, i) => i + 1) },
+    high:       { numbers: Array.from({length: 18}, (_, i) => i + 19) },
+    zero:       { numbers: [0] },
     doublezero: { numbers: [37] },
-    dozen1:  { numbers: Array.from({length: 12}, (_, i) => i + 1) },
-    dozen2:  { numbers: Array.from({length: 12}, (_, i) => i + 13) },
-    dozen3:  { numbers: Array.from({length: 12}, (_, i) => i + 25) },
-    column1: { numbers: [1,4,7,10,13,16,19,22,25,28,31,34] },
-    column2: { numbers: [2,5,8,11,14,17,20,23,26,29,32,35] },
-    column3: { numbers: [3,6,9,12,15,18,21,24,27,30,33,36] }
+    dozen1:     { numbers: Array.from({length: 12}, (_, i) => i + 1) },
+    dozen2:     { numbers: Array.from({length: 12}, (_, i) => i + 13) },
+    dozen3:     { numbers: Array.from({length: 12}, (_, i) => i + 25) },
+    column1:    { numbers: [1,4,7,10,13,16,19,22,25,28,31,34] },
+    column2:    { numbers: [2,5,8,11,14,17,20,23,26,29,32,35] },
+    column3:    { numbers: [3,6,9,12,15,18,21,24,27,30,33,36] }
 };
 
-// --- Состояние интерфейса ---
 let isSimulating = false;
 let conditions = [];
 const MAX_CONDITIONS = 5;
 let percentActive = true;
 
 // --- Инициализация ---
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
     initEventListeners();
     updateTargetInputState();
     initConditions();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.translationsReady) {
+        initApp();
+    } else {
+        document.addEventListener('translationsReady', initApp, { once: true });
+    }
 });
 
-// --- Парсинг своих чисел с поддержкой диапазонов ---
+// --- Парсинг своих чисел ---
 function parseCustomNumbers(input) {
     if (!input || input.trim() === '') return [];
     const parts = input.split(',').map(s => s.trim());
@@ -78,14 +84,12 @@ function parseCustomNumbers(input) {
     return [...new Set(numbers)].sort((a, b) => a - b);
 }
 
-// --- Инициализация условий ---
 function initConditions() {
     conditions = [{ not: false, type: 'custom', customNumbers: '', percent: 100 }];
     renderConditions();
     calculateTotalBet();
 }
 
-// --- Рендер условий в HTML ---
 function renderConditions() {
     const container = document.getElementById('conditionsContainer');
     if (!container) return;
@@ -149,14 +153,7 @@ function renderConditions() {
             select.appendChild(option);
         });
 
-        ['dozen1','dozen2','dozen3'].forEach(key => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
-            select.appendChild(option);
-        });
-
-        ['column1','column2','column3'].forEach(key => {
+        ['dozen1','dozen2','dozen3','column1','column2','column3'].forEach(key => {
             const option = document.createElement('option');
             option.value = key;
             option.setAttribute('data-i18n', `strategy${key.charAt(0).toUpperCase() + key.slice(1)}`);
@@ -203,7 +200,7 @@ function renderConditions() {
 
         percentInput.addEventListener('input', () => {
             if (!percentActive) return;
-            let val = parseFloat(percentInput.value);
+            const val = parseFloat(percentInput.value);
             conditions[index].percent = isNaN(val) ? 0 : val;
             if (isNaN(val)) percentInput.value = 0;
             calculateTotalBet();
@@ -211,7 +208,7 @@ function renderConditions() {
 
         percentInput.addEventListener('blur', () => {
             if (!percentActive) return;
-            let val = Math.round((parseFloat(percentInput.value) || 0) * 10) / 10;
+            const val = Math.round((parseFloat(percentInput.value) || 0) * 10) / 10;
             conditions[index].percent = val;
             percentInput.value = val;
             calculateTotalBet();
@@ -241,11 +238,9 @@ function renderConditions() {
     if (window.reloadTranslationsForNewContent) window.reloadTranslationsForNewContent(container);
 
     updatePercentWarning();
-
-    setTimeout(() => { calculateTotalBet(); }, 50);
+    calculateTotalBet();
 }
 
-// --- Предупреждение о процентах ---
 function updatePercentWarning() {
     const oldWarning = document.getElementById('percentWarning');
     if (oldWarning) oldWarning.remove();
@@ -263,7 +258,6 @@ function updatePercentWarning() {
     }
 }
 
-// --- Добавить условие ---
 function addCondition() {
     if (conditions.length >= MAX_CONDITIONS) {
         alert(window.getTranslation('maxConditions'));
@@ -274,7 +268,6 @@ function addCondition() {
     calculateTotalBet();
 }
 
-// --- Удалить условие ---
 function removeCondition(index) {
     if (conditions.length <= 1) return;
     conditions.splice(index, 1);
@@ -282,7 +275,6 @@ function removeCondition(index) {
     calculateTotalBet();
 }
 
-// --- Получить числа для условия ---
 function getNumbersForCondition(cond) {
     const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
     const config = RouletteConfig[rouletteType];
@@ -296,7 +288,6 @@ function getNumbersForCondition(cond) {
     return numbers;
 }
 
-// --- Рассчитать итоговое пересечение ---
 function calculateTotalBet() {
     if (conditions.length === 0) {
         document.getElementById('totalBetText').textContent = '—';
@@ -327,7 +318,7 @@ function calculateTotalBet() {
         displayText = window.getTranslation('noCommonNumbers') || '❌ Нет общих чисел';
     } else {
         const displayNumbers = finalNumbers.map(n => n === 37 ? '00' : n.toString());
-        let numbersStr = displayNumbers.length <= 10
+        const numbersStr = displayNumbers.length <= 10
             ? displayNumbers.join(', ')
             : displayNumbers.slice(0, 8).join(', ') + '...' + displayNumbers.slice(-2).join(', ');
         displayText = percentActive ? `${numbersStr} = ${totalPercent.toFixed(1)}%` : numbersStr;
@@ -338,7 +329,6 @@ function calculateTotalBet() {
     return { finalNumbers, totalPercent };
 }
 
-// --- Обработчики событий ---
 function initEventListeners() {
     document.querySelectorAll('[data-type]').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -377,7 +367,6 @@ function updateTargetInputState() {
     document.getElementById('maxSpins').disabled = !document.getElementById('stopSpins').checked;
 }
 
-// --- Симуляция ---
 async function simulateStrategy() {
     if (isSimulating) return;
 
@@ -430,7 +419,6 @@ async function simulateStrategy() {
     }, 50);
 }
 
-// --- Симуляция одной сессии ---
 function simulateSession(config, startingBankroll, betAmount, targetNumbers, triggerType, triggerCount, stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins) {
     let bankroll = startingBankroll;
     let spins = 0;
@@ -466,7 +454,6 @@ function simulateSession(config, startingBankroll, betAmount, targetNumbers, tri
     return { profit: bankroll - startingBankroll, spins, bankrupt: bankroll <= 0 };
 }
 
-// --- Запуск множества сессий ---
 function runSimulation(config, startingBankroll, betAmount, targetNumbers, triggerType, triggerCount, stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins, sessionCount) {
     const sessions = [];
     for (let i = 0; i < sessionCount; i++) {
@@ -483,11 +470,10 @@ function runSimulation(config, startingBankroll, betAmount, targetNumbers, trigg
         avgProfit, riskRate: bankruptSessions / sessionCount,
         successfulSessions, bankruptSessions, totalSessions: sessionCount,
         avgSpins, maxProfit, maxLoss: Math.abs(minProfit),
-        profitDistribution: sessions.map(s => s.profit).sort((a,b) => a - b)
+        profitDistribution: sessions.map(s => s.profit).sort((a, b) => a - b)
     };
 }
 
-// --- Отображение результатов ---
 function displayResults(results) {
     document.getElementById('winRate').textContent = (results.winRate * 100).toFixed(1) + '%';
     document.getElementById('avgProfit').textContent = '$' + Math.round(results.avgProfit);
