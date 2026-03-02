@@ -3,7 +3,6 @@
 let currentLanguage = 'ru';
 let translations = {};
 
-// Минимальные fallback переводы (на случай если JSON не загрузятся)
 const fallbackTranslations = {
     ru: { 
         siteTitle: "GTA Casino Tools", 
@@ -31,7 +30,6 @@ const fallbackTranslations = {
     }
 };
 
-// Загружает переводы для языка
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`data/translations/${lang}.json`);
@@ -40,167 +38,122 @@ async function loadTranslations(lang) {
         console.warn(`Переводы ${lang}.json не загружены, используем fallback`, error);
         translations = fallbackTranslations[lang] || fallbackTranslations.en;
     }
-    
     applyCurrentLanguage();
 }
 
-// Применяет переводы ко всем элементам на странице
 function applyCurrentLanguage() {
     if (!translations) return;
-    
-    // Title страницы
-    if (translations.siteTitle) {
-        document.title = translations.siteTitle;
-    }
-    
-    // Все элементы с data-i18n
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        if (translations[key]) {
-            element.textContent = translations[key];
-        } else {
-            console.warn(`Перевод для ключа "${key}" не найден в ${currentLanguage}.json`);
-        }
+
+    if (translations.siteTitle) document.title = translations.siteTitle;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[key]) el.textContent = translations[key];
+        else console.warn(`Перевод для ключа "${key}" не найден в ${currentLanguage}.json`);
     });
-    
-    // Для элементов с атрибутами placeholder
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-i18n-placeholder');
-        if (translations[key]) {
-            element.placeholder = translations[key];
-        }
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[key]) el.placeholder = translations[key];
     });
-    
-    // Для элементов с атрибутами title
-    document.querySelectorAll('[data-i18n-title]').forEach(element => {
-        const key = element.getAttribute('data-i18n-title');
-        if (translations[key]) {
-            element.title = translations[key];
-        }
+
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (translations[key]) el.title = translations[key];
     });
-    
-    // Для элементов с атрибутами alt
-    document.querySelectorAll('[data-i18n-alt]').forEach(element => {
-        const key = element.getAttribute('data-i18n-alt');
-        if (translations[key]) {
-            element.alt = translations[key];
-        }
+
+    document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+        const key = el.getAttribute('data-i18n-alt');
+        if (translations[key]) el.alt = translations[key];
     });
+
     window.translations = translations;
+
+    // Сигнализируем что переводы готовы (для скриптов которые ждут первой загрузки)
+    if (!window.translationsReady) {
+        window.translationsReady = true;
+        document.dispatchEvent(new CustomEvent('translationsReady'));
+    }
 }
 
-// Обновляет все переключатели языка на странице
 function updateAllLanguageSwitchers(lang) {
     document.querySelectorAll('.lang-btn').forEach(btn => {
         const btnLang = btn.getAttribute('data-lang');
         btn.classList.toggle('active', btnLang === lang);
-    });
-    
-    // Обновляем title у кнопок
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        const btnLang = btn.getAttribute('data-lang');
-        let langName = '';
-        switch(btnLang) {
-            case 'ru': langName = 'Русский'; break;
-            case 'en': langName = 'English'; break;
-            case 'es': langName = 'Español'; break;
-        }
-        btn.setAttribute('title', langName);
+        const names = { ru: 'Русский', en: 'English', es: 'Español' };
+        btn.setAttribute('title', names[btnLang] || btnLang);
     });
 }
 
-// Смена языка
 async function changeLanguage(lang) {
     if (currentLanguage === lang) return;
-    
     currentLanguage = lang;
     localStorage.setItem('gta-casino-language', lang);
     document.documentElement.lang = lang;
-    
     updateAllLanguageSwitchers(lang);
     await loadTranslations(lang);
-    
-    // Отправляем событие о смене языка (для других скриптов)
-    document.dispatchEvent(new CustomEvent('languageChanged', {
-        detail: { language: lang }
-    }));
+    document.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: lang } }));
 }
 
-// Добавляет обработчики клика на кнопки переключения языка
 function addLanguageButtonListeners() {
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        // Удаляем старые обработчики, чтобы избежать дублирования
         btn.removeEventListener('click', handleLanguageButtonClick);
         btn.addEventListener('click', handleLanguageButtonClick);
     });
 }
 
-// Обработчик клика на кнопку языка
 function handleLanguageButtonClick(event) {
-    const btn = event.currentTarget;
-    const lang = btn.getAttribute('data-lang');
-    changeLanguage(lang);
+    changeLanguage(event.currentTarget.getAttribute('data-lang'));
 }
 
-// Инициализация системы переводов
 async function initLanguageSystem() {
-    // Определяем язык
     const savedLang = localStorage.getItem('gta-casino-language');
     const browserLang = navigator.language.split('-')[0];
-    
-    if (savedLang) {
-        currentLanguage = savedLang;
-    } else if (['ru', 'en', 'es'].includes(browserLang)) {
-        currentLanguage = browserLang;
-    }
-    
+
+    if (savedLang) currentLanguage = savedLang;
+    else if (['ru', 'en', 'es'].includes(browserLang)) currentLanguage = browserLang;
+
     document.documentElement.lang = currentLanguage;
     updateAllLanguageSwitchers(currentLanguage);
-    
+
     await loadTranslations(currentLanguage);
     addLanguageButtonListeners();
-    
-    // Наблюдатель за DOM для динамически добавленных кнопок
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
+
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
             if (mutation.addedNodes.length) {
-                const newLangButtons = Array.from(mutation.addedNodes).flatMap(node => 
+                const newBtns = Array.from(mutation.addedNodes).flatMap(node =>
                     node.querySelectorAll ? Array.from(node.querySelectorAll('.lang-btn')) : []
                 );
-                if (newLangButtons.length) {
-                    addLanguageButtonListeners();
-                }
+                if (newBtns.length) addLanguageButtonListeners();
             }
         });
     });
-    
+
     observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// Перезагрузка переводов для динамически добавленного контента
 function reloadTranslationsForNewContent(container) {
     if (!container || !translations) return;
-    
-    container.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        if (translations[key]) element.textContent = translations[key];
+
+    container.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[key]) el.textContent = translations[key];
     });
-    
-    container.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-i18n-placeholder');
-        if (translations[key]) element.placeholder = translations[key];
+
+    container.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[key]) el.placeholder = translations[key];
     });
-    
-    container.querySelectorAll('[data-i18n-title]').forEach(element => {
-        const key = element.getAttribute('data-i18n-title');
-        if (translations[key]) element.title = translations[key];
+
+    container.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (translations[key]) el.title = translations[key];
     });
 }
 
-// Запуск системы переводов при загрузке DOM
 document.addEventListener('DOMContentLoaded', initLanguageSystem);
 
-// Экспорт функций для использования в других скриптах
 window.changeLanguage = changeLanguage;
 window.getCurrentLanguage = () => currentLanguage;
 window.reloadTranslationsForNewContent = reloadTranslationsForNewContent;
@@ -210,8 +163,5 @@ window.getTranslation = (key, params = {}) => {
         text = text.replace(`{${param}}`, params[param]);
     });
     return text;
-}
-window.translations = translations; // Экспортируем объект переводов
-
-
-
+};
+window.translations = translations;
