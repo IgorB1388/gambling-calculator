@@ -29,10 +29,9 @@
 }
 
 .header-content {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
     gap: 25px;
 }
 
@@ -42,6 +41,7 @@
     align-items: center;
     gap: 20px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .logo-icon {
@@ -80,7 +80,6 @@
 
 /* НАВИГАЦИЯ */
 .main-nav {
-    flex-grow: 1;
     display: flex;
     justify-content: center;
 }
@@ -126,6 +125,15 @@
 
 .nav-link:hover {
     transform: translateY(-3px) scale(1.05);
+}
+
+/* ПРАВЫЙ БЛОК - языки и темы */
+.header-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    align-self: flex-start;
 }
 
 /* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА */
@@ -459,15 +467,22 @@
     z-index: 1;
 }
 
-/* === АДАПТИВНОСТЬ - ТОЛЬКО РАЗМЕРЫ === */
+/* === АДАПТИВНОСТЬ === */
 @media (max-width: 1200px) {
     .site-container { max-width: 1000px; }
     .page-header h1 { font-size: 2.5rem; }
 }
 
 @media (max-width: 1024px) {
-    .header-content { flex-direction: column; text-align: center; gap: 20px; }
-    .logo { justify-content: center; }
+    .header-content {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+    .header-controls {
+        flex-direction: row;
+        align-self: auto;
+        align-items: center;
+    }
     .nav-list { width: 100%; justify-content: center; gap: 8px; }
     .nav-link { width: 190px; padding: 10px 16px; }
 }
@@ -492,6 +507,7 @@
 @media (max-width: 480px) {
     .nav-list { flex-direction: column; align-items: center; width: auto; }
     .nav-link { width: 220px; justify-content: flex-start; }
+    .header-controls { flex-direction: column; align-items: center; }
     .page-header { padding: 25px 15px; }
     .page-header h1 { font-size: 1.8rem; }
     .coming-soon-sa, .coming-soon-gta4 { padding: 30px 15px; }
