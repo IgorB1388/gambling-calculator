@@ -142,6 +142,10 @@
     "arbsROI": "Calculadora de ROI",
     "arbsRisk": "Gestión de riesgo",
     "arbsLive": "Actualizaciones en vivo",
+    "arbsOutcomeLabel": "Resultado",
+    "arbsBkLabel": "Casa",
+    "arbsFound": "✅ ¡Apuesta encontrada!",
+    "arbsNotFound": "❌ Sin apuesta",
     
     "faqTitle": "FAQ",
     "faqSubtitle": "Respuestas a preguntas comunes sobre GTA Casino Tools",
@@ -178,3 +182,4 @@
     "strategyZero": "0 (Cero)",
     "strategyDoubleZero": "00 (Doble cero)"
 }
+
