@@ -32,54 +32,7 @@
     <div class="site-container">
         
         <!-- ========== ШАПКА САЙТА (общая для всех страниц) ========== -->
-        <!-- bg-header - фон шапки, border-primary - цвет нижней границы, shadow-default - тень -->
-        <header class="site-header bg-header border-primary shadow-default">
-            <div class="header-content">
-                <!-- ===== ЛОГОТИП ===== -->
-                <div class="logo">
-                    <!-- logo-gradient - градиентный фон из переменных темы -->
-                    <div class="logo-icon logo-gradient">
-                        <i class="fas fa-dice"></i> <!-- Иконка кубиков из Font Awesome -->
-                    </div>
-                    <div class="logo-text">
-                        <!-- logo-text-gradient - градиент для текста логотипа -->
-                        <span class="logo-main logo-text-gradient">GTA CASINO</span>
-                        <!-- text-secondary - второстепенный цвет текста из темы -->
-                        <span class="logo-sub text-secondary">TOOLS</span>
-                    </div>
-                </div>
-                
-                <!-- ===== НАВИГАЦИОННОЕ МЕНЮ ===== -->
-                <nav class="main-nav">
-                    <!-- nav-bg - фон навигации, border-primary - цвет рамки -->
-                    <ul class="nav-list nav-bg border-primary">
-                        <!-- nav-link-bg - фон ссылки, text-medium - цвет текста, data-i18n - ключ перевода -->
-                        <!-- active nav-link-active - классы активной страницы (подсветка) -->
-                        <li><a href="index.html" class="nav-link nav-link-bg text-medium" data-i18n="navHome"><i class="fas fa-home"></i></a></li>
-                        <li><a href="poker.html" class="nav-link nav-link-bg text-medium" data-i18n="navPoker"><i class="fas fa-club"></i></a></li>
-                        <li><a href="roulette.html" class="nav-link nav-link-bg text-medium active nav-link-active" data-i18n="navRoulette"><i class="fas fa-dice"></i></a></li>
-                        <li><a href="arbs.html" class="nav-link nav-link-bg text-medium" data-i18n="navArbs"><i class="fas fa-chart-line"></i></a></li>
-                        <li><a href="faq.html" class="nav-link nav-link-bg text-medium" data-i18n="navFaq"><i class="fas fa-question-circle"></i></a></li>
-                    </ul>
-                </nav>
-                
-                <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ ===== -->
-                <!-- bg-surface - фон, border-accent - цвет рамки -->
-                <div class="language-switcher-header bg-surface border-accent">
-                    <!-- lang-btn - кнопка языка, data-lang - код языка, title - подсказка -->
-                    <div class="lang-btn" data-lang="ru" title="Русский">
-                        <!-- lang-flag - флаг, border-muted - цвет рамки флага -->
-                        <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
-                    </div>
-                    <div class="lang-btn" data-lang="en" title="English">
-                        <img src="images/flags/en.png" alt="EN" class="lang-flag border-muted">
-                    </div>
-                    <div class="lang-btn" data-lang="es" title="Español">
-                        <img src="images/flags/es.png" alt="ES" class="lang-flag border-muted">
-                    </div>
-                </div>
-            </div>
-        </header>
+          <div id="header-placeholder"></div>
 
         <!-- ========== ОСНОВНОЙ КОНТЕНТ - АНАЛИЗАТОР РУЛЕТКИ ========== -->
         <div class="roulette-analyzer-container">
@@ -315,6 +268,7 @@
     </div>
 
     <!-- ========== ПОДКЛЮЧЕНИЕ СКРИПТОВ ========== -->
+    <script src="js/header-loader.js"></script>
     <!-- language.js - система переводов (загружается ПЕРВЫМ!) -->
     <script src="js/language.js"></script>
     <!-- main.js - основные функции сайта -->
@@ -325,3 +279,4 @@
     <script src="js/theme-switcher.js"></script>
 </body>
 </html>
+
