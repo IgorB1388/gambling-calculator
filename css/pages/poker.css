@@ -5,14 +5,9 @@
 }
 
 /* === ЗАГОЛОВОК ПОКЕР-КАЛЬКУЛЯТОРА === */
-.poker-header {
-    text-align: center;      /* Текст по центру */
-    margin-bottom: 40px;     /* Отступ снизу */
-    padding: 25px;           /* Внутренние отступы */
-    border-radius: 15px;     /* Скругление углов */
-    border-width: 2px;       /* Толщина границы */
-    border-style: solid;     /* Стиль границы (сплошная) */
-    position: relative;      /* Для позиционирования псевдоэлементов */
+.page-header .header-suits {
+    font-size: 2.8rem;
+    margin-bottom: 10px;
 }
 
 /* === РЯД С МАСТЯМИ В ЗАГОЛОВКЕ === */
@@ -720,3 +715,4 @@
         font-size: 1rem;
     }
 }
+
