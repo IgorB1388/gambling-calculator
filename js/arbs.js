@@ -328,20 +328,20 @@ function displayResults(data) {
         row.innerHTML = `
             <span class="text-2">${window.getTranslation('arbsOutcomeLabel')} ${i + 1}</span>
             <span class="text-1">${odd.toFixed(2)}</span>
-            <span class="text-1">${data.stakes[i].toFixed(2)} ₽</span>
-            <span class="text-1">${data.payouts[i].toFixed(2)} ₽</span>
+            <span class="text-1">${data.stakes[i].toFixed(2)} $</span>
+            <span class="text-1">${data.payouts[i].toFixed(2)} $</span>
         `;
         tableBody.appendChild(row);
     });
 
-    document.getElementById('totalStakeDisplay').textContent = data.totalStake.toFixed(2) + ' ₽';
+    document.getElementById('totalStakeDisplay').textContent = data.totalStake.toFixed(2) + ' $';
 
     if (data.isArb) {
-        document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' ₽';
+        document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' $';
         document.getElementById('profitRow').style.display = 'flex';
-        document.getElementById('netProfit').textContent = (data.guaranteedPayout - data.totalStake).toFixed(2) + ' ₽';
+        document.getElementById('netProfit').textContent = (data.guaranteedPayout - data.totalStake).toFixed(2) + ' $';
     } else {
-        document.getElementById('totalPayout').textContent = '0 ₽';
+        document.getElementById('totalPayout').textContent = '0 $';
         document.getElementById('profitRow').style.display = 'none';
     }
 }
@@ -359,8 +359,8 @@ function resetCalculator() {
     document.getElementById('arbStatus').className = 'text-1';
     document.getElementById('profitCard').style.display = 'none';
     document.getElementById('tableBody').innerHTML = '';
-    document.getElementById('totalStakeDisplay').textContent = '0 ₽';
-    document.getElementById('totalPayout').textContent = '0 ₽';
+    document.getElementById('totalStakeDisplay').textContent = '0 $';
+    document.getElementById('totalPayout').textContent = '0 $';
     document.getElementById('profitRow').style.display = 'none';
 
     updateOutcomePillsActive(2);
@@ -394,3 +394,4 @@ window.calculateArbitrage = calculateArbitrage;
 window.addBookmaker = addBookmaker;
 window.removeBookmaker = removeBookmaker;
 window.changeStrategy = changeStrategy;
+
