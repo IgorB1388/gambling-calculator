@@ -1,5 +1,4 @@
 /* arbs.css - только позиционирование, никаких цветов! */
-/* Новая версия: БК как строки, исходы как колонки */
 
 .arbitrage-container {
     max-width: 1400px;
@@ -24,9 +23,7 @@
 }
 
 @media (max-width: 1100px) {
-    .arbitrage-main-area {
-        grid-template-columns: 1fr;
-    }
+    .arbitrage-main-area { grid-template-columns: 1fr; }
 }
 
 .panel {
@@ -46,6 +43,8 @@
     padding-bottom: 10px;
     border-bottom-width: 2px;
     border-bottom-style: solid;
+    /* Фиксируем высоту чтобы не скакало при смене языка */
+    min-height: 2.5rem;
 }
 
 .settings-group {
@@ -58,6 +57,9 @@
 .settings-label {
     font-size: 1rem;
     font-weight: bold;
+    /* Фиксируем высоту */
+    min-height: 1.4rem;
+    white-space: nowrap;
 }
 
 /* Кнопки выбора количества исходов */
@@ -80,21 +82,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
-.outcome-pill:hover {
-    transform: scale(1.1);
-}
+.outcome-pill:hover { transform: scale(1.1); }
 
-/* ===== СТИЛИ ДЛЯ СТРОКИ СУММА + СТРАТЕГИЯ ===== */
-.stake-strategy-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
+/* Поле суммы — без стратегии рядом */
 .input-wrapper {
-    flex: 2;
     position: relative;
     display: flex;
     align-items: center;
@@ -102,7 +96,7 @@
 
 .input-wrapper .settings-input {
     width: 100%;
-    padding-right: 40px; /* Место для валюты */
+    padding-right: 40px;
 }
 
 .input-suffix {
@@ -111,31 +105,68 @@
     font-weight: bold;
 }
 
-/* Компактные кнопки стратегии */
+/* Убираем стрелки у поля суммы ставки */
+#totalStake::-webkit-outer-spin-button,
+#totalStake::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#totalStake[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Кнопки управления — увеличенные */
+.controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 5px;
+}
+
+.controls .btn {
+    flex: 1;
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    /* Фиксируем высоту чтобы не скакало */
+    min-height: 56px;
+    white-space: nowrap;
+}
+
+.controls .btn:hover { transform: translateY(-2px); }
+
+/* Компактные кнопки стратегии (теперь в индикаторе) */
 .strategy-mini-pills {
     display: flex;
-    gap: 5px;
-    flex: 1;
+    gap: 6px;
 }
 
 .strategy-mini-btn {
-    padding: 8px 10px;
-    border-radius: 20px;
+    padding: 6px 12px;
+    border-radius: 16px;
     border-width: 2px;
     border-style: solid;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
     background: transparent;
-    flex: 1;
     white-space: nowrap;
+    /* Фиксируем размер чтобы не скакало при смене языка */
+    min-width: 60px;
     text-align: center;
 }
 
-.strategy-mini-btn:hover {
-    transform: translateY(-2px);
-}
+.strategy-mini-btn:hover { transform: translateY(-1px); }
 
 .strategy-mini-btn.active {
     background: var(--color-info) !important;
@@ -144,13 +175,7 @@
     box-shadow: 0 0 10px var(--color-info) !important;
 }
 
-/* 
-==================================================
-    ТАБЛИЦА КОЭФФИЦИЕНТОВ (НОВАЯ ВЕРСИЯ)
-    БК как строки, исходы как колонки
-==================================================
-*/
-
+/* Таблица коэффициентов */
 .odds-table {
     width: 100%;
     display: flex;
@@ -159,7 +184,6 @@
     margin-top: 10px;
 }
 
-/* Заголовки исходов */
 .odds-header-row {
     display: grid;
     grid-template-columns: 100px repeat(var(--outcome-count, 2), 1fr);
@@ -168,9 +192,7 @@
     align-items: center;
 }
 
-.odds-corner {
-    width: 100px; /* Пустая ячейка в углу */
-}
+.odds-corner { width: 100px; }
 
 .odds-header {
     text-align: center;
@@ -180,7 +202,6 @@
     white-space: nowrap;
 }
 
-/* Строка БК */
 .odds-row {
     display: grid;
     grid-template-columns: 100px repeat(var(--outcome-count, 2), 1fr);
@@ -188,7 +209,6 @@
     align-items: center;
 }
 
-/* Ячейка с меткой БК и кнопкой удаления */
 .odds-bk-label {
     display: flex;
     align-items: center;
@@ -199,13 +219,11 @@
     white-space: nowrap;
 }
 
-/* Кнопка удаления БК */
 .remove-bk {
     cursor: pointer;
     font-size: 1.2rem;
     opacity: 0.7;
     transition: all 0.2s;
-    display: inline-block;
     width: 24px;
     height: 24px;
     display: flex;
@@ -214,12 +232,8 @@
     border-radius: 50%;
 }
 
-.remove-bk:hover {
-    opacity: 1;
-    transform: scale(1.1);
-}
+.remove-bk:hover { opacity: 1; transform: scale(1.1); }
 
-/* Поля ввода коэффициентов */
 .odds-input {
     padding: 10px 8px;
     border-radius: 6px;
@@ -227,17 +241,23 @@
     border-style: solid;
     font-size: 1rem;
     width: 100%;
+    min-width: 60px;
     background: transparent;
     transition: all 0.2s;
     text-align: center;
 }
 
-.odds-input:focus {
-    outline: none;
-    transform: scale(1.02);
+.odds-input:focus { outline: none; transform: scale(1.02); }
+
+/* Убираем стрелки у всех odds-input */
+.odds-input::-webkit-outer-spin-button,
+.odds-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-/* ===== СТРОКА С КНОПКОЙ ДОБАВЛЕНИЯ БК ===== */
+.odds-input[type=number] { -moz-appearance: textfield; }
+
 .add-bk-row {
     margin-top: 10px;
     display: grid;
@@ -246,13 +266,11 @@
     align-items: center;
 }
 
-/* Ячейка с кнопкой добавления */
 .odds-add-bk {
-    grid-column: 1;  /* Занимает первую колонку */
+    grid-column: 1;
     width: 100%;
 }
 
-/* Прямоугольная кнопка добавления БК */
 .add-bk-btn {
     background: transparent;
     border: 2px solid;
@@ -261,7 +279,7 @@
     cursor: pointer;
     padding: 8px 0;
     border-radius: 8px;
-    width: 100%;  /* На всю ширину колонки */
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -279,6 +297,8 @@
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
+    /* Фиксируем высоту */
+    min-height: 72px;
 }
 
 .indicator-circle {
@@ -286,6 +306,7 @@
     height: 40px;
     border-radius: 50%;
     transition: background-color 0.3s;
+    flex-shrink: 0;
 }
 
 .indicator-text {
@@ -303,6 +324,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 60px;
 }
 
 .profit-value {
@@ -334,11 +356,6 @@
     grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
     gap: 10px;
     padding: 10px 15px;
-    border-bottom: none;
-}
-
-.table-row:last-child {
-    border-bottom: none;
 }
 
 /* Итоги */
@@ -364,10 +381,9 @@
     padding-top: 8px;
     border-top-width: 2px;
     border-top-style: solid;
-    border-top-color: inherit;  /* наследует цвет границ блока */
+    border-top-color: inherit;
 }
 
-/* Подсказка */
 .arb-hint {
     font-size: 0.85rem;
     font-style: italic;
@@ -375,178 +391,73 @@
     padding: 10px;
 }
 
-/* 
-==================================================
-    АДАПТИВНОСТЬ
-==================================================
-*/
-
+/* Адаптивность */
 @media (max-width: 768px) {
-    .panel {
-        padding: 20px;
-    }
-    
-    /* Уменьшаем размеры для мобилок */
-    .odds-header-row {
-        grid-template-columns: 70px repeat(var(--outcome-count, 2), 1fr);
-        gap: 5px;
-    }
-    
-    .odds-corner {
-        width: 70px;
-    }
-    
-    .odds-row {
-        grid-template-columns: 70px repeat(var(--outcome-count, 2), 1fr);
-        gap: 5px;
-    }
+    .panel { padding: 20px; }
 
+    .odds-header-row,
+    .odds-row,
     .add-bk-row {
         grid-template-columns: 70px repeat(var(--outcome-count, 2), 1fr);
         gap: 5px;
     }
-    
-    .odds-bk-label {
-        font-size: 0.9rem;
-    }
-    
-    .odds-input {
-        padding: 8px 4px;
-        font-size: 0.9rem;
-    }
-    
-    .odds-header {
-        font-size: 0.85rem;
-    }
-    
-    .add-bk-btn {
-        font-size: 1.3rem;
-        padding: 6px 0;
-    }
-    
-    .remove-bk {
-        font-size: 1rem;
-        width: 20px;
-        height: 20px;
-    }
-    
-    /* Адаптация строки сумма+стратегия */
-    .stake-strategy-row {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .input-wrapper {
-        width: 100%;
-    }
-    
-    .strategy-mini-pills {
-        width: 100%;
-    }
-    
-    .strategy-mini-btn {
-        padding: 8px 5px;
-        font-size: 0.8rem;
-    }
-    
+
+    .odds-corner { width: 70px; }
+    .odds-bk-label { font-size: 0.9rem; }
+    .odds-input { padding: 8px 4px; font-size: 0.9rem; }
+    .odds-header { font-size: 0.85rem; }
+    .add-bk-btn { font-size: 1.3rem; padding: 6px 0; }
+    .remove-bk { font-size: 1rem; width: 20px; height: 20px; }
+
     .table-header,
     .table-row {
         grid-template-columns: 1.5fr 1fr 1.2fr 1.2fr;
         font-size: 0.9rem;
         padding: 8px 10px;
     }
-    
-    .profit-value {
-        font-size: 1.4rem;
+
+    .profit-value { font-size: 1.4rem; }
+
+    .controls .btn {
+        padding: 14px 16px;
+        font-size: 1rem;
+        min-height: 50px;
     }
+
+    .arb-indicator { flex-wrap: wrap; }
+    .strategy-mini-pills { width: 100%; justify-content: flex-end; }
 }
 
 @media (max-width: 480px) {
-    .outcome-pills {
-        justify-content: center;
-    }
-    
-    .outcome-pill {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-    
-    /* Еще меньше на маленьких экранах */
-    .odds-header-row {
-        grid-template-columns: 60px repeat(var(--outcome-count, 2), 1fr);
-        gap: 3px;
-    }
-    
-    .odds-corner {
-        width: 60px;
-    }
-    
-    .odds-row {
-        grid-template-columns: 60px repeat(var(--outcome-count, 2), 1fr);
-        gap: 3px;
-    }
+    .outcome-pills { justify-content: center; }
+    .outcome-pill { width: 40px; height: 40px; font-size: 1rem; }
 
+    .odds-header-row,
+    .odds-row,
     .add-bk-row {
         grid-template-columns: 60px repeat(var(--outcome-count, 2), 1fr);
         gap: 3px;
     }
-    
-    .odds-bk-label {
-        font-size: 0.8rem;
-    }
-    
-    .odds-input {
-        padding: 6px 2px;
-        font-size: 0.8rem;
-    }
-    
-    .odds-header {
-        font-size: 0.75rem;
-    }
-    
-    .add-bk-btn {
-        font-size: 1.2rem;
-        padding: 5px 0;
-    }
-    
-    .strategy-mini-btn {
-        font-size: 0.75rem;
-        padding: 6px 3px;
-    }
-    
+
+    .odds-corner { width: 60px; }
+    .odds-bk-label { font-size: 0.8rem; }
+    .odds-input { padding: 6px 2px; font-size: 0.8rem; }
+    .odds-header { font-size: 0.75rem; }
+    .add-bk-btn { font-size: 1.2rem; padding: 5px 0; }
+
+    .strategy-mini-btn { font-size: 0.75rem; padding: 5px 8px; }
+
     .table-header,
     .table-row {
         grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
         font-size: 0.8rem;
     }
-    
-    .indicator-circle {
-        width: 30px;
-        height: 30px;
+
+    .indicator-circle { width: 30px; height: 30px; }
+
+    .controls .btn {
+        padding: 12px 10px;
+        font-size: 0.95rem;
+        min-height: 46px;
     }
 }
-
-/* 
-==================================================
-    ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ ДЛЯ СЕТКИ
-==================================================
-*/
-
-/* Для случаев, когда колонок много - минимальная ширина поля */
-.odds-input {
-    min-width: 60px;
-}
-
-/* Убираем стрелки у number input (опционально) */
-.odds-input::-webkit-outer-spin-button,
-.odds-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.odds-input[type=number] {
-    -moz-appearance: textfield;
-}
-
-
