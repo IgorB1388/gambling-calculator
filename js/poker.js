@@ -17,7 +17,6 @@ const HandEvaluator = {
 
         const flushSuit = this.getFlushSuit(formatted);
 
-        // --- Стрит-флеш ---
         if(flushSuit!==-1){
             const straightFlushCards = this.getStraightFlushCards(formatted,flushSuit);
             if(straightFlushCards.length===5){
@@ -26,14 +25,12 @@ const HandEvaluator = {
             }
         }
 
-        // --- Каре ---
         const quadRank = this.getRankOfCount(counts,4);
         if(quadRank!==-1){
             const kicker = this.getKickersByRanks(formatted,[quadRank],1);
             return {rank:7, mainCards:[this.rankToValue(quadRank)], kickers:kicker.map(r=>this.rankToValue(r))};
         }
 
-        // --- Фулл-хаус ---
         const tripsRanks = this.getRanksOfCount(counts,3).sort((a,b)=>b-a);
         const pairRanks = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
 
@@ -44,27 +41,23 @@ const HandEvaluator = {
             return {rank:6, mainCards:[this.rankToValue(trips),this.rankToValue(pair)], kickers:[]};
         }
 
-        // --- Флеш ---
         if(flushSuit!==-1){
             const flushCards = formatted.filter(c=>c.suit===flushSuit).slice(0,5);
             return {rank:5, mainCards:flushCards.map(c=>c.originalValue), kickers:[]};
         }
 
-        // --- Стрит ---
         const straightHigh = this.getStraightValue(formatted);
         if(straightHigh!==-1){
             const mainCards = this.getStraightCards(formatted,straightHigh);
             return {rank:4, mainCards:mainCards.map(c=>c.originalValue), kickers:[]};
         }
 
-        // --- Тройка ---
         if(tripsRanks.length>=1){
             const trips = tripsRanks[0];
             const kickers = this.getKickersByRanks(formatted,[trips],2);
             return {rank:3, mainCards:[this.rankToValue(trips)], kickers:kickers.map(r=>this.rankToValue(r))};
         }
 
-        // --- Две пары ---
         const pairs = this.getRanksOfCount(counts,2).sort((a,b)=>b-a);
         if(pairs.length>=2){
             const topPairs = pairs.slice(0,2);
@@ -72,14 +65,12 @@ const HandEvaluator = {
             return {rank:2, mainCards:topPairs.map(r=>this.rankToValue(r)), kickers:kicker.map(r=>this.rankToValue(r))};
         }
 
-        // --- Пара ---
         if(pairs.length===1){
             const pair = pairs[0];
             const kickers = this.getKickersByRanks(formatted,[pair],3);
             return {rank:1, mainCards:[this.rankToValue(pair)], kickers:kickers.map(r=>this.rankToValue(r))};
         }
 
-        // --- Старшая карта ---
         const topCards = formatted.slice(0,5);
         return {rank:0, mainCards:topCards.map(c=>c.originalValue), kickers:[]};
     },
@@ -172,7 +163,7 @@ let currentDragOverSection=null;
 let dragOverTimer=null;
 
 // --- Инициализация ---
-document.addEventListener('DOMContentLoaded',()=>{
+function initApp(){
     createDeck();
     initEventListeners();
     initDragAndDrop();
@@ -181,6 +172,14 @@ document.addEventListener('DOMContentLoaded',()=>{
     checkBoardValidity();
     checkHandValidity();
     selectHandBlock();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    if(window.translationsReady){
+        initApp();
+    } else {
+        document.addEventListener('translationsReady', initApp, { once: true });
+    }
 });
 
 // --- Создание колоды ---
@@ -436,12 +435,14 @@ function updateCardDisplay(){
 function updateStatus(){
     document.getElementById('calculateBtn').disabled=!(checkHandValidity()&&checkBoardValidity()&&!isCalculating);
 }
+
 function checkHandValidity(){
     const w=document.getElementById('handWarning');
     const valid=getHandCardsCount()===2;
     w.style.display=valid?'none':'block';
     return valid;
 }
+
 function checkBoardValidity(){
     const w=document.getElementById('boardWarning');
     const count=getBoardCardsCount();
@@ -455,17 +456,20 @@ function selectHandBlock(){
     document.getElementById('handSection').classList.add('active');
     document.getElementById('boardSection').classList.remove('active');
 }
+
 function selectBoardBlock(){
     activeBlock='board';
     document.getElementById('boardSection').classList.add('active');
     document.getElementById('handSection').classList.remove('active');
 }
+
 function checkAndSwitchActiveBlock(){
     const handCount=getHandCardsCount();
     const boardCount=getBoardCardsCount();
     if(activeBlock==='hand'&&handCount>=2&&boardCount<5) selectBoardBlock();
     if(activeBlock==='board'&&boardCount>=5&&handCount<2) selectHandBlock();
 }
+
 function activateBlockBySlotId(slotId){
     if(slotId.startsWith('hero')) selectHandBlock();
     else selectBoardBlock();
@@ -551,7 +555,6 @@ function resetResults(){
     }
 }
 
-// --- Форматирование: count=кол-во раздач этого исхода, total=всего раздач ---
 function fmt(n, count, total){
     if(count===0) return '0%';
     if(count===total) return '100%';
@@ -561,7 +564,6 @@ function fmt(n, count, total){
     return r.toFixed(1)+'%';
 }
 
-// --- Расчет эквити ---
 function calculateEquity(){
     if(isCalculating) return;
 
@@ -628,7 +630,6 @@ function calculateEquity(){
 
     if(actualRuns===0){isCalculating=false;updateStatus();return;}
 
-    // Метод наибольших остатков с защитой строгих нулей и соток
     const heroPercent=(heroWins/actualRuns)*100;
     const oppPercent=(oppWins/actualRuns)*100;
     const tiePercent=(tieRuns/actualRuns)*100;
@@ -639,14 +640,12 @@ function calculateEquity(){
         {key:'tie', exact:tiePercent, count:tieRuns},
     ];
 
-    // Фиксируем строгие нули и сотки, остальным floor
     vals.forEach(v=>{
         if(v.count===0) v.rounded=0;
         else if(v.count===actualRuns) v.rounded=100;
         else v.rounded=Math.floor(v.exact*10)/10;
     });
 
-    // Остаток до 100 отдаём нефиксированным по убыванию дробной части
     const free=vals.filter(v=>v.count>0&&v.count<actualRuns);
     const sum=vals.reduce((a,v)=>a+v.rounded,0);
     let remainder=Math.round((100-sum)*10)/10;
@@ -670,13 +669,11 @@ function calculateEquity(){
     updateStatus();
 }
 
-// --- Смена темы ---
 document.addEventListener('themeChanged',()=>{
     createDeck();
     updateCardDisplay();
 });
 
-// --- Экспорт для отладки ---
 window.getHandCardsCount=getHandCardsCount;
 window.getBoardCardsCount=getBoardCardsCount;
 window.checkHandValidity=checkHandValidity;
