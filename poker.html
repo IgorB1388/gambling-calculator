@@ -24,44 +24,7 @@
     <div class="site-container">
         
         <!-- ШАПКА САЙТА -->
-        <header class="site-header bg-header border-primary shadow-default">
-            <div class="header-content">
-                <!-- Логотип -->
-                <div class="logo">
-                    <div class="logo-icon logo-gradient">
-                        <i class="fas fa-dice"></i> <!-- Иконка кубиков -->
-                    </div>
-                    <div class="logo-text">
-                        <span class="logo-main logo-text-gradient">GTA CASINO</span>
-                        <span class="logo-sub text-secondary">TOOLS</span>
-                    </div>
-                </div>
-                
-                <!-- Навигационное меню -->
-                <nav class="main-nav">
-                    <ul class="nav-list nav-bg border-primary">
-                        <li><a href="index.html" class="nav-link nav-link-bg text-medium" data-i18n="navHome"><i class="fas fa-home"></i></a></li>
-                        <li><a href="poker.html" class="nav-link nav-link-bg text-medium active nav-link-active" data-i18n="navPoker"><i class="fas fa-club"></i></a></li>
-                        <li><a href="roulette.html" class="nav-link nav-link-bg text-medium" data-i18n="navRoulette"><i class="fas fa-dice"></i></a></li>
-                        <li><a href="arbs.html" class="nav-link nav-link-bg text-medium" data-i18n="navArbs"><i class="fas fa-chart-line"></i></a></li>
-                        <li><a href="faq.html" class="nav-link nav-link-bg text-medium" data-i18n="navFaq"><i class="fas fa-question-circle"></i></a></li>
-                    </ul>
-                </nav>
-                
-                <!-- Переключатель языков -->
-                <div class="language-switcher-header bg-surface border-accent">
-                    <div class="lang-btn" data-lang="ru" title="Русский">
-                        <img src="images/flags/ru.png" alt="RU" class="lang-flag border-muted">
-                    </div>
-                    <div class="lang-btn" data-lang="en" title="English">
-                        <img src="images/flags/en.png" alt="EN" class="lang-flag border-muted">
-                    </div>
-                    <div class="lang-btn" data-lang="es" title="Español">
-                        <img src="images/flags/es.png" alt="ES" class="lang-flag border-muted">
-                    </div>
-                </div>
-            </div>
-        </header>
+       <div id="header-placeholder"></div>
 
         <!-- ПОКЕР-КАЛЬКУЛЯТОР - основная часть страницы -->
         <div class="poker-container">
@@ -192,11 +155,13 @@
     </div>
 
     <!-- Подключение скриптов -->
+    <script src="js/header-loader.js"></script>
     <script src="js/language.js"></script> <!-- Мультиязычность -->
     <script src="js/main.js"></script> <!-- Основные функции -->
     <script src="js/poker.js"></script> <!-- Логика покер-калькулятора -->
     <script src="js/theme-switcher.js"></script> <!-- Переключение тем -->
 </body>
 </html>
+
 
 
