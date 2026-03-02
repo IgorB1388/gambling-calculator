@@ -125,6 +125,10 @@
     "arbsStrategyLabel": "СТРАТЕГИЯ РАСЧЕТА:",
     "arbsStrategyGuaranteed": "Гарантированная прибыль",
     "arbsStrategyMax": "Максимальная прибыль с возвратом",
+    "arbsOutcomeLabel": "Исход",
+    "arbsBkLabel": "БК",
+    "arbsFound": "✅ Вилка найдена!",
+    "arbsNotFound": "❌ Вилки нет",
     
     "faqTitle": "ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ",
     "faqSubtitle": "Ответы на популярные вопросы о GTA Casino Tools",
@@ -162,6 +166,7 @@
     "strategyZero": "0 (Зеро)",
     "strategyDoubleZero": "00 (Двойное зеро)"
 }
+
 
 
 
