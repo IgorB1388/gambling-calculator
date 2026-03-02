@@ -57,6 +57,7 @@ class ThemeManager {
     }
 
     addThemeSwitcherToHeader() {
+        // ищем .header-controls, куда вставляем темы
         const controls = document.querySelector('.header-controls');
         if (!controls) return;
         if (document.querySelector('.theme-switcher')) return;
