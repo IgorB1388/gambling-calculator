@@ -285,7 +285,7 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    gap: 15%;
+    gap: 10%;
 }
 
 /* === РАНГ КАРТЫ === */
@@ -493,4 +493,5 @@
     .opponent-pills { gap: 5px; }
     .opponent-pill { width: 35px; height: 35px; font-size: 1rem; }
 }
+
 
