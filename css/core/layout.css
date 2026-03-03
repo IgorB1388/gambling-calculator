@@ -240,6 +240,7 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+    height: 250px;
 }
 
 .page-header-icon {
@@ -538,3 +539,4 @@
     .logo { flex-direction: column; gap: 10px; }
     .logo-text { align-items: center; }
 }
+
