@@ -262,7 +262,6 @@
     border-style: solid;         /* Стиль границы */
     font-weight: bold;           /* Жирное начертание */
     position: relative;          /* Для позиционирования псевдоэлементов */
-    overflow: hidden;            /* Скрытие выступающего */
     border-color: transparent;   /* Прозрачная граница по умолчанию */
 }
 
@@ -715,4 +714,5 @@
         font-size: 1rem;
     }
 }
+
 
