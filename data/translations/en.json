@@ -12,10 +12,8 @@
     
     "toolPokerTitle": "Poker Calculator",
     "toolPokerDesc": "Calculate winning chances in poker based on your hand and community cards",
-    
     "toolRouletteTitle": "Roulette Analyzer",
     "toolRouletteDesc": "Roulette statistics analysis in GTA San Andreas style",
-    
     "toolArbsTitle": "Arbitrage Scanner",
     "toolArbsDesc": "Find arbitrage opportunities between bookmakers",
     
@@ -44,21 +42,9 @@
     "yourHandResult": "YOUR HAND",
     "opponentsResult": "OPPONENTS",
     "tieResult": "TIE",
-    "preflop": "Preflop",
-    "highCard": "High card",
-    "pair": "Pair",
-    "twoPair": "Two pair",
-    "threeOfAKind": "Three of a kind",
-    "straight": "Straight",
-    "flush": "Flush",
-    "fullHouse": "Full house",
-    "fourOfAKind": "Four of a kind",
-    "straightFlush": "Straight flush",
-    "royalFlush": "Royal flush",
-    "unknownCombo": "Unknown combination",
     
     "rouletteTitle": "ROULETTE ANALYZER",
-    "rouletteSubtitle": "GTA San Andreas Edition",
+    "rouletteSubtitle": "Strategy simulation and risk analysis",
     "rouletteSettingsTitle": "⚙️ STRATEGY SETTINGS",
     "rouletteTypeLabel": "ROULETTE TYPE:",
     "rouletteEuropean": "European (single zero)",
@@ -78,6 +64,10 @@
     "strategyColumn1": "1st column (1,4,7,...)",
     "strategyColumn2": "2nd column (2,5,8,...)",
     "strategyColumn3": "3rd column (3,6,9,...)",
+    "strategyCustom": "✏️ Custom numbers...",
+    "strategyNumber": "Number {number}",
+    "strategyZero": "0 (Zero)",
+    "strategyDoubleZero": "00 (Double zero)",
     
     "triggerLabel": "TRIGGER CONDITION:",
     "triggerMissed": "missed",
@@ -110,11 +100,6 @@
     "chartPlaceholder": "📊 Results distribution",
     "profitableSessions": "Profitable sessions",
     "noData": "No data",
-    "rouletteComingSoon": "IN DEVELOPMENT",
-    "rouletteComingDesc": "Roulette analyzer in GTA San Andreas style coming soon!",
-    "rouletteFeature1": "Real-time statistics",
-    "rouletteFeature2": "Spin history",
-    "rouletteFeature3": "Popular betting systems",
     
     "arbsTitle": "ARBITRAGE SCANNER",
     "arbsSubtitle": "Wall Street meets Las Vegas",
@@ -137,11 +122,6 @@
     "arbsStrategyLabel": "CALCULATION STRATEGY:",
     "arbsStrategyGuaranteed": "Guaranteed profit",
     "arbsStrategyMax": "Maximum profit with refund",
-    "arbsComingSoon": "COMING SOON",
-    "arbsDescription": "Advanced financial tool for guaranteed profit opportunities across multiple bookmakers",
-    "arbsROI": "ROI Calculator",
-    "arbsRisk": "Risk Management",
-    "arbsLive": "Live Updates",
     "arbsOutcomeLabel": "Outcome",
     "arbsBkLabel": "BK",
     "arbsFound": "✅ Arbitrage found!",
@@ -160,17 +140,13 @@
     "faqContact": "Didn't find an answer to your question?",
     "faqContactAnswer": "If you have other questions or suggestions for improving the tools, please contact us through the project's GitHub repository.",
     
-    "strategyCustom": "✏️ Custom numbers...",
-    "strategyNumber": "Number {number}",
-    
+    "addCondition": "➕ Add condition",
+    "not": "NOT",
+    "customNumbersTitle": "✏️ Custom numbers",
     "customNumbersPlaceholder": "Example: 7,14-17,33",
     "customNumbersHint": "Enter numbers separated by commas (spaces optional)",
     "customNumbersRequired": "Enter at least one number to bet on!",
     "betTooLarge": "Bet cannot be larger than bankroll!",
-    
-    "addCondition": "➕ Add condition",
-    "not": "NOT",
-    "customNumbersTitle": "✏️ Custom numbers",
     "totalBet": "📊 TOTAL:",
     "maxConditions": "Maximum 5 conditions",
     "removeCondition": "Remove condition",
@@ -178,8 +154,5 @@
     "totalBetNumbers": "Total numbers: {count} | Total percentage: {total}%",
     "noCommonNumbers": "❌ No common numbers",
     "enablePercent": "Bet percentage",
-    "conditionsLabel": "🎯 BET CONDITIONS",
-    "strategyZero": "0 (Zero)",
-    "strategyDoubleZero": "00 (Double zero)"
+    "conditionsLabel": "🎯 BET CONDITIONS"
 }
-
