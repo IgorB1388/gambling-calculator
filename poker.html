@@ -3,166 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Заголовок страницы подгружается из файлов локализации data-i18n -->
     <title data-i18n="siteTitle"></title>
     
-    <!-- Подключение стилей -->
-    <link rel="stylesheet" href="css/core/color-classes.css"> <!-- Базовые классы цветов -->
-    <link rel="stylesheet" href="css/core/layout.css"> <!-- Общий лэйаут для всего сайта -->
-    <link rel="stylesheet" href="css/pages/poker.css"> <!-- Стили только для покер-калькулятора -->
-    <link rel="stylesheet" href="css/themes/base-theme.css" id="theme-style"> <!-- Тема оформления (переключается) -->
+    <link rel="stylesheet" href="css/core/color-classes.css">
+    <link rel="stylesheet" href="css/core/layout.css">
+    <link rel="stylesheet" href="css/pages/poker.css">
+    <link rel="stylesheet" href="css/themes/base-theme.css" id="theme-style">
     
-    <!-- Иконка сайта (favicon) - динамическая через SVG -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
-    
-    <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<!-- Класс bg-body задает цвет фона из color-classes.css -->
 <body class="bg-body">
-    <!-- site-container - общий контейнер для всего контента (из layout.css) -->
     <div class="site-container">
         
-        <!-- ШАПКА САЙТА -->
-       <div id="header-placeholder"></div>
+        <div id="header-placeholder"></div>
 
-        <!-- ПОКЕР-КАЛЬКУЛЯТОР - основная часть страницы -->
-        <div class="poker-container">
-            
-            <!-- Заголовок покер-калькулятора -->
-            <div class="page-header bg-surface border-primary shadow-default">
-                <div class="header-suits">
-                    <!-- Статичные цвета мастей (text-black, text-red из color-classes.css) -->
-                    <span class="text-black">♠</span>
-                    <span class="text-red">♥</span>
-                    <span class="text-black">♣</span>
-                    <span class="text-red">♦</span>
-                </div>
-                <h1 class="text-gradient" data-i18n="title"></h1>               
-            </div>
-            
-            <!-- Основная область с двумя колонками -->
-            <div class="main-area">
+        <div class="content-wrapper">
+            <div class="poker-container">
                 
-                <!-- ЛЕВАЯ ПАНЕЛЬ (рука и борд) -->
-                <div class="panel bg-surface border-primary shadow-default">
-                    <!-- Заголовок ВАША РУКА И БОРД -->
-                    <div class="panel-title text-6" data-i18n="panelHandBoard"></div>
+                <div class="page-header bg-surface border-primary shadow-default">
+                    <div class="page-header-icon">♠</div>
+                    <h1 class="text-gradient" data-i18n="title"></h1>
+                    <p class="text-medium" data-i18n="subtitle"></p>
+                </div>
+                
+                <div class="main-area">
                     
-                    <!-- БЛОК "ВАША РУКА" -->
-                    <div class="hand-section bg-elevated border-primary" id="handSection">
-                        <div class="section-title text-primary" id="handTitle" data-i18n="yourHand"></div>
-                        <div class="hand-subtitle text-medium" data-i18n="handSubtitle"></div>
-                        <div class="section-content">
-                            <div class="cards-row">
-                                <!-- Слоты для карт руки (2 слота) -->
-                                <div class="card-slot slot-bg slot-border" data-slot="hero-1"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg slot-border" data-slot="hero-2"><div class="slot-empty text-slot">+</div></div>
+                    <div class="panel bg-surface border-primary shadow-default">
+                        <div class="panel-title text-6" data-i18n="panelHandBoard"></div>
+                        
+                        <div class="hand-section bg-elevated border-primary" id="handSection">
+                            <div class="section-title text-primary" id="handTitle" data-i18n="yourHand"></div>
+                            <div class="hand-subtitle text-medium" data-i18n="handSubtitle"></div>
+                            <div class="section-content">
+                                <div class="cards-row">
+                                    <div class="card-slot slot-bg slot-border" data-slot="hero-1"><div class="slot-empty text-slot">+</div></div>
+                                    <div class="card-slot slot-bg slot-border" data-slot="hero-2"><div class="slot-empty text-slot">+</div></div>
+                                </div>
+                            </div>
+                            <div class="warning text-warning" id="handWarning" data-i18n="handWarning"></div>
+                        </div>
+                        
+                        <div class="board-section bg-elevated border-secondary" id="boardSection">
+                            <div class="section-title text-secondary" id="boardTitle" data-i18n="board"></div>
+                            <div class="board-subtitle text-medium" data-i18n="boardSubtitle"></div>
+                            <div class="section-content">
+                                <div class="cards-row">
+                                    <div class="card-slot slot-bg slot-border" data-slot="board-1"><div class="slot-empty text-slot">+</div></div>
+                                    <div class="card-slot slot-bg slot-border" data-slot="board-2"><div class="slot-empty text-slot">+</div></div>
+                                    <div class="card-slot slot-bg slot-border" data-slot="board-3"><div class="slot-empty text-slot">+</div></div>
+                                    <div class="card-slot slot-bg slot-border" data-slot="board-4"><div class="slot-empty text-slot">+</div></div>
+                                    <div class="card-slot slot-bg slot-border" data-slot="board-5"><div class="slot-empty text-slot">+</div></div>
+                                </div>
+                            </div>
+                            <div class="warning text-warning" id="boardWarning" data-i18n="boardWarning"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel bg-surface border-primary shadow-default">
+                        <div class="panel-title text-6" data-i18n="panelSettings"></div>
+                        
+                        <div class="opponents-control bg-elevated border-4">
+                            <div class="opponents-label text-4" data-i18n="opponentsLabel"></div>
+                            <div class="opponent-pills" id="opponentPills">
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent active opponent-active" data-opponents="1">1</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="2">2</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="3">3</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="4">4</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="5">5</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="6">6</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="7">7</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="8">8</button>
+                                <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="9">9</button>
                             </div>
                         </div>
-                        <!-- Предупреждение для руки (неправильное кол-во карт) -->
-                        <div class="warning text-warning" id="handWarning" data-i18n="handWarning"></div>
-                    </div>
-                    
-                    <!-- БЛОК "БОРД" (общие карты) -->
-                    <div class="board-section bg-elevated border-secondary" id="boardSection">
-                        <div class="section-title text-secondary" id="boardTitle" data-i18n="board"></div>
-                        <div class="board-subtitle text-medium" data-i18n="boardSubtitle"></div>
-                        <div class="section-content">
-                            <div class="cards-row">
-                                <!-- Слоты для карт борда (5 слотов) -->
-                                <div class="card-slot slot-bg slot-border" data-slot="board-1"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg slot-border" data-slot="board-2"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg slot-border" data-slot="board-3"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg slot-border" data-slot="board-4"><div class="slot-empty text-slot">+</div></div>
-                                <div class="card-slot slot-bg slot-border" data-slot="board-5"><div class="slot-empty text-slot">+</div></div>
-                            </div>
+                        
+                        <div class="panel-title text-6" style="margin-top: 25px;" data-i18n="panelChooseCards"></div>
+                        
+                        <div class="deck-grid border-deck" id="deck"></div>
+                        
+                        <div class="drop-hint text-success" data-i18n="dropHint"></div>
+                        
+                        <div class="controls">
+                            <button class="btn btn-primary-bg btn-primary-text" id="calculateBtn" data-i18n="calculateBtn"></button>
+                            <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="clearAllBtn" data-i18n="clearBtn"></button>
                         </div>
-                        <!-- Предупреждение для борда -->
-                        <div class="warning text-warning" id="boardWarning" data-i18n="boardWarning"></div>
                     </div>
                 </div>
                 
-                <!-- ПРАВАЯ ПАНЕЛЬ (настройки и колода) -->
-                <div class="panel bg-surface border-primary shadow-default">
-                    <!-- Заголовок "НАСТРОЙКИ" -->
-                    <div class="panel-title text-6" data-i18n="panelSettings"></div>
-                    
-                    <!-- БЛОК ВЫБОРА КОЛИЧЕСТВА ОППОНЕНТОВ -->
-                    <div class="opponents-control bg-elevated border-4">
-                        <div class="opponents-label text-4" data-i18n="opponentsLabel"></div>
-                        <div class="opponent-pills" id="opponentPills">
-                            <!-- Кнопки-пилюли для выбора кол-ва оппонентов (1-9) -->
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent active opponent-active" data-opponents="1">1</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="2">2</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="3">3</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="4">4</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="5">5</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="6">6</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="7">7</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="8">8</button>
-                            <button class="opponent-pill opponent-bg opponent-border text-opponent" data-opponents="9">9</button>
+                <div class="results-panel bg-surface border-primary shadow-default" id="resultsPanel">
+                    <div class="panel-title text-6" data-i18n="panelResults"></div>
+                    <div class="results-grid">
+                        <div class="result-card bg-elevated border-primary shadow-default">
+                            <div class="text-primary" style="font-size: 1.1rem;" data-i18n="yourHandResult"></div>
+                            <div class="result-percent text-win" id="resultHero">—</div>
+                        </div>
+                        <div class="result-card bg-elevated border-secondary shadow-default">
+                            <div class="text-secondary" style="font-size: 1.1rem;" data-i18n="opponentsResult"></div>
+                            <div class="result-percent text-opp" id="resultOpponent">—</div>
+                        </div>
+                        <div class="result-card bg-elevated border-info shadow-default">
+                            <div class="text-info" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
+                            <div class="result-percent text-tie" id="resultTie">—</div>
                         </div>
                     </div>
-                    
-                    <!-- Заголовок КОЛОДА -->
-                    <div class="panel-title text-6" style="margin-top: 25px;" data-i18n="panelChooseCards"></div>
-                    
-                    <!-- КОЛОДА - сетка карт -->
-                    <div class="deck-grid border-deck" id="deck"></div>
-                    
-                    <!-- Подсказка по перетаскиванию -->
-                    <div class="drop-hint text-success" data-i18n="dropHint"></div>
-                    
-                    <!-- КНОПКИ УПРАВЛЕНИЯ -->
-                    <div class="controls">
-                        <button class="btn btn-primary-bg btn-primary-text" id="calculateBtn" data-i18n="calculateBtn"></button>
-                        <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="clearAllBtn" data-i18n="clearBtn"></button>
-                    </div>
                 </div>
-            </div>
-            
-            <!-- ПАНЕЛЬ РЕЗУЛЬТАТОВ (появляется после расчета) -->
-            <div class="results-panel bg-surface border-primary shadow-default" id="resultsPanel">
-                <div class="panel-title text-6" data-i18n="panelResults"></div>
-                
-                <div class="results-grid">
-                    <!-- Результат для руки игрока -->
-                    <div class="result-card bg-elevated border-primary shadow-default">
-                        <div class="text-primary" style="font-size: 1.1rem;" data-i18n="yourHandResult"></div>
-                        <div class="result-percent text-win" id="resultHero">—</div>
-                    </div>
-                    
-                    <!-- Результат для оппонентов -->
-                    <div class="result-card bg-elevated border-secondary shadow-default">
-                        <div class="text-secondary" style="font-size: 1.1rem;" data-i18n="opponentsResult"></div>
-                        <div class="result-percent text-opp" id="resultOpponent">—</div>
-                    </div>
-                    
-                    <!-- Результат для ничьей -->
-                    <div class="result-card bg-elevated border-info shadow-default">
-                        <div class="text-info" style="font-size: 1.1rem;" data-i18n="tieResult"></div>
-                        <div class="result-percent text-tie" id="resultTie">—</div>
-                    </div>
-                </div>
+
             </div>
         </div>
 
-        <!-- ФУТЕР -->
         <footer class="site-footer footer-bg border-primary">
             <p class="footer-text" data-i18n="footerText"></p>
         </footer>
     </div>
 
-    <!-- Подключение скриптов -->
     <script src="js/header-loader.js"></script>
-    <script src="js/language.js"></script> <!-- Мультиязычность -->
-    <script src="js/main.js"></script> <!-- Основные функции -->
-    <script src="js/poker.js"></script> <!-- Логика покер-калькулятора -->
-    <script src="js/theme-switcher.js"></script> <!-- Переключение тем -->
+    <script src="js/language.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/poker.js"></script>
+    <script src="js/theme-switcher.js"></script>
 </body>
 </html>
-
-
-
-
