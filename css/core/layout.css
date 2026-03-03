@@ -17,6 +17,13 @@
     flex-direction: column;
 }
 
+/* === ОБЁРТКА КОНТЕНТА (уже шапки) === */
+.content-wrapper {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
 /* === ШАПКА === */
 .site-header {
     border-radius: 20px;
@@ -221,28 +228,41 @@
 /* === ЗАГОЛОВКИ СТРАНИЦ === */
 .page-header {
     text-align: center;
-    margin-bottom: 50px;
-    padding: 40px;
+    margin-bottom: 40px;
+    padding: 35px 40px;
     border-radius: 25px;
     border-width: 2px;
     border-style: solid;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.page-header-icon {
+    font-size: 3rem;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
 }
 
 .page-header h1 {
-    font-size: 3rem;
-    margin-bottom: 15px;
+    font-size: 2.5rem;
+    margin: 0;
     position: relative;
     z-index: 1;
 }
 
 .page-header p {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0;
     position: relative;
     z-index: 1;
+    line-height: 1.5;
 }
 
 /* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
@@ -474,7 +494,8 @@
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 1200px) {
     .site-container { max-width: 1000px; }
-    .page-header h1 { font-size: 2.5rem; }
+    .content-wrapper { max-width: 100%; }
+    .page-header h1 { font-size: 2.2rem; }
 }
 
 @media (max-width: 1024px) {
@@ -485,9 +506,10 @@
 @media (max-width: 768px) {
     .site-container { padding: 15px; }
     .header-top { flex-wrap: wrap; gap: 15px; }
-    .page-header { padding: 30px 20px; margin-bottom: 30px; }
+    .page-header { padding: 25px 20px; margin-bottom: 30px; }
     .page-header h1 { font-size: 2rem; }
-    .page-header p { font-size: 1.1rem; }
+    .page-header p { font-size: 1rem; }
+    .page-header-icon { font-size: 2.5rem; }
     .tools-grid { grid-template-columns: 1fr; gap: 25px; margin: 30px 0; }
     .tool-card { padding: 25px; min-height: 250px; }
     .tool-icon { width: 75px; height: 75px; font-size: 30px; }
@@ -505,8 +527,9 @@
     .header-controls { flex-wrap: wrap; justify-content: center; }
     .nav-list { flex-direction: column; align-items: center; width: auto; }
     .nav-link { width: 220px; justify-content: flex-start; }
-    .page-header { padding: 25px 15px; }
+    .page-header { padding: 20px 15px; }
     .page-header h1 { font-size: 1.8rem; }
+    .page-header-icon { font-size: 2rem; }
     .coming-soon-sa, .coming-soon-gta4 { padding: 30px 15px; }
     .coming-soon-icon-sa, .coming-soon-icon-gta4 { font-size: 3.5rem; }
     .language-switcher-header { padding: 8px 10px; gap: 6px; }
