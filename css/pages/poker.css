@@ -290,14 +290,14 @@
 
 /* === РАНГ КАРТЫ === */
 .card-value { 
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: bold;
     line-height: 1;
 }
 
 /* === МАСТЬ КАРТЫ === */
 .card-suit-large { 
-    font-size: 1.05rem;
+    font-size: 1.2rem;
     line-height: 1;
 }
 
@@ -493,3 +493,4 @@
     .opponent-pills { gap: 5px; }
     .opponent-pill { width: 35px; height: 35px; font-size: 1rem; }
 }
+
