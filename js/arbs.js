@@ -35,6 +35,19 @@ function initState() {
     }
 }
 
+function showStakeError(show) {
+    const input = document.getElementById('totalStake');
+    const errorEl = document.getElementById('stakeError');
+    if (show) {
+        input.classList.add('input-error');
+        errorEl.style.display = 'block';
+        errorEl.textContent = window.getTranslation('invalidStake') || 'Введите корректную сумму ставки';
+    } else {
+        input.classList.remove('input-error');
+        errorEl.style.display = 'none';
+    }
+}
+
 function updateOutcomePillsActive(count) {
     document.querySelectorAll('.outcome-pill').forEach(btn => {
         const v = parseInt(btn.dataset.outcomes);
@@ -61,7 +74,6 @@ function renderOddsTable() {
     container.innerHTML = '';
     container.style.setProperty('--outcome-count', outcomeCount);
 
-    // Заголовки
     const headerRow = document.createElement('div');
     headerRow.className = 'odds-header-row';
     headerRow.appendChild(Object.assign(document.createElement('div'), { className: 'odds-corner' }));
@@ -74,7 +86,6 @@ function renderOddsTable() {
     }
     container.appendChild(headerRow);
 
-    // Строки БК
     for (let b = 0; b < bkCount; b++) {
         const row = document.createElement('div');
         row.className = 'odds-row';
@@ -122,7 +133,6 @@ function renderOddsTable() {
         container.appendChild(row);
     }
 
-    // Кнопка добавления БК
     if (bkCount < 5) {
         const addRow = document.createElement('div');
         addRow.className = 'add-bk-row';
@@ -207,6 +217,9 @@ function initEventListeners() {
     document.getElementById('calculateArbBtn').addEventListener('click', calculateArbitrage);
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 
+    // Скрываем ошибку при вводе
+    document.getElementById('totalStake').addEventListener('input', () => showStakeError(false));
+
     document.addEventListener('languageChanged', () => {
         renderOddsTable();
         if (lastCalculation) displayResults(lastCalculation);
@@ -281,9 +294,11 @@ function calculateArbitrage() {
     const totalStake = parseFloat(document.getElementById('totalStake').value);
 
     if (isNaN(totalStake) || totalStake <= 0) {
-        alert(window.getTranslation('invalidStake') || 'Введите корректную сумму ставки');
+        showStakeError(true);
         return;
     }
+
+    showStakeError(false);
 
     const result = strategy === 'guaranteed'
         ? calculateGuaranteedStrategy(bestOdds, totalStake)
@@ -354,6 +369,7 @@ function resetCalculator() {
     renderOddsTable();
 
     document.getElementById('totalStake').value = 1000;
+    showStakeError(false);
     document.getElementById('indicatorCircle').classList.remove('bg-success-solid', 'bg-danger-solid');
     document.getElementById('arbStatus').textContent = '—';
     document.getElementById('arbStatus').className = 'text-1';
@@ -394,4 +410,3 @@ window.calculateArbitrage = calculateArbitrage;
 window.addBookmaker = addBookmaker;
 window.removeBookmaker = removeBookmaker;
 window.changeStrategy = changeStrategy;
-
