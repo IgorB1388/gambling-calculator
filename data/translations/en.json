@@ -24,7 +24,7 @@
     "footerText": "GTA Casino Tools © 2024 | Created for gambling enthusiasts",
     
     "title": "POKER CALCULATOR",
-    "subtitle": "Calculate winning chances",
+    "pokerSubtitle": "Calculate winning chances",
     "panelHandBoard": "🎯 YOUR HAND AND BOARD",
     "yourHand": "⭐ YOUR HAND",
     "handSubtitle": "2 cards",
@@ -156,3 +156,4 @@
     "enablePercent": "Bet percentage",
     "conditionsLabel": "🎯 BET CONDITIONS"
 }
+
