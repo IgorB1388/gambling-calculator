@@ -266,7 +266,11 @@
     position: relative;
     z-index: 1;
     line-height: 1.5;
-    min-height: 2.5em; /* резервируем место под 2 строки */
+    height: 3.3em;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
@@ -542,5 +546,6 @@
     .logo { flex-direction: column; gap: 10px; }
     .logo-text { align-items: center; }
 }
+
 
 
