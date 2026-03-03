@@ -27,64 +27,85 @@
 
                 <div class="arbitrage-main-area">
 
+                    <!-- ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ -->
                     <div class="panel bg-surface border-1 shadow-default">
                         <div class="panel-title text-1" style="border-bottom: 2px solid var(--border-1);" data-i18n="arbsSettingsTitle"></div>
 
+                        <!-- Количество исходов -->
                         <div class="settings-group">
                             <div class="settings-label text-3" data-i18n="arbsOutcomesLabel"></div>
                             <div class="outcome-pills" id="outcomeCountPills">
-                                <button class="outcome-pill opponent-bg border-5 text-5 active opponent-active" data-outcomes="2">2</button>
-                                <button class="outcome-pill opponent-bg border-5 text-5" data-outcomes="3">3</button>
-                                <button class="outcome-pill opponent-bg border-5 text-5" data-outcomes="4">4</button>
-                                <button class="outcome-pill opponent-bg border-5 text-5" data-outcomes="5">5</button>
+                                <button class="outcome-pill active" data-outcomes="2">2</button>
+                                <button class="outcome-pill" data-outcomes="3">3</button>
+                                <button class="outcome-pill" data-outcomes="4">4</button>
+                                <button class="outcome-pill" data-outcomes="5">5</button>
                             </div>
                         </div>
 
+                        <!-- Таблица коэффициентов -->
                         <div class="settings-group">
                             <div class="settings-label text-3" data-i18n="arbsOddsLabel"></div>
                             <div class="odds-table" id="oddsTable"></div>
                         </div>
 
+                        <!-- Сумма ставки -->
                         <div class="settings-group">
                             <div class="settings-label text-3" data-i18n="arbsStakeLabel"></div>
-                            <div class="input-wrapper">
-                                <input type="number" id="totalStake" class="settings-input bg-elevated border-5 text-1" value="1000" min="1" step="1">
-                                <span class="input-suffix text-2">$</span>
+                            <div class="stake-row">
+                                <div class="stake-input-wrapper">
+                                    <input type="number" id="totalStake"
+                                        class="stake-input bg-elevated border-3 text-3"
+                                        value="1000" min="1" max="99999999" step="1" maxlength="8">
+                                    <span class="stake-suffix text-3">$</span>
+                                </div>
+                                <div class="stake-error text-danger" id="stakeError" style="display:none;"></div>
                             </div>
                         </div>
 
+                        <!-- Кнопки -->
                         <div class="controls">
-                            <button class="btn btn-primary-bg btn-primary-text" id="calculateArbBtn">
-                                <i class="fas fa-calculator"></i> <span data-i18n="arbsCalculateBtn"></span>
+                            <button class="btn btn-primary-bg btn-primary-text border-secondary" id="calculateArbBtn">
+                                <i class="fas fa-calculator"></i>
+                                <span data-i18n="arbsCalculateBtn"></span>
                             </button>
                             <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="resetArbBtn">
-                                <i class="fas fa-undo-alt"></i> <span data-i18n="resetBtn"></span>
+                                <i class="fas fa-undo-alt"></i>
+                                <span data-i18n="resetBtn"></span>
                             </button>
                         </div>
                     </div>
 
-                    <div class="panel bg-surface border-1 shadow-default">
+                    <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
+                    <div class="panel bg-surface border-4 shadow-default">
                         <div class="panel-title text-4" style="border-bottom: 2px solid var(--border-4);" data-i18n="arbsResultsTitle"></div>
 
-                        <div class="arb-indicator border-1" id="arbIndicator">
+                        <!-- Индикатор статуса -->
+                        <div class="arb-indicator bg-elevated border-1" id="arbIndicator">
                             <div class="indicator-circle" id="indicatorCircle"></div>
                             <div class="indicator-text">
-                                <span class="text-2" data-i18n="arbsStatusLabel"></span>
+                                <span class="text-muted" data-i18n="arbsStatusLabel"></span>
                                 <span class="text-1" id="arbStatus">—</span>
-                            </div>
-                            <div class="strategy-mini-pills" style="margin-left: auto;">
-                                <button class="strategy-mini-btn opponent-bg border-5 text-5 active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed"></button>
-                                <button class="strategy-mini-btn opponent-bg border-5 text-5" data-strategy="max" data-i18n="arbsStrategyMax"></button>
                             </div>
                         </div>
 
+                        <!-- Кнопки стратегии — отдельным блоком -->
+                        <div class="strategy-block">
+                            <div class="settings-label text-3" data-i18n="arbsStrategyLabel"></div>
+                            <div class="strategy-mini-pills">
+                                <button class="strategy-mini-btn active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed"></button>
+                                <button class="strategy-mini-btn" data-strategy="max" data-i18n="arbsStrategyMax"></button>
+                            </div>
+                        </div>
+
+                        <!-- Карточка прибыли -->
                         <div class="profit-card bg-elevated border-4" id="profitCard" style="display: none;">
                             <div class="profit-label text-2" data-i18n="arbsProfitPercent"></div>
                             <div class="profit-value text-4" id="profitPercent">0.00%</div>
                         </div>
 
+                        <!-- Таблица распределения -->
                         <div class="distribution-table border-1" id="distributionTable">
-                            <div class="table-header border-1">
+                            <div class="table-header bg-elevated border-1">
                                 <span class="text-2" data-i18n="arbsOutcome"></span>
                                 <span class="text-2" data-i18n="arbsOdds"></span>
                                 <span class="text-2" data-i18n="arbsStake"></span>
@@ -93,25 +114,26 @@
                             <div class="table-body" id="tableBody"></div>
                         </div>
 
-                        <div class="totals border-1">
+                        <!-- Итоги -->
+                        <div class="totals bg-elevated border-1">
                             <div class="total-row">
-                                <span class="text-5" data-i18n="arbsTotalStake"></span>
-                                <span class="text-6" id="totalStakeDisplay">0 $</span>
+                                <span class="text-muted" data-i18n="arbsTotalStake"></span>
+                                <span class="text-3" id="totalStakeDisplay">0 $</span>
                             </div>
                             <div class="total-row">
-                                <span class="text-5" data-i18n="arbsTotalPayout"></span>
-                                <span class="text-6" id="totalPayout">0 $</span>
+                                <span class="text-muted" data-i18n="arbsTotalPayout"></span>
+                                <span class="text-4" id="totalPayout">0 $</span>
                             </div>
                             <div class="total-row profit-row" id="profitRow" style="display: none;">
-                                <span class="text-5" data-i18n="arbsNetProfit"></span>
-                                <span class="text-6" id="netProfit">0 $</span>
+                                <span class="text-muted" data-i18n="arbsNetProfit"></span>
+                                <span class="text-4" id="netProfit">0 $</span>
                             </div>
                         </div>
 
                         <div class="arb-hint text-muted" data-i18n="arbsHint"></div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
 
