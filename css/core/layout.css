@@ -237,7 +237,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 10px;
     height: 250px;
@@ -546,6 +546,7 @@
     .logo { flex-direction: column; gap: 10px; }
     .logo-text { align-items: center; }
 }
+
 
 
 
