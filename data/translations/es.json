@@ -24,7 +24,7 @@
     "footerText": "GTA Casino Tools © 2024 | Creado para entusiastas de los juegos de azar",
     
     "title": "CALCULADORA DE PÓKER",
-    "subtitle": "Calcula las probabilidades de ganar",
+    "pokerSubtitle": "Calcula las probabilidades de ganar",
     "panelHandBoard": "🎯 TU MANO Y LA MESA",
     "yourHand": "⭐ TU MANO",
     "handSubtitle": "2 cartas",
@@ -156,3 +156,4 @@
     "enablePercent": "Porcentaje de apuesta",
     "conditionsLabel": "🎯 CONDICIONES DE APUESTA"
 }
+
