@@ -248,6 +248,7 @@
     line-height: 1;
     position: relative;
     z-index: 1;
+    flex-shrink: 0;
 }
 
 .page-header h1 {
@@ -255,6 +256,7 @@
     margin: 0;
     position: relative;
     z-index: 1;
+    flex-shrink: 0;
 }
 
 .page-header p {
@@ -264,6 +266,7 @@
     position: relative;
     z-index: 1;
     line-height: 1.5;
+    min-height: 2.5em; /* резервируем место под 2 строки */
 }
 
 /* === КАРТОЧКИ ИНСТРУМЕНТОВ === */
@@ -539,4 +542,5 @@
     .logo { flex-direction: column; gap: 10px; }
     .logo-text { align-items: center; }
 }
+
 
