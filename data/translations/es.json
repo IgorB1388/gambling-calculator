@@ -12,10 +12,8 @@
     
     "toolPokerTitle": "Calculadora de póker",
     "toolPokerDesc": "Calcula probabilidades de ganar en póker basado en tu mano y cartas comunitarias",
-    
     "toolRouletteTitle": "Analizador de ruleta",
     "toolRouletteDesc": "Análisis estadístico de ruleta en estilo GTA San Andreas",
-    
     "toolArbsTitle": "Escáner de arbitraje",
     "toolArbsDesc": "Encuentra oportunidades de arbitraje entre casas de apuestas",
     
@@ -44,21 +42,9 @@
     "yourHandResult": "TU MANO",
     "opponentsResult": "OPONENTES",
     "tieResult": "EMPATE",
-    "preflop": "Preflop",
-    "highCard": "Carta alta",
-    "pair": "Pareja",
-    "twoPair": "Doble pareja",
-    "threeOfAKind": "Trío",
-    "straight": "Escalera",
-    "flush": "Color",
-    "fullHouse": "Full house",
-    "fourOfAKind": "Póker",
-    "straightFlush": "Escalera de color",
-    "royalFlush": "Escalera real de color",
-    "unknownCombo": "Combinación desconocida",
     
     "rouletteTitle": "ANALIZADOR DE RULETA",
-    "rouletteSubtitle": "Edición GTA San Andreas",
+    "rouletteSubtitle": "Simulación de estrategias y análisis de riesgos",
     "rouletteSettingsTitle": "⚙️ AJUSTES DE ESTRATEGIA",
     "rouletteTypeLabel": "TIPO DE RULETA:",
     "rouletteEuropean": "Europea (un cero)",
@@ -78,6 +64,10 @@
     "strategyColumn1": "1ª columna (1,4,7,...)",
     "strategyColumn2": "2ª columna (2,5,8,...)",
     "strategyColumn3": "3ª columna (3,6,9,...)",
+    "strategyCustom": "✏️ Números personalizados...",
+    "strategyNumber": "Número {number}",
+    "strategyZero": "0 (Cero)",
+    "strategyDoubleZero": "00 (Doble cero)",
     
     "triggerLabel": "CONDICIÓN DE ACTIVACIÓN:",
     "triggerMissed": "no salió",
@@ -110,11 +100,6 @@
     "chartPlaceholder": "📊 Distribución de resultados",
     "profitableSessions": "Sesiones rentables",
     "noData": "Sin datos",
-    "rouletteComingSoon": "EN DESARROLLO",
-    "rouletteComingDesc": "¡Analizador de ruleta en estilo GTA San Andreas disponible pronto!",
-    "rouletteFeature1": "Estadísticas en tiempo real",
-    "rouletteFeature2": "Historial de giros",
-    "rouletteFeature3": "Sistemas de apuestas populares",
     
     "arbsTitle": "ESCÁNER DE ARBITRAJE",
     "arbsSubtitle": "Wall Street se encuentra con Las Vegas",
@@ -137,11 +122,6 @@
     "arbsStrategyLabel": "ESTRATEGIA DE CÁLCULO:",
     "arbsStrategyGuaranteed": "Beneficio garantizado",
     "arbsStrategyMax": "Beneficio máximo con reembolso",
-    "arbsComingSoon": "PRÓXIMAMENTE",
-    "arbsDescription": "Herramienta financiera avanzada para oportunidades de ganancias garantizadas en múltiples casas de apuestas",
-    "arbsROI": "Calculadora de ROI",
-    "arbsRisk": "Gestión de riesgo",
-    "arbsLive": "Actualizaciones en vivo",
     "arbsOutcomeLabel": "Resultado",
     "arbsBkLabel": "Casa",
     "arbsFound": "✅ ¡Apuesta encontrada!",
@@ -160,17 +140,13 @@
     "faqContact": "¿No encontraste respuesta a tu pregunta?",
     "faqContactAnswer": "Si tiene otras preguntas o sugerencias para mejorar las herramientas, comuníquese con nosotros a través del repositorio GitHub del proyecto.",
     
-    "strategyCustom": "✏️ Números personalizados...",
-    "strategyNumber": "Número {number}",
-    
+    "addCondition": "➕ Agregar condición",
+    "not": "NO",
+    "customNumbersTitle": "✏️ Números personalizados",
     "customNumbersPlaceholder": "Ejemplo: 7,14-17,33",
     "customNumbersHint": "Ingresa números separados por comas (espacios opcionales)",
     "customNumbersRequired": "¡Ingresa al menos un número para apostar!",
     "betTooLarge": "¡La apuesta no puede ser mayor que la banca!",
-    
-    "addCondition": "➕ Agregar condición",
-    "not": "NO",
-    "customNumbersTitle": "✏️ Números personalizados",
     "totalBet": "📊 TOTAL:",
     "maxConditions": "Máximo 5 condiciones",
     "removeCondition": "Eliminar condición",
@@ -178,8 +154,5 @@
     "totalBetNumbers": "Total números: {count} | Porcentaje total: {total}%",
     "noCommonNumbers": "❌ No hay números comunes",
     "enablePercent": "Porcentaje de apuesta",
-    "conditionsLabel": "🎯 CONDICIONES DE APUESTA",
-    "strategyZero": "0 (Cero)",
-    "strategyDoubleZero": "00 (Doble cero)"
+    "conditionsLabel": "🎯 CONDICIONES DE APUESTA"
 }
-
