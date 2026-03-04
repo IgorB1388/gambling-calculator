@@ -27,7 +27,7 @@
     flex-direction: column;
     gap: 20px;
     box-sizing: border-box;
-    min-height: 680px;
+    min-height: 900px;
 }
 
 .panel-title {
@@ -592,3 +592,4 @@
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
 }
+
