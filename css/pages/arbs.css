@@ -27,11 +27,11 @@
     flex-direction: column;
     gap: 20px;
     box-sizing: border-box;
-    min-height: 720px;
+    min-height: 600px;
 }
 
 .panel-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: bold;
     padding-bottom: 12px;
     border-bottom: 2px solid var(--border-muted);
@@ -61,7 +61,7 @@
 }
 
 .settings-label {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: bold;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -96,7 +96,7 @@
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     z-index: 10000;
     display: none;
@@ -111,8 +111,8 @@
 }
 
 .outcome-pill {
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     border-width: 2px;
     border-style: solid;
@@ -145,7 +145,7 @@
 
 .stake-input {
     width: 100%;
-    padding: 13px 38px 13px 15px;
+    padding: 13px 40px 13px 15px;
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
@@ -189,8 +189,8 @@
 
 .results-controls .btn {
     flex: 1;
-    padding: 15px 16px;
-    font-size: 1.1rem;
+    padding: 16px 16px;
+    font-size: 1.15rem;
     font-weight: bold;
     border-radius: 12px;
     border-width: 2px;
@@ -201,7 +201,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 54px;
+    min-height: 56px;
     white-space: nowrap;
 }
 
@@ -214,18 +214,18 @@
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
-    gap: 16px;
+    gap: 18px;
     text-align: center;
     flex: 1;
 }
 
 .placeholder-icon { font-size: 4rem; opacity: 0.4; }
-.placeholder-text { font-size: 1.1rem; font-style: italic; }
+.placeholder-text { font-size: 1.15rem; font-style: italic; }
 
 .placeholder-steps {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     text-align: left;
     margin-top: 8px;
 }
@@ -234,19 +234,19 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
 }
 
 .step-num {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     border: 1px solid var(--border-1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     flex-shrink: 0;
 }
 
@@ -266,12 +266,12 @@
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
-    min-height: 72px;
+    min-height: 74px;
 }
 
 .indicator-circle {
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     transition: background-color 0.3s;
     flex-shrink: 0;
@@ -284,16 +284,16 @@
     flex: 1;
 }
 
-.indicator-text span { font-size: 1.05rem; }
+.indicator-text span { font-size: 1.1rem; }
 .indicator-text span:last-child {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: bold;
 }
 
 .indicator-profit { margin-left: auto; }
 
 .profit-badge {
-    font-size: 2.2rem;
+    font-size: 2.4rem;
     font-weight: bold;
 }
 
@@ -311,13 +311,13 @@
 
 .strategy-mini-btn {
     flex: 1;
-    height: 54px;
+    height: 56px;
     padding: 6px 12px;
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
     border-color: var(--border-5);
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
@@ -359,7 +359,7 @@
 .odds-header {
     text-align: center;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.05rem;
     padding: 4px;
 }
 
@@ -376,7 +376,7 @@
     justify-content: space-between;
     gap: 4px;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.05rem;
     white-space: nowrap;
 }
 
@@ -401,7 +401,7 @@
     border-radius: 6px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     width: 100%;
     min-width: 50px;
     background: transparent;
@@ -455,9 +455,9 @@
     display: grid;
     grid-template-columns: 1.6fr 0.9fr 1.3fr 1.3fr 1fr;
     gap: 8px;
-    padding: 12px 15px;
+    padding: 13px 15px;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.05rem;
     border-bottom-width: 2px;
     border-bottom-style: solid;
 }
@@ -477,7 +477,7 @@
 .outcome-badge {
     display: inline-block;
     padding: 3px 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -496,11 +496,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
 }
 
 .total-row-value {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: bold;
 }
 
@@ -517,20 +517,20 @@
 }
 
 .net-profit-label {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .net-profit-value {
-    font-size: 2.4rem;
+    font-size: 2.6rem;
     font-weight: bold;
 }
 
 /* === ПОДСКАЗКА === */
 .arb-hint {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-style: italic;
     text-align: center;
     padding: 6px;
@@ -547,9 +547,9 @@
     }
 
     .odds-corner { width: 65px; }
-    .odds-bk-label { font-size: 0.9rem; }
+    .odds-bk-label { font-size: 0.95rem; }
     .odds-input { padding: 9px 4px; font-size: 1rem; }
-    .odds-header { font-size: 0.9rem; }
+    .odds-header { font-size: 0.95rem; }
 
     .table-header, .table-row {
         grid-template-columns: 1.4fr 0.8fr 1.1fr 1.1fr 0.9fr;
@@ -557,16 +557,17 @@
         padding: 9px 10px;
     }
 
-    .profit-badge { font-size: 1.6rem; }
-    .net-profit-value { font-size: 1.8rem; }
-    .results-controls .btn { padding: 13px 10px; font-size: 1rem; }
+    .profit-badge { font-size: 1.7rem; }
+    .net-profit-value { font-size: 1.9rem; }
+    .results-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
     .stake-input-wrapper { width: 100%; }
     .settings-label { font-size: 1rem; }
+    .panel-title { font-size: 1.4rem; }
 }
 
 @media (max-width: 480px) {
     .outcome-pills { justify-content: center; }
-    .outcome-pill { width: 44px; height: 44px; font-size: 1.1rem; }
+    .outcome-pill { width: 46px; height: 46px; font-size: 1.1rem; }
 
     .odds-header-row, .odds-row, .add-bk-row {
         grid-template-columns: 55px repeat(var(--outcome-count, 2), 1fr);
@@ -574,7 +575,7 @@
     }
 
     .odds-corner { width: 55px; }
-    .odds-bk-label { font-size: 0.82rem; }
+    .odds-bk-label { font-size: 0.85rem; }
     .odds-input { padding: 7px 2px; font-size: 0.9rem; }
 
     .table-header, .table-row {
@@ -583,9 +584,10 @@
         padding: 8px 8px;
     }
 
-    .indicator-circle { width: 36px; height: 36px; }
+    .indicator-circle { width: 38px; height: 38px; }
     .results-controls { flex-direction: column; }
     .results-controls .btn { width: 100%; }
-    .net-profit-value { font-size: 1.5rem; }
-    .profit-badge { font-size: 1.4rem; }
+    .net-profit-value { font-size: 1.6rem; }
+    .profit-badge { font-size: 1.5rem; }
+    .panel-title { font-size: 1.3rem; }
 }
