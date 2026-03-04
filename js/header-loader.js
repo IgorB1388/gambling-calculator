@@ -25,6 +25,11 @@ function loadHeader() {
             
             // Применяем переводы к шапке
             reloadTranslationsForNewContent(headerPlaceholder);
+
+            // Добавляем дорожную разметку для SA темы
+            if (!document.querySelector('.road-marking')) {
+                document.body.insertAdjacentHTML('beforeend', '<div class="road-marking"></div>');
+            }
         })
         .catch(error => {
             console.error('Ошибка загрузки шапки:', error);
