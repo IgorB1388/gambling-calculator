@@ -27,7 +27,7 @@
     flex-direction: column;
     gap: 20px;
     box-sizing: border-box;
-    min-height: 600px;
+    min-height: 680px;
 }
 
 .panel-title {
@@ -181,13 +181,14 @@
 .stake-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .stake-input[type=number] { -moz-appearance: textfield; }
 
-/* === КНОПКИ РЕЗУЛЬТАТОВ === */
-.results-controls {
+/* === КНОПКИ УПРАВЛЕНИЯ === */
+.panel-controls {
     display: flex;
     gap: 12px;
+    margin-top: 4px;
 }
 
-.results-controls .btn {
+.panel-controls .btn {
     flex: 1;
     padding: 16px 16px;
     font-size: 1.15rem;
@@ -205,7 +206,7 @@
     white-space: nowrap;
 }
 
-.results-controls .btn:hover { transform: translateY(-2px); }
+.panel-controls .btn:hover { transform: translateY(-2px); }
 
 /* === ЗАГЛУШКА === */
 .results-placeholder {
@@ -559,7 +560,7 @@
 
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
-    .results-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
+    .panel-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
     .stake-input-wrapper { width: 100%; }
     .settings-label { font-size: 1rem; }
     .panel-title { font-size: 1.4rem; }
@@ -585,8 +586,8 @@
     }
 
     .indicator-circle { width: 38px; height: 38px; }
-    .results-controls { flex-direction: column; }
-    .results-controls .btn { width: 100%; }
+    .panel-controls { flex-direction: column; }
+    .panel-controls .btn { width: 100%; }
     .net-profit-value { font-size: 1.6rem; }
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
