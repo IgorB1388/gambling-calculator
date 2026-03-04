@@ -45,12 +45,55 @@
     gap: 8px;
 }
 
+.settings-label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .settings-label {
     font-size: 0.9rem;
     font-weight: bold;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     min-height: 1.4rem;
+}
+
+/* === ТУЛТИП === */
+.tooltip-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--border-muted);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.tooltip-icon:hover {
+    border-color: var(--border-3);
+    color: var(--text-3);
+}
+
+.tooltip-popup {
+    position: fixed;
+    max-width: 260px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    z-index: 10000;
+    display: none;
+    pointer-events: none;
+    box-shadow: var(--shadow-md);
 }
 
 /* === КНОПКИ ИСХОДОВ === */
@@ -104,10 +147,7 @@
     transition: all 0.2s;
 }
 
-.stake-input:focus {
-    outline: none;
-    transform: scale(1.02);
-}
+.stake-input:focus { outline: none; transform: scale(1.02); }
 
 .stake-input.input-error {
     border-color: var(--color-danger) !important;
@@ -128,21 +168,19 @@
     padding: 4px 0;
 }
 
-/* Убираем стрелки */
 .stake-input::-webkit-outer-spin-button,
 .stake-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .stake-input[type=number] { -moz-appearance: textfield; }
 
-/* === КНОПКИ УПРАВЛЕНИЯ === */
-.controls {
+/* === КНОПКИ РЕЗУЛЬТАТОВ === */
+.results-controls {
     display: flex;
     gap: 12px;
-    margin-top: 5px;
 }
 
-.controls .btn {
+.results-controls .btn {
     flex: 1;
-    padding: 16px 20px;
+    padding: 14px 16px;
     font-size: 1rem;
     font-weight: bold;
     border-radius: 12px;
@@ -154,12 +192,64 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 56px;
+    min-height: 50px;
     white-space: nowrap;
-    overflow: hidden;
 }
 
-.controls .btn:hover { transform: translateY(-2px); }
+.results-controls .btn:hover { transform: translateY(-2px); }
+
+/* === ЗАГЛУШКА === */
+.results-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 16px;
+    text-align: center;
+}
+
+.placeholder-icon { font-size: 3rem; opacity: 0.4; }
+
+.placeholder-text {
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.placeholder-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    margin-top: 8px;
+}
+
+.placeholder-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+/* === РЕЗУЛЬТАТЫ === */
+.results-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
 /* === ИНДИКАТОР СТАТУСА === */
 .arb-indicator {
@@ -185,6 +275,7 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
+    flex: 1;
 }
 
 .indicator-text span:last-child {
@@ -192,7 +283,17 @@
     font-weight: bold;
 }
 
-/* === БЛОК СТРАТЕГИИ (отдельный) === */
+.indicator-profit {
+    margin-left: auto;
+}
+
+.profit-badge {
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: -0.02em;
+}
+
+/* === БЛОК СТРАТЕГИИ === */
 .strategy-block {
     display: flex;
     flex-direction: column;
@@ -236,28 +337,6 @@
     color: var(--text-primary) !important;
     border-color: var(--color-info) !important;
     box-shadow: 0 0 12px var(--color-info) !important;
-}
-
-/* === КАРТОЧКА ПРИБЫЛИ === */
-.profit-card {
-    padding: 15px 20px;
-    border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 64px;
-}
-
-.profit-label {
-    font-size: 1rem;
-    font-weight: bold;
-}
-
-.profit-value {
-    font-size: 2rem;
-    font-weight: bold;
 }
 
 /* === ТАБЛИЦА КОЭФФИЦИЕНТОВ === */
@@ -416,9 +495,7 @@
 .profit-row {
     margin-top: 4px;
     padding-top: 10px;
-    border-top-width: 1px;
-    border-top-style: solid;
-    border-top-color: var(--border-muted);
+    border-top: 1px solid var(--border-muted);
 }
 
 /* === ПОДСКАЗКА === */
@@ -430,7 +507,7 @@
     line-height: 1.5;
 }
 
-/* === АДАПТИВНОСТЬ 768px === */
+/* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
     .panel { padding: 18px; gap: 16px; }
 
@@ -452,13 +529,12 @@
         padding: 8px 10px;
     }
 
-    .profit-value { font-size: 1.6rem; }
-    .controls .btn { padding: 14px 12px; font-size: 0.95rem; min-height: 50px; }
+    .profit-badge { font-size: 1.5rem; }
+    .results-controls .btn { padding: 12px 10px; font-size: 0.9rem; }
     .stake-input-wrapper { width: 100%; }
     .strategy-mini-btn { font-size: 0.75rem; }
 }
 
-/* === АДАПТИВНОСТЬ 480px === */
 @media (max-width: 480px) {
     .outcome-pills { justify-content: center; }
     .outcome-pill { width: 40px; height: 40px; font-size: 1rem; }
@@ -481,7 +557,8 @@
     }
 
     .indicator-circle { width: 34px; height: 34px; }
-    .controls .btn { padding: 12px 8px; font-size: 0.9rem; min-height: 46px; }
+    .results-controls { flex-direction: column; }
+    .results-controls .btn { width: 100%; }
     .strategy-mini-btn { font-size: 0.72rem; height: 48px; }
-    .profit-value { font-size: 1.4rem; }
+    .profit-badge { font-size: 1.3rem; }
 }
