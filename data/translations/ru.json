@@ -47,47 +47,26 @@
     
     "rouletteTitle": "АНАЛИЗАТОР РУЛЕТКИ",
     "rouletteSubtitle": "Симуляция стратегий и анализ рисков",
-    
     "rouletteSettingsTitle": "⚙️ НАСТРОЙКИ СТРАТЕГИИ",
     "rouletteTypeLabel": "ТИП РУЛЕТКИ:",
     "rouletteEuropean": "Европейская (одно зеро)",
     "rouletteAmerican": "Американская (два зеро)",
     "bankrollLabel": "НАЧАЛЬНЫЙ БАНК:",
     "betSizeLabel": "РАЗМЕР СТАВКИ:",
-    "strategyLabel": "СТАВКА НА:",
-    "strategyRed": "🔴 Красное",
-    "strategyBlack": "⚫ Черное",
-    "strategyEven": "Четное",
-    "strategyOdd": "Нечетное",
-    "strategyLow": "1-18 (Малые)",
-    "strategyHigh": "19-36 (Большие)",
-    "strategyDozen1": "1-я дюжина (1-12)",
-    "strategyDozen2": "2-я дюжина (13-24)",
-    "strategyDozen3": "3-я дюжина (25-36)",
-    "strategyColumn1": "1-я колонна (1, 4, 7,...)",
-    "strategyColumn2": "2-я колонна (2, 5, 8,...)",
-    "strategyColumn3": "3-я колонна (3, 6, 9,...)",
-    
     "triggerLabel": "УСЛОВИЕ АКТИВАЦИИ:",
     "triggerMissed": "не выпало",
     "triggerHit": "выпало",
     "triggerTimes": "раз подряд",
     "triggerExample": "например: ставить на красное, если оно не выпало 3 раза подряд",
-
-  
-   
     "stopConditionsLabel": "УСЛОВИЯ ОСТАНОВКИ:",
     "stopBankrupt": "Остановить при банкротстве",
     "stopTarget": "Достижение целевого банка:",
     "stopSpins": "Максимальное число спинов:",
-    
     "sessionsLabel": "КОЛИЧЕСТВО СЕССИЙ:",
     "sessionsHint": "500-1000 сессий для точной статистики",
-    
     "simulateBtn": "СИМУЛИРОВАТЬ",
     "resetBtn": "СБРОСИТЬ",
     "simulating": "СИМУЛЯЦИЯ...",
-    
     "rouletteResultsTitle": "📊 РЕЗУЛЬТАТЫ СИМУЛЯЦИИ",
     "winRateLabel": "Шанс выигрыша",
     "avgProfitLabel": "Средний профит",
@@ -101,16 +80,14 @@
     "chartPlaceholder": "📊 Распределение результатов",
     "profitableSessions": "Прибыльных сессий",
     "noData": "Нет данных",
-    
+
     "arbsTitle": "АНАЛИЗАТОР ВИЛОК",
     "arbsSubtitle": "Калькулятор арбитражных ситуаций",
-    
     "arbsSettingsTitle": "⚙️ НАСТРОЙКИ ВИЛКИ",
     "arbsOutcomesLabel": "КОЛИЧЕСТВО ИСХОДОВ:",
     "arbsOddsLabel": "КОЭФФИЦИЕНТЫ (БК 1 / БК 2)",
     "arbsStakeLabel": "ОБЩАЯ СУММА СТАВКИ:",
     "arbsCalculateBtn": "РАССЧИТАТЬ",
-    
     "arbsResultsTitle": "📊 РЕЗУЛЬТАТЫ",
     "arbsStatusLabel": "Статус:",
     "arbsProfitPercent": "Прибыль:",
@@ -129,7 +106,7 @@
     "arbsBkLabel": "БК",
     "arbsFound": "✅ Вилка найдена!",
     "arbsNotFound": "❌ Вилки нет",
-    
+
     "faqTitle": "ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ",
     "faqSubtitle": "Ответы на популярные вопросы о GTA Casino Tools",
     "faqQuestion1": "Для кого предназначен этот сайт?",
@@ -142,17 +119,14 @@
     "faqAnswer4": "Да, все инструменты полностью адаптированы для использования на смартфонах и планшетах.",
     "faqContact": "Не нашли ответ на свой вопрос?",
     "faqContactAnswer": "Если у вас есть другие вопросы или предложения по улучшению инструментов, свяжитесь с нами через репозиторий GitHub проекта.",
-    
-    
+
     "strategyCustom": "✏️ Свои цифры...",
     "strategyNumber": "Цифра {number}",
-    
-    "customNumbersPlaceholder": "Например: 7,14-17,33",
-    "customNumbersHint": "Введите цифры через запятую (можно без пробелов)",
+    "customNumbersPlaceholder": "Например: 3-6, 15,16",
+    "customNumbersHint": "Числа через запятую, диапазон через дефис",
     "customNumbersRequired": "Введите хотя бы одну цифру для ставки!",
     "betTooLarge": "Ставка не может быть больше банка!",
-    
-   "addCondition": "➕ Добавить условие",
+    "addCondition": "➕ Добавить условие",
     "not": "НЕ",
     "customNumbersTitle": "✏️ Свои числа",
     "totalBet": "📊 ИТОГО:",
@@ -164,15 +138,43 @@
     "enablePercent": "Процент ставки",
     "conditionsLabel": "🎯 УСЛОВИЯ СТАВКИ",
     "strategyZero": "0 (Зеро)",
-    "strategyDoubleZero": "00 (Двойное зеро)"
+    "strategyDoubleZero": "00 (Двойное зеро)",
+    "strategyRed": "🔴 Красное",
+    "strategyBlack": "⚫ Чёрное",
+    "strategyEven": "Чётное",
+    "strategyOdd": "Нечётное",
+    "strategyLow": "1-18 (Малые)",
+    "strategyHigh": "19-36 (Большие)",
+    "strategyDozen1": "1-я дюжина (1-12)",
+    "strategyDozen2": "2-я дюжина (13-24)",
+    "strategyDozen3": "3-я дюжина (25-36)",
+    "strategyColumn1": "1-я колонна (1,4,7...)",
+    "strategyColumn2": "2-я колонна (2,5,8...)",
+    "strategyColumn3": "3-я колонна (3,6,9...)",
+
+    "presetsLabel": "ПРЕСЕТЫ:",
+    "presetMartingaleRed": "Мартингейл / красное",
+    "presetFlatEven": "Флэт / чётное",
+    "presetFibonacciDozens": "Фибоначчи / дюжины",
+    "presetAntiMartingaleBlack": "Анти-мартингейл / чёрное",
+    "progressionFlat": "Фиксированная ставка",
+    "progressionMartingale": "Мартингейл (x2 после проигрыша)",
+    "progressionAntiMartingale": "Анти-мартингейл (x2 после выигрыша)",
+    "progressionFibonacci": "Фибоначчи",
+    "progressionDalembert": "Д'Аламбер (+1/-1 единица)",
+    "afterTriggerLabel": "ПОСЛЕ ТРИГГЕРА:",
+    "afterTriggerOnce": "Сделать одну ставку",
+    "afterTriggerUntilWin": "Ставить до первого выигрыша",
+    "conditionsTooltip": "Выберите на что ставить. Несколько условий объединяются — ставка идёт только на числа которые попадают во все условия одновременно.",
+    "triggerTooltip": "Условие при котором начинаем ставить. Например: красное не выпадало 3 раза подряд — начинаем ставить на красное.",
+    "afterTriggerTooltip": "Одна ставка — ставим один раз и ждём следующий триггер. До выигрыша — ставим каждый спин пока не выиграем.",
+    "sessionsTooltip": "Чем больше сессий — тем точнее статистика. 500 достаточно для базового анализа, 2000+ для точного.",
+    "resultsPlaceholder": "Настройте параметры и нажмите Симулировать",
+    "placeholderStep1": "Выберите тип рулетки и банк",
+    "placeholderStep2": "Настройте ставку и условия",
+    "placeholderStep3": "Нажмите Симулировать",
+    "avgSpinsBankrupt": "Ср. спинов до банкротства:",
+    "invalidStake": "Введите корректную сумму ставки",
+    "percentTotalError": "Сумма процентов должна быть 100%!",
+    "totalPercentWarning": "⚠️ Сумма процентов: {total}% (должна быть 100%)"
 }
-
-
-
-
-
-
-
-
-
-
