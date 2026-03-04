@@ -83,7 +83,7 @@
 .bg-danger-solid { background: var(--color-danger); }
 .bg-highlight-solid { background: var(--color-highlight); }
 
-.bg-body { background: var(--bg-body); }
+.bg-body { background-color: var(--bg-body); }
 .bg-surface { background: var(--bg-surface); }
 .bg-elevated { background: var(--bg-elevated); }
 .bg-overlay { background: var(--bg-overlay); }
@@ -320,3 +320,4 @@
     border-color: var(--color-secondary) !important;
     box-shadow: 0 0 15px var(--color-secondary) !important;
 }
+
