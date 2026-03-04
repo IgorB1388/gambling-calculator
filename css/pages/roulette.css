@@ -1,282 +1,597 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="siteTitle"></title>
-    <link rel="stylesheet" href="css/core/color-classes.css">
-    <link rel="stylesheet" href="css/core/layout.css">
-    <link rel="stylesheet" href="css/pages/roulette.css">
-    <link rel="stylesheet" href="css/themes/base-theme.css" id="theme-style">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2215%22 fill=%22%232a2f4a%22/><text y=%22.9em%22 x=%2250%22 font-size=%2290%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22>♠</text></svg>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-body">
-    <div class="site-container">
+/* roulette.css - АНАЛИЗАТОР РУЛЕТКИ */
 
-        <div id="header-placeholder"></div>
+.roulette-analyzer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
 
-        <div class="content-wrapper">
-            <div class="roulette-analyzer-container">
+/* === ПРЕСЕТЫ === */
+.presets-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
 
-                <div class="page-header bg-surface border-primary shadow-default">
-                    <div class="page-header-icon">🎰</div>
-                    <h1 class="text-gradient" data-i18n="rouletteTitle"></h1>
-                    <p class="text-medium" data-i18n="rouletteSubtitle"></p>
-                </div>
+.presets-label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
 
-                <!-- ПРЕСЕТЫ -->
-                <div class="presets-bar bg-surface border-1 shadow-default">
-                    <span class="presets-label text-3" data-i18n="presetsLabel"></span>
-                    <button class="preset-btn border-2 text-2" data-preset="martingale_red" data-i18n="presetMartingaleRed"></button>
-                    <button class="preset-btn border-2 text-2" data-preset="flat_even" data-i18n="presetFlatEven"></button>
-                    <button class="preset-btn border-3 text-3" data-preset="fibonacci_dozens" data-i18n="presetFibonacciDozens"></button>
-                    <button class="preset-btn border-5 text-5" data-preset="antimartingale_black" data-i18n="presetAntiMartingaleBlack"></button>
-                </div>
+.preset-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
 
-                <div class="analyzer-main-area">
+.preset-btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.85;
+}
 
-                    <!-- ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ -->
-                    <div class="panel bg-surface border-1 shadow-default">
-                        <div class="panel-title text-1" style="border-bottom: 2px solid var(--border-1);" data-i18n="rouletteSettingsTitle"></div>
+/* === ОСНОВНАЯ СЕТКА === */
+.analyzer-main-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
 
-                        <!-- Тип рулетки -->
-                        <div class="settings-group">
-                            <div class="settings-label text-3" data-i18n="rouletteTypeLabel"></div>
-                            <div class="option-pills" id="rouletteTypePills">
-                                <button class="option-pill active" data-type="european">
-                                    <img src="images/flags/eu.png" alt="EU" class="roulette-flag">
-                                    <span data-i18n="rouletteEuropean"></span>
-                                </button>
-                                <button class="option-pill" data-type="american">
-                                    <img src="images/flags/us.png" alt="US" class="roulette-flag">
-                                    <span data-i18n="rouletteAmerican"></span>
-                                </button>
-                            </div>
-                        </div>
+@media (max-width: 1100px) {
+    .analyzer-main-area { grid-template-columns: 1fr; }
+}
 
-                        <!-- Банк -->
-                        <div class="settings-group">
-                            <div class="settings-label text-3" data-i18n="bankrollLabel"></div>
-                            <div class="stake-row">
-                                <div class="stake-input-wrapper">
-                                    <input type="number" id="startingBankroll" class="stake-input bg-elevated border-3 text-3" value="1000" min="1" step="1">
-                                    <span class="stake-suffix text-3">$</span>
-                                </div>
-                            </div>
-                        </div>
+/* === ПАНЕЛЬ === */
+.panel {
+    border-radius: 15px;
+    padding: 25px;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-                        <!-- Базовая ставка + прогрессия -->
-                        <div class="settings-group">
-                            <div class="settings-label text-3" data-i18n="betSizeLabel"></div>
-                            <div class="stake-row">
-                                <div class="stake-input-wrapper">
-                                    <input type="number" id="betAmount" class="stake-input bg-elevated border-3 text-3" value="10" min="1" step="1">
-                                    <span class="stake-suffix text-3">$</span>
-                                </div>
-                            </div>
-                            <!-- Прогрессия -->
-                            <select id="progressionType" class="progression-select bg-elevated border-5 text-5">
-                                <option value="flat" data-i18n="progressionFlat"></option>
-                                <option value="martingale" data-i18n="progressionMartingale"></option>
-                                <option value="antimartingale" data-i18n="progressionAntiMartingale"></option>
-                                <option value="fibonacci" data-i18n="progressionFibonacci"></option>
-                                <option value="dalembert" data-i18n="progressionDalembert"></option>
-                            </select>
-                            <div class="progression-hint text-muted" id="progressionHint"></div>
-                        </div>
+.panel-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    padding-bottom: 12px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+}
 
-                        <!-- Условия ставки -->
-                        <div class="settings-group">
-                            <div class="settings-label-row">
-                                <span class="settings-label text-3" data-i18n="conditionsLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="conditionsTooltip">?</span>
-                            </div>
-                            <div id="conditionsContainer" class="conditions-container"></div>
-                            <button id="addConditionBtn" class="add-condition-btn border-5 text-5">
-                                <i class="fas fa-plus"></i> <span data-i18n="addCondition"></span>
-                            </button>
-                            <div id="totalBetDisplay" class="total-bet-display bg-elevated border-4">
-                                <span class="text-muted" data-i18n="totalBet"></span>
-                                <span class="text-4" id="totalBetText">—</span>
-                            </div>
-                        </div>
+/* === ГРУППЫ НАСТРОЕК === */
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-                        <!-- Условие активации -->
-                        <div class="settings-group">
-                            <div class="settings-label-row">
-                                <span class="settings-label text-3" data-i18n="triggerLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="triggerTooltip">?</span>
-                            </div>
-                            <div class="trigger-builder">
-                                <select id="triggerType" class="trigger-select bg-elevated border-5 text-5">
-                                    <option value="missed" data-i18n="triggerMissed"></option>
-                                    <option value="hit" data-i18n="triggerHit"></option>
-                                </select>
-                                <input type="number" id="triggerCount" class="trigger-input bg-elevated border-5 text-5" value="3" min="1" max="20" step="1">
-                                <span class="text-muted" data-i18n="triggerTimes"></span>
-                            </div>
-                            <!-- После триггера -->
-                            <div class="settings-label-row" style="margin-top: 8px;">
-                                <span class="settings-label text-3" data-i18n="afterTriggerLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="afterTriggerTooltip">?</span>
-                            </div>
-                            <select id="afterTriggerMode" class="trigger-select bg-elevated border-5 text-5">
-                                <option value="once" data-i18n="afterTriggerOnce"></option>
-                                <option value="until_win" data-i18n="afterTriggerUntilWin"></option>
-                            </select>
-                        </div>
+.settings-label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-                        <!-- Условия остановки -->
-                        <div class="settings-group">
-                            <div class="settings-label text-3" data-i18n="stopConditionsLabel"></div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="stopBankrupt" checked>
-                                <label for="stopBankrupt" class="text-muted" data-i18n="stopBankrupt"></label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="stopTarget">
-                                <label for="stopTarget" class="text-muted" data-i18n="stopTarget"></label>
-                            </div>
-                            <div class="stake-row" style="margin-left: 25px; margin-top: 4px;">
-                                <div class="stake-input-wrapper" style="width: 140px;">
-                                    <input type="number" id="targetAmount" class="stake-input bg-elevated border-3 text-3" value="2000" min="1" step="1" disabled>
-                                    <span class="stake-suffix text-3">$</span>
-                                </div>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="stopSpins" checked>
-                                <label for="stopSpins" class="text-muted" data-i18n="stopSpins"></label>
-                            </div>
-                            <div class="stake-row" style="margin-left: 25px; margin-top: 4px;">
-                                <div class="stake-input-wrapper" style="width: 140px;">
-                                    <input type="number" id="maxSpins" class="stake-input bg-elevated border-3 text-3" value="100" min="1" step="1">
-                                </div>
-                            </div>
-                        </div>
+.settings-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
 
-                        <!-- Количество сессий -->
-                        <div class="settings-group">
-                            <div class="settings-label-row">
-                                <span class="settings-label text-3" data-i18n="sessionsLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="sessionsTooltip">?</span>
-                            </div>
-                            <div class="stake-row">
-                                <div class="stake-input-wrapper" style="width: 140px;">
-                                    <input type="number" id="sessionCount" class="stake-input bg-elevated border-3 text-3" value="500" min="1" max="10000" step="1">
-                                </div>
-                            </div>
-                            <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
-                        </div>
+/* === ТУЛТИП === */
+.tooltip-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--border-muted);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
 
-                    </div>
+.tooltip-icon:hover {
+    border-color: var(--border-3);
+    color: var(--text-3);
+}
 
-                    <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
-                    <div class="panel bg-surface border-4 shadow-default">
+.tooltip-popup {
+    position: fixed;
+    max-width: 260px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    z-index: 10000;
+    display: none;
+    pointer-events: none;
+    box-shadow: var(--shadow-md);
+}
 
-                        <!-- Кнопки сверху правой панели -->
-                        <div class="results-controls">
-                            <button class="btn btn-primary-bg btn-primary-text border-secondary" id="simulateBtn">
-                                <i class="fas fa-cogs"></i>
-                                <span data-i18n="simulateBtn"></span>
-                            </button>
-                            <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="resetBtn">
-                                <i class="fas fa-undo-alt"></i>
-                                <span data-i18n="resetBtn"></span>
-                            </button>
-                        </div>
+/* === ПОЛЕ СТАВКИ === */
+.stake-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
 
-                        <div class="panel-title text-4" style="border-bottom: 2px solid var(--border-4);" data-i18n="rouletteResultsTitle"></div>
+.stake-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 180px;
+}
 
-                        <!-- Заглушка до симуляции -->
-                        <div class="results-placeholder" id="resultsPlaceholder">
-                            <div class="placeholder-icon">🎰</div>
-                            <div class="placeholder-text text-muted" data-i18n="resultsPlaceholder"></div>
-                            <div class="placeholder-steps">
-                                <div class="placeholder-step text-muted"><span class="step-num text-1">1</span> <span data-i18n="placeholderStep1"></span></div>
-                                <div class="placeholder-step text-muted"><span class="step-num text-1">2</span> <span data-i18n="placeholderStep2"></span></div>
-                                <div class="placeholder-step text-muted"><span class="step-num text-1">3</span> <span data-i18n="placeholderStep3"></span></div>
-                            </div>
-                        </div>
+.stake-input {
+    width: 100%;
+    padding: 10px 32px 10px 12px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: transparent;
+    transition: all 0.2s;
+}
 
-                        <!-- Результаты (скрыты до симуляции) -->
-                        <div class="results-content" id="resultsContent" style="display:none;">
+.stake-input:focus { outline: none; transform: scale(1.02); }
 
-                            <div class="results-grid-compact">
-                                <div class="stat-card bg-elevated border-1">
-                                    <div class="stat-label text-muted" data-i18n="winRateLabel"></div>
-                                    <div class="stat-value text-1" id="winRate">0.0%</div>
-                                    <div class="stat-hint text-muted" id="winRateHint"></div>
-                                </div>
-                                <div class="stat-card bg-elevated border-4">
-                                    <div class="stat-label text-muted" data-i18n="avgProfitLabel"></div>
-                                    <div class="stat-value text-4" id="avgProfit">$0</div>
-                                    <div class="stat-hint text-muted" id="avgProfitHint"></div>
-                                </div>
-                                <div class="stat-card bg-elevated border-7">
-                                    <div class="stat-label text-muted" data-i18n="riskLabel"></div>
-                                    <div class="stat-value text-7" id="riskPercent">0.0%</div>
-                                    <div class="stat-hint text-muted" id="riskHint"></div>
-                                </div>
-                            </div>
+.stake-suffix {
+    position: absolute;
+    right: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    pointer-events: none;
+}
 
-                            <div class="stats-detailed bg-elevated border-1">
-                                <div class="stats-row">
-                                    <span class="text-muted" data-i18n="sessionsSimulated"></span>
-                                    <span class="text-3" id="sessionsSimulated">0</span>
-                                </div>
-                                <div class="stats-row">
-                                    <span class="text-muted" data-i18n="successfulSessions"></span>
-                                    <span class="text-4" id="successfulSessions">0</span>
-                                </div>
-                                <div class="stats-row">
-                                    <span class="text-muted" data-i18n="bankruptSessions"></span>
-                                    <span class="text-7" id="bankruptSessions">0</span>
-                                </div>
-                                <div class="stats-row">
-                                    <span class="text-muted" data-i18n="avgSpins"></span>
-                                    <span class="text-3" id="avgSpins">0</span>
-                                </div>
-                                <div class="stats-row">
-                                    <span class="text-muted" data-i18n="avgSpinsBankrupt"></span>
-                                    <span class="text-7" id="avgSpinsBankrupt">0</span>
-                                </div>
-                                <div class="stats-row">
-                                    <span class="text-muted" data-i18n="maxProfit"></span>
-                                    <span class="text-4" id="maxProfit">$0</span>
-                                </div>
-                                <div class="stats-row">
-                                    <span class="text-muted" data-i18n="maxLoss"></span>
-                                    <span class="text-7" id="maxLoss">$0</span>
-                                </div>
-                            </div>
+.stake-input::-webkit-outer-spin-button,
+.stake-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.stake-input[type=number] { -moz-appearance: textfield; }
 
-                            <div class="chart-container border-1" id="resultsChart">
-                                <div class="chart-placeholder bg-elevated border-muted" id="chartPlaceholder">
-                                    <span class="text-muted" data-i18n="chartPlaceholder"></span>
-                                </div>
-                            </div>
+/* === ПРОГРЕССИЯ === */
+.progression-select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+}
 
-                        </div>
+.progression-hint {
+    font-size: 0.8rem;
+    font-style: italic;
+    min-height: 1.2rem;
+    padding: 2px 0;
+}
 
-                    </div>
-                </div>
+/* === КНОПКИ РУЛЕТКИ === */
+.option-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 
-            </div>
-        </div>
+.option-pill {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--border-5);
+    background: rgba(106, 168, 255, 0.08);
+    color: var(--text-5);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-        <footer class="site-footer footer-bg border-primary">
-            <p class="footer-text" data-i18n="footerText"></p>
-        </footer>
-    </div>
+.option-pill:hover { transform: translateY(-2px); }
 
-    <!-- Тултип -->
-    <div class="tooltip-popup bg-elevated border-3 text-muted" id="tooltipPopup"></div>
+.option-pill.active {
+    background: var(--color-info) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--color-info) !important;
+    box-shadow: 0 0 12px var(--color-info);
+}
 
-    <script src="js/header-loader.js"></script>
-    <script src="js/language.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/roulette.js"></script>
-    <script src="js/theme-switcher.js"></script>
-</body>
-</html>
+.roulette-flag {
+    width: 22px;
+    height: 16px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 1px solid var(--border-muted);
+}
+
+/* === УСЛОВИЯ СТАВКИ === */
+.conditions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.condition-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--bg-elevated);
+    border-radius: 8px;
+    border-left: 3px solid var(--border-4);
+}
+
+.condition-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--border-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    color: var(--text-4);
+}
+
+.condition-not {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.condition-not input[type="checkbox"],
+.condition-logic input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.condition-not label {
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.condition-select {
+    flex: 2;
+    min-width: 130px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--border-5);
+    background: var(--bg-surface);
+    color: var(--text-5);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.condition-custom-input {
+    flex: 2;
+    min-width: 130px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--border-5);
+    background: var(--bg-elevated);
+    color: var(--text-5);
+    font-size: 0.85rem;
+}
+
+.condition-remove {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--color-danger);
+    background: rgba(255, 51, 102, 0.1);
+    color: var(--color-danger);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.condition-remove:hover {
+    background: var(--color-danger);
+    color: white;
+    transform: scale(1.1);
+}
+
+.add-condition-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+}
+
+.add-condition-btn:hover { transform: translateY(-1px); opacity: 0.85; }
+
+.total-bet-display {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    gap: 10px;
+}
+
+#totalBetText {
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-align: right;
+    word-break: break-word;
+    max-width: 65%;
+}
+
+.percent-warning {
+    font-size: 0.82rem;
+    padding: 4px 0;
+}
+
+/* === ТРИГГЕР === */
+.trigger-builder {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.trigger-select {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: transparent;
+    cursor: pointer;
+    flex: 1;
+    min-width: 120px;
+}
+
+.trigger-input {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: transparent;
+    width: 70px;
+    text-align: center;
+}
+
+.trigger-input::-webkit-outer-spin-button,
+.trigger-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.trigger-input[type=number] { -moz-appearance: textfield; }
+
+/* === ЧЕКБОКСЫ === */
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.checkbox-item label { cursor: pointer; font-size: 0.9rem; }
+
+.setting-hint {
+    font-size: 0.78rem;
+    font-style: italic;
+}
+
+/* === КНОПКИ РЕЗУЛЬТАТОВ === */
+.results-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 5px;
+}
+
+.results-controls .btn {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 50px;
+    white-space: nowrap;
+}
+
+.results-controls .btn:hover { transform: translateY(-2px); }
+
+/* === ЗАГЛУШКА РЕЗУЛЬТАТОВ === */
+.results-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 16px;
+    text-align: center;
+}
+
+.placeholder-icon { font-size: 3rem; opacity: 0.4; }
+
+.placeholder-text {
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.placeholder-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    margin-top: 8px;
+}
+
+.placeholder-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+/* === КАРТОЧКИ РЕЗУЛЬТАТОВ === */
+.results-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.stat-card {
+    padding: 14px;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+}
+
+.stat-label { font-size: 0.8rem; }
+.stat-value { font-size: 1.6rem; font-weight: bold; }
+.stat-hint { font-size: 0.72rem; min-height: 1rem; }
+
+/* === ДЕТАЛЬНАЯ СТАТИСТИКА === */
+.stats-detailed {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    padding: 2px 0;
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.stats-row:last-child { border-bottom: none; }
+
+/* === ГРАФИК === */
+.chart-container {
+    padding: 14px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+    min-height: 100px;
+}
+
+.chart-placeholder {
+    width: 100%;
+    min-height: 80px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: dashed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 768px) {
+    .panel { padding: 18px; gap: 16px; }
+    .results-grid-compact { grid-template-columns: 1fr; }
+    .presets-bar { gap: 8px; }
+    .preset-btn { font-size: 0.75rem; padding: 5px 10px; }
+    .stake-input-wrapper { width: 100%; }
+    .trigger-builder { flex-direction: column; align-items: stretch; }
+}
+
+@media (max-width: 480px) {
+    .option-pills { flex-direction: column; }
+    .option-pill { width: 100%; justify-content: center; }
+    .results-controls { flex-direction: column; }
+    .results-controls .btn { width: 100%; }
+}
