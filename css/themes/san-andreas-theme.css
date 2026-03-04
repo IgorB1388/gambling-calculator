@@ -2,192 +2,228 @@
 
 :root {
     /* === ЦВЕТА === */
-    --color-primary: #ff9900;
-    --color-secondary: #ff6600;
-    --color-accent: #c8860a;
-    --color-success: #3a9e1f;
-    --color-info: #d4923a;
-    --color-warning: #ffcc00;
-    --color-danger: #cc2222;
-    --color-highlight: #c8a050;
-    --color-deck: #ff9900;
+    --color-primary: #e08800;
+    --color-secondary: #cc5500;
+    --color-accent: #8b4513;
+    --color-success: #2e7d1e;
+    --color-info: #c47a2a;
+    --color-warning: #e8b800;
+    --color-danger: #aa1111;
+    --color-highlight: #b8860b;
+    --color-deck: #e08800;
 
-    /* === ФОНЫ — тёплые, средние по яркости === */
-    --bg-body: #2e1a00;
-    --bg-surface: #3d2408;
-    --bg-elevated: #4a2e0e;
-    --bg-overlay: rgba(46, 26, 0, 0.92);
-    --bg-overlay-light: rgba(46, 26, 0, 0.85);
-    --bg-header: linear-gradient(135deg, #3d2408 0%, #5a3810 50%, #3d2408 100%);
-    --bg-coming-soon: rgba(46, 26, 0, 0.92);
-    --bg-nav: rgba(0, 0, 0, 0.35);
-    --bg-surface-light: rgba(255, 153, 0, 0.1);
-    --bg-surface-hover: rgba(255, 153, 0, 0.18);
-    --bg-surface-active: rgba(255, 102, 0, 0.22);
+    /* === ФОНЫ — песчаные, тёплые, светлые === */
+    --bg-body: #e8c97a;
+    --bg-surface: #d4b055;
+    --bg-elevated: #c8a040;
+    --bg-overlay: rgba(100, 60, 10, 0.88);
+    --bg-overlay-light: rgba(100, 60, 10, 0.75);
+    --bg-header: linear-gradient(135deg, #8b5e1a 0%, #a06820 50%, #8b5e1a 100%);
+    --bg-coming-soon: rgba(100, 60, 10, 0.88);
+    --bg-nav: rgba(80, 40, 5, 0.35);
+    --bg-surface-light: rgba(255, 200, 80, 0.25);
+    --bg-surface-hover: rgba(224, 136, 0, 0.2);
+    --bg-surface-active: rgba(204, 85, 0, 0.2);
 
-    /* === ТЕКСТ === */
-    --text-primary: #faebd0;
-    --text-secondary: #d4a060;
-    --text-inverse: #2e1a00;
-    --text-muted: rgba(212, 160, 96, 0.5);
-    --text-slot: rgba(250, 235, 208, 0.4);
+    /* === ТЕКСТ — тёмный на светлом === */
+    --text-primary: #3a1a00;
+    --text-secondary: #6b3800;
+    --text-inverse: #f5e6cc;
+    --text-muted: rgba(107, 56, 0, 0.5);
+    --text-slot: rgba(58, 26, 0, 0.4);
 
     /* === ГРАНИЦЫ === */
-    --border-primary: #ff9900;
-    --border-secondary: #ff6600;
-    --border-accent: #c8860a;
-    --border-success: #3a9e1f;
-    --border-info: #d4923a;
-    --border-muted: rgba(255, 153, 0, 0.22);
-    --border-dark: rgba(0, 0, 0, 0.4);
-    --border-dashed: rgba(255, 153, 0, 0.28);
-    --border-nav: rgba(255, 153, 0, 0.22);
-    --border-deck: #ff9900;
+    --border-primary: #c07000;
+    --border-secondary: #cc5500;
+    --border-accent: #8b4513;
+    --border-success: #2e7d1e;
+    --border-info: #c47a2a;
+    --border-muted: rgba(160, 90, 0, 0.3);
+    --border-dark: rgba(58, 26, 0, 0.35);
+    --border-dashed: rgba(160, 90, 0, 0.35);
+    --border-nav: rgba(160, 90, 0, 0.3);
+    --border-deck: #e08800;
 
-    /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ — вся палитра тёплая === */
-    --border-1: #ff9900;
-    --border-2: #ff6600;
-    --border-3: #ffcc00;
-    --border-4: #3a9e1f;
-    --border-5: #d4923a;
-    --border-6: #c8a050;
-    --border-7: #c8860a;
+    /* === УНИВЕРСАЛЬНЫЕ — тёплая палитра === */
+    --border-1: #c07000;
+    --border-2: #cc5500;
+    --border-3: #e8b800;
+    --border-4: #2e7d1e;
+    --border-5: #c47a2a;
+    --border-6: #8b4513;
+    --border-7: #aa1111;
 
-    /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
-    --text-1: #ff9900;
-    --text-2: #ff6600;
-    --text-3: #ffcc00;
-    --text-4: #4aab2e;
-    --text-5: #d4923a;
-    --text-6: #c8a050;
-    --text-7: #c8860a;
+    --text-1: #c07000;
+    --text-2: #cc5500;
+    --text-3: #9a6200;
+    --text-4: #2e7d1e;
+    --text-5: #a06018;
+    --text-6: #7a3a00;
+    --text-7: #aa1111;
 
     /* === ТЕНИ === */
-    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.45);
-    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.55);
-    --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.65);
-    --shadow-header: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 153, 0, 0.12);
-    --glow-primary: 0 0 20px rgba(255, 153, 0, 0.4);
-    --glow-secondary: 0 0 20px rgba(255, 102, 0, 0.4);
-    --glow-accent: 0 0 20px rgba(200, 134, 10, 0.35);
-    --glow-highlight: 0 0 20px rgba(200, 160, 80, 0.3);
-    --glow-success: 0 0 20px rgba(58, 158, 31, 0.35);
+    --shadow-sm: 0 2px 6px rgba(100, 60, 0, 0.3);
+    --shadow-md: 0 10px 30px rgba(100, 60, 0, 0.4);
+    --shadow-lg: 0 15px 40px rgba(100, 60, 0, 0.5);
+    --shadow-header: 0 10px 30px rgba(80, 40, 0, 0.5), 0 0 40px rgba(224, 136, 0, 0.2);
+    --glow-primary: 0 0 20px rgba(224, 136, 0, 0.45);
+    --glow-secondary: 0 0 20px rgba(204, 85, 0, 0.4);
+    --glow-accent: 0 0 20px rgba(139, 69, 19, 0.35);
+    --glow-highlight: 0 0 20px rgba(184, 134, 11, 0.35);
+    --glow-success: 0 0 20px rgba(46, 125, 30, 0.35);
 
     /* === ПЕРЕКЛЮЧАТЕЛЬ ТЕМ === */
-    --theme-switcher-bg: rgba(255, 153, 0, 0.12);
-    --theme-switcher-border: #ff9900;
-    --theme-btn-bg: rgba(255, 153, 0, 0.1);
-    --theme-btn-text: #faebd0;
-    --theme-btn-hover-border: #ff6600;
-    --theme-btn-hover-glow: #ff6600;
-    --theme-btn-active-bg: #ff9900;
-    --theme-btn-active-text: #2e1a00;
-    --theme-btn-active-border: #ff9900;
-    --theme-btn-active-glow: #ff9900;
+    --theme-switcher-bg: rgba(139, 94, 26, 0.3);
+    --theme-switcher-border: #c07000;
+    --theme-btn-bg: rgba(255, 200, 80, 0.2);
+    --theme-btn-text: #3a1a00;
+    --theme-btn-hover-border: #cc5500;
+    --theme-btn-hover-glow: #cc5500;
+    --theme-btn-active-bg: #e08800;
+    --theme-btn-active-text: #3a1a00;
+    --theme-btn-active-border: #c07000;
+    --theme-btn-active-glow: #e08800;
 
     /* === ГРАДИЕНТЫ === */
-    --gradient-body: linear-gradient(180deg, #2e1a00 0%, #3d2408 50%, #2e1a00 100%);
+    --gradient-body: linear-gradient(180deg, #f0d080 0%, #e8c97a 40%, #dab860 100%);
     --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     --gradient-logo-text: linear-gradient(45deg, var(--color-warning), var(--color-primary));
-    --gradient-nav-link: linear-gradient(145deg, rgba(255,153,0,0.07), rgba(0,0,0,0.2));
-    --gradient-nav-hover: linear-gradient(145deg, rgba(255,153,0,0.18), rgba(255,102,0,0.12));
+    --gradient-nav-link: linear-gradient(145deg, rgba(255,200,80,0.15), rgba(80,40,5,0.15));
+    --gradient-nav-hover: linear-gradient(145deg, rgba(224,136,0,0.25), rgba(204,85,0,0.2));
     --gradient-nav-active: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
     --gradient-btn-primary: linear-gradient(45deg, var(--color-secondary), var(--color-primary));
-    --gradient-btn-secondary: linear-gradient(145deg, rgba(255,153,0,0.1), rgba(0,0,0,0.2));
-    --gradient-page-header: linear-gradient(135deg, rgba(61,36,8,0.95), rgba(74,46,14,0.95));
-    --gradient-card: linear-gradient(135deg, rgba(61,36,8,0.92), rgba(74,46,14,0.92));
-    --gradient-coming-soon: linear-gradient(135deg, rgba(61,36,8,0.95), rgba(74,46,14,0.95));
-    --gradient-faq-contact: linear-gradient(135deg, rgba(58,158,31,0.05), rgba(255,153,0,0.05));
+    --gradient-btn-secondary: linear-gradient(145deg, rgba(255,200,80,0.2), rgba(80,40,5,0.1));
+    --gradient-page-header: linear-gradient(135deg, rgba(212,176,85,0.97), rgba(200,160,64,0.97));
+    --gradient-card: linear-gradient(135deg, rgba(212,176,85,0.95), rgba(200,160,64,0.95));
+    --gradient-coming-soon: linear-gradient(135deg, rgba(212,176,85,0.97), rgba(200,160,64,0.97));
+    --gradient-faq-contact: linear-gradient(135deg, rgba(46,125,30,0.06), rgba(224,136,0,0.06));
     --gradient-cyber: linear-gradient(90deg, transparent, var(--color-primary), var(--color-secondary), var(--color-accent), transparent);
     --gradient-tool-border: linear-gradient(90deg, var(--color-primary), var(--color-warning), var(--color-primary), var(--color-secondary));
     --gradient-footer: linear-gradient(90deg, transparent, var(--color-primary), var(--color-primary), transparent);
 }
 
-/* === ДЕКОР: Закат в правом верхнем углу === */
+/* === ДЕКОР: Яркое солнце в углу === */
 body::before {
     content: '';
     position: fixed;
-    top: -60px;
-    right: -60px;
-    width: 320px;
-    height: 320px;
+    top: -80px;
+    right: -80px;
+    width: 360px;
+    height: 360px;
     background: radial-gradient(circle,
-        rgba(255, 200, 0, 0.18) 0%,
-        rgba(255, 120, 0, 0.1) 35%,
-        rgba(255, 60, 0, 0.04) 60%,
-        transparent 75%
+        rgba(255, 230, 50, 0.55) 0%,
+        rgba(255, 160, 0, 0.35) 30%,
+        rgba(255, 100, 0, 0.12) 55%,
+        transparent 70%
     );
     border-radius: 50%;
-    filter: blur(15px);
+    filter: blur(8px);
     z-index: 0;
     pointer-events: none;
-    animation: sun-haze 9s ease-in-out infinite;
+    animation: sun-haze 8s ease-in-out infinite;
 }
 
-/* === ДЕКОР: Пальма — видимая но не кричащая === */
+/* === ДЕКОР: Пальма — заметная === */
 body::after {
     content: '🌴';
     position: fixed;
-    bottom: 20px;
-    right: 45px;
-    font-size: 3.5rem;
-    opacity: 0.28;
+    bottom: 10px;
+    right: 40px;
+    font-size: 5rem;
+    opacity: 0.35;
     z-index: 0;
     animation: sway 5s ease-in-out infinite;
     transform-origin: bottom center;
     pointer-events: none;
 }
 
-/* === ДЕКОР: Диагональные полоски в шапке === */
+/* === ДЕКОР: Деревянные полоски в шапке === */
 .site-header::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: repeating-linear-gradient(
-        45deg,
-        rgba(255, 153, 0, 0.04) 0px,
-        rgba(255, 153, 0, 0.04) 10px,
-        rgba(255, 102, 0, 0.04) 10px,
-        rgba(255, 102, 0, 0.04) 20px
+        90deg,
+        rgba(80, 40, 5, 0.07) 0px,
+        rgba(80, 40, 5, 0.07) 3px,
+        transparent 3px,
+        transparent 18px
     );
     pointer-events: none;
     z-index: 0;
 }
 
-/* === ДЕКОР: Кактус в футере === */
+/* === ДЕКОР: Дорожная разметка снизу === */
 .site-footer {
     position: relative;
     overflow: hidden;
 }
 
+.site-footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--color-warning) 0px,
+        var(--color-warning) 40px,
+        transparent 40px,
+        transparent 70px
+    );
+    opacity: 0.6;
+}
+
 .site-footer::after {
-    content: '🌵';
+    content: '🌵  🌵';
     position: absolute;
     bottom: 6px;
     right: 20px;
-    font-size: 1.8rem;
-    opacity: 0.18;
+    font-size: 1.6rem;
+    opacity: 0.2;
+    letter-spacing: 20px;
     pointer-events: none;
 }
 
-/* === ДЕКОР: Дорога на фоне — едва заметная сетка === */
+/* === ДЕКОР: Следы шин на фоне === */
 body {
     background-image:
-        linear-gradient(rgba(255,153,0,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,153,0,0.025) 1px, transparent 1px);
-    background-size: 60px 60px;
+        repeating-linear-gradient(
+            170deg,
+            transparent 0px,
+            transparent 80px,
+            rgba(160, 100, 0, 0.04) 80px,
+            rgba(160, 100, 0, 0.04) 84px
+        );
 }
 
-/* === HOVER КАРТОЧЕК === */
+/* === ДЕКОР: Пыль при ховере карточек === */
+.tool-card {
+    position: relative;
+}
+
+.tool-card::before {
+    content: '💨';
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.tool-card:hover::before {
+    opacity: 0.3;
+    animation: dust 1s ease-out;
+}
+
 .tool-card:hover {
     transform: translateY(-10px) scale(1.02);
     box-shadow:
         var(--shadow-md),
-        0 0 30px rgba(255, 153, 0, 0.25),
-        0 0 60px rgba(255, 102, 0, 0.1);
+        0 0 30px rgba(224, 136, 0, 0.3),
+        0 0 60px rgba(204, 85, 0, 0.1);
 }
 
 /* === АНИМАЦИИ === */
@@ -197,18 +233,24 @@ body {
 }
 
 @keyframes sun-haze {
-    0%, 100% { opacity: 0.85; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.06); }
+    0%, 100% { opacity: 0.9; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.07); }
+}
+
+@keyframes dust {
+    0% { transform: translateX(0) scale(1); opacity: 0.3; }
+    100% { transform: translateX(-30px) scale(1.5); opacity: 0; }
 }
 
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    body::after { font-size: 2.5rem; right: 20px; opacity: 0.22; }
-    body::before { width: 220px; height: 220px; top: -40px; right: -40px; }
-    .site-footer::after { font-size: 1.4rem; }
+    body::after { font-size: 3.5rem; right: 20px; opacity: 0.28; }
+    body::before { width: 250px; height: 250px; top: -50px; right: -50px; }
+    .site-footer::after { font-size: 1.2rem; letter-spacing: 10px; }
 }
 
 @media (max-width: 480px) {
-    body::after { font-size: 2rem; right: 10px; opacity: 0.18; }
+    body::after { font-size: 2.5rem; right: 10px; opacity: 0.22; }
     .site-footer::after { display: none; }
+    .site-footer::before { height: 3px; }
 }
