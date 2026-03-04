@@ -62,7 +62,6 @@ function positionTooltip(e, popup) {
     popup.style.top = Math.min(y, window.innerHeight - popup.offsetHeight - 16) + 'px';
 }
 
-// --- Заглушка / результаты ---
 function showPlaceholder() {
     document.getElementById('resultsPlaceholder').style.display = 'flex';
     document.getElementById('resultsContent').style.display = 'none';
@@ -73,7 +72,6 @@ function showResults() {
     document.getElementById('resultsContent').style.display = 'flex';
 }
 
-// --- Ошибка ставки ---
 function showStakeError(show) {
     const input = document.getElementById('totalStake');
     const errorEl = document.getElementById('stakeError');
@@ -106,13 +104,11 @@ function formatToTwoDecimals(value) {
     return num.toFixed(2);
 }
 
-// --- Рендер таблицы коэффициентов ---
 function renderOddsTable() {
     const container = document.getElementById('oddsTable');
     container.innerHTML = '';
     container.style.setProperty('--outcome-count', outcomeCount);
 
-    // Заголовок
     const headerRow = document.createElement('div');
     headerRow.className = 'odds-header-row';
     headerRow.appendChild(Object.assign(document.createElement('div'), { className: 'odds-corner' }));
@@ -124,7 +120,6 @@ function renderOddsTable() {
     }
     container.appendChild(headerRow);
 
-    // Строки БК
     for (let b = 0; b < bkCount; b++) {
         const row = document.createElement('div');
         row.className = 'odds-row';
@@ -168,7 +163,6 @@ function renderOddsTable() {
         container.appendChild(row);
     }
 
-    // Кнопка добавить БК
     if (bkCount < 5) {
         const addRow = document.createElement('div');
         addRow.className = 'add-bk-row';
@@ -251,7 +245,6 @@ function initEventListeners() {
     document.getElementById('calculateArbBtn').addEventListener('click', calculateArbitrage);
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 
-    // Ограничение 9 символов
     const stakeInput = document.getElementById('totalStake');
     stakeInput.addEventListener('input', () => {
         showStakeError(false);
@@ -273,7 +266,6 @@ function initEventListeners() {
     });
 }
 
-// --- Расчёт ---
 function getBestOdds() {
     const bestOdds = [];
     for (let o = 0; o < outcomeCount; o++) {
@@ -293,8 +285,7 @@ function calculateGuaranteedStrategy(bestOdds, totalStake) {
     const profitPercent = isArb ? ((1 / sumInverse - 1) * 100) : 0;
     const stakes = bestOdds.map(odd => (totalStake * (1 / odd)) / sumInverse);
     const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
-    const stakePercents = stakes.map(s => (s / totalStake) * 100);
-    return { stakes, payouts, stakePercents, guaranteedPayout: payouts[0], isArb, profitPercent, sumInverse };
+    return { stakes, payouts, guaranteedPayout: payouts[0], isArb, profitPercent, sumInverse };
 }
 
 function calculateMaxStrategy(bestOdds, totalStake) {
@@ -319,10 +310,9 @@ function calculateMaxStrategy(bestOdds, totalStake) {
 
     stakes[maxOddIndex] = remainingStake;
     const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
-    const stakePercents = stakes.map(s => (s / totalStake) * 100);
     const guaranteedPayout = payouts[maxOddIndex];
     const profitPercent = ((guaranteedPayout - totalStake) / totalStake) * 100;
-    return { stakes, payouts, stakePercents, guaranteedPayout, isArb: true, profitPercent, sumInverse, maxOddIndex };
+    return { stakes, payouts, guaranteedPayout, isArb: true, profitPercent, sumInverse, maxOddIndex };
 }
 
 function calculateArbitrage() {
@@ -354,11 +344,16 @@ function calculateArbitrage() {
         : calculateMaxStrategy(bestOdds, totalStake);
 
     lastCalculation = {
-        bestOdds, stakes: result.stakes, payouts: result.payouts,
-        stakePercents: result.stakePercents,
-        totalStake, sumInverse: result.sumInverse, isArb: result.isArb,
-        profitPercent: result.profitPercent, strategy,
-        guaranteedPayout: result.guaranteedPayout
+        bestOdds,
+        stakes: result.stakes,
+        payouts: result.payouts,
+        totalStake,
+        sumInverse: result.sumInverse,
+        isArb: result.isArb,
+        profitPercent: result.profitPercent,
+        strategy,
+        guaranteedPayout: result.guaranteedPayout,
+        maxOddIndex: result.maxOddIndex
     };
 
     hasCalculated = true;
@@ -375,6 +370,7 @@ function displayResults(data) {
     const tableBody = document.getElementById('tableBody');
     const netProfitBlock = document.getElementById('netProfitBlock');
     const netProfitEl = document.getElementById('netProfit');
+    const payoutPercentEl = document.getElementById('payoutPercent');
 
     if (data.isArb) {
         indicatorCircle.className = 'indicator-circle bg-success-solid';
@@ -389,17 +385,32 @@ function displayResults(data) {
         indicatorProfit.style.display = 'none';
     }
 
-    // Таблица с колонкой процентов
+    const isMaxStrategy = data.strategy === 'max' && data.maxOddIndex !== undefined;
+    const winText = window.getTranslation('arbsWin') || 'Выигрыш';
+    const returnText = window.getTranslation('arbsReturn') || 'Возврат';
+
     tableBody.innerHTML = '';
     data.bestOdds.forEach((odd, i) => {
         const row = document.createElement('div');
         row.className = 'table-row';
+
+        let badgeHtml = '';
+        if (data.isArb) {
+            if (isMaxStrategy && i !== data.maxOddIndex) {
+                badgeHtml = `<span class="outcome-badge" style="background:rgba(255,193,7,0.15);color:var(--color-warning,#ffc107);">${returnText}</span>`;
+            } else {
+                badgeHtml = `<span class="outcome-badge" style="background:rgba(39,174,96,0.15);color:var(--color-success);">${winText}</span>`;
+            }
+        } else {
+            badgeHtml = `<span class="outcome-badge" style="background:rgba(128,128,128,0.1);color:var(--text-muted);">—</span>`;
+        }
+
         row.innerHTML = `
             <span class="text-2">${window.getTranslation('arbsOutcomeLabel') || 'Исход'} ${i + 1}</span>
             <span class="text-1">${odd.toFixed(2)}</span>
             <span class="text-1">${data.stakes[i].toFixed(2)} $</span>
             <span class="text-1">${data.payouts[i].toFixed(2)} $</span>
-            <span class="text-muted">${data.stakePercents[i].toFixed(1)}%</span>
+            ${badgeHtml}
         `;
         tableBody.appendChild(row);
     });
@@ -408,13 +419,24 @@ function displayResults(data) {
 
     if (data.isArb) {
         document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' $';
+
+        if (isMaxStrategy) {
+            const minPct = (Math.min(...data.payouts) / data.totalStake * 100).toFixed(1);
+            const maxPct = (Math.max(...data.payouts) / data.totalStake * 100).toFixed(1);
+            payoutPercentEl.textContent = `(${minPct}–${maxPct}%)`;
+        } else {
+            const pct = (data.guaranteedPayout / data.totalStake * 100).toFixed(1);
+            payoutPercentEl.textContent = `(${pct}%)`;
+        }
+        payoutPercentEl.style.display = 'inline';
+
         const netProfit = data.guaranteedPayout - data.totalStake;
         netProfitBlock.style.display = 'flex';
         netProfitEl.textContent = '+' + netProfit.toFixed(2) + ' $';
         netProfitEl.className = 'net-profit-value text-4';
-        netProfitBlock.style.borderColor = 'var(--border-4)';
     } else {
         document.getElementById('totalPayout').textContent = '0 $';
+        payoutPercentEl.style.display = 'none';
         netProfitBlock.style.display = 'none';
     }
 }
@@ -430,6 +452,8 @@ function resetCalculator() {
     showStakeError(false);
     updateOutcomePillsActive(2);
     updateStrategyPillsActive('guaranteed');
+    document.getElementById('payoutPercent').style.display = 'none';
+    document.getElementById('netProfitBlock').style.display = 'none';
     showPlaceholder();
     lastCalculation = null;
     localStorage.removeItem('arbLastCalculation');
@@ -447,9 +471,6 @@ function loadLastCalculation() {
             if (lastCalculation.strategy) {
                 strategy = lastCalculation.strategy;
                 updateStrategyPillsActive(strategy);
-            }
-            if (!lastCalculation.stakePercents && lastCalculation.stakes && lastCalculation.totalStake) {
-                lastCalculation.stakePercents = lastCalculation.stakes.map(s => (s / lastCalculation.totalStake) * 100);
             }
             hasCalculated = true;
             showResults();
