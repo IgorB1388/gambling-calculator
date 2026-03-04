@@ -183,7 +183,8 @@
     "arbsOutcomeType": "Исход",
     "arbsWin": "Выигрыш",
     "arbsReturn": "Возврат",
-    "arbsPayoutPercent": "Выплата / Доход:",
+    "arbsTotalPayoutRow": "Выплата:",
+    "arbsIncomeRow": "Доход:",
 
     "faqTitle": "ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ",
     "faqSubtitle": "Ответы на популярные вопросы о GTA Casino Tools",
@@ -198,6 +199,7 @@
     "faqContact": "Не нашли ответ на свой вопрос?",
     "faqContactAnswer": "Если у вас есть другие вопросы или предложения по улучшению инструментов, свяжитесь с нами через репозиторий GitHub проекта."
 }
+
 
 
 
