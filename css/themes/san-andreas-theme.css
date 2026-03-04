@@ -12,40 +12,40 @@
     --color-highlight: #b8860b;
     --color-deck: #e08800;
 
-    /* === ФОНЫ === */
-    --bg-body: #e8c97a;
-    --bg-surface: #d4b055;
-    --bg-elevated: #c8a040;
-    --bg-overlay: rgba(100, 60, 10, 0.88);
-    --bg-overlay-light: rgba(100, 60, 10, 0.75);
-    --bg-header: linear-gradient(135deg, #8b5e1a 0%, #a06820 50%, #8b5e1a 100%);
-    --bg-coming-soon: rgba(100, 60, 10, 0.88);
-    --bg-nav: rgba(80, 40, 5, 0.35);
-    --bg-surface-light: rgba(255, 200, 80, 0.25);
+    /* === ФОНЫ — светлый песок + тёмные панели === */
+    --bg-body: #f2d878;
+    --bg-surface: #7a5218;
+    --bg-elevated: #6a4410;
+    --bg-overlay: rgba(80, 45, 5, 0.92);
+    --bg-overlay-light: rgba(80, 45, 5, 0.80);
+    --bg-header: linear-gradient(135deg, #5a3a0a 0%, #7a5218 50%, #5a3a0a 100%);
+    --bg-coming-soon: rgba(80, 45, 5, 0.92);
+    --bg-nav: rgba(50, 25, 0, 0.4);
+    --bg-surface-light: rgba(255, 210, 100, 0.12);
     --bg-surface-hover: rgba(224, 136, 0, 0.2);
     --bg-surface-active: rgba(204, 85, 0, 0.2);
 
-    /* === ТЕКСТ === */
-    --text-primary: #3a1a00;
-    --text-secondary: #6b3800;
-    --text-inverse: #f5e6cc;
-    --text-muted: rgba(107, 56, 0, 0.5);
-    --text-slot: rgba(58, 26, 0, 0.4);
+    /* === ТЕКСТ — светлый на тёмных панелях === */
+    --text-primary: #faebd0;
+    --text-secondary: #e8c87a;
+    --text-inverse: #3a1a00;
+    --text-muted: rgba(232, 200, 122, 0.6);
+    --text-slot: rgba(250, 235, 208, 0.4);
 
     /* === ГРАНИЦЫ === */
-    --border-primary: #c07000;
+    --border-primary: #e08800;
     --border-secondary: #cc5500;
     --border-accent: #8b4513;
     --border-success: #2e7d1e;
     --border-info: #c47a2a;
-    --border-muted: rgba(160, 90, 0, 0.3);
-    --border-dark: rgba(58, 26, 0, 0.35);
-    --border-dashed: rgba(160, 90, 0, 0.35);
-    --border-nav: rgba(160, 90, 0, 0.3);
+    --border-muted: rgba(224, 136, 0, 0.3);
+    --border-dark: rgba(30, 10, 0, 0.5);
+    --border-dashed: rgba(224, 136, 0, 0.35);
+    --border-nav: rgba(224, 136, 0, 0.25);
     --border-deck: #e08800;
 
     /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
-    --border-1: #c07000;
+    --border-1: #e08800;
     --border-2: #cc5500;
     --border-3: #e8b800;
     --border-4: #2e7d1e;
@@ -54,49 +54,49 @@
     --border-7: #aa1111;
 
     /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
-    --text-1: #c07000;
-    --text-2: #cc5500;
-    --text-3: #9a6200;
-    --text-4: #2e7d1e;
-    --text-5: #a06018;
-    --text-6: #7a3a00;
-    --text-7: #aa1111;
+    --text-1: #ffaa00;
+    --text-2: #ff7733;
+    --text-3: #ffe066;
+    --text-4: #4aab2e;
+    --text-5: #e8a050;
+    --text-6: #e8c87a;
+    --text-7: #dd4444;
 
     /* === ТЕНИ === */
-    --shadow-sm: 0 2px 6px rgba(100, 60, 0, 0.3);
-    --shadow-md: 0 10px 30px rgba(100, 60, 0, 0.4);
-    --shadow-lg: 0 15px 40px rgba(100, 60, 0, 0.5);
-    --shadow-header: 0 10px 30px rgba(80, 40, 0, 0.5), 0 0 40px rgba(224, 136, 0, 0.2);
-    --glow-primary: 0 0 20px rgba(224, 136, 0, 0.45);
-    --glow-secondary: 0 0 20px rgba(204, 85, 0, 0.4);
-    --glow-accent: 0 0 20px rgba(139, 69, 19, 0.35);
-    --glow-highlight: 0 0 20px rgba(184, 134, 11, 0.35);
-    --glow-success: 0 0 20px rgba(46, 125, 30, 0.35);
+    --shadow-sm: 0 2px 6px rgba(60, 30, 0, 0.4);
+    --shadow-md: 0 10px 30px rgba(60, 30, 0, 0.5);
+    --shadow-lg: 0 15px 40px rgba(60, 30, 0, 0.6);
+    --shadow-header: 0 10px 30px rgba(40, 20, 0, 0.6), 0 0 40px rgba(224, 136, 0, 0.2);
+    --glow-primary: 0 0 20px rgba(224, 136, 0, 0.5);
+    --glow-secondary: 0 0 20px rgba(204, 85, 0, 0.45);
+    --glow-accent: 0 0 20px rgba(139, 69, 19, 0.4);
+    --glow-highlight: 0 0 20px rgba(184, 134, 11, 0.4);
+    --glow-success: 0 0 20px rgba(46, 125, 30, 0.4);
 
     /* === ПЕРЕКЛЮЧАТЕЛЬ ТЕМ === */
-    --theme-switcher-bg: rgba(139, 94, 26, 0.3);
-    --theme-switcher-border: #c07000;
-    --theme-btn-bg: rgba(255, 200, 80, 0.2);
-    --theme-btn-text: #3a1a00;
+    --theme-switcher-bg: rgba(50, 25, 0, 0.4);
+    --theme-switcher-border: #e08800;
+    --theme-btn-bg: rgba(255, 200, 80, 0.15);
+    --theme-btn-text: #faebd0;
     --theme-btn-hover-border: #cc5500;
     --theme-btn-hover-glow: #cc5500;
     --theme-btn-active-bg: #e08800;
     --theme-btn-active-text: #3a1a00;
-    --theme-btn-active-border: #c07000;
+    --theme-btn-active-border: #e08800;
     --theme-btn-active-glow: #e08800;
 
     /* === ГРАДИЕНТЫ === */
-    --gradient-body: linear-gradient(180deg, #f0d080 0%, #e8c97a 40%, #dab860 100%);
+    --gradient-body: linear-gradient(180deg, #f8e090 0%, #f2d878 40%, #e8c860 100%);
     --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     --gradient-logo-text: linear-gradient(45deg, var(--color-warning), var(--color-primary));
-    --gradient-nav-link: linear-gradient(145deg, rgba(255,200,80,0.15), rgba(80,40,5,0.15));
+    --gradient-nav-link: linear-gradient(145deg, rgba(255,210,100,0.1), rgba(50,25,0,0.2));
     --gradient-nav-hover: linear-gradient(145deg, rgba(224,136,0,0.25), rgba(204,85,0,0.2));
     --gradient-nav-active: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
     --gradient-btn-primary: linear-gradient(45deg, var(--color-secondary), var(--color-primary));
-    --gradient-btn-secondary: linear-gradient(145deg, rgba(255,200,80,0.2), rgba(80,40,5,0.1));
-    --gradient-page-header: linear-gradient(135deg, rgba(212,176,85,0.97), rgba(200,160,64,0.97));
-    --gradient-card: linear-gradient(135deg, rgba(212,176,85,0.95), rgba(200,160,64,0.95));
-    --gradient-coming-soon: linear-gradient(135deg, rgba(212,176,85,0.97), rgba(200,160,64,0.97));
+    --gradient-btn-secondary: linear-gradient(145deg, rgba(255,200,80,0.15), rgba(50,25,0,0.2));
+    --gradient-page-header: linear-gradient(135deg, rgba(122,82,24,0.97), rgba(106,68,16,0.97));
+    --gradient-card: linear-gradient(135deg, rgba(122,82,24,0.95), rgba(106,68,16,0.95));
+    --gradient-coming-soon: linear-gradient(135deg, rgba(122,82,24,0.97), rgba(106,68,16,0.97));
     --gradient-faq-contact: linear-gradient(135deg, rgba(46,125,30,0.06), rgba(224,136,0,0.06));
     --gradient-cyber: linear-gradient(90deg, transparent, var(--color-primary), var(--color-secondary), var(--color-accent), transparent);
     --gradient-tool-border: linear-gradient(90deg, var(--color-primary), var(--color-warning), var(--color-primary), var(--color-secondary));
@@ -131,7 +131,7 @@ body::after {
     bottom: 10px;
     right: 40px;
     font-size: 5rem;
-    opacity: 0.35;
+    opacity: 0.4;
     z-index: 0;
     animation: sway 5s ease-in-out infinite;
     transform-origin: bottom center;
@@ -145,8 +145,8 @@ body::after {
     top: 0; left: 0; right: 0; bottom: 0;
     background: repeating-linear-gradient(
         90deg,
-        rgba(80, 40, 5, 0.07) 0px,
-        rgba(80, 40, 5, 0.07) 3px,
+        rgba(30, 10, 0, 0.08) 0px,
+        rgba(30, 10, 0, 0.08) 3px,
         transparent 3px,
         transparent 18px
     );
@@ -154,25 +154,24 @@ body::after {
     z-index: 0;
 }
 
-/* === ДЕКОР: Следы шин на фоне — двойные === */
+/* === ДЕКОР: Следы шин на фоне === */
 body {
     background-image:
         repeating-linear-gradient(
             170deg,
             transparent 0px,
             transparent 60px,
-            rgba(140, 80, 0, 0.09) 60px,
-            rgba(140, 80, 0, 0.09) 65px,
+            rgba(120, 70, 0, 0.12) 60px,
+            rgba(120, 70, 0, 0.12) 65px,
             transparent 65px,
             transparent 72px,
-            rgba(140, 80, 0, 0.09) 72px,
-            rgba(140, 80, 0, 0.09) 77px
+            rgba(120, 70, 0, 0.12) 72px,
+            rgba(120, 70, 0, 0.12) 77px
         );
 }
 
-/* === ДЕКОР: Дорожная разметка — фиксированная внизу === */
-.site-container::after {
-    content: '';
+/* === ДЕКОР: Дорожная разметка внизу === */
+.road-marking {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -185,12 +184,12 @@ body {
         transparent 50px,
         transparent 85px
     );
-    opacity: 0.55;
+    opacity: 0.6;
     pointer-events: none;
     z-index: 9998;
 }
 
-/* === ДЕКОР: Футер с кактусами === */
+/* === ДЕКОР: Футер === */
 .site-footer {
     position: relative;
     overflow: hidden;
@@ -269,14 +268,14 @@ body {
 
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    body::after { font-size: 3.5rem; right: 20px; opacity: 0.28; }
+    body::after { font-size: 3.5rem; right: 20px; opacity: 0.35; }
     body::before { width: 250px; height: 250px; top: -50px; right: -50px; }
     .site-footer::after { font-size: 1.2rem; letter-spacing: 10px; }
-    .site-container::after { height: 4px; }
+    .road-marking { height: 4px; }
 }
 
 @media (max-width: 480px) {
-    body::after { font-size: 2.5rem; right: 10px; opacity: 0.22; }
+    body::after { font-size: 2.5rem; right: 10px; opacity: 0.28; }
     .site-footer::after { display: none; }
-    .site-container::after { display: none; }
+    .road-marking { display: none; }
 }
