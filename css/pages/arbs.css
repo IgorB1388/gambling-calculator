@@ -10,7 +10,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     margin-bottom: 40px;
-    align-items: start;
+    align-items: stretch;
 }
 
 @media (max-width: 1100px) {
@@ -26,10 +26,7 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
-}
-
-.panel-right {
-    min-height: 520px;
+    box-sizing: border-box;
 }
 
 .panel-title {
@@ -142,7 +139,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 200px;
+    width: 210px;
 }
 
 .stake-input {
@@ -173,7 +170,7 @@
 }
 
 .stake-error {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: bold;
     padding: 4px 0;
     color: var(--color-danger) !important;
@@ -192,7 +189,7 @@
 .results-controls .btn {
     flex: 1;
     padding: 14px 16px;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: bold;
     border-radius: 12px;
     border-width: 2px;
@@ -203,7 +200,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 50px;
+    min-height: 52px;
     white-space: nowrap;
 }
 
@@ -221,13 +218,13 @@
     flex: 1;
 }
 
-.placeholder-icon { font-size: 3rem; opacity: 0.4; }
-.placeholder-text { font-size: 1rem; font-style: italic; }
+.placeholder-icon { font-size: 3.5rem; opacity: 0.4; }
+.placeholder-text { font-size: 1.05rem; font-style: italic; }
 
 .placeholder-steps {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     text-align: left;
     margin-top: 8px;
 }
@@ -236,19 +233,19 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
 .step-num {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1px solid var(--border-1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     flex-shrink: 0;
 }
 
@@ -286,15 +283,16 @@
     flex: 1;
 }
 
+.indicator-text span { font-size: 1rem; }
 .indicator-text span:last-child {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: bold;
 }
 
 .indicator-profit { margin-left: auto; }
 
 .profit-badge {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: bold;
 }
 
@@ -318,7 +316,7 @@
     border-width: 2px;
     border-style: solid;
     border-color: var(--border-5);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
@@ -454,7 +452,7 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: 1.8fr 1fr 1.4fr 1.4fr 0.8fr;
+    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.3fr 1fr;
     gap: 8px;
     padding: 11px 14px;
     font-weight: bold;
@@ -465,14 +463,23 @@
 
 .table-row {
     display: grid;
-    grid-template-columns: 1.8fr 1fr 1.4fr 1.4fr 0.8fr;
+    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.3fr 1fr;
     gap: 8px;
-    padding: 10px 14px;
+    padding: 11px 14px;
     border-bottom: 1px solid var(--border-muted);
     font-size: 1.05rem;
+    align-items: center;
 }
 
 .table-row:last-child { border-bottom: none; }
+
+.outcome-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
 
 /* === ИТОГИ === */
 .totals {
@@ -490,6 +497,19 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1rem;
+    gap: 8px;
+}
+
+.total-payout-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.payout-percent {
+    font-size: 0.9rem;
+    font-weight: bold;
+    opacity: 0.8;
 }
 
 /* === ЧИСТАЯ ПРИБЫЛЬ === */
@@ -497,7 +517,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
+    padding: 18px 22px;
     border-radius: 12px;
     border-width: 2px;
     border-style: solid;
@@ -505,20 +525,20 @@
 }
 
 .net-profit-label {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .net-profit-value {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
 }
 
 /* === ПОДСКАЗКА === */
 .arb-hint {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-style: italic;
     text-align: center;
     padding: 6px;
@@ -528,7 +548,6 @@
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
     .panel { padding: 18px; gap: 14px; }
-    .panel-right { min-height: 400px; }
 
     .odds-header-row, .odds-row, .add-bk-row {
         grid-template-columns: 65px repeat(var(--outcome-count, 2), 1fr);
@@ -541,16 +560,15 @@
     .odds-header { font-size: 0.85rem; }
 
     .table-header, .table-row {
-        grid-template-columns: 1.5fr 0.9fr 1.2fr 1.2fr 0.7fr;
+        grid-template-columns: 1.4fr 0.8fr 1.1fr 1.1fr 0.9fr;
         font-size: 0.9rem;
         padding: 8px 10px;
     }
 
-    .profit-badge { font-size: 1.4rem; }
-    .net-profit-value { font-size: 1.6rem; }
-    .results-controls .btn { padding: 12px 10px; font-size: 0.9rem; }
+    .profit-badge { font-size: 1.5rem; }
+    .net-profit-value { font-size: 1.7rem; }
+    .results-controls .btn { padding: 12px 10px; font-size: 0.95rem; }
     .stake-input-wrapper { width: 100%; }
-    .strategy-mini-btn { font-size: 0.8rem; }
     .settings-label { font-size: 0.95rem; }
 }
 
@@ -566,10 +584,9 @@
     .odds-corner { width: 55px; }
     .odds-bk-label { font-size: 0.78rem; }
     .odds-input { padding: 6px 2px; font-size: 0.85rem; }
-    .odds-header { font-size: 0.75rem; }
 
     .table-header, .table-row {
-        grid-template-columns: 1.3fr 0.8fr 1.1fr 1.1fr 0.65fr;
+        grid-template-columns: 1.2fr 0.75fr 1fr 1fr 0.85fr;
         font-size: 0.82rem;
         padding: 7px 8px;
     }
@@ -577,7 +594,6 @@
     .indicator-circle { width: 34px; height: 34px; }
     .results-controls { flex-direction: column; }
     .results-controls .btn { width: 100%; }
-    .strategy-mini-btn { font-size: 0.75rem; height: 46px; }
     .net-profit-value { font-size: 1.4rem; }
-    .profit-badge { font-size: 1.2rem; }
+    .profit-badge { font-size: 1.3rem; }
 }
