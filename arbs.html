@@ -29,7 +29,6 @@
                     <div class="panel bg-surface border-1 shadow-default">
                         <div class="panel-title text-1" data-i18n="arbsSettingsTitle"></div>
 
-                        <!-- Количество исходов -->
                         <div class="settings-group">
                             <div class="settings-label-row">
                                 <span class="settings-label text-3" data-i18n="arbsOutcomesLabel"></span>
@@ -45,7 +44,6 @@
 
                         <div class="block-divider"></div>
 
-                        <!-- Коэффициенты -->
                         <div class="settings-group">
                             <div class="settings-label-row">
                                 <span class="settings-label text-3" data-i18n="arbsOddsLabel"></span>
@@ -56,7 +54,6 @@
 
                         <div class="block-divider"></div>
 
-                        <!-- Сумма ставки -->
                         <div class="settings-group">
                             <div class="settings-label-row">
                                 <span class="settings-label text-3" data-i18n="arbsStakeLabel"></span>
@@ -75,9 +72,8 @@
                     </div>
 
                     <!-- ПРАВАЯ ПАНЕЛЬ -->
-                    <div class="panel bg-surface border-4 shadow-default panel-right">
+                    <div class="panel bg-surface border-4 shadow-default">
 
-                        <!-- Кнопки -->
                         <div class="results-controls">
                             <button class="btn btn-primary-bg btn-primary-text" id="calculateArbBtn">
                                 <i class="fas fa-calculator"></i>
@@ -114,7 +110,6 @@
                         <!-- Результаты -->
                         <div class="results-content" id="resultsContent" style="display:none;">
 
-                            <!-- Статус -->
                             <div class="arb-indicator bg-elevated border-1" id="arbIndicator">
                                 <div class="indicator-circle" id="indicatorCircle"></div>
                                 <div class="indicator-text">
@@ -126,8 +121,8 @@
                                 </div>
                             </div>
 
-                            <!-- Стратегия -->
                             <div class="block-divider"></div>
+
                             <div class="strategy-block">
                                 <div class="settings-label-row">
                                     <span class="settings-label text-3" data-i18n="arbsStrategyLabel"></span>
@@ -141,37 +136,38 @@
 
                             <div class="block-divider"></div>
 
-                            <!-- Таблица -->
                             <div class="distribution-table border-1" id="distributionTable">
                                 <div class="table-header bg-elevated border-1">
                                     <span class="text-2" data-i18n="arbsOutcome"></span>
                                     <span class="text-2" data-i18n="arbsOdds"></span>
                                     <span class="text-2" data-i18n="arbsStake"></span>
                                     <span class="text-2" data-i18n="arbsPayout"></span>
-                                    <span class="text-2">%</span>
+                                    <span class="text-2" data-i18n="arbsOutcomeType"></span>
                                 </div>
                                 <div class="table-body" id="tableBody"></div>
                             </div>
 
-                            <!-- Итоги + чистая прибыль -->
                             <div class="totals bg-elevated border-1">
                                 <div class="total-row">
                                     <span class="text-muted" data-i18n="arbsTotalStake"></span>
                                     <span class="text-3" id="totalStakeDisplay">0 $</span>
                                 </div>
                                 <div class="total-row">
-                                    <span class="text-muted" data-i18n="arbsTotalPayout"></span>
-                                    <span class="text-3" id="totalPayout">0 $</span>
+                                    <span class="text-muted" data-i18n="arbsPayoutPercent"></span>
+                                    <div class="total-payout-right">
+                                        <span class="text-3" id="totalPayout">0 $</span>
+                                        <span class="payout-percent text-4" id="payoutPercent" style="display:none;"></span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Чистая прибыль — отдельно крупно -->
                             <div class="net-profit-block bg-elevated" id="netProfitBlock" style="display:none;">
                                 <span class="net-profit-label text-muted" data-i18n="arbsNetProfit"></span>
-                                <span class="net-profit-value" id="netProfit">0 $</span>
+                                <span class="net-profit-value text-4" id="netProfit">0 $</span>
                             </div>
 
                             <div class="arb-hint text-muted" data-i18n="arbsHint"></div>
+
                         </div>
                     </div>
 
