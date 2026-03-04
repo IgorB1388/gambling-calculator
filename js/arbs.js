@@ -37,7 +37,6 @@ function initState() {
     }
 }
 
-// --- Тултипы ---
 function initTooltips() {
     const popup = document.getElementById('tooltipPopup');
     if (!popup) return;
@@ -370,7 +369,8 @@ function displayResults(data) {
     const tableBody = document.getElementById('tableBody');
     const netProfitBlock = document.getElementById('netProfitBlock');
     const netProfitEl = document.getElementById('netProfit');
-    const payoutPercentEl = document.getElementById('payoutPercent');
+    const incomeRow = document.getElementById('incomeRow');
+    const incomePercent = document.getElementById('incomePercent');
 
     if (data.isArb) {
         indicatorCircle.className = 'indicator-circle bg-success-solid';
@@ -397,12 +397,12 @@ function displayResults(data) {
         let badgeHtml = '';
         if (data.isArb) {
             if (isMaxStrategy && i !== data.maxOddIndex) {
-                badgeHtml = `<span class="outcome-badge" style="background:rgba(255,193,7,0.15);color:var(--color-warning,#ffc107);">${returnText}</span>`;
+                badgeHtml = `<span class="outcome-badge" style="color:var(--color-warning,#ffc107);font-weight:bold;">${returnText}</span>`;
             } else {
-                badgeHtml = `<span class="outcome-badge" style="background:rgba(39,174,96,0.15);color:var(--color-success);">${winText}</span>`;
+                badgeHtml = `<span class="outcome-badge" style="color:var(--color-success);font-weight:bold;">${winText}</span>`;
             }
         } else {
-            badgeHtml = `<span class="outcome-badge" style="background:rgba(128,128,128,0.1);color:var(--text-muted);">—</span>`;
+            badgeHtml = `<span class="outcome-badge" style="color:var(--text-muted);">—</span>`;
         }
 
         row.innerHTML = `
@@ -420,15 +420,16 @@ function displayResults(data) {
     if (data.isArb) {
         document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' $';
 
+        // Строка дохода в процентах
+        incomeRow.style.display = 'flex';
         if (isMaxStrategy) {
-            const minPct = (Math.min(...data.payouts) / data.totalStake * 100).toFixed(1);
-            const maxPct = (Math.max(...data.payouts) / data.totalStake * 100).toFixed(1);
-            payoutPercentEl.textContent = `(${minPct}–${maxPct}%)`;
+            const minPct = (Math.min(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
+            const maxPct = (Math.max(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
+            incomePercent.textContent = `+${minPct}% — +${maxPct}%`;
         } else {
-            const pct = (data.guaranteedPayout / data.totalStake * 100).toFixed(1);
-            payoutPercentEl.textContent = `(${pct}%)`;
+            const pct = (data.guaranteedPayout / data.totalStake * 100 - 100).toFixed(1);
+            incomePercent.textContent = `+${pct}%`;
         }
-        payoutPercentEl.style.display = 'inline';
 
         const netProfit = data.guaranteedPayout - data.totalStake;
         netProfitBlock.style.display = 'flex';
@@ -436,7 +437,7 @@ function displayResults(data) {
         netProfitEl.className = 'net-profit-value text-4';
     } else {
         document.getElementById('totalPayout').textContent = '0 $';
-        payoutPercentEl.style.display = 'none';
+        incomeRow.style.display = 'none';
         netProfitBlock.style.display = 'none';
     }
 }
@@ -452,7 +453,7 @@ function resetCalculator() {
     showStakeError(false);
     updateOutcomePillsActive(2);
     updateStrategyPillsActive('guaranteed');
-    document.getElementById('payoutPercent').style.display = 'none';
+    document.getElementById('incomeRow').style.display = 'none';
     document.getElementById('netProfitBlock').style.display = 'none';
     showPlaceholder();
     lastCalculation = null;
