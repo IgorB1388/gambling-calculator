@@ -13,7 +13,7 @@
     "toolPokerTitle": "Calculadora de póker",
     "toolPokerDesc": "Calcula probabilidades de ganar en póker basado en tu mano y cartas comunitarias",
     "toolRouletteTitle": "Analizador de ruleta",
-    "toolRouletteDesc": "Análisis estadístico de ruleta en estilo GTA San Andreas",
+    "toolRouletteDesc": "Análisis estadístico de ruleta",
     "toolArbsTitle": "Escáner de arbitraje",
     "toolArbsDesc": "Encuentra oportunidades de arbitraje entre casas de apuestas",
     
@@ -21,7 +21,7 @@
     "infoDesc1": "Este es un conjunto de herramientas para análisis de juegos de azar, creado en el estilo del universo Grand Theft Auto.",
     "infoDesc2": "Todas las herramientas son gratuitas y funcionan directamente en el navegador sin instalar software adicional.",
     
-    "footerText": "GTA Casino Tools © 2024 | Creado para entusiastas de los juegos de azar",
+    "footerText": "Neon Casino Tools © 2026 | Creado para entusiastas de los juegos de azar",
     
     "title": "CALCULADORA DE PÓKER",
     "pokerSubtitle": "Calcula las probabilidades de ganar",
@@ -128,9 +128,9 @@
     "arbsNotFound": "❌ Sin apuesta",
     
     "faqTitle": "FAQ",
-    "faqSubtitle": "Respuestas a preguntas comunes sobre GTA Casino Tools",
+    "faqSubtitle": "Respuestas a preguntas comunes sobre Neon Casino Tools",
     "faqQuestion1": "¿Para quién es este sitio?",
-    "faqAnswer1": "GTA Casino Tools está diseñado para personas interesadas en los juegos de azar desde una perspectiva analítica.",
+    "faqAnswer1": "Neon Casino Tools está diseñado para personas interesadas en los juegos de azar desde una perspectiva analítica.",
     "faqQuestion2": "¿Cómo funciona la calculadora de póker?",
     "faqAnswer2": "La calculadora de póker utiliza el método Monte Carlo para simular 25,000 repartos aleatorios y calcular la probabilidad de que tu mano gane contra el número especificado de oponentes.",
     "faqQuestion3": "¿En qué idiomas está disponible el sitio?",
