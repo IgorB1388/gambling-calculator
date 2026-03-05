@@ -1,5 +1,5 @@
 {
-    "siteTitle": "GTA Casino Tools - Gambling Analysis",
+    "siteTitle": "Neon Casino Tools - Gambling Analysis",
     
     "navHome": "Home",
     "navPoker": "Poker Calculator",
@@ -7,13 +7,13 @@
     "navArbs": "Arbitrage Scanner",
     "navFaq": "FAQ",
     
-    "heroTitle": "GTA CASINO TOOLS",
-    "heroSubtitle": "A set of professional tools for gambling analysis in GTA style",
+    "heroTitle": "NEON CASINO TOOLS",
+    "heroSubtitle": "A set of professional tools for gambling analysis",
     
     "toolPokerTitle": "Poker Calculator",
     "toolPokerDesc": "Calculate winning chances in poker based on your hand and community cards",
     "toolRouletteTitle": "Roulette Analyzer",
-    "toolRouletteDesc": "Roulette statistics analysis in GTA San Andreas style",
+    "toolRouletteDesc": "Roulette statistics analysis",
     "toolArbsTitle": "Arbitrage Scanner",
     "toolArbsDesc": "Find arbitrage opportunities between bookmakers",
     
@@ -21,7 +21,7 @@
     "infoDesc1": "This is a set of tools for gambling analysis, created in the style of the Grand Theft Auto universe.",
     "infoDesc2": "All tools are free and work directly in the browser without installing additional software.",
     
-    "footerText": "GTA Casino Tools © 2024 | Created for gambling enthusiasts",
+    "footerText": "Neon Casino Tools © 2026 | Created for gambling enthusiasts",
     
     "title": "POKER CALCULATOR",
     "pokerSubtitle": "Calculate winning chances",
@@ -128,9 +128,9 @@
     "arbsNotFound": "❌ No arbitrage",
     
     "faqTitle": "FREQUENTLY ASKED QUESTIONS",
-    "faqSubtitle": "Answers to common questions about GTA Casino Tools",
+    "faqSubtitle": "Answers to common questions about Neon Casino Tools",
     "faqQuestion1": "Who is this site for?",
-    "faqAnswer1": "GTA Casino Tools is designed for people interested in gambling from an analytical perspective.",
+    "faqAnswer1": "Neon Casino Tools is designed for people interested in gambling from an analytical perspective.",
     "faqQuestion2": "How does the poker calculator work?",
     "faqAnswer2": "The poker calculator uses the Monte Carlo method to simulate 25,000 random deals and calculate the probability of your hand winning against the specified number of opponents.",
     "faqQuestion3": "In which languages is the site available?",
