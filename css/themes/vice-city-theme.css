@@ -6,14 +6,13 @@
     --color-primary: #ff44aa;
     --color-secondary: #44aaff;
     --color-accent: #ff8844;
-    --color-success: #88ffaa;
+    --color-success: #00ffcc;
     --color-info: #88ccff;
     --color-warning: #ff8844;
     --color-danger: #ff3366;
     --color-highlight: #b36bff;
-    --color-deck: #ff44aa;  /* розовый как в Vice City */
+    --color-deck: #ff44aa;
 
-    
     /* === ФОНЫ ПО РОЛИ === */
     --bg-body: #1a1b2f;
     --bg-surface: rgba(255, 255, 255, 0.1);
@@ -27,19 +26,18 @@
     --bg-surface-hover: rgba(255, 68, 170, 0.2);
     --bg-surface-active: rgba(68, 170, 255, 0.2);
 
-  
     /* === ТЕКСТ ПО РОЛИ === */
     --text-primary: #ffffff;
     --text-secondary: #e0e0ff;
     --text-inverse: #0a0a1a;
     --text-muted: rgba(255, 255, 255, 0.4);
     --text-slot: rgba(255, 255, 255, 0.4);
-    
+
     /* === ГРАНИЦЫ ПО РОЛИ === */
     --border-primary: #ff44aa;
     --border-secondary: #44aaff;
     --border-accent: #ff8844;
-    --border-success: #88ffaa;
+    --border-success: #00ffcc;
     --border-info: #88ccff;
     --border-muted: rgba(255, 68, 170, 0.5);
     --border-dark: rgba(0, 0, 0, 0.2);
@@ -47,37 +45,36 @@
     --border-nav: rgba(255, 68, 170, 0.3);
     --border-deck: #ff44aa;
 
-        /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
+    /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
     --border-1: #00f0ff;
     --border-2: #ff5fd2;
-    --border-3: #ffd966;
-    --border-4: #2effc7;
+    --border-3: #00e5ff;
+    --border-4: #00ffcc;
     --border-5: #6aa8ff;
     --border-6: #b36bff;
     --border-7: #b36bff;
 
-
     /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
     --text-1: #00f0ff;
     --text-2: #ff5fd2;
-    --text-3: #ffd966;
-    --text-4: #2effc7;
+    --text-3: #00e5ff;
+    --text-4: #00ffcc;
     --text-5: #6aa8ff;
     --text-6: #b36bff;
-    --text-7: #b36bff;
+    --text-7: #ff3366;
 
     /* Переключатель тем для Vice City */
---theme-switcher-bg: rgba(255, 68, 170, 0.2);
---theme-switcher-border: #ff44aa;
---theme-btn-bg: rgba(255, 255, 255, 0.1);
---theme-btn-text: #ffffff;
---theme-btn-hover-border: #44aaff;
---theme-btn-hover-glow: #44aaff;
---theme-btn-active-bg: #ff44aa;
---theme-btn-active-text: #ffffff;
---theme-btn-active-border: #ff44aa;
---theme-btn-active-glow: #ff44aa;
-    
+    --theme-switcher-bg: rgba(255, 68, 170, 0.2);
+    --theme-switcher-border: #ff44aa;
+    --theme-btn-bg: rgba(255, 255, 255, 0.1);
+    --theme-btn-text: #ffffff;
+    --theme-btn-hover-border: #44aaff;
+    --theme-btn-hover-glow: #44aaff;
+    --theme-btn-active-bg: #ff44aa;
+    --theme-btn-active-text: #ffffff;
+    --theme-btn-active-border: #ff44aa;
+    --theme-btn-active-glow: #ff44aa;
+
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -87,17 +84,17 @@
     --glow-secondary: 0 0 20px rgba(68, 170, 255, 0.6);
     --glow-accent: 0 0 20px rgba(255, 136, 68, 0.6);
     --glow-highlight: 0 0 20px rgba(179, 107, 255, 0.6);
-    --glow-success: 0 0 20px rgba(136, 255, 170, 0.6);
-    
+    --glow-success: 0 0 20px rgba(0, 255, 204, 0.6);
+
     /* === ГРАДИЕНТЫ === */
-    --gradient-body: linear-gradient(135deg, 
+    --gradient-body: linear-gradient(135deg,
         #0a0a1a 0%,
         #1a1b2f 40%,
         #2a1f2f 70%,
         #1f1a2a 100%
     );
     --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    --gradient-logo-text: linear-gradient(45deg, #ff44aa, #44aaff, #ff8844);
+    --gradient-logo-text: linear-gradient(45deg, #ff44aa, #44aaff, #00ffcc);
     --gradient-nav-link: rgba(255, 255, 255, 0.02);
     --gradient-nav-hover: rgba(255, 68, 170, 0.2);
     --gradient-nav-active: linear-gradient(135deg, rgba(255, 68, 170, 0.8), rgba(68, 170, 255, 0.8));
@@ -106,11 +103,11 @@
     --gradient-card: rgba(255, 255, 255, 0.05);
     --gradient-faq-contact: rgba(0, 0, 0, 0.4);
     --gradient-coming-soon: rgba(26, 27, 47, 0.8);
-    --gradient-cyber: linear-gradient(90deg, 
-        transparent, 
-        var(--color-primary), 
-        var(--color-secondary), 
-        var(--color-accent), 
+    --gradient-cyber: linear-gradient(90deg,
+        transparent,
+        var(--color-primary),
+        var(--color-secondary),
+        var(--color-accent),
         transparent
     );
 }
@@ -125,7 +122,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
+    background-image:
         linear-gradient(0deg, rgba(255, 68, 170, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(68, 170, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
@@ -177,11 +174,11 @@ body::after {
 }
 
 @keyframes neon-pulse {
-    0%, 100% { 
+    0%, 100% {
         box-shadow: 0 0 20px var(--color-primary), 0 0 40px var(--color-secondary);
         opacity: 1;
     }
-    50% { 
+    50% {
         box-shadow: 0 0 30px var(--color-primary), 0 0 60px var(--color-secondary);
         opacity: 0.95;
     }
@@ -202,7 +199,3 @@ body::after {
         content: '🌴';
     }
 }
-
-
-
-
