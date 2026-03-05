@@ -1,6 +1,9 @@
 /* vice-city-theme.css - ТЕМА VICE CITY */
 /* УНИКАЛЬНЫЕ ЦВЕТА + ДЕКОР ЭЛЕМЕНТЫ */
 
+/* Подключаем неоновый шрифт */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
 :root {
     /* === ЦВЕТА ПО РОЛИ (VICE CITY) === */
     --color-primary: #ff44aa;
@@ -166,6 +169,115 @@ body::after {
     z-index: 0;
 }
 
+/* === 🌟 НЕОНОВЫЕ ВЫВЕСКИ В PAGE-HEADER === */
+
+.page-header::before {
+    content: 'Miami';
+    position: absolute;
+    top: 12px;
+    left: 18px;
+    font-family: 'Pacifico', cursive;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    transform: rotate(-8deg);
+    color: #ff44aa;
+    text-shadow:
+        0 0 5px #ff44aa,
+        0 0 12px #ff44aa,
+        0 0 25px #ff44aa,
+        0 0 45px #ff44aa,
+        0 0 70px #ff44aa;
+    animation: neon-miami 4s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.85;
+}
+
+.page-header::after {
+    content: 'Disco';
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-family: 'Pacifico', cursive;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    transform: rotate(8deg);
+    color: #b36bff;
+    text-shadow:
+        0 0 5px #b36bff,
+        0 0 12px #b36bff,
+        0 0 25px #b36bff,
+        0 0 45px #b36bff,
+        0 0 70px #b36bff;
+    animation: neon-disco 4s ease-in-out infinite alternate;
+    animation-delay: 2s;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.85;
+}
+
+@keyframes neon-miami {
+    0% {
+        color: #ff44aa;
+        text-shadow:
+            0 0 5px #ff44aa,
+            0 0 12px #ff44aa,
+            0 0 25px #ff44aa,
+            0 0 45px #ff44aa,
+            0 0 70px #ff44aa;
+    }
+    50% {
+        color: #ffffff;
+        text-shadow:
+            0 0 5px #ff44aa,
+            0 0 15px #ff44aa,
+            0 0 35px #ff44aa,
+            0 0 65px #ff44aa,
+            0 0 100px #ff44aa;
+    }
+    100% {
+        color: #00f0ff;
+        text-shadow:
+            0 0 5px #00f0ff,
+            0 0 12px #00f0ff,
+            0 0 25px #00f0ff,
+            0 0 45px #00f0ff,
+            0 0 70px #00f0ff;
+    }
+}
+
+@keyframes neon-disco {
+    0% {
+        color: #b36bff;
+        text-shadow:
+            0 0 5px #b36bff,
+            0 0 12px #b36bff,
+            0 0 25px #b36bff,
+            0 0 45px #b36bff,
+            0 0 70px #b36bff;
+    }
+    50% {
+        color: #ffffff;
+        text-shadow:
+            0 0 5px #b36bff,
+            0 0 15px #b36bff,
+            0 0 35px #ff44aa,
+            0 0 65px #ff44aa,
+            0 0 100px #ff44aa;
+    }
+    100% {
+        color: #ff8844;
+        text-shadow:
+            0 0 5px #ff8844,
+            0 0 12px #ff8844,
+            0 0 25px #ff8844,
+            0 0 45px #ff8844,
+            0 0 70px #ff8844;
+    }
+}
+
 /* Неоновый пульс для активных элементов */
 .nav-link.active,
 .btn-primary-bg,
@@ -184,11 +296,17 @@ body::after {
     }
 }
 
-/* Адаптивность для мобилок */
+/* Адаптивность */
 @media (max-width: 768px) {
     body::after {
         font-size: 4rem;
         letter-spacing: 20px;
+    }
+
+    .page-header::before,
+    .page-header::after {
+        font-size: 1rem;
+        top: 8px;
     }
 }
 
@@ -197,5 +315,12 @@ body::after {
         font-size: 3rem;
         letter-spacing: 10px;
         content: '🌴';
+    }
+
+    .page-header::before,
+    .page-header::after {
+        font-size: 0.85rem;
+        opacity: 0.6;
+        top: 6px;
     }
 }
