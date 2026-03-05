@@ -5,7 +5,7 @@
     /* === ЦВЕТА ПО РОЛИ === */
     --color-primary: #00f0ff;
     --color-secondary: #ff5fd2;
-    --color-accent: #ffd966;
+    --color-accent: #aa88ff;
     --color-success: #2effc7;
     --color-info: #6aa8ff;
     --color-warning: #ff9966;
@@ -36,7 +36,7 @@
     /* === ГРАНИЦЫ ПО РОЛИ === */
     --border-primary: #00f0ff;
     --border-secondary: #ff5fd2;
-    --border-accent: #ffd966;
+    --border-accent: #aa88ff;
     --border-success: #2effc7;
     --border-info: #6aa8ff;
     --border-muted: rgba(255, 255, 255, 0.3);
@@ -47,23 +47,21 @@
     /* === УНИВЕРСАЛЬНЫЕ ГРАНИЦЫ === */
     --border-1: #00f0ff;
     --border-2: #ff5fd2;
-    --border-3: #ffd966;
+    --border-3: #aa88ff;
     --border-4: #2effc7;
     --border-5: #6aa8ff;
     --border-6: #b36bff;
     --border-7: #b36bff;
 
-
     /* === УНИВЕРСАЛЬНЫЙ ТЕКСТ === */
     --text-1: #00f0ff;
     --text-2: #ff5fd2;
-    --text-3: #ffd966;
+    --text-3: #aa88ff;
     --text-4: #2effc7;
     --text-5: #6aa8ff;
     --text-6: #ff00ff;
-    --text-7: #b36bff;
+    --text-7: #ff3366;
 
-        
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -71,7 +69,7 @@
     --shadow-header: 0 0 30px rgba(0, 102, 255, 0.1);
     --glow-primary: 0 0 25px rgba(0, 240, 255, 0.4);
     --glow-secondary: 0 0 25px rgba(255, 95, 210, 0.4);
-    --glow-accent: 0 0 25px rgba(255, 217, 102, 0.4);
+    --glow-accent: 0 0 25px rgba(170, 136, 255, 0.4);
     --glow-highlight: 0 0 25px rgba(179, 107, 255, 0.4);
     --glow-success: 0 0 25px rgba(46, 255, 199, 0.4);
 
@@ -83,7 +81,7 @@
     --theme-btn-hover-border: var(--color-accent);
     --theme-btn-hover-glow: var(--color-accent);
     --theme-btn-active-bg: var(--color-accent);
-    --theme-btn-active-text: var(--text-inverse);
+    --theme-btn-active-text: var(--text-primary);
     --theme-btn-active-border: var(--color-accent);
     --theme-btn-active-glow: var(--color-accent);
     
@@ -121,68 +119,55 @@
 
 /* === АНИМАЦИИ === */
 
-/* cyber-scan - бегущая полоса сканирования по горизонтали (кибер-эффект) */
 @keyframes cyber-scan {
     0% { left: -100%; }
     100% { left: 100%; }
 }
 
-/* hologram - мерцающая голограмма под углом 45 градусов */
 @keyframes hologram {
     0% { transform: translateX(-100%) rotate(45deg); }
     100% { transform: translateX(100%) rotate(45deg); }
 }
 
-/* float - медленное вращение на 360 градусов */
 @keyframes float {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* scan - движение градиента слева направо */
 @keyframes scan {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
 }
 
-/* pulse-glow - пульсация прозрачности */
 @keyframes pulse-glow {
     0%, 100% { opacity: 0.7; }
     50% { opacity: 1; }
 }
 
-/* footer-glow - пульсация для футера */
 @keyframes footer-glow {
     0% { opacity: 0.3; }
     50% { opacity: 1; }
     100% { opacity: 0.3; }
 }
 
-/* button-pulse - пульсация кнопки при клике */
 @keyframes button-pulse {
     0% { transform: scale(1); }
     50% { transform: scale(0.95); }
     100% { transform: scale(1); }
 }
 
-/* ripple - эффект расходящейся волны при клике */
 @keyframes ripple {
     0% { transform: scale(0, 0); opacity: 0.5; }
     100% { transform: scale(20, 20); opacity: 0; }
 }
 
-/* quick-glow - быстрая вспышка границы при обновлении результатов */
 @keyframes quick-glow {
     0% { border-color: var(--color-primary); box-shadow: var(--shadow-md); }
     50% { border-color: var(--color-success); box-shadow: var(--shadow-md), 0 0 25px var(--color-success); }
     100% { border-color: var(--color-primary); box-shadow: var(--shadow-md); }
 }
 
-/* float-icon - плавное покачивание иконки вверх-вниз */
 @keyframes float-icon {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
-
-
-
