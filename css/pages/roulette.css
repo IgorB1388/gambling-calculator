@@ -9,39 +9,40 @@
 .presets-bar {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
     padding: 12px 20px;
     border-radius: 12px;
     border-width: 2px;
     border-style: solid;
     margin-bottom: 20px;
-    flex-wrap: wrap;
 }
 
-.presets-label {
-    font-size: 0.85rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-}
-
-.preset-btn {
-    padding: 6px 14px;
-    border-radius: 20px;
+.presets-select {
+    padding: 8px 14px;
+    border-radius: 8px;
     border-width: 2px;
     border-style: solid;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-weight: bold;
-    cursor: pointer;
     background: transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
+    cursor: pointer;
+    min-width: 220px;
 }
 
-.preset-btn:hover {
-    transform: translateY(-1px);
-    opacity: 0.85;
+.presets-hint {
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .presets-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .presets-select {
+        width: 100%;
+    }
 }
 
 /* === ОСНОВНАЯ СЕТКА === */
@@ -595,3 +596,4 @@
     .results-controls { flex-direction: column; }
     .results-controls .btn { width: 100%; }
 }
+
