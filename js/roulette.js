@@ -178,13 +178,11 @@ function renderConditions() {
         const row = document.createElement('div');
         row.className = 'condition-row';
 
-        // Номер
         const numberDiv = document.createElement('div');
         numberDiv.className = 'condition-number text-4';
         numberDiv.textContent = index + 1;
         row.appendChild(numberDiv);
 
-        // НЕ
         const notDiv = document.createElement('div');
         notDiv.className = 'condition-not';
         const notCheckbox = document.createElement('input');
@@ -202,7 +200,6 @@ function renderConditions() {
         notDiv.appendChild(notLabel);
         row.appendChild(notDiv);
 
-        // Список ставок — порядок: простые, дюжины, колонки, зеро, свои
         const select = document.createElement('select');
         select.className = 'condition-select';
 
@@ -243,7 +240,6 @@ function renderConditions() {
         });
         row.appendChild(select);
 
-        // Поле своих чисел
         if (cond.type === 'custom') {
             const customInput = document.createElement('input');
             customInput.type = 'text';
@@ -258,7 +254,6 @@ function renderConditions() {
             row.appendChild(customInput);
         }
 
-        // Кнопка удаления
         if (conditions.length > 1) {
             const removeBtn = document.createElement('button');
             removeBtn.className = 'condition-remove';
@@ -301,17 +296,14 @@ function getNumbersForCondition(cond) {
     return numbers;
 }
 
-// Определяем выплату для набора чисел
 function getPayoutForNumbers(numbers) {
     if (numbers.length === 0) return 1;
-    // Ищем совпадение с известными ставками
     for (const [key, def] of Object.entries(BetDefinitions)) {
         if (def.numbers.length === numbers.length &&
             def.numbers.every(n => numbers.includes(n))) {
             return def.payout;
         }
     }
-    // Для кастомных — примерно по формуле рулетки
     if (numbers.length === 1) return 35;
     if (numbers.length === 2) return 17;
     if (numbers.length === 3) return 11;
@@ -423,7 +415,6 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
         spins++;
         const isHit = targetNumbers.includes(number);
 
-        // Обновляем триггер-счётчик
         if (!inBettingMode) {
             if (triggerType === 'missed') {
                 if (!isHit) triggerCounter++; else triggerCounter = 0;
@@ -439,7 +430,6 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
             }
         }
 
-        // Делаем ставку если в режиме ставок
         if (inBettingMode) {
             const currentBet = getNextBet(baseBet, baseBet, progression, consecutiveLosses, consecutiveWins, fibSeq);
             const actualBet = Math.min(currentBet, bankroll);
@@ -465,7 +455,6 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
                     inBettingMode = false;
                     triggerCounter = 0;
                 }
-                // until_win — продолжаем ставить
             }
         }
     }
@@ -538,7 +527,6 @@ function getProfitHint(avgProfit) {
 }
 
 function displayResults(results) {
-    // Показываем результаты, скрываем заглушку
     document.getElementById('resultsPlaceholder').style.display = 'none';
     document.getElementById('resultsContent').style.display = 'flex';
     document.getElementById('resultsContent').style.flexDirection = 'column';
@@ -657,6 +645,8 @@ function resetSimulation() {
     document.getElementById('sessionCount').value = 500;
     document.getElementById('stopTarget').checked = false;
     document.getElementById('stopSpins').checked = true;
+    const presetsSelect = document.getElementById('presetsSelect');
+    if (presetsSelect) presetsSelect.value = '';
     updateTargetInputState();
     updateProgressionHint();
     document.getElementById('resultsPlaceholder').style.display = 'flex';
@@ -686,11 +676,15 @@ function initEventListeners() {
     const progressionSel = document.getElementById('progressionType');
     if (progressionSel) progressionSel.addEventListener('change', updateProgressionHint);
 
-    document.querySelectorAll('[data-preset]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            applyPreset(this.getAttribute('data-preset'));
+    const presetsSelect = document.getElementById('presetsSelect');
+    if (presetsSelect) {
+        presetsSelect.addEventListener('change', function() {
+            if (this.value) {
+                applyPreset(this.value);
+                this.value = '';
+            }
         });
-    });
+    }
 
     document.addEventListener('languageChanged', () => {
         renderConditions();
