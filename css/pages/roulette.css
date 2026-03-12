@@ -12,19 +12,19 @@
     gap: 14px;
     padding: 12px 20px;
     border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
+    border: 1px solid var(--border-muted);
     margin-bottom: 20px;
+    background: var(--bg-elevated);
 }
 
 .presets-select {
     padding: 8px 14px;
     border-radius: 8px;
-    border-width: 2px;
-    border-style: solid;
+    border: 1px solid var(--border-muted);
     font-size: 0.95rem;
-    font-weight: bold;
-    background: transparent;
+    font-weight: 500;
+    background: var(--bg-surface);
+    color: var(--text-primary);
     cursor: pointer;
     min-width: 220px;
 }
@@ -35,52 +35,45 @@
 }
 
 /* === СТЕППЕР === */
-.step-header {
+.step-divider {
+    margin: 8px 0 0 0;
+}
+
+.step-divider-line {
+    width: 100%;
+    height: 1px;
+    background: var(--border-muted);
+    opacity: 0.6;
+    margin-bottom: 14px;
+}
+
+.step-divider-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 4px 0 -4px 0;
+    gap: 14px;
+    margin-bottom: 6px;
 }
 
 .step-badge {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    border-width: 2px;
-    border-style: solid;
+    border: 2px solid var(--border-1);
+    color: var(--text-1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     flex-shrink: 0;
 }
 
 .step-title {
-    font-size: 0.8rem;
+    font-size: 1.05rem;
     font-weight: bold;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.step-line {
-    flex: 1;
-    height: 1px;
-    border-top-width: 1px;
-    border-top-style: solid;
-    opacity: 0.4;
-}
-
-@media (max-width: 768px) {
-    .presets-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    .presets-select {
-        width: 100%;
-    }
+    color: var(--text-1);
 }
 
 /* === ОСНОВНАЯ СЕТКА === */
@@ -104,6 +97,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    box-sizing: border-box;
+    min-height: 820px;
 }
 
 .panel-title {
@@ -131,7 +126,7 @@
 }
 
 .settings-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: bold;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -155,8 +150,8 @@
 }
 
 .tooltip-icon:hover {
-    border-color: var(--border-3);
-    color: var(--text-3);
+    border-color: var(--border-1);
+    color: var(--text-1);
 }
 
 .tooltip-popup {
@@ -166,7 +161,7 @@
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     line-height: 1.5;
     z-index: 10000;
     display: none;
@@ -195,7 +190,7 @@
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: bold;
     background: transparent;
     transition: all 0.2s;
@@ -221,7 +216,7 @@
     border-radius: 8px;
     border-width: 2px;
     border-style: solid;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: bold;
     background: transparent;
     cursor: pointer;
@@ -229,7 +224,7 @@
 }
 
 .progression-hint {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-style: italic;
     min-height: 1.2rem;
     padding: 2px 0;
@@ -243,13 +238,13 @@
 }
 
 .option-pill {
-    padding: 8px 16px;
+    padding: 8px 18px;
     border-radius: 20px;
     border-width: 2px;
     border-style: solid;
-    border-color: var(--border-5);
-    background: rgba(106, 168, 255, 0.08);
-    color: var(--text-5);
+    border-color: var(--border-muted);
+    background: transparent;
+    color: var(--text-primary);
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
@@ -259,7 +254,7 @@
     gap: 6px;
 }
 
-.option-pill:hover { transform: translateY(-2px); }
+.option-pill:hover { opacity: 0.8; transform: translateY(-1px); }
 
 .option-pill.active {
     background: var(--color-info) !important;
@@ -294,21 +289,21 @@
     padding: 10px 12px;
     background: var(--bg-elevated);
     border-radius: 8px;
-    border-left: 3px solid var(--border-4);
+    border-left: 3px solid var(--border-muted);
 }
 
 .condition-number {
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    border: 2px solid var(--border-4);
+    border: 2px solid var(--border-muted);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     font-size: 0.8rem;
     flex-shrink: 0;
-    color: var(--text-4);
+    color: var(--text-muted);
 }
 
 .condition-not {
@@ -325,7 +320,7 @@
 }
 
 .condition-not label {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     cursor: pointer;
     color: var(--text-muted);
     white-space: nowrap;
@@ -338,10 +333,10 @@
     border-radius: 6px;
     border-width: 1px;
     border-style: solid;
-    border-color: var(--border-5);
+    border-color: var(--border-muted);
     background: var(--bg-surface);
-    color: var(--text-5);
-    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
     cursor: pointer;
 }
 
@@ -352,10 +347,10 @@
     border-radius: 6px;
     border-width: 1px;
     border-style: solid;
-    border-color: var(--border-5);
+    border-color: var(--border-muted);
     background: var(--bg-elevated);
-    color: var(--text-5);
-    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
 }
 
 .condition-remove {
@@ -385,8 +380,10 @@
     border-radius: 8px;
     border-width: 2px;
     border-style: solid;
+    border-color: var(--border-muted);
     background: transparent;
-    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
@@ -396,7 +393,7 @@
     align-self: flex-start;
 }
 
-.add-condition-btn:hover { transform: translateY(-1px); opacity: 0.85; }
+.add-condition-btn:hover { opacity: 0.75; transform: translateY(-1px); }
 
 .total-bet-display {
     padding: 10px 14px;
@@ -406,21 +403,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     gap: 10px;
 }
 
 #totalBetText {
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-align: right;
     word-break: break-word;
     max-width: 65%;
-}
-
-.percent-warning {
-    font-size: 0.82rem;
-    padding: 4px 0;
 }
 
 /* === ТРИГГЕР === */
@@ -436,7 +428,7 @@
     border-radius: 8px;
     border-width: 2px;
     border-style: solid;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: bold;
     background: transparent;
     cursor: pointer;
@@ -449,7 +441,7 @@
     border-radius: 8px;
     border-width: 2px;
     border-style: solid;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: bold;
     background: transparent;
     width: 70px;
@@ -473,10 +465,10 @@
     cursor: pointer;
 }
 
-.checkbox-item label { cursor: pointer; font-size: 0.9rem; }
+.checkbox-item label { cursor: pointer; font-size: 0.95rem; }
 
 .setting-hint {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-style: italic;
 }
 
@@ -484,13 +476,12 @@
 .results-controls {
     display: flex;
     gap: 12px;
-    margin-bottom: 5px;
 }
 
 .results-controls .btn {
     flex: 1;
     padding: 14px 16px;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: bold;
     border-radius: 12px;
     border-width: 2px;
@@ -501,7 +492,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 50px;
+    min-height: 52px;
     white-space: nowrap;
 }
 
@@ -516,19 +507,20 @@
     padding: 40px 20px;
     gap: 16px;
     text-align: center;
+    flex: 1;
 }
 
-.placeholder-icon { font-size: 3rem; opacity: 0.4; }
+.placeholder-icon { font-size: 3.5rem; opacity: 0.4; }
 
 .placeholder-text {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-style: italic;
 }
 
 .placeholder-steps {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     text-align: left;
     margin-top: 8px;
 }
@@ -537,19 +529,19 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .step-num {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1px solid var(--border-1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     flex-shrink: 0;
 }
 
@@ -572,7 +564,7 @@
     gap: 4px;
 }
 
-.stat-label { font-size: 0.8rem; }
+.stat-label { font-size: 0.82rem; }
 .stat-value { font-size: 1.6rem; font-weight: bold; }
 .stat-hint { font-size: 0.72rem; min-height: 1rem; }
 
@@ -591,7 +583,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.95rem;
+    font-size: 1rem;
     padding: 2px 0;
     border-bottom: 1px solid var(--border-muted);
 }
@@ -620,9 +612,10 @@
 
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    .panel { padding: 18px; gap: 16px; }
+    .panel { padding: 18px; gap: 16px; min-height: 0; }
     .results-grid-compact { grid-template-columns: 1fr; }
-    .presets-bar { gap: 8px; }
+    .presets-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .presets-select { width: 100%; }
     .stake-input-wrapper { width: 100%; }
     .trigger-builder { flex-direction: column; align-items: stretch; }
 }
@@ -633,6 +626,3 @@
     .results-controls { flex-direction: column; }
     .results-controls .btn { width: 100%; }
 }
-
-
-
