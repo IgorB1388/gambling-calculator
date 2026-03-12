@@ -34,6 +34,44 @@
     font-style: italic;
 }
 
+/* === СТЕППЕР === */
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0 -4px 0;
+}
+
+.step-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.step-title {
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.step-line {
+    flex: 1;
+    height: 1px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    opacity: 0.4;
+}
+
 @media (max-width: 768px) {
     .presets-bar {
         flex-direction: column;
@@ -595,5 +633,6 @@
     .results-controls { flex-direction: column; }
     .results-controls .btn { width: 100%; }
 }
+
 
 
