@@ -25,14 +25,17 @@
                     <p class="text-medium" data-i18n="rouletteSubtitle"></p>
                 </div>
 
-                <!-- ПРЕСЕТЫ -->
-                <div class="presets-bar bg-surface border-1 shadow-default">
-                    <span class="presets-label text-3" data-i18n="presetsLabel"></span>
-                    <button class="preset-btn border-2 text-2" data-preset="martingale_red" data-i18n="presetMartingaleRed"></button>
-                    <button class="preset-btn border-2 text-2" data-preset="flat_even" data-i18n="presetFlatEven"></button>
-                    <button class="preset-btn border-3 text-3" data-preset="fibonacci_dozens" data-i18n="presetFibonacciDozens"></button>
-                    <button class="preset-btn border-5 text-5" data-preset="antimartingale_black" data-i18n="presetAntiMartingaleBlack"></button>
-                </div>
+               <!-- ПРЕСЕТЫ -->
+             <div class="presets-bar bg-surface border-1 shadow-default">
+                  <select id="presetsSelect" class="presets-select bg-elevated border-2 text-2">
+                  <option value="" data-i18n="presetsPlaceholder"></option>
+                  <option value="martingale_red" data-i18n="presetMartingaleRed"></option>
+                  <option value="flat_even" data-i18n="presetFlatEven"></option>
+                  <option value="fibonacci_dozens" data-i18n="presetFibonacciDozens"></option>
+                  <option value="antimartingale_black" data-i18n="presetAntiMartingaleBlack"></option>
+                   </select>
+                   <span class="presets-hint text-muted" data-i18n="presetsHint"></span>
+             </div>
 
                 <div class="analyzer-main-area">
 
@@ -280,3 +283,4 @@
     <script src="js/theme-switcher.js"></script>
 </body>
 </html>
+
