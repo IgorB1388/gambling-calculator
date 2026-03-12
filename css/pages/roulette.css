@@ -585,7 +585,6 @@
     .panel { padding: 18px; gap: 16px; }
     .results-grid-compact { grid-template-columns: 1fr; }
     .presets-bar { gap: 8px; }
-    .preset-btn { font-size: 0.75rem; padding: 5px 10px; }
     .stake-input-wrapper { width: 100%; }
     .trigger-builder { flex-direction: column; align-items: stretch; }
 }
@@ -596,4 +595,5 @@
     .results-controls { flex-direction: column; }
     .results-controls .btn { width: 100%; }
 }
+
 
