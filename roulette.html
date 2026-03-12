@@ -25,17 +25,17 @@
                     <p class="text-medium" data-i18n="rouletteSubtitle"></p>
                 </div>
 
-               <!-- ПРЕСЕТЫ -->
-             <div class="presets-bar bg-surface border-1 shadow-default">
-                  <select id="presetsSelect" class="presets-select bg-elevated border-2 text-2">
-                  <option value="" data-i18n="presetsPlaceholder"></option>
-                  <option value="martingale_red" data-i18n="presetMartingaleRed"></option>
-                  <option value="flat_even" data-i18n="presetFlatEven"></option>
-                  <option value="fibonacci_dozens" data-i18n="presetFibonacciDozens"></option>
-                  <option value="antimartingale_black" data-i18n="presetAntiMartingaleBlack"></option>
-                   </select>
-                   <span class="presets-hint text-muted" data-i18n="presetsHint"></span>
-             </div>
+                <!-- ПРЕСЕТЫ -->
+                <div class="presets-bar bg-surface border-1 shadow-default">
+                    <select id="presetsSelect" class="presets-select bg-elevated border-2 text-2">
+                        <option value="" data-i18n="presetsPlaceholder"></option>
+                        <option value="martingale_red" data-i18n="presetMartingaleRed"></option>
+                        <option value="flat_even" data-i18n="presetFlatEven"></option>
+                        <option value="fibonacci_dozens" data-i18n="presetFibonacciDozens"></option>
+                        <option value="antimartingale_black" data-i18n="presetAntiMartingaleBlack"></option>
+                    </select>
+                    <span class="presets-hint text-muted" data-i18n="presetsHint"></span>
+                </div>
 
                 <div class="analyzer-main-area">
 
@@ -43,7 +43,13 @@
                     <div class="panel bg-surface border-1 shadow-default">
                         <div class="panel-title text-1" style="border-bottom: 2px solid var(--border-1);" data-i18n="rouletteSettingsTitle"></div>
 
-                        <!-- Тип рулетки -->
+                        <!-- ШАГ 1 -->
+                        <div class="step-header">
+                            <div class="step-badge text-1 border-1">1</div>
+                            <span class="step-title text-1" data-i18n="stepBasic"></span>
+                            <div class="step-line border-1"></div>
+                        </div>
+
                         <div class="settings-group">
                             <div class="settings-label text-3" data-i18n="rouletteTypeLabel"></div>
                             <div class="option-pills" id="rouletteTypePills">
@@ -58,7 +64,6 @@
                             </div>
                         </div>
 
-                        <!-- Банк -->
                         <div class="settings-group">
                             <div class="settings-label text-3" data-i18n="bankrollLabel"></div>
                             <div class="stake-row">
@@ -69,7 +74,6 @@
                             </div>
                         </div>
 
-                        <!-- Базовая ставка + прогрессия -->
                         <div class="settings-group">
                             <div class="settings-label text-3" data-i18n="betSizeLabel"></div>
                             <div class="stake-row">
@@ -78,7 +82,6 @@
                                     <span class="stake-suffix text-3">$</span>
                                 </div>
                             </div>
-                            <!-- Прогрессия -->
                             <select id="progressionType" class="progression-select bg-elevated border-5 text-5">
                                 <option value="flat" data-i18n="progressionFlat"></option>
                                 <option value="martingale" data-i18n="progressionMartingale"></option>
@@ -89,7 +92,13 @@
                             <div class="progression-hint text-muted" id="progressionHint"></div>
                         </div>
 
-                        <!-- Условия ставки -->
+                        <!-- ШАГ 2 -->
+                        <div class="step-header">
+                            <div class="step-badge text-2 border-2">2</div>
+                            <span class="step-title text-2" data-i18n="stepBet"></span>
+                            <div class="step-line border-2"></div>
+                        </div>
+
                         <div class="settings-group">
                             <div class="settings-label-row">
                                 <span class="settings-label text-3" data-i18n="conditionsLabel"></span>
@@ -105,7 +114,13 @@
                             </div>
                         </div>
 
-                        <!-- Условие активации -->
+                        <!-- ШАГ 3 -->
+                        <div class="step-header">
+                            <div class="step-badge text-4 border-4">3</div>
+                            <span class="step-title text-4" data-i18n="stepTrigger"></span>
+                            <div class="step-line border-4"></div>
+                        </div>
+
                         <div class="settings-group">
                             <div class="settings-label-row">
                                 <span class="settings-label text-3" data-i18n="triggerLabel"></span>
@@ -119,7 +134,6 @@
                                 <input type="number" id="triggerCount" class="trigger-input bg-elevated border-5 text-5" value="3" min="1" max="20" step="1">
                                 <span class="text-muted" data-i18n="triggerTimes"></span>
                             </div>
-                            <!-- После триггера -->
                             <div class="settings-label-row" style="margin-top: 8px;">
                                 <span class="settings-label text-3" data-i18n="afterTriggerLabel"></span>
                                 <span class="tooltip-icon" data-tooltip-key="afterTriggerTooltip">?</span>
@@ -130,7 +144,13 @@
                             </select>
                         </div>
 
-                        <!-- Условия остановки -->
+                        <!-- ШАГ 4 -->
+                        <div class="step-header">
+                            <div class="step-badge text-6 border-6">4</div>
+                            <span class="step-title text-6" data-i18n="stepStop"></span>
+                            <div class="step-line border-6"></div>
+                        </div>
+
                         <div class="settings-group">
                             <div class="settings-label text-3" data-i18n="stopConditionsLabel"></div>
                             <div class="checkbox-item">
@@ -158,7 +178,12 @@
                             </div>
                         </div>
 
-                        <!-- Количество сессий -->
+                    </div>
+
+                    <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
+                    <div class="panel bg-surface border-4 shadow-default">
+
+                        <!-- Количество сессий вверху правой панели -->
                         <div class="settings-group">
                             <div class="settings-label-row">
                                 <span class="settings-label text-3" data-i18n="sessionsLabel"></span>
@@ -172,12 +197,7 @@
                             <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
                         </div>
 
-                    </div>
-
-                    <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
-                    <div class="panel bg-surface border-4 shadow-default">
-
-                        <!-- Кнопки сверху правой панели -->
+                        <!-- Кнопки -->
                         <div class="results-controls">
                             <button class="btn btn-primary-bg btn-primary-text border-secondary" id="simulateBtn">
                                 <i class="fas fa-cogs"></i>
@@ -202,7 +222,7 @@
                             </div>
                         </div>
 
-                        <!-- Результаты (скрыты до симуляции) -->
+                        <!-- Результаты -->
                         <div class="results-content" id="resultsContent" style="display:none;">
 
                             <div class="results-grid-compact">
@@ -273,7 +293,6 @@
         </footer>
     </div>
 
-    <!-- Тултип -->
     <div class="tooltip-popup bg-elevated border-3 text-muted" id="tooltipPopup"></div>
 
     <script src="js/header-loader.js"></script>
@@ -283,4 +302,3 @@
     <script src="js/theme-switcher.js"></script>
 </body>
 </html>
-
