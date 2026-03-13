@@ -12,7 +12,7 @@
     --color-highlight: #f1c40f;
     --color-deck: #f1c40f;
 
-    /* === ФОНЫ — ночной город, не чёрный === */
+    /* === ФОНЫ === */
     --bg-body: #0d1b2a;
     --bg-surface: #1a2d42;
     --bg-elevated: #243852;
@@ -44,7 +44,7 @@
     --border-nav: rgba(77, 184, 255, 0.2);
     --border-deck: #f1c40f;
 
-    /* === УНИВЕРСАЛЬНЫЕ — синий + жёлтый акцент === */
+    /* === УНИВЕРСАЛЬНЫЕ === */
     --border-1: #4db8ff;
     --border-2: #f1c40f;
     --border-3: #85c1e9;
@@ -104,97 +104,110 @@
 
 /* =============================================
    ДЕКОР: ФОН — ночной дождь
-   Две волны капель под разными углами
    ============================================= */
 
+/* Слой 1 — основные струи */
 body::before {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-image:
-        repeating-linear-gradient(
-            100deg,
-            transparent 0px,
-            transparent 3px,
-            rgba(77, 184, 255, 0.035) 3px,
-            rgba(77, 184, 255, 0.035) 4px,
-            transparent 4px,
-            transparent 18px
-        );
-    background-size: 22px 80px;
+    background-image: repeating-linear-gradient(
+        100deg,
+        transparent              0px,
+        transparent              2px,
+        rgba(77, 184, 255, 0.1)  2px,
+        rgba(77, 184, 255, 0.1)  3px,
+        transparent              3px,
+        transparent              16px
+    );
+    background-size: 20px 70px;
     pointer-events: none;
     z-index: 0;
-    animation: rain-fall 1.4s linear infinite;
+    animation: rain-fall 1.2s linear infinite;
 }
 
-/* Второй слой — капли крупнее, медленнее */
+/* Слой 2 — редкие яркие капли */
 body::after {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-image:
-        repeating-linear-gradient(
-            102deg,
-            transparent 0px,
-            transparent 6px,
-            rgba(77, 184, 255, 0.022) 6px,
-            rgba(77, 184, 255, 0.022) 8px,
-            transparent 8px,
-            transparent 40px
-        );
-    background-size: 50px 120px;
+    background-image: repeating-linear-gradient(
+        101deg,
+        transparent              0px,
+        transparent              5px,
+        rgba(77, 184, 255, 0.07) 5px,
+        rgba(77, 184, 255, 0.07) 7px,
+        transparent              7px,
+        transparent              45px
+    );
+    background-size: 55px 110px;
     pointer-events: none;
     z-index: 0;
-    animation: rain-fall 2.2s linear infinite;
-    animation-delay: -0.7s;
+    animation: rain-fall 2s linear infinite;
+    animation-delay: -0.6s;
 }
 
 /* =============================================
-   ДЕКОР: ШАПКА — металлические царапины
-   Горизонтальные линии разной длины и яркости
+   ДЕКОР: ШАПКА САЙТА — мокрый металл
    ============================================= */
+.site-header {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Царапины металла */
 .site-header::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background-image:
-        /* длинные редкие */
-        linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.06) 80%, transparent 100%),
-        /* короткие частые */
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.07) 15%,
+            rgba(255, 255, 255, 0.07) 85%,
+            transparent 100%
+        ),
         repeating-linear-gradient(
             180deg,
-            transparent 0px,
-            transparent 11px,
-            rgba(255, 255, 255, 0.025) 11px,
-            rgba(255, 255, 255, 0.025) 12px
+            transparent              0px,
+            transparent              8px,
+            rgba(255, 255, 255, 0.03) 8px,
+            rgba(255, 255, 255, 0.03) 9px
         );
     pointer-events: none;
     z-index: 0;
 }
 
-/* Отблеск на шапке — как мокрый металл */
+/* Скользящий отблеск фары */
 .site-header::after {
     content: '';
     position: absolute;
-    top: 0; left: -100%; right: 0;
-    height: 2px;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(77, 184, 255, 0.5),
-        rgba(241, 196, 15, 0.6),
-        rgba(77, 184, 255, 0.3),
+        rgba(77, 184, 255, 0.14),
+        rgba(241, 196, 15, 0.2),
+        rgba(77, 184, 255, 0.09),
         transparent
     );
-    animation: metal-sheen 8s ease-in-out infinite;
+    animation: metal-sheen 9s ease-in-out infinite;
     pointer-events: none;
     z-index: 1;
 }
 
 /* =============================================
    ДЕКОР: PAGE-HEADER — знак LCPD
-   Левый нижний угол, как водяной знак
    ============================================= */
+.page-header {
+    position: relative;
+    overflow: hidden;
+}
+
 .page-header::before {
     content: 'LCPD';
     position: absolute;
@@ -203,14 +216,13 @@ body::after {
     font-size: 0.75rem;
     font-weight: 900;
     letter-spacing: 0.35em;
-    color: rgba(77, 184, 255, 0.18);
+    color: rgba(77, 184, 255, 0.22);
     pointer-events: none;
     z-index: 2;
     text-transform: uppercase;
     font-family: 'Courier New', monospace;
 }
 
-/* Правый угол — номер участка */
 .page-header::after {
     content: 'LIB · CITY · PD';
     position: absolute;
@@ -219,7 +231,7 @@ body::after {
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.25em;
-    color: rgba(241, 196, 15, 0.2);
+    color: rgba(241, 196, 15, 0.25);
     pointer-events: none;
     z-index: 2;
     text-transform: uppercase;
@@ -227,28 +239,32 @@ body::after {
 }
 
 /* =============================================
-   ДЕКОР: ПАНЕЛИ — полоска отражения
+   ДЕКОР: ПАНЕЛИ — скользящая линия сверху
+   position:relative НО БЕЗ overflow:hidden
+   чтобы не ломать grid-layout покера
    ============================================= */
 .panel,
+.results-panel,
 .faq-container,
 .info-section {
     position: relative;
-    overflow: hidden;
 }
 
 .panel::before,
+.results-panel::before,
 .faq-container::before,
 .info-section::before {
     content: '';
     position: absolute;
-    top: 0; left: -100%;
+    top: 0;
+    left: -60%;
     width: 60%;
     height: 1px;
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(77, 184, 255, 0.45),
-        rgba(241, 196, 15, 0.25),
+        rgba(77, 184, 255, 0.55),
+        rgba(241, 196, 15, 0.35),
         transparent
     );
     animation: reflection 7s linear infinite;
@@ -283,12 +299,8 @@ body::after {
 }
 
 /* =============================================
-   ДЕКОР: Нижняя неоновая линия
+   ДЕКОР: нижняя неоновая линия
    ============================================= */
-body {
-    position: relative;
-}
-
 .site-container::after {
     content: '';
     position: fixed;
@@ -310,7 +322,7 @@ body {
 }
 
 /* =============================================
-   ДЕКОР: Болты на карточках
+   ДЕКОР: болты на карточках инструментов
    ============================================= */
 .tool-card {
     position: relative;
@@ -359,14 +371,14 @@ html, body { overflow-x: hidden; max-width: 100%; }
 
 @keyframes metal-sheen {
     0%   { left: -100%; opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
+    5%   { opacity: 1; }
+    85%  { opacity: 1; }
     100% { left: 200%; opacity: 0; }
 }
 
 @keyframes reflection {
-    0%   { left: -100%; }
-    100% { left: 200%; }
+    0%   { left: -60%; }
+    100% { left: 160%; }
 }
 
 @keyframes neon-line {
