@@ -117,8 +117,93 @@
     --animation-float-icon: float-icon 3s ease-in-out infinite;
 }
 
-/* === АНИМАЦИИ === */
+/* =============================================
+   ДЕКОР: ФОН — голографическая сетка
+   Тонкая, не отвлекает, даёт глубину
+   ============================================= */
 
+/* Слой 1: мелкая сетка */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    animation: grid-breathe 8s ease-in-out infinite;
+}
+
+/* Слой 2: крупная сетка поверх — даёт перспективу */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(rgba(170, 136, 255, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(170, 136, 255, 0.055) 1px, transparent 1px);
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 0;
+    animation: grid-breathe 8s ease-in-out infinite reverse;
+}
+
+/* =============================================
+   ДЕКОР: ШАПКА — тонкие диагональные полоски
+   Как предупреждающая лента, но ненавязчиво
+   ============================================= */
+.site-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        -55deg,
+        transparent 0px,
+        transparent 18px,
+        rgba(0, 240, 255, 0.035) 18px,
+        rgba(0, 240, 255, 0.035) 20px
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Сканирующая линия в шапке — едва заметная */
+.site-header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; right: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 240, 255, 0.6),
+        rgba(179, 107, 255, 0.4),
+        transparent
+    );
+    animation: header-scan 6s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* =============================================
+   АНИМАЦИИ
+   ============================================= */
+
+/* Сетка медленно дышит */
+@keyframes grid-breathe {
+    0%, 100% { opacity: 0.7; }
+    50%       { opacity: 1; }
+}
+
+/* Сканирующая линия в шапке */
+@keyframes header-scan {
+    0%   { left: -100%; }
+    100% { left: 200%; }
+}
+
+/* Остальные анимации (используются в других местах) */
 @keyframes cyber-scan {
     0% { left: -100%; }
     100% { left: 100%; }
