@@ -102,66 +102,134 @@
     --gradient-footer: linear-gradient(90deg, transparent, var(--color-primary), var(--color-primary), transparent);
 }
 
-/* === ДЕКОР: Дождь — движущаяся сетка === */
+/* =============================================
+   ДЕКОР: ФОН — ночной дождь
+   Две волны капель под разными углами
+   ============================================= */
+
 body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background-image:
-        linear-gradient(170deg, transparent 49.5%, rgba(77, 184, 255, 0.04) 49.5%, rgba(77, 184, 255, 0.04) 50.5%, transparent 50.5%);
-    background-size: 30px 60px;
+        repeating-linear-gradient(
+            100deg,
+            transparent 0px,
+            transparent 3px,
+            rgba(77, 184, 255, 0.035) 3px,
+            rgba(77, 184, 255, 0.035) 4px,
+            transparent 4px,
+            transparent 18px
+        );
+    background-size: 22px 80px;
     pointer-events: none;
     z-index: 0;
-    animation: rain 2s linear infinite;
+    animation: rain-fall 1.4s linear infinite;
 }
 
-/* === ДЕКОР: Отблески неона снизу === */
+/* Второй слой — капли крупнее, медленнее */
 body::after {
     content: '';
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(77, 184, 255, 0.6) 20%,
-        rgba(241, 196, 15, 0.8) 50%,
-        rgba(77, 184, 255, 0.6) 80%,
-        transparent 100%
-    );
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        repeating-linear-gradient(
+            102deg,
+            transparent 0px,
+            transparent 6px,
+            rgba(77, 184, 255, 0.022) 6px,
+            rgba(77, 184, 255, 0.022) 8px,
+            transparent 8px,
+            transparent 40px
+        );
+    background-size: 50px 120px;
     pointer-events: none;
-    z-index: 9999;
-    animation: neon-line 4s ease-in-out infinite;
+    z-index: 0;
+    animation: rain-fall 2.2s linear infinite;
+    animation-delay: -0.7s;
 }
 
-/* === ДЕКОР: Металл в шапке === */
+/* =============================================
+   ДЕКОР: ШАПКА — металлические царапины
+   Горизонтальные линии разной длины и яркости
+   ============================================= */
 .site-header::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background-image:
-        linear-gradient(45deg,
-            transparent 45%,
-            rgba(255, 255, 255, 0.025) 45%,
-            rgba(255, 255, 255, 0.025) 55%,
-            transparent 55%),
-        linear-gradient(-45deg,
-            transparent 45%,
-            rgba(255, 255, 255, 0.025) 45%,
-            rgba(255, 255, 255, 0.025) 55%,
-            transparent 55%);
-    background-size: 20px 20px;
+        /* длинные редкие */
+        linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.06) 80%, transparent 100%),
+        /* короткие частые */
+        repeating-linear-gradient(
+            180deg,
+            transparent 0px,
+            transparent 11px,
+            rgba(255, 255, 255, 0.025) 11px,
+            rgba(255, 255, 255, 0.025) 12px
+        );
     pointer-events: none;
     z-index: 0;
 }
 
-/* === ДЕКОР: Полоска отражения на панелях === */
+/* Отблеск на шапке — как мокрый металл */
+.site-header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; right: 0;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(77, 184, 255, 0.5),
+        rgba(241, 196, 15, 0.6),
+        rgba(77, 184, 255, 0.3),
+        transparent
+    );
+    animation: metal-sheen 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* =============================================
+   ДЕКОР: PAGE-HEADER — знак LCPD
+   Левый нижний угол, как водяной знак
+   ============================================= */
+.page-header::before {
+    content: 'LCPD';
+    position: absolute;
+    bottom: 14px;
+    left: 20px;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.35em;
+    color: rgba(77, 184, 255, 0.18);
+    pointer-events: none;
+    z-index: 2;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+}
+
+/* Правый угол — номер участка */
+.page-header::after {
+    content: 'LIB · CITY · PD';
+    position: absolute;
+    bottom: 14px;
+    right: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: rgba(241, 196, 15, 0.2);
+    pointer-events: none;
+    z-index: 2;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+}
+
+/* =============================================
+   ДЕКОР: ПАНЕЛИ — полоска отражения
+   ============================================= */
 .panel,
-.results-panel,
 .faq-container,
 .info-section {
     position: relative;
@@ -169,27 +237,81 @@ body::after {
 }
 
 .panel::before,
-.results-panel::before,
 .faq-container::before,
 .info-section::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    right: 0;
+    top: 0; left: -100%;
+    width: 60%;
     height: 1px;
-    background: linear-gradient(90deg,
+    background: linear-gradient(
+        90deg,
         transparent,
-        rgba(77, 184, 255, 0.5),
-        rgba(241, 196, 15, 0.3),
+        rgba(77, 184, 255, 0.45),
+        rgba(241, 196, 15, 0.25),
         transparent
     );
-    animation: reflection 5s linear infinite;
+    animation: reflection 7s linear infinite;
     pointer-events: none;
     z-index: 1;
 }
 
-/* === ДЕКОР: Болты на карточках === */
+/* =============================================
+   ДЕКОР: ТАКСИ
+   ============================================= */
+.taxi {
+    position: fixed;
+    bottom: 30px;
+    right: -100px;
+    font-size: 2.8rem;
+    filter: drop-shadow(0 0 12px rgba(241, 196, 15, 0.7));
+    z-index: 9999;
+    animation: taxi-drive 20s linear infinite;
+    pointer-events: none;
+}
+
+.taxi-duplicate {
+    position: fixed;
+    bottom: 65px;
+    right: -200px;
+    font-size: 2rem;
+    filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.4));
+    z-index: 9998;
+    animation: taxi-drive 28s linear infinite 7s;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* =============================================
+   ДЕКОР: Нижняя неоновая линия
+   ============================================= */
+body {
+    position: relative;
+}
+
+.site-container::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(77, 184, 255, 0.5) 25%,
+        rgba(241, 196, 15, 0.7) 50%,
+        rgba(77, 184, 255, 0.5) 75%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 9999;
+    animation: neon-line 4s ease-in-out infinite;
+}
+
+/* =============================================
+   ДЕКОР: Болты на карточках
+   ============================================= */
 .tool-card {
     position: relative;
 }
@@ -221,81 +343,55 @@ body::after {
         0 0 60px rgba(77, 184, 255, 0.08);
 }
 
-/* === ДЕКОР: Такси === */
-.taxi {
-    position: fixed;
-    bottom: 30px;
-    right: -100px;
-    font-size: 2.8rem;
-    filter: drop-shadow(0 0 12px rgba(241, 196, 15, 0.7));
-    z-index: 9999;
-    animation: taxi-drive 20s linear infinite;
-    pointer-events: none;
-}
-
-.taxi-duplicate {
-    position: fixed;
-    bottom: 65px;
-    right: -200px;
-    font-size: 2rem;
-    filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.4));
-    z-index: 9998;
-    animation: taxi-drive 28s linear infinite 7s;
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-/* === ДЕКОР: Шум CCTV === */
-.site-container::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23000" opacity="0.01"/></svg>');
-    background-size: 50px 50px;
-    pointer-events: none;
-    z-index: 10000;
-    opacity: 0.06;
-    animation: noise 0.5s steps(2) infinite;
-}
-
-/* === КОНТРОЛЬ СКРОЛЛА === */
+/* =============================================
+   КОНТРОЛЬ СКРОЛЛА
+   ============================================= */
 html, body { overflow-x: hidden; max-width: 100%; }
-.site-container { max-width: 1400px; margin: 0 auto; padding: 20px; overflow-x: hidden; }
+.site-container { overflow-x: hidden; }
 
-/* === АНИМАЦИИ === */
-@keyframes rain {
-    0% { background-position: 0 0; }
-    100% { background-position: 30px 60px; }
+/* =============================================
+   АНИМАЦИИ
+   ============================================= */
+@keyframes rain-fall {
+    0%   { background-position: 0 0; }
+    100% { background-position: -20px 80px; }
+}
+
+@keyframes metal-sheen {
+    0%   { left: -100%; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { left: 200%; opacity: 0; }
+}
+
+@keyframes reflection {
+    0%   { left: -100%; }
+    100% { left: 200%; }
 }
 
 @keyframes neon-line {
     0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+    50%       { opacity: 1; }
 }
 
 @keyframes taxi-drive {
-    0% { transform: translateX(0); opacity: 0; }
-    5% { opacity: 1; }
-    95% { opacity: 1; }
+    0%   { transform: translateX(0); opacity: 0; }
+    5%   { opacity: 1; }
+    95%  { opacity: 1; }
     100% { transform: translateX(-150vw); opacity: 0; }
 }
 
-@keyframes reflection {
-    0% { left: -100%; }
-    100% { left: 200%; }
-}
-
-@keyframes noise {
-    0%, 100% { opacity: 0.06; }
-    50% { opacity: 0.09; }
-}
-
-/* === АДАПТИВНОСТЬ === */
+/* =============================================
+   АДАПТИВНОСТЬ
+   ============================================= */
 @media (max-width: 768px) {
     .taxi { font-size: 2.2rem; bottom: 20px; }
     .taxi-duplicate { display: none; }
+    .page-header::before,
+    .page-header::after { font-size: 0.65rem; }
 }
 
 @media (max-width: 480px) {
     .taxi { font-size: 1.8rem; bottom: 15px; }
+    .page-header::after { display: none; }
 }
