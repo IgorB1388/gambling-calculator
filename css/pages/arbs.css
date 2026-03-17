@@ -42,8 +42,8 @@
 /* === РАЗДЕЛИТЕЛЬ === */
 .block-divider {
     height: 1px;
-    background: var(--border-muted);
-    opacity: 0.5;
+    background: var(--border-primary);
+    opacity: 0.35;
     margin: 2px 0;
 }
 
@@ -529,15 +529,6 @@
     font-weight: bold;
 }
 
-/* === ПОДСКАЗКА === */
-.arb-hint {
-    font-size: 0.95rem;
-    font-style: italic;
-    text-align: center;
-    padding: 6px;
-    line-height: 1.5;
-}
-
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
     .panel { padding: 18px; gap: 16px; min-height: 0; }
@@ -592,4 +583,3 @@
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
 }
-
