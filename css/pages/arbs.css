@@ -42,9 +42,10 @@
 /* === РАЗДЕЛИТЕЛЬ === */
 .block-divider {
     height: 1px;
-    background: var(--border-primary);
-    opacity: 0.35;
+    background: var(--color-primary);
+    box-shadow: 0 0 6px var(--color-primary);
     margin: 2px 0;
+    border: none;
 }
 
 /* === ГРУППЫ НАСТРОЕК === */
