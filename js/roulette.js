@@ -117,12 +117,8 @@ function initSessionValidation() {
     if (!errorEl) {
         errorEl = document.createElement('div');
         errorEl.id = 'sessionCountError';
-        errorEl.style.cssText = 'font-size:0.85rem;font-weight:bold;color:var(--color-danger);display:none;white-space:nowrap;align-self:center;';
-        const wrapper = input.parentElement;
-        wrapper.style.display = 'flex';
-        wrapper.style.alignItems = 'center';
-        wrapper.style.gap = '10px';
-        wrapper.appendChild(errorEl);
+        errorEl.style.cssText = 'font-size:0.85rem;font-weight:bold;color:var(--color-danger);visibility:hidden;min-height:1.2em;margin-top:4px;';
+        input.parentElement.parentElement.insertBefore(errorEl, input.parentElement.nextSibling);
     }
 
     input.addEventListener('input', () => validateSessionCount());
@@ -138,12 +134,12 @@ function validateSessionCount() {
         input.style.borderColor = 'var(--color-danger)';
         input.style.boxShadow = '0 0 10px rgba(231,76,60,0.5)';
         errorEl.textContent = window.getTranslation ? window.getTranslation('sessionCountError') : `Максимум ${MAX_SESSIONS.toLocaleString()} сессий`;
-        errorEl.style.display = 'inline';
+        errorEl.style.visibility = 'visible';
         return false;
     } else {
         input.style.borderColor = '';
         input.style.boxShadow = '';
-        errorEl.style.display = 'none';
+        errorEl.style.visibility = 'hidden';
         return true;
     }
 }
