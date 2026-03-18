@@ -82,6 +82,8 @@ const ProgressionHints = {
     dalembert: 'progressionHintDalembert'
 };
 
+const MAX_SESSIONS = 10000;
+
 let isSimulating = false;
 let conditions = [];
 const MAX_CONDITIONS = 5;
@@ -93,6 +95,7 @@ function initApp() {
     updateTargetInputState();
     initConditions();
     updateProgressionHint();
+    initSessionValidation();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -102,6 +105,44 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('translationsReady', initApp, { once: true });
     }
 });
+
+// --- Валидация поля сессий ---
+function initSessionValidation() {
+    const input = document.getElementById('sessionCount');
+    if (!input) return;
+
+    input.max = MAX_SESSIONS;
+
+    let errorEl = document.getElementById('sessionCountError');
+    if (!errorEl) {
+        errorEl = document.createElement('div');
+        errorEl.id = 'sessionCountError';
+        errorEl.style.cssText = 'font-size:0.9rem;font-weight:bold;color:var(--color-danger);display:none;padding:2px 0;';
+        input.parentElement.parentElement.appendChild(errorEl);
+    }
+
+    input.addEventListener('input', () => validateSessionCount());
+}
+
+function validateSessionCount() {
+    const input = document.getElementById('sessionCount');
+    const errorEl = document.getElementById('sessionCountError');
+    if (!input || !errorEl) return true;
+
+    const val = parseInt(input.value);
+    if (val > MAX_SESSIONS) {
+        input.style.borderColor = 'var(--color-danger)';
+        input.style.boxShadow = '0 0 10px rgba(231,76,60,0.5)';
+        errorEl.textContent = window.getTranslation ? window.getTranslation('sessionCountError') : `Максимум ${MAX_SESSIONS.toLocaleString()} сессий`;
+        errorEl.style.display = 'block';
+        return false;
+    } else {
+        input.style.borderColor = '';
+        input.style.boxShadow = '';
+        errorEl.style.display = 'none';
+        return true;
+    }
+}
 
 // --- Тултипы ---
 function initTooltips() {
@@ -583,6 +624,7 @@ function drawChart(distribution) {
 // --- Главная функция симуляции ---
 async function simulateStrategy() {
     if (isSimulating) return;
+    if (!validateSessionCount()) return;
 
     const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
     const config = RouletteConfig[rouletteType];
@@ -597,7 +639,7 @@ async function simulateStrategy() {
     const targetAmount = parseInt(document.getElementById('targetAmount').value) || 2000;
     const stopSpins = document.getElementById('stopSpins').checked;
     const maxSpins = parseInt(document.getElementById('maxSpins').value) || 100;
-    const sessionCount = parseInt(document.getElementById('sessionCount').value) || 500;
+    const sessionCount = Math.min(parseInt(document.getElementById('sessionCount').value) || 500, MAX_SESSIONS);
 
     const { finalNumbers } = calculateTotalBet();
 
@@ -649,6 +691,7 @@ function resetSimulation() {
     if (presetsSelect) presetsSelect.value = '';
     updateTargetInputState();
     updateProgressionHint();
+    validateSessionCount();
     document.getElementById('resultsPlaceholder').style.display = 'flex';
     document.getElementById('resultsContent').style.display = 'none';
     initConditions();
