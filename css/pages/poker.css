@@ -4,26 +4,6 @@
     margin: 0 auto;
 }
 
-/* === ЗАГОЛОВОК ПОКЕР-КАЛЬКУЛЯТОРА === */
-.page-header .header-suits {
-    font-size: 2.8rem;
-    margin-bottom: 10px;
-}
-
-.header-suits {
-    font-size: 2.8rem;
-    margin-bottom: 10px;
-}
-
-.poker-header h1 {
-    font-size: 2.8rem;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    font-size: 1.1rem;
-}
-
 /* === ОСНОВНАЯ ОБЛАСТЬ С ДВУМЯ КОЛОНКАМИ === */
 .main-area {
     display: grid;
@@ -33,9 +13,7 @@
 }
 
 @media (max-width: 1100px) {
-    .main-area { 
-        grid-template-columns: 1fr;
-    }
+    .main-area { grid-template-columns: 1fr; }
 }
 
 /* === ПАНЕЛИ === */
@@ -49,6 +27,34 @@
 .panel:first-child {
     display: flex;
     flex-direction: column;
+}
+
+/* === ЗАГОЛОВОК ПАНЕЛИ — крупнее подзаголовков, центрирован по высоте === */
+.panel-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border-muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+    min-height: 2.2rem;
+    letter-spacing: 0.04em;
+}
+
+/* === ПОДЗАГОЛОВКИ СЕКЦИЙ — заметно мельче панельного заголовка === */
+.section-title {
+    margin-bottom: 3px;
+    font-size: 1.0rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    height: 28px;
+    position: relative;
+    letter-spacing: 0.03em;
 }
 
 /* === СЕКЦИИ РУКИ И БОРДА === */
@@ -69,17 +75,6 @@
 
 .section-title::before {
     transition: opacity 0.3s, background-color 0.3s, box-shadow 0.3s;
-}
-
-.section-title {
-    margin-bottom: 3px;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    height: 28px;
-    position: relative;
 }
 
 .board-subtitle,
@@ -127,9 +122,7 @@
     cursor: pointer;
 }
 
-.card-slot.drag-over {
-    transform: scale(1.05);
-}
+.card-slot.drag-over { transform: scale(1.05); }
 
 /* === РЕАЛЬНАЯ КАРТА === */
 .real-card {
@@ -193,7 +186,7 @@
     font-weight: bold;
     margin-bottom: 10px;
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1.0rem;
 }
 
 .opponent-pills {
@@ -218,9 +211,7 @@
     justify-content: center;
 }
 
-.opponent-pill:hover {
-    transform: scale(1.1);
-}
+.opponent-pill:hover { transform: scale(1.1); }
 
 /* === СЕТКА КОЛОДЫ === */
 .deck-grid {
@@ -256,17 +247,16 @@
     z-index: 10;
 }
 
+/* === ВЫБРАННАЯ КАРТА — затемняем === */
 .deck-card.selected {
     cursor: default;
+    opacity: 0.35;
+    filter: grayscale(40%);
 }
 
-.deck-card.selected:hover {
-    transform: none;
-}
+.deck-card.selected:hover { transform: none; }
 
-.deck-card.selected .card-face {
-    display: none;
-}
+.deck-card.selected .card-face { display: none; }
 
 .deck-card.selected::after {
     content: "✕";
@@ -288,15 +278,13 @@
     gap: 7%;
 }
 
-/* === РАНГ КАРТЫ === */
-.card-value { 
+.card-value {
     font-size: 1.2rem;
     font-weight: bold;
     line-height: 1;
 }
 
-/* === МАСТЬ КАРТЫ === */
-.card-suit-large { 
+.card-suit-large {
     font-size: 1.3rem;
     line-height: 1;
 }
@@ -323,13 +311,8 @@
     overflow: hidden;
 }
 
-.btn:hover {
-    transform: translateY(-3px);
-}
-
-.btn:active {
-    transform: scale(0.95);
-}
+.btn:hover { transform: translateY(-3px); }
+.btn:active { transform: scale(0.95); }
 
 .btn-primary:disabled {
     opacity: 0.5;
@@ -337,13 +320,9 @@
     transform: none;
 }
 
-.btn-primary:disabled:hover {
-    transform: none;
-}
+.btn-primary:disabled:hover { transform: none; }
 
-.btn.clicked {
-    animation: button-pulse 0.3s ease-in-out;
-}
+.btn.clicked { animation: button-pulse 0.3s ease-in-out; }
 
 @keyframes button-pulse {
     0% { transform: scale(1); }
@@ -364,9 +343,7 @@
     transform-origin: 50% 50%;
 }
 
-.btn:active::after {
-    animation: ripple 0.6s ease-out;
-}
+.btn:active::after { animation: ripple 0.6s ease-out; }
 
 @keyframes ripple {
     0% { transform: scale(0, 0); opacity: 0.5; }
@@ -421,9 +398,7 @@
     margin-top: 5px;
 }
 
-.slot-empty {
-    font-size: 2.5rem;
-}
+.slot-empty { font-size: 2.5rem; }
 
 /* === ИНДИКАТОР АКТИВНОГО БЛОКА === */
 .section-title::before {
@@ -452,14 +427,11 @@
     100% { border-color: transparent; }
 }
 
-.results-panel.fresh-result {
-    animation: quick-glow 0.25s ease-in-out;
-}
+.results-panel.fresh-result { animation: quick-glow 0.25s ease-in-out; }
 
 /* === АДАПТИВНОСТЬ 768px === */
 @media (max-width: 768px) {
     .section-title::before { width: 12px; height: 12px; right: -4px; top: -4px; }
-    .poker-header h1 { font-size: 2.2rem; margin-top: 10px; }
     .panel { padding: 20px 15px; }
     .hand-section, .board-section { min-height: 180px; padding: 12px; margin-bottom: 10px; }
     .card-slot { width: 70px; height: 100px; font-size: 2rem; }
@@ -475,12 +447,13 @@
     .result-card { min-height: 140px; padding: 15px; }
     .opponent-pill { width: 40px; height: 40px; font-size: 1.1rem; }
     .controls { gap: 10px; }
+    .panel-title { font-size: 1.1rem; }
+    .section-title { font-size: 0.9rem; }
 }
 
 /* === АДАПТИВНОСТЬ 480px === */
 @media (max-width: 480px) {
     .section-title::before { width: 10px; height: 10px; right: -3px; top: -3px; }
-    .poker-header h1 { font-size: 1.8rem; }
     .panel { padding: 15px; }
     .hand-section, .board-section { min-height: 160px; padding: 10px; }
     .card-slot { width: 60px; height: 85px; font-size: 1.8rem; }
@@ -492,7 +465,6 @@
     .deck-grid { grid-template-columns: repeat(4, 1fr); }
     .opponent-pills { gap: 5px; }
     .opponent-pill { width: 35px; height: 35px; font-size: 1rem; }
+    .panel-title { font-size: 1rem; }
+    .section-title { font-size: 0.85rem; }
 }
-
-
-
