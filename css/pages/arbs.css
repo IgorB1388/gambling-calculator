@@ -475,6 +475,7 @@
     text-align: center;
     outline: none;
     box-sizing: border-box;
+    color: var(--text-secondary);
 }
 
 .odds-input:focus { transform: scale(1.02); }
@@ -552,6 +553,8 @@
 }
 
 .table-row:last-child { border-bottom: none; }
+
+.cell-text { color: var(--text-secondary); }
 
 /* Ячейка кэфа в итоговой таблице — только обводка, без окраски строки */
 .kef-cell {
