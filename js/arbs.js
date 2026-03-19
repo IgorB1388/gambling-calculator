@@ -194,7 +194,7 @@ function renderOddsTable() {
             const input = document.createElement('input');
             input.type = 'number';
             input.id = `odds-${b}-${o}`;
-            input.className = 'odds-input bg-elevated border-5 text-1';
+            input.className = 'odds-input bg-elevated border-5';
             input.placeholder = '2.50';
             input.min = '1.01';
             input.step = '0.01';
