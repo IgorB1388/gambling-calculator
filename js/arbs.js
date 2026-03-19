@@ -10,7 +10,8 @@ const ARB_COLORS = [
 ];
 
 // Записываем цвета в CSS-переменные на :root
-function applyArbColorVars() {
+// applyArbColorVars не нужна — используем CSS vars
+function applyArbColorVarsNoop() {
     const root = document.documentElement;
     ARB_COLORS.forEach((c, i) => root.style.setProperty(`--arb-color-${i}`, c));
 }
@@ -28,7 +29,7 @@ const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
 const MAX_STAKE_LENGTH = 9;
 
 function initApp() {
-    applyArbColorVars();
+    // цвета берём из CSS переменных темы
     initState();
     renderOddsTable();
     initEventListeners();
@@ -467,17 +468,10 @@ function displayResults(data) {
     tableBody.innerHTML = '';
     data.bestOdds.forEach((odd, i) => {
         const row = document.createElement('div');
-        const highlightClass = data.isArb ? `highlight-outcome-${i}` : '';
-        row.className = `table-row ${highlightClass}`;
+        row.className = 'table-row';
 
-        // Исход + (БК N) двумя строками
-        const bkIdx = data.bestBk ? data.bestBk[i] + 1 : '?';
-        const outcomeCell = `
-            <div class="outcome-cell">
-                <span class="outcome-cell-main">${outcomeLabel} ${i + 1}</span>
-                <span class="outcome-cell-sub">(${bkLabel} ${bkIdx})</span>
-            </div>
-        `;
+        // Исход N — просто текст
+        const outcomeCell = `<span class="text-2">${outcomeLabel} ${i + 1}</span>`;
 
         let badgeHtml = '';
         if (data.isArb) {
@@ -492,7 +486,7 @@ function displayResults(data) {
 
         row.innerHTML = `
             ${outcomeCell}
-            <span class="kef-cell">${odd.toFixed(2)}</span>
+            <span class="kef-cell${data.isArb ? ' highlight-outcome-' + i : ''}">${odd.toFixed(2)}</span>
             <span>${data.stakes[i].toFixed(2)} $</span>
             ${badgeHtml}
             <span>${data.payouts[i].toFixed(2)} $</span>
