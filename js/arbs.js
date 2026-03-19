@@ -125,7 +125,7 @@ function formatToTwoDecimals(value) {
 // === Сброс подсветки инпутов ===
 function clearInputHighlights() {
     document.querySelectorAll('.odds-input').forEach(inp => {
-        for (let i = 0; i < 5; i++) inp.classList.remove(`highlight-outcome-${i}`);
+        for (let i = 0; i < 5; i++) inp.classList.remove(`arb-highlight-${i}`);
         // Восстанавливаем стандартный border
         inp.style.borderColor = '';
         inp.style.boxShadow = '';
@@ -137,7 +137,7 @@ function applyInputHighlights(bestBkArr) {
     clearInputHighlights();
     bestBkArr.forEach((bkIdx, outcomeIdx) => {
         const input = document.getElementById(`odds-${bkIdx}-${outcomeIdx}`);
-        if (input) input.classList.add(`highlight-outcome-${outcomeIdx}`);
+        if (input) input.classList.add(`arb-highlight-${outcomeIdx}`);
     });
 }
 
@@ -486,7 +486,7 @@ function displayResults(data) {
 
         row.innerHTML = `
             ${outcomeCell}
-            <span class="kef-cell${data.isArb ? ' highlight-outcome-' + i : ''}">${odd.toFixed(2)}</span>
+            <span class="kef-cell${data.isArb ? ' arb-highlight-' + i : ''}">${odd.toFixed(2)}</span>
             <span>${data.stakes[i].toFixed(2)} $</span>
             ${badgeHtml}
             <span>${data.payouts[i].toFixed(2)} $</span>
