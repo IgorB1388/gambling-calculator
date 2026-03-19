@@ -115,6 +115,13 @@
     --animation-ripple: ripple 0.6s ease-out;
     --animation-quick-glow: quick-glow 0.25s ease-in-out;
     --animation-float-icon: float-icon 3s ease-in-out infinite;
+
+    /* === ПОДСВЕТКА ПАР ВИЛОК === */
+    --arb-hl-0: #ff5fd2;
+    --arb-hl-1: #ff5fd2;
+    --arb-hl-2: #b36bff;
+    --arb-hl-3: #2effc7;
+    --arb-hl-4: #2effc7;
 }
 
 /* =============================================
