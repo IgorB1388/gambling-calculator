@@ -30,11 +30,33 @@
     min-height: 900px;
 }
 
+/* === ЗАГОЛОВОК ПАНЕЛИ — с чертой через весь блок === */
 .panel-title {
     font-size: 1.6rem;
     font-weight: bold;
     display: flex;
     align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 0;
+    /* Черта растягивается за padding панели */
+    margin-left: -25px;
+    margin-right: -25px;
+    padding-left: 25px;
+    padding-right: 25px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
+
+/* Левая панель — циановая черта */
+.panel.border-1 .panel-title {
+    border-bottom-color: var(--border-1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Правая панель — зелёная черта */
+.panel.border-4 .panel-title {
+    border-bottom-color: var(--border-4);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 /* === ШАГИ ЛЕВОЙ ПАНЕЛИ === */
@@ -50,19 +72,22 @@
     gap: 12px;
 }
 
+/* Шаг-бейдж — квадратный, отличается от пилюль исходов */
 .arbs-step-badge {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
     border-width: 2px;
     border-style: solid;
+    border-color: var(--border-3);
+    color: var(--text-3);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     flex-shrink: 0;
-    background: rgba(0, 240, 255, 0.08);
+    background: rgba(133, 193, 233, 0.08);
 }
 
 /* === РАЗДЕЛИТЕЛЬ === */
@@ -131,7 +156,7 @@
     box-shadow: var(--shadow-md);
 }
 
-/* === КНОПКИ ИСХОДОВ === */
+/* === КНОПКИ ИСХОДОВ — info цвет (голубой) === */
 .outcome-pills {
     display: flex;
     gap: 10px;
@@ -283,7 +308,7 @@
     gap: 14px;
 }
 
-/* === ИНДИКАТОР — без слова Статус === */
+/* === ИНДИКАТОР === */
 .arb-indicator {
     display: flex;
     align-items: center;
@@ -429,11 +454,19 @@
     width: 100%;
     min-width: 50px;
     background: transparent;
-    transition: all 0.2s;
+    transition: border-color 0.3s, box-shadow 0.3s;
     text-align: center;
+    outline: none;
 }
 
-.odds-input:focus { outline: none; transform: scale(1.02); }
+.odds-input:focus { transform: scale(1.02); }
+
+/* Подсветка лучшего кэфа по цвету исхода */
+.odds-input.highlight-outcome-0 { border-color: var(--arb-color-0) !important; box-shadow: 0 0 8px var(--arb-color-0); }
+.odds-input.highlight-outcome-1 { border-color: var(--arb-color-1) !important; box-shadow: 0 0 8px var(--arb-color-1); }
+.odds-input.highlight-outcome-2 { border-color: var(--arb-color-2) !important; box-shadow: 0 0 8px var(--arb-color-2); }
+.odds-input.highlight-outcome-3 { border-color: var(--arb-color-3) !important; box-shadow: 0 0 8px var(--arb-color-3); }
+.odds-input.highlight-outcome-4 { border-color: var(--arb-color-4) !important; box-shadow: 0 0 8px var(--arb-color-4); }
 
 .odds-input::-webkit-outer-spin-button,
 .odds-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -449,26 +482,25 @@
 
 .odds-add-bk { grid-column: 1; width: 100%; }
 
-/* === КНОПКА ДОБАВИТЬ БК === */
+/* === КНОПКА ДОБАВИТЬ БК — без плюса, ширина по тексту === */
 .add-bk-btn {
     background: transparent;
     border: 2px solid var(--border-3);
     color: var(--text-3);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
-    padding: 7px 10px;
+    padding: 7px 12px;
     border-radius: 8px;
-    width: 100%;
-    display: flex;
+    width: auto;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
     transition: all 0.2s;
     white-space: nowrap;
 }
 
-.add-bk-btn:hover { opacity: 0.8; transform: scale(1.02); }
+.add-bk-btn:hover { opacity: 0.8; }
 
 /* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ: Исход / Кэф / Ставка / Результат / Выплата === */
 .distribution-table {
@@ -481,7 +513,7 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.1fr 1.3fr;
+    grid-template-columns: 1.8fr 0.9fr 1.3fr 1.1fr 1.3fr;
     gap: 8px;
     padding: 13px 15px;
     font-weight: bold;
@@ -492,15 +524,44 @@
 
 .table-row {
     display: grid;
-    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.1fr 1.3fr;
+    grid-template-columns: 1.8fr 0.9fr 1.3fr 1.1fr 1.3fr;
     gap: 8px;
     padding: 12px 15px;
     border-bottom: 1px solid var(--border-muted);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     align-items: center;
 }
 
 .table-row:last-child { border-bottom: none; }
+
+/* Ячейка исхода — двухстрочная */
+.outcome-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.2;
+}
+
+.outcome-cell-main {
+    font-weight: bold;
+}
+
+.outcome-cell-sub {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+/* Подсветка строки итоговой таблицы */
+.table-row.highlight-outcome-0 .outcome-cell-main,
+.table-row.highlight-outcome-0 .kef-cell { color: var(--arb-color-0) !important; }
+.table-row.highlight-outcome-1 .outcome-cell-main,
+.table-row.highlight-outcome-1 .kef-cell { color: var(--arb-color-1) !important; }
+.table-row.highlight-outcome-2 .outcome-cell-main,
+.table-row.highlight-outcome-2 .kef-cell { color: var(--arb-color-2) !important; }
+.table-row.highlight-outcome-3 .outcome-cell-main,
+.table-row.highlight-outcome-3 .kef-cell { color: var(--arb-color-3) !important; }
+.table-row.highlight-outcome-4 .outcome-cell-main,
+.table-row.highlight-outcome-4 .kef-cell { color: var(--arb-color-4) !important; }
 
 .outcome-badge {
     display: inline-block;
@@ -559,6 +620,7 @@
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
     .panel { padding: 18px; gap: 16px; min-height: 0; }
+    .panel-title { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; }
 
     .odds-header-row, .odds-row, .add-bk-row {
         grid-template-columns: 65px repeat(var(--outcome-count, 2), 1fr);
@@ -571,8 +633,8 @@
     .odds-header { font-size: 0.95rem; }
 
     .table-header, .table-row {
-        grid-template-columns: 1.4fr 0.8fr 1.1fr 0.9fr 1.1fr;
-        font-size: 0.95rem;
+        grid-template-columns: 1.5fr 0.8fr 1.1fr 0.9fr 1.1fr;
+        font-size: 0.92rem;
         padding: 9px 10px;
     }
 
@@ -599,8 +661,8 @@
     .odds-input { padding: 7px 2px; font-size: 0.9rem; }
 
     .table-header, .table-row {
-        grid-template-columns: 1.2fr 0.75fr 1fr 0.85fr 1fr;
-        font-size: 0.88rem;
+        grid-template-columns: 1.3fr 0.75fr 1fr 0.85fr 1fr;
+        font-size: 0.85rem;
         padding: 8px 8px;
     }
 
