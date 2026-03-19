@@ -33,10 +33,36 @@
 .panel-title {
     font-size: 1.6rem;
     font-weight: bold;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--border-muted);
     display: flex;
     align-items: center;
+}
+
+/* === ШАГИ ЛЕВОЙ ПАНЕЛИ === */
+.arbs-step {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.arbs-step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.arbs-step-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    background: rgba(0, 240, 255, 0.08);
 }
 
 /* === РАЗДЕЛИТЕЛЬ === */
@@ -209,16 +235,14 @@
 
 .panel-controls .btn:hover { transform: translateY(-2px); }
 
-/* === ЗАГЛУШКА === */
+/* === ЗАГЛУШКА — вверху === */
 .results-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
+    padding: 30px 20px 20px 20px;
     gap: 18px;
     text-align: center;
-    flex: 1;
 }
 
 .placeholder-icon { font-size: 4rem; opacity: 0.4; }
@@ -259,7 +283,7 @@
     gap: 14px;
 }
 
-/* === ИНДИКАТОР === */
+/* === ИНДИКАТОР — без слова Статус === */
 .arb-indicator {
     display: flex;
     align-items: center;
@@ -280,15 +304,13 @@
 }
 
 .indicator-text {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
     flex: 1;
+    display: flex;
+    align-items: center;
 }
 
-.indicator-text span { font-size: 1.1rem; }
-.indicator-text span:last-child {
-    font-size: 1.25rem;
+.indicator-status-text {
+    font-size: 1.35rem;
     font-weight: bold;
 }
 
@@ -427,24 +449,28 @@
 
 .odds-add-bk { grid-column: 1; width: 100%; }
 
+/* === КНОПКА ДОБАВИТЬ БК === */
 .add-bk-btn {
     background: transparent;
     border: 2px solid var(--border-3);
     color: var(--text-3);
-    font-size: 1.4rem;
+    font-size: 0.95rem;
+    font-weight: bold;
     cursor: pointer;
-    padding: 7px 0;
+    padding: 7px 10px;
     border-radius: 8px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     transition: all 0.2s;
+    white-space: nowrap;
 }
 
-.add-bk-btn:hover { opacity: 0.8; transform: scale(1.05); }
+.add-bk-btn:hover { opacity: 0.8; transform: scale(1.02); }
 
-/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ === */
+/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ: Исход / Кэф / Ставка / Результат / Выплата === */
 .distribution-table {
     width: 100%;
     border-radius: 12px;
@@ -455,7 +481,7 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.3fr 1fr;
+    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.1fr 1.3fr;
     gap: 8px;
     padding: 13px 15px;
     font-weight: bold;
@@ -466,7 +492,7 @@
 
 .table-row {
     display: grid;
-    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.3fr 1fr;
+    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.1fr 1.3fr;
     gap: 8px;
     padding: 12px 15px;
     border-bottom: 1px solid var(--border-muted);
@@ -545,7 +571,7 @@
     .odds-header { font-size: 0.95rem; }
 
     .table-header, .table-row {
-        grid-template-columns: 1.4fr 0.8fr 1.1fr 1.1fr 0.9fr;
+        grid-template-columns: 1.4fr 0.8fr 1.1fr 0.9fr 1.1fr;
         font-size: 0.95rem;
         padding: 9px 10px;
     }
@@ -556,6 +582,7 @@
     .stake-input-wrapper { width: 100%; }
     .settings-label { font-size: 1rem; }
     .panel-title { font-size: 1.4rem; }
+    .indicator-status-text { font-size: 1.1rem; }
 }
 
 @media (max-width: 480px) {
@@ -572,7 +599,7 @@
     .odds-input { padding: 7px 2px; font-size: 0.9rem; }
 
     .table-header, .table-row {
-        grid-template-columns: 1.2fr 0.75fr 1fr 1fr 0.85fr;
+        grid-template-columns: 1.2fr 0.75fr 1fr 0.85fr 1fr;
         font-size: 0.88rem;
         padding: 8px 8px;
     }
