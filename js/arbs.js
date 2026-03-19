@@ -487,9 +487,9 @@ function displayResults(data) {
         row.innerHTML = `
             ${outcomeCell}
             <span class="kef-cell${data.isArb ? ' arb-highlight-' + i : ''}">${odd.toFixed(2)}</span>
-            <span>${data.stakes[i].toFixed(2)} $</span>
+            <span class="cell-text">${data.stakes[i].toFixed(2)} $</span>
             ${badgeHtml}
-            <span>${data.payouts[i].toFixed(2)} $</span>
+            <span class="cell-text">${data.payouts[i].toFixed(2)} $</span>
         `;
         tableBody.appendChild(row);
     });
