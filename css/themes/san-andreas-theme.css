@@ -85,6 +85,12 @@
     --theme-btn-active-border: #e08800;
     --theme-btn-active-glow: #e08800;
 
+    --arb-hl-0: #c05000;
+    --arb-hl-1: #006633;
+    --arb-hl-2: #8b1a1a;
+    --arb-hl-3: #003d7a;
+    --arb-hl-4: #5a006b;
+
     /* === ГРАДИЕНТЫ === */
     --gradient-body: linear-gradient(180deg, #f8e090 0%, #f2d878 40%, #e8c860 100%);
     --gradient-logo: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
@@ -279,3 +285,4 @@ body {
     .site-footer::after { display: none; }
     .road-marking { display: none; }
 }
+
