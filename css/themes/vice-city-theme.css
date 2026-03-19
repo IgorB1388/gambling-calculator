@@ -78,6 +78,12 @@
     --theme-btn-active-border: #ff44aa;
     --theme-btn-active-glow: #ff44aa;
 
+    --arb-hl-0: #ff44aa;
+    --arb-hl-1: #44aaff;
+    --arb-hl-2: #00ffcc;
+    --arb-hl-3: #ff8844;
+    --arb-hl-4: #b36bff;
+
     /* === ТЕНИ ПО РОЛИ === */
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
