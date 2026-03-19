@@ -47,12 +47,12 @@
 
 .panel.border-1 .panel-title {
     border-bottom-color: var(--border-1);
-    text-shadow: 0 0 8px var(--border-1);
+    box-shadow: 0 3px 8px -3px var(--border-1);
 }
 
 .panel.border-4 .panel-title {
     border-bottom-color: var(--border-4);
-    text-shadow: 0 0 8px var(--border-4);
+    box-shadow: 0 3px 8px -3px var(--border-4);
 }
 
 /* === ШАГИ ЛЕВОЙ ПАНЕЛИ — круглые, цвет text-3 (отличается от исходов) === */
@@ -451,17 +451,19 @@
 .remove-bk:hover { opacity: 1; transform: scale(1.1); }
 
 .odds-input {
-    padding: 11px 6px;
+    padding: 6px 8px;
     border-radius: 6px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
+    font-weight: bold;
     width: 100%;
     min-width: 50px;
     background: transparent;
     transition: border-color 0.3s, box-shadow 0.3s;
     text-align: center;
     outline: none;
+    color: var(--text-primary);
 }
 
 .odds-input:focus { transform: scale(1.02); }
@@ -541,21 +543,27 @@
 
 /* Ячейка кэфа в итоговой таблице — только обводка, без окраски строки */
 .kef-cell {
-    display: inline-block;
-    padding: 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    min-width: 58px;
     border-radius: 6px;
     border-width: 2px;
     border-style: solid;
     border-color: transparent;
     font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text-primary);
     transition: border-color 0.3s, box-shadow 0.3s;
+    text-align: center;
 }
 
-.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 6px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
-.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 6px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
-.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 6px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
-.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 6px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
-.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 6px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
+.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; font-weight: bold; }
+.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; font-weight: bold; }
+.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; font-weight: bold; }
+.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3); color: var(--arb-hl-3) !important; font-weight: bold; }
+.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); color: var(--arb-hl-4) !important; font-weight: bold; }
 
 .outcome-badge {
     display: inline-block;
