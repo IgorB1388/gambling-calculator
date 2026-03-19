@@ -71,7 +71,7 @@
 }
 
 .arbs-step:first-of-type {
-    padding-bottom: 8px;
+    padding-bottom: 18px;
 }
 
 .arbs-step-header {
@@ -474,18 +474,17 @@
     transition: border-color 0.3s, box-shadow 0.3s;
     text-align: center;
     outline: none;
-    color: var(--text-primary);
     box-sizing: border-box;
 }
 
 .odds-input:focus { transform: scale(1.02); }
 
-/* Подсветка инпутов — через arb-highlight классы из color-classes */
-.odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); }
-.odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); }
-.odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); }
-.odds-input.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3); }
-.odds-input.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); }
+/* Подсветка инпутов — обводка И цвет цифры одинаковые */
+.odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
+.odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
+.odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
+.odds-input.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
+.odds-input.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
 
 .odds-input::-webkit-outer-spin-button,
 .odds-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -528,6 +527,7 @@
     border-width: 1px;
     border-style: solid;
     overflow: hidden;
+    color: var(--text-secondary);
 }
 
 .table-header {
@@ -566,7 +566,6 @@
     border-color: transparent;
     font-weight: bold;
     font-size: 1.1rem;
-    color: var(--text-primary);
     transition: border-color 0.3s, box-shadow 0.3s;
     text-align: center;
 }
