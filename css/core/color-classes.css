@@ -42,6 +42,13 @@
     --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.5);
     --glow-primary: 0 0 25px rgba(0, 240, 255, 0.4);
     --glow-secondary: 0 0 25px rgba(255, 95, 210, 0.4);
+
+    /* === ПОДСВЕТКА ПАР ВИЛОК (переопределяются в каждой теме) === */
+    --arb-hl-0: #00f0ff;
+    --arb-hl-1: #ffd966;
+    --arb-hl-2: #b36bff;
+    --arb-hl-3: #ff9966;
+    --arb-hl-4: #ff5fd2;
 }
 
 /* === 🃏 СТАТИЧНЫЕ ЦВЕТА КАРТ === */
@@ -321,3 +328,9 @@
     box-shadow: 0 0 15px var(--color-secondary) !important;
 }
 
+/* === ПОДСВЕТКА ПАР ВИЛОК === */
+.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0) !important; }
+.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1) !important; }
+.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2) !important; }
+.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3) !important; }
+.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4) !important; }
