@@ -108,17 +108,19 @@ function renderOddsTable() {
     container.innerHTML = '';
     container.style.setProperty('--outcome-count', outcomeCount);
 
+    // Заголовок: Исход 1, Исход 2...
     const headerRow = document.createElement('div');
     headerRow.className = 'odds-header-row';
     headerRow.appendChild(Object.assign(document.createElement('div'), { className: 'odds-corner' }));
     for (let o = 0; o < outcomeCount; o++) {
         const header = document.createElement('div');
-        header.className = 'odds-header text-2';
+        header.className = 'odds-header text-1';
         header.textContent = `${window.getTranslation('arbsOutcomeLabel') || 'Исход'} ${o + 1}`;
         headerRow.appendChild(header);
     }
     container.appendChild(headerRow);
 
+    // Строки БК
     for (let b = 0; b < bkCount; b++) {
         const row = document.createElement('div');
         row.className = 'odds-row';
@@ -126,7 +128,7 @@ function renderOddsTable() {
         const labelCell = document.createElement('div');
         labelCell.className = 'odds-bk-label';
         const labelText = document.createElement('span');
-        labelText.className = 'text-3';
+        labelText.className = 'text-1';
         labelText.textContent = `${window.getTranslation('arbsBkLabel') || 'БК'} ${b + 1}`;
         labelCell.appendChild(labelText);
 
@@ -162,6 +164,7 @@ function renderOddsTable() {
         container.appendChild(row);
     }
 
+    // Кнопка добавить БК с текстом
     if (bkCount < 5) {
         const addRow = document.createElement('div');
         addRow.className = 'add-bk-row';
@@ -169,7 +172,7 @@ function renderOddsTable() {
         addCell.className = 'odds-add-bk';
         const addBtn = document.createElement('button');
         addBtn.className = 'add-bk-btn';
-        addBtn.textContent = '➕';
+        addBtn.innerHTML = `<span>➕</span><span>${window.getTranslation('arbsAddBk') || 'Добавить БК'}</span>`;
         addBtn.addEventListener('click', addBookmaker);
         addCell.appendChild(addBtn);
         addRow.appendChild(addCell);
@@ -374,14 +377,15 @@ function displayResults(data) {
 
     if (data.isArb) {
         indicatorCircle.className = 'indicator-circle bg-success-solid';
-        arbStatus.textContent = window.getTranslation('arbsFound') || '✅ Вилка найдена!';
-        arbStatus.className = 'text-4';
-        indicatorProfit.style.display = 'block';
-        profitBadge.textContent = data.profitPercent.toFixed(2) + '%';
+        // Статус + доход в одну строку
+        const pct = data.profitPercent.toFixed(2);
+        arbStatus.textContent = `${window.getTranslation('arbsFound') || '✅ Вилка найдена!'} +${pct}%`;
+        arbStatus.className = 'indicator-status-text text-4';
+        indicatorProfit.style.display = 'none'; // прячем отдельный badge
     } else {
         indicatorCircle.className = 'indicator-circle bg-danger-solid';
         arbStatus.textContent = window.getTranslation('arbsNotFound') || '❌ Вилки нет';
-        arbStatus.className = 'text-7';
+        arbStatus.className = 'indicator-status-text text-7';
         indicatorProfit.style.display = 'none';
     }
 
@@ -389,6 +393,7 @@ function displayResults(data) {
     const winText = window.getTranslation('arbsWin') || 'Выигрыш';
     const returnText = window.getTranslation('arbsReturn') || 'Возврат';
 
+    // Таблица: Исход / Кэф / Ставка / Результат / Выплата
     tableBody.innerHTML = '';
     data.bestOdds.forEach((odd, i) => {
         const row = document.createElement('div');
@@ -402,15 +407,16 @@ function displayResults(data) {
                 badgeHtml = `<span class="outcome-badge" style="color:var(--color-success);font-weight:bold;">${winText}</span>`;
             }
         } else {
-            badgeHtml = `<span class="outcome-badge" style="color:var(--text-muted);">—</span>`;
+            // Вилки нет — тире по центру
+            badgeHtml = `<span class="outcome-badge" style="color:var(--text-muted);display:block;text-align:center;">—</span>`;
         }
 
         row.innerHTML = `
-            <span class="text-2">${window.getTranslation('arbsOutcomeLabel') || 'Исход'} ${i + 1}</span>
+            <span class="text-1">${window.getTranslation('arbsOutcomeLabel') || 'Исход'} ${i + 1}</span>
             <span class="text-1">${odd.toFixed(2)}</span>
             <span class="text-1">${data.stakes[i].toFixed(2)} $</span>
-            <span class="text-1">${data.payouts[i].toFixed(2)} $</span>
             ${badgeHtml}
+            <span class="text-1">${data.payouts[i].toFixed(2)} $</span>
         `;
         tableBody.appendChild(row);
     });
@@ -419,8 +425,6 @@ function displayResults(data) {
 
     if (data.isArb) {
         document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' $';
-
-        // Строка дохода в процентах
         incomeRow.style.display = 'flex';
         if (isMaxStrategy) {
             const minPct = (Math.min(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
@@ -430,7 +434,6 @@ function displayResults(data) {
             const pct = (data.guaranteedPayout / data.totalStake * 100 - 100).toFixed(1);
             incomePercent.textContent = `+${pct}%`;
         }
-
         const netProfit = data.guaranteedPayout - data.totalStake;
         netProfitBlock.style.display = 'flex';
         netProfitEl.textContent = '+' + netProfit.toFixed(2) + ' $';
