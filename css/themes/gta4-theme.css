@@ -100,6 +100,13 @@
     --gradient-cyber: linear-gradient(90deg, transparent, var(--color-primary), var(--color-accent), var(--color-primary), transparent);
     --gradient-tool-border: linear-gradient(90deg, var(--color-primary), var(--color-accent), var(--color-primary), var(--color-secondary));
     --gradient-footer: linear-gradient(90deg, transparent, var(--color-primary), var(--color-primary), transparent);
+
+    /* === ПОДСВЕТКА ПАР ВИЛОК === */
+    --arb-hl-0: #4db8ff;
+    --arb-hl-1: #f1c40f;
+    --arb-hl-2: #2ecc71;
+    --arb-hl-3: #e67e22;
+    --arb-hl-4: #e74c3c;
 }
 
 /* =============================================
