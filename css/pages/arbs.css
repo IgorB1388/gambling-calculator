@@ -316,11 +316,6 @@
     flex-shrink: 0;
 }
 
-/* === ВЫРАВНИВАНИЕ ЧЕРТЫ ПОД СТАТУСОМ === */
-.panel.border-4 .results-content > .block-divider:first-of-type {
-    margin-top: 20px;
-}
-
 /* === РЕЗУЛЬТАТЫ === */
 .results-content {
     display: flex;
@@ -537,8 +532,8 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 0;
     padding: 13px 15px;
     font-weight: bold;
     font-size: 1.05rem;
@@ -552,16 +547,18 @@
 
 .table-row {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 0;
     padding: 12px 15px;
     border-bottom: 1px solid var(--border-muted);
     font-size: 1.1rem;
     align-items: center;
 }
 
-.table-row > * { text-align: center; }
-.table-row > *:first-child { text-align: left; }
+.table-row > * { text-align: center; padding-left: 8px; padding-right: 8px; }
+.table-row > *:first-child { text-align: left; padding-left: 0; }
+.table-row > *:not(:last-child) { border-right: 1px solid var(--border-muted); }
+.table-header > *:not(:last-child) { border-right: 1px solid var(--border-muted); }
 
 .table-row:last-child { border-bottom: none; }
 
