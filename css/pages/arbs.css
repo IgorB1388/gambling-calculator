@@ -30,7 +30,7 @@
     min-height: 900px;
 }
 
-/* === ЗАГОЛОВОК ПАНЕЛИ — жирная черта через весь блок === */
+/* === ЗАГОЛОВОК ПАНЕЛИ === */
 .panel-title {
     font-size: 1.6rem;
     font-weight: bold;
@@ -63,14 +63,19 @@
     box-shadow: 0 0 10px var(--border-4), 0 0 20px var(--border-4);
 }
 
-/* === ШАГИ ЛЕВОЙ ПАНЕЛИ — круглые, цвет text-3 (отличается от исходов) === */
+/* === ШАГИ ЛЕВОЙ ПАНЕЛИ === */
 .arbs-step {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-
+/* Фиксированная высота первого шага — черта на одном уровне с индикатором */
+.arbs-step:first-of-type {
+    height: 120px;
+    justify-content: center;
+    box-sizing: border-box;
+}
 
 .arbs-step-header {
     display: flex;
@@ -95,13 +100,14 @@
     background: rgba(133, 193, 233, 0.08);
 }
 
-/* === РАЗДЕЛИТЕЛЬ === */
+/* === РАЗДЕЛИТЕЛЬ — через весь блок === */
 .block-divider {
     height: 1px;
     background: var(--color-primary);
     box-shadow: 0 0 6px var(--color-primary);
     margin: 2px -25px;
     border: none;
+    flex-shrink: 0;
 }
 
 /* === ГРУППЫ НАСТРОЕК === */
@@ -161,7 +167,7 @@
     box-shadow: var(--shadow-md);
 }
 
-/* === КНОПКИ ИСХОДОВ — цвет secondary (розовый в base, жёлтый в gta4) === */
+/* === КНОПКИ ИСХОДОВ === */
 .outcome-pills {
     display: flex;
     gap: 10px;
@@ -275,7 +281,7 @@
 
 .panel-controls .btn:hover { transform: translateY(-2px); }
 
-/* === ЗАГЛУШКА — вверху === */
+/* === ЗАГЛУШКА === */
 .results-placeholder {
     display: flex;
     flex-direction: column;
@@ -323,16 +329,18 @@
     gap: 14px;
 }
 
-/* === ИНДИКАТОР === */
+/* === ИНДИКАТОР — фиксированная высота совпадает с первым шагом === */
 .arb-indicator {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 20px 18px;
+    padding: 0 18px;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
+    height: 120px;
     box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 .indicator-circle {
@@ -478,7 +486,6 @@
 
 .odds-input:focus { transform: scale(1.02); }
 
-/* Подсветка инпутов — обводка И цвет цифры одинаковые */
 .odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
 .odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
 .odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
@@ -499,7 +506,6 @@
 
 .odds-add-bk { grid-column: 1; width: 100%; }
 
-/* === КНОПКА ДОБАВИТЬ БК === */
 .add-bk-btn {
     background: transparent;
     border: 2px solid var(--border-3);
@@ -519,70 +525,84 @@
 
 .add-bk-btn:hover { opacity: 0.8; }
 
-/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ === */
+/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ ===
+   Используем display:grid на самой таблице,
+   table-header и table-row имеют display:contents
+   — вертикальные линии идут сквозь все строки
+*/
 .distribution-table {
-    display: grid;
-    grid-template-columns: auto minmax(60px,auto) auto auto auto;
     width: 100%;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
     overflow: hidden;
-    color: var(--text-secondary);
+    /* grid задаём через подклассы */
+    display: block;
+}
+
+/* Внутренняя сетка — отдельный контейнер */
+.table-header,
+.table-body {
+    display: grid;
+    grid-template-columns: 1fr minmax(58px, auto) 1fr 1fr 1fr;
+    width: 100%;
 }
 
 .table-header {
-    display: contents;
+    background: var(--bg-elevated);
+    border-bottom: 2px solid var(--border-muted);
 }
 
 .table-header > span {
-    padding: 13px 8px;
+    padding: 12px 10px;
     font-weight: bold;
-    font-size: 1.05rem;
+    font-size: 1.0rem;
     color: var(--text-secondary);
     text-align: center;
-    border-bottom: 2px solid var(--border-muted);
-    background: var(--bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .table-header > span:not(:last-child) {
     border-right: 1px solid var(--border-muted);
 }
 
-.table-body {
-    display: contents;
+.table-row {
+    display: grid;
+    grid-template-columns: 1fr minmax(58px, auto) 1fr 1fr 1fr;
+    width: 100%;
+    border-bottom: 1px solid var(--border-muted);
 }
 
-.table-row {
-    display: contents;
+.table-row:last-child {
+    border-bottom: none;
 }
 
 .table-row > * {
-    padding: 12px 8px;
-    font-size: 1.05rem;
+    padding: 11px 10px;
+    font-size: 1.0rem;
+    color: var(--text-secondary);
     text-align: center;
-    align-self: center;
-    border-bottom: 1px solid var(--border-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .table-row > *:not(:last-child) {
     border-right: 1px solid var(--border-muted);
 }
 
-.table-row:last-child > * {
-    border-bottom: none;
+.cell-text {
+    color: var(--text-secondary);
 }
 
-.table-row:last-child { border-bottom: none; }
-
-.cell-text { color: var(--text-secondary); }
-
-/* Ячейка кэфа в итоговой таблице — только обводка, без окраски строки */
+/* === ЯЧЕЙКА КЭФ — обводка влезает в ячейку === */
 .kef-cell {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 3px 6px;
+    padding: 4px 8px;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
@@ -590,19 +610,18 @@
     font-weight: bold;
     font-size: 1.0rem;
     transition: border-color 0.3s, box-shadow 0.3s;
-    text-align: center;
     white-space: nowrap;
+    min-width: 48px;
 }
 
-.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; font-weight: bold; }
-.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; font-weight: bold; }
-.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; font-weight: bold; }
-.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3); color: var(--arb-hl-3) !important; font-weight: bold; }
-.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); color: var(--arb-hl-4) !important; font-weight: bold; }
+.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 6px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
+.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 6px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
+.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 6px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
+.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 6px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
+.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 6px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
 
 .outcome-badge {
-    display: block;
-    text-align: center;
+    color: var(--text-secondary);
     font-size: 1rem;
     font-weight: bold;
 }
@@ -658,6 +677,7 @@
 @media (max-width: 768px) {
     .panel { padding: 18px; gap: 16px; min-height: 0; }
     .panel-title { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; }
+    .block-divider { margin: 2px -18px; }
 
     .odds-header-row, .odds-row, .add-bk-row {
         grid-template-columns: 65px repeat(var(--outcome-count, 2), 1fr);
@@ -670,10 +690,11 @@
     .odds-header { font-size: 0.95rem; }
 
     .table-header, .table-row {
-        grid-template-columns: 1.4fr 0.8fr 1.1fr 0.9fr 1.1fr;
-        font-size: 0.95rem;
-        padding: 9px 10px;
+        grid-template-columns: 1fr auto 1fr 1fr 1fr;
+        font-size: 0.92rem;
     }
+
+    .table-header > span, .table-row > * { padding: 9px 6px; }
 
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
@@ -682,6 +703,8 @@
     .settings-label { font-size: 1rem; }
     .panel-title { font-size: 1.4rem; }
     .indicator-status-text { font-size: 1.1rem; }
+    .arb-indicator { height: auto; min-height: 80px; padding: 15px 18px; }
+    .arbs-step:first-of-type { height: auto; min-height: 80px; }
 }
 
 @media (max-width: 480px) {
@@ -696,12 +719,6 @@
     .odds-corner { width: 55px; }
     .odds-bk-label { font-size: 0.85rem; }
     .odds-input { padding: 7px 2px; font-size: 0.9rem; }
-
-    .table-header, .table-row {
-        grid-template-columns: 1.2fr 0.75fr 1fr 0.85fr 1fr;
-        font-size: 0.88rem;
-        padding: 8px 8px;
-    }
 
     .indicator-circle { width: 38px; height: 38px; }
     .panel-controls { flex-direction: column; }
