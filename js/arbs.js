@@ -28,6 +28,20 @@ let bestBkPerOutcome = [];
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
 const MAX_STAKE_LENGTH = 9;
 
+
+// === Выравнивание черты под статусом по черте под исходами ===
+function alignDividers() {
+    const leftDivider = document.querySelector('.panel.border-1 .block-divider');
+    const indicator = document.getElementById('arbIndicator');
+    const resultsContent = document.getElementById('resultsContent');
+    if (!leftDivider || !indicator) return;
+
+    const leftDividerTop = leftDivider.getBoundingClientRect().top;
+    const indicatorParentTop = indicator.parentElement.getBoundingClientRect().top;
+    const neededTop = leftDividerTop - indicatorParentTop - indicator.offsetHeight;
+    indicator.style.marginTop = Math.max(0, neededTop) + 'px';
+}
+
 function initApp() {
     // цвета берём из CSS переменных темы
     initState();
@@ -287,7 +301,7 @@ function changeStrategy(newStrategy) {
     if (newStrategy === strategy) return;
     strategy = newStrategy;
     updateStrategyPillsActive(newStrategy);
-    if (hasCalculated) calculateArbitrage();
+    if (hasCalculated) { calculateArbitrage(); requestAnimationFrame(alignDividers); }
 }
 
 function initEventListeners() {
@@ -434,6 +448,7 @@ function calculateArbitrage() {
     showResults();
     displayResults(lastCalculation);
     saveLastCalculation();
+    requestAnimationFrame(alignDividers);
 }
 
 function displayResults(data) {
@@ -471,7 +486,7 @@ function displayResults(data) {
         row.className = 'table-row';
 
         // Исход N — просто текст
-        const outcomeCell = `<span class="text-2">${outcomeLabel} ${i + 1}</span>`;
+        const outcomeCell = `<span class="cell-text">${outcomeLabel} ${i + 1}</span>`;
 
         let badgeHtml = '';
         if (data.isArb) {
@@ -554,6 +569,7 @@ function loadLastCalculation() {
             hasCalculated = true;
             showResults();
             displayResults(lastCalculation);
+            requestAnimationFrame(alignDividers);
             if (lastCalculation.isArb && lastCalculation.bestBk) {
                 applyInputHighlights(lastCalculation.bestBk);
             }
