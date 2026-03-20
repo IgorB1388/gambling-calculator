@@ -543,7 +543,7 @@
 /* Внутренняя сетка — отдельный контейнер */
 .table-header {
     display: grid;
-    grid-template-columns: 1fr minmax(58px, auto) 1fr 1fr 1fr;
+    grid-template-columns: auto auto auto auto auto;
     width: 100%;
     background: var(--bg-elevated);
     border-bottom: 2px solid var(--border-muted);
@@ -565,13 +565,11 @@
     justify-content: center;
 }
 
-.table-header > span:not(:last-child) {
-    border-right: 1px solid var(--border-muted);
-}
+
 
 .table-row {
     display: grid;
-    grid-template-columns: 1fr minmax(58px, auto) 1fr 1fr 1fr;
+    grid-template-columns: auto auto auto auto auto;
     width: 100%;
     border-bottom: 1px solid var(--border-muted);
 }
@@ -590,9 +588,7 @@
     justify-content: center;
 }
 
-.table-row > *:not(:last-child) {
-    border-right: 1px solid var(--border-muted);
-}
+
 
 .cell-text {
     color: var(--text-secondary);
