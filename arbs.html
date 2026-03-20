@@ -122,14 +122,16 @@
                         <!-- Результаты -->
                         <div class="results-content" id="resultsContent" style="display:none;">
 
-                            <!-- Индикатор без слова "Статус" -->
-                            <div class="arb-indicator bg-elevated border-1" id="arbIndicator">
-                                <div class="indicator-circle" id="indicatorCircle"></div>
-                                <div class="indicator-text">
-                                    <span class="indicator-status-text" id="arbStatus">—</span>
-                                </div>
-                                <div class="indicator-profit" id="indicatorProfit" style="display:none;">
-                                    <span class="profit-badge text-4" id="profitBadge"></span>
+                            <!-- Индикатор — обёртка выравнивает по высоте с первым шагом слева -->
+                            <div class="indicator-step">
+                                <div class="arb-indicator bg-elevated border-1" id="arbIndicator">
+                                    <div class="indicator-circle" id="indicatorCircle"></div>
+                                    <div class="indicator-text">
+                                        <span class="indicator-status-text" id="arbStatus">—</span>
+                                    </div>
+                                    <div class="indicator-profit" id="indicatorProfit" style="display:none;">
+                                        <span class="profit-badge text-4" id="profitBadge"></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -148,16 +150,20 @@
 
                             <div class="block-divider"></div>
 
-                            <!-- Таблица: Исход / Кэф / Ставка / Результат / Выплата -->
+                            <!-- Таблица: настоящий <table> для правильного выравнивания столбцов -->
                             <div class="distribution-table border-1" id="distributionTable">
-                                <div class="table-header bg-elevated border-1">
-                                    <span data-i18n="arbsOutcome"></span>
-                                    <span data-i18n="arbsOdds"></span>
-                                    <span data-i18n="arbsStake"></span>
-                                    <span data-i18n="arbsOutcomeType"></span>
-                                    <span data-i18n="arbsPayout"></span>
-                                </div>
-                                <div class="table-body" id="tableBody"></div>
+                                <table>
+                                    <thead class="bg-elevated">
+                                        <tr>
+                                            <th data-i18n="arbsOutcome"></th>
+                                            <th data-i18n="arbsOdds"></th>
+                                            <th data-i18n="arbsStake"></th>
+                                            <th data-i18n="arbsOutcomeType"></th>
+                                            <th data-i18n="arbsPayout"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody"></tbody>
+                                </table>
                             </div>
 
                             <div class="totals bg-elevated border-1">
