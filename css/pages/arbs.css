@@ -334,7 +334,7 @@
 /* === ИНДИКАТОР ВИЛКИ=== */
 /* Высота должна совпадать с .arbs-step:first-of-type */
 .indicator-step {
-    height: 100px; /* <<<< МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
+    height: 80px; /* <<<< МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -751,4 +751,5 @@
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
 }
+
 
