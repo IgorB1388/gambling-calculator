@@ -28,8 +28,8 @@
     gap: 20px;
     box-sizing: border-box;
     min-height: 900px;
-    min-width: 0;        /* не даёт панели расти шире своей grid-ячейки */
-    overflow: hidden;    /* обрезаем всё что вылезет */
+    min-width: 0;
+    overflow: hidden;
 }
 
 /* === ЗАГОЛОВОК ПАНЕЛИ === */
@@ -72,9 +72,9 @@
     gap: 12px;
 }
 
-/* Фиксированная высота первого шага */
+/* Высота первого шага — должна совпадать с .indicator-step */
 .arbs-step:first-of-type {
-    height: 120px;
+    height: 80px; /* <<<< МЕНЯТЬ ВМЕСТЕ С .indicator-step */
     justify-content: center;
     box-sizing: border-box;
 }
@@ -331,9 +331,10 @@
     gap: 14px;
 }
 
-/* === ИНДИКАТОР — обёртка выравнивает с первым шагом левой панели === */
+/* === ИНДИКАТОР === */
+/* Высота должна совпадать с .arbs-step:first-of-type */
 .indicator-step {
-    height: 120px;
+    height: 80px; /* <<<< МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -344,7 +345,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 0 18px;
+    padding: 10px 18px; /* вертикальный padding — уменьшать если черта всё ещё низко */
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
@@ -536,32 +537,22 @@
 
 .add-bk-btn:hover { opacity: 0.8; }
 
-/* ============================================================
-   ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) — настоящий <table>
-   Ширина столбцов по содержимому, вертикальные разделители
-   ============================================================ */
+/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) === */
 .distribution-table {
     width: 100%;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
     overflow: hidden;
-    border-collapse: collapse;  /* для <table> */
+    min-width: 0;
 }
 
-/* Если используется <table> */
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    /* fixed — столбцы не распираются длинным текстом */
     table-layout: fixed;
 }
 
-/*
-  Фиксированные ширины столбцов в %:
-  Исход(1) | Кэф(2) | Ставка(3) | Результат(4) | Выплата(5)
-  На любом языке сумма = 100%, текст обрезается через ellipsis
-*/
 .distribution-table table col:nth-child(1) { width: 22%; }
 .distribution-table table col:nth-child(2) { width: 16%; }
 .distribution-table table col:nth-child(3) { width: 22%; }
@@ -579,31 +570,25 @@
     font-size: 1.0rem;
     color: var(--text-secondary);
     text-align: center;
-    /* не переносим, обрезаем лишнее */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     border-right: 1px solid var(--border-muted);
 }
 
-.distribution-table thead th:last-child {
-    border-right: none;
-}
+.distribution-table thead th:last-child { border-right: none; }
 
 .distribution-table tbody tr {
     border-bottom: 1px solid var(--border-muted);
 }
 
-.distribution-table tbody tr:last-child {
-    border-bottom: none;
-}
+.distribution-table tbody tr:last-child { border-bottom: none; }
 
 .distribution-table tbody td {
     padding: 11px 8px;
     font-size: 1.0rem;
     color: var(--text-secondary);
     text-align: center;
-    /* не переносим, обрезаем лишнее */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -611,20 +596,15 @@
     vertical-align: middle;
 }
 
-.distribution-table tbody td:last-child {
-    border-right: none;
-}
+.distribution-table tbody td:last-child { border-right: none; }
 
-/* kef-cell внутри td не должна растягивать колонку */
 .distribution-table tbody td .kef-cell {
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-
-
-/* === ЯЧЕЙКА КЭФ — уменьшенные размеры чтобы не налезала === */
+/* === ЯЧЕЙКА КЭФ === */
 .kef-cell {
     display: inline-flex;
     align-items: center;
@@ -747,8 +727,8 @@
     .settings-label { font-size: 1rem; }
     .panel-title { font-size: 1.4rem; }
     .indicator-status-text { font-size: 1.1rem; }
-    .indicator-step { height: auto; min-height: 80px; }
-    .arbs-step:first-of-type { height: auto; min-height: 80px; }
+    .indicator-step { height: auto; min-height: 60px; }
+    .arbs-step:first-of-type { height: auto; min-height: 60px; }
 }
 
 @media (max-width: 480px) {
