@@ -70,7 +70,7 @@
     gap: 12px;
 }
 
-/* Фиксированная высота первого шага — черта на одном уровне с индикатором */
+/* Фиксированная высота первого шага */
 .arbs-step:first-of-type {
     height: 120px;
     justify-content: center;
@@ -100,7 +100,7 @@
     background: rgba(133, 193, 233, 0.08);
 }
 
-/* === РАЗДЕЛИТЕЛЬ — через весь блок === */
+/* === РАЗДЕЛИТЕЛЬ === */
 .block-divider {
     height: 1px;
     background: var(--color-primary);
@@ -329,7 +329,15 @@
     gap: 14px;
 }
 
-/* === ИНДИКАТОР — фиксированная высота совпадает с первым шагом === */
+/* === ИНДИКАТОР — обёртка выравнивает с первым шагом левой панели === */
+.indicator-step {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
 .arb-indicator {
     display: flex;
     align-items: center;
@@ -338,7 +346,8 @@
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
-    height: 120px;
+    height: 100%;
+    width: 100%;
     box-sizing: border-box;
     flex-shrink: 0;
 }
@@ -411,7 +420,7 @@
     box-shadow: 0 0 12px var(--color-info) !important;
 }
 
-/* === ТАБЛИЦА КОЭФФИЦИЕНТОВ === */
+/* === ТАБЛИЦА КОЭФФИЦИЕНТОВ (левая панель) === */
 .odds-table {
     width: 100%;
     display: flex;
@@ -525,22 +534,69 @@
 
 .add-bk-btn:hover { opacity: 0.8; }
 
-/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ ===
-   Используем display:grid на самой таблице,
-   table-header и table-row имеют display:contents
-   — вертикальные линии идут сквозь все строки
-*/
+/* ============================================================
+   ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) — настоящий <table>
+   Ширина столбцов по содержимому, вертикальные разделители
+   ============================================================ */
 .distribution-table {
     width: 100%;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
     overflow: hidden;
-    /* grid задаём через подклассы */
-    display: block;
+    border-collapse: collapse;  /* для <table> */
 }
 
-/* Внутренняя сетка — отдельный контейнер */
+/* Если используется <table> */
+.distribution-table table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.distribution-table thead {
+    background: var(--bg-elevated);
+    border-bottom: 2px solid var(--border-muted);
+}
+
+.distribution-table thead th {
+    padding: 12px 14px;
+    font-weight: bold;
+    font-size: 1.0rem;
+    color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    /* вертикальные разделители */
+    border-right: 1px solid var(--border-muted);
+}
+
+.distribution-table thead th:last-child {
+    border-right: none;
+}
+
+.distribution-table tbody tr {
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.distribution-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.distribution-table tbody td {
+    padding: 11px 14px;
+    font-size: 1.0rem;
+    color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid var(--border-muted);
+    vertical-align: middle;
+}
+
+.distribution-table tbody td:last-child {
+    border-right: none;
+}
+
+/* Старые классы — оставляем для совместимости, но они не используются если таблица <table> */
 .table-header {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
@@ -565,8 +621,6 @@
     justify-content: center;
 }
 
-
-
 .table-row {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
@@ -588,19 +642,17 @@
     justify-content: center;
 }
 
-
-
 .cell-text {
     color: var(--text-secondary);
 }
 
-/* === ЯЧЕЙКА КЭФ — обводка влезает в ячейку === */
+/* === ЯЧЕЙКА КЭФ — уменьшенные размеры чтобы не налезала === */
 .kef-cell {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 8px;
-    border-radius: 5px;
+    padding: 2px 6px;
+    border-radius: 4px;
     border-width: 2px;
     border-style: solid;
     border-color: transparent;
@@ -608,14 +660,15 @@
     font-size: 1.0rem;
     transition: border-color 0.3s, box-shadow 0.3s;
     white-space: nowrap;
-    min-width: 48px;
+    min-width: 44px;
+    box-sizing: border-box;
 }
 
-.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 6px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
-.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 6px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
-.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 6px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
-.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 6px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
-.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 6px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
+.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 5px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
+.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 5px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
+.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 5px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
+.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 5px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
+.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 5px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
 
 .outcome-badge {
     color: var(--text-secondary);
@@ -686,12 +739,8 @@
     .odds-input { padding: 9px 4px; font-size: 1rem; }
     .odds-header { font-size: 0.95rem; }
 
-    .table-header, .table-row {
-        grid-template-columns: 1fr auto 1fr 1fr 1fr;
-        font-size: 0.92rem;
-    }
-
-    .table-header > span, .table-row > * { padding: 9px 6px; }
+    .distribution-table thead th,
+    .distribution-table tbody td { padding: 9px 8px; font-size: 0.92rem; }
 
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
@@ -700,7 +749,7 @@
     .settings-label { font-size: 1rem; }
     .panel-title { font-size: 1.4rem; }
     .indicator-status-text { font-size: 1.1rem; }
-    .arb-indicator { height: auto; min-height: 80px; padding: 15px 18px; }
+    .indicator-step { height: auto; min-height: 80px; }
     .arbs-step:first-of-type { height: auto; min-height: 80px; }
 }
 
