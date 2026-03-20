@@ -328,7 +328,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 15px 18px;
+    padding: 0 18px;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
@@ -522,6 +522,8 @@
 
 /* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ === */
 .distribution-table {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     width: 100%;
     border-radius: 12px;
     border-width: 1px;
@@ -531,34 +533,46 @@
 }
 
 .table-header {
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    gap: 0;
-    padding: 13px 15px;
+    display: contents;
+}
+
+.table-header > span {
+    padding: 13px 8px;
     font-weight: bold;
     font-size: 1.05rem;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
     color: var(--text-secondary);
+    text-align: center;
+    border-bottom: 2px solid var(--border-muted);
+    background: var(--bg-elevated);
 }
 
-.table-header > span { text-align: center; }
-.table-header > span:first-child { text-align: left; }
+.table-header > span:not(:last-child) {
+    border-right: 1px solid var(--border-muted);
+}
+
+.table-body {
+    display: contents;
+}
 
 .table-row {
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    gap: 0;
-    padding: 12px 15px;
-    border-bottom: 1px solid var(--border-muted);
-    font-size: 1.1rem;
-    align-items: center;
+    display: contents;
 }
 
-.table-row > * { text-align: center; padding-left: 8px; padding-right: 8px; }
-.table-row > *:first-child { text-align: left; padding-left: 0; }
-.table-row > *:not(:last-child) { border-right: 1px solid var(--border-muted); }
-.table-header > *:not(:last-child) { border-right: 1px solid var(--border-muted); }
+.table-row > * {
+    padding: 12px 8px;
+    font-size: 1.05rem;
+    text-align: center;
+    align-self: center;
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.table-row > *:not(:last-child) {
+    border-right: 1px solid var(--border-muted);
+}
+
+.table-row:last-child > * {
+    border-bottom: none;
+}
 
 .table-row:last-child { border-bottom: none; }
 
