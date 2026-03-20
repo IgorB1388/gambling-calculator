@@ -74,7 +74,7 @@
 
 /* Высота первого шага — должна совпадать с .indicator-step */
 .arbs-step:first-of-type {
-    height: 80px;
+    height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .indicator-step */
     justify-content: center;
     box-sizing: border-box;
 }
@@ -110,6 +110,12 @@
     margin: 2px -25px;
     border: none;
     flex-shrink: 0;
+}
+
+/* Разделители в правой панели — зелёные как черта под заголовком */
+.panel.border-4 .block-divider {
+    background: var(--border-4);
+    box-shadow: 0 0 6px var(--border-4);
 }
 
 /* === ГРУППЫ НАСТРОЕК === */
@@ -331,10 +337,10 @@
     gap: 14px;
 }
 
-/* === ИНДИКАТОР ВИЛКИ=== */
+/* === ИНДИКАТОР ВИЛКИ === */
 /* Высота должна совпадать с .arbs-step:first-of-type */
 .indicator-step {
-    height: 100px; /* <<<< МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
+    height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -345,7 +351,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 10px 18px; /* вертикальный padding — уменьшать если черта всё ещё низко */
+    padding: 10px 18px;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
@@ -655,11 +661,13 @@
     gap: 8px;
 }
 
+/* Лейблы "Всего поставлено", "Выплата", "Доход" — цвет как строки таблицы */
 .total-row > span:first-child {
     flex-shrink: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--text-secondary);
 }
 
 .total-row-value {
@@ -683,8 +691,9 @@
     gap: 8px;
 }
 
+/* "ЧИСТАЯ ПРИБЫЛЬ:" — цвет как строки таблицы, шрифт крупнее */
 .net-profit-label {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -692,6 +701,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--text-secondary);
 }
 
 .net-profit-value {
@@ -751,6 +761,3 @@
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
 }
-
-
-
