@@ -17,7 +17,8 @@ let hasCalculated = false;
 let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
-const MAX_STAKE_LENGTH = 9;
+const MAX_STAKE_LENGTH = 8;   /* максимум 8 цифр для ставки */
+const MAX_ODDS_LENGTH  = 6;   /* максимум 6 символов для кэфа (напр. 999.99) */
 
 
 function initApp() {
@@ -186,16 +187,30 @@ function renderOddsTable() {
             input.min = '1.01';
             input.step = '0.01';
             input.value = oddsValues[b][o].toFixed(2);
+
             input.addEventListener('input', (e) => {
+                /* ограничение длины кэфа */
+                if (e.target.value.length > MAX_ODDS_LENGTH) {
+                    e.target.value = e.target.value.slice(0, MAX_ODDS_LENGTH);
+                }
                 const val = parseFloat(e.target.value);
                 if (!isNaN(val) && val >= 1.01) oddsValues[b][o] = val;
                 resetOnEdit();
             });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.target.value.length >= MAX_ODDS_LENGTH &&
+                    !['Backspace','Delete','ArrowLeft','ArrowRight','Tab','.'].includes(e.key)) {
+                    e.preventDefault();
+                }
+            });
+
             input.addEventListener('blur', (e) => {
                 const formatted = formatToTwoDecimals(e.target.value);
                 e.target.value = formatted;
                 oddsValues[b][o] = parseFloat(formatted);
             });
+
             row.appendChild(input);
         }
         container.appendChild(row);
@@ -449,17 +464,14 @@ function displayResults(data) {
     const returnText = window.getTranslation('arbsReturn') || 'Возврат';
     const outcomeLabel = window.getTranslation('arbsOutcomeLabel') || 'Исход';
 
-    // Строим настоящую <table>
     tableBody.innerHTML = '';
     data.bestOdds.forEach((odd, i) => {
         const tr = document.createElement('tr');
 
-        // Исход
         const tdOutcome = document.createElement('td');
         tdOutcome.textContent = `${outcomeLabel} ${i + 1}`;
         tr.appendChild(tdOutcome);
 
-        // Кэф
         const tdOdds = document.createElement('td');
         const kefSpan = document.createElement('span');
         kefSpan.className = `kef-cell${data.isArb ? ' arb-highlight-' + i : ''}`;
@@ -467,12 +479,10 @@ function displayResults(data) {
         tdOdds.appendChild(kefSpan);
         tr.appendChild(tdOdds);
 
-        // Ставка
         const tdStake = document.createElement('td');
         tdStake.textContent = `${data.stakes[i].toFixed(2)} $`;
         tr.appendChild(tdStake);
 
-        // Результат
         const tdResult = document.createElement('td');
         if (data.isArb) {
             const badge = document.createElement('span');
@@ -492,7 +502,6 @@ function displayResults(data) {
         }
         tr.appendChild(tdResult);
 
-        // Выплата
         const tdPayout = document.createElement('td');
         tdPayout.textContent = `${data.payouts[i].toFixed(2)} $`;
         tr.appendChild(tdPayout);
