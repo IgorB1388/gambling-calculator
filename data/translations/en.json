@@ -170,7 +170,7 @@
     "arbsOutcomesTooltip": "Number of possible event outcomes",
     "arbsOddsTooltip": "Enter the best odds for each outcome from different bookmakers. The calculator will find the optimal stake distribution.",
     "arbsStakeTooltip": "Total amount you are willing to stake. Will be automatically distributed between outcomes.",
-    "arbsStrategyTooltip": "Guaranteed profit — equal win on any outcome. Maximum profit — maximum on the most likely outcome, less on others.",
+    "arbsStrategyTooltip": "Guaranteed profit — equal win on any outcome. Maximum profit — maximum on the least likely outcome, return on others.",
     "arbsProfitPercentInline": "Profit: {percent}%",
     "arbsOutcomeType": "Outcome",
     "arbsWin": "Win",
