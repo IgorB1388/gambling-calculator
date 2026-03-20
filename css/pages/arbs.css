@@ -556,14 +556,8 @@
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto; /* ширина столбцов по содержимому */
 }
-
-.distribution-table table col:nth-child(1) { width: 22%; }
-.distribution-table table col:nth-child(2) { width: 16%; }
-.distribution-table table col:nth-child(3) { width: 22%; }
-.distribution-table table col:nth-child(4) { width: 18%; }
-.distribution-table table col:nth-child(5) { width: 22%; }
 
 .distribution-table thead {
     background: var(--bg-elevated);
@@ -577,8 +571,6 @@
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     border-right: 1px solid var(--border-muted);
 }
 
@@ -596,19 +588,11 @@
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     border-right: 1px solid var(--border-muted);
     vertical-align: middle;
 }
 
 .distribution-table tbody td:last-child { border-right: none; }
-
-.distribution-table tbody td .kef-cell {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 /* === ЯЧЕЙКА КЭФ === */
 .kef-cell {
@@ -728,7 +712,7 @@
     .odds-header { font-size: 0.95rem; }
 
     .distribution-table thead th,
-    .distribution-table tbody td { padding: 9px 8px; font-size: 0.92rem; }
+    .distribution-table tbody td { padding: 9px 6px; font-size: 0.9rem; }
 
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
