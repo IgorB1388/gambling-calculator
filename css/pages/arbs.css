@@ -541,16 +541,17 @@
 }
 
 /* Внутренняя сетка — отдельный контейнер */
-.table-header,
-.table-body {
+.table-header {
     display: grid;
     grid-template-columns: 1fr minmax(58px, auto) 1fr 1fr 1fr;
     width: 100%;
-}
-
-.table-header {
     background: var(--bg-elevated);
     border-bottom: 2px solid var(--border-muted);
+}
+
+.table-body {
+    display: block;
+    width: 100%;
 }
 
 .table-header > span {
