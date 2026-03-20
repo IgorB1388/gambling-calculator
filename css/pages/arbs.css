@@ -100,7 +100,7 @@
     height: 1px;
     background: var(--color-primary);
     box-shadow: 0 0 6px var(--color-primary);
-    margin: 2px 0;
+    margin: 2px -25px;
     border: none;
 }
 
@@ -328,11 +328,10 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 0 18px;
+    padding: 20px 18px;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
-    height: 100px;
     box-sizing: border-box;
 }
 
@@ -523,7 +522,7 @@
 /* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ === */
 .distribution-table {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: auto minmax(60px,auto) auto auto auto;
     width: 100%;
     border-radius: 12px;
     border-width: 1px;
@@ -583,16 +582,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 8px;
-    min-width: 58px;
-    border-radius: 6px;
+    padding: 3px 6px;
+    border-radius: 5px;
     border-width: 2px;
     border-style: solid;
     border-color: transparent;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     transition: border-color 0.3s, box-shadow 0.3s;
     text-align: center;
+    white-space: nowrap;
 }
 
 .kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; font-weight: bold; }
@@ -602,8 +601,8 @@
 .kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); color: var(--arb-hl-4) !important; font-weight: bold; }
 
 .outcome-badge {
-    display: inline-block;
-    padding: 3px 0;
+    display: block;
+    text-align: center;
     font-size: 1rem;
     font-weight: bold;
 }
