@@ -544,7 +544,11 @@
     font-size: 1.05rem;
     border-bottom-width: 2px;
     border-bottom-style: solid;
+    color: var(--text-secondary);
 }
+
+.table-header > span { text-align: center; }
+.table-header > span:first-child { text-align: left; }
 
 .table-row {
     display: grid;
@@ -555,6 +559,9 @@
     font-size: 1.1rem;
     align-items: center;
 }
+
+.table-row > * { text-align: center; }
+.table-row > *:first-child { text-align: left; }
 
 .table-row:last-child { border-bottom: none; }
 
