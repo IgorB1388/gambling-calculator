@@ -7,7 +7,7 @@
 
 .arbitrage-main-area {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 30px;
     margin-bottom: 40px;
     align-items: stretch;
@@ -28,6 +28,8 @@
     gap: 20px;
     box-sizing: border-box;
     min-height: 900px;
+    min-width: 0;        /* не даёт панели расти шире своей grid-ячейки */
+    overflow: hidden;    /* обрезаем всё что вылезет */
 }
 
 /* === ЗАГОЛОВОК ПАНЕЛИ === */
@@ -551,8 +553,20 @@
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto;
+    /* fixed — столбцы не распираются длинным текстом */
+    table-layout: fixed;
 }
+
+/*
+  Фиксированные ширины столбцов в %:
+  Исход(1) | Кэф(2) | Ставка(3) | Результат(4) | Выплата(5)
+  На любом языке сумма = 100%, текст обрезается через ellipsis
+*/
+.distribution-table table col:nth-child(1) { width: 22%; }
+.distribution-table table col:nth-child(2) { width: 16%; }
+.distribution-table table col:nth-child(3) { width: 22%; }
+.distribution-table table col:nth-child(4) { width: 18%; }
+.distribution-table table col:nth-child(5) { width: 22%; }
 
 .distribution-table thead {
     background: var(--bg-elevated);
@@ -560,13 +574,15 @@
 }
 
 .distribution-table thead th {
-    padding: 12px 14px;
+    padding: 12px 8px;
     font-weight: bold;
     font-size: 1.0rem;
     color: var(--text-secondary);
     text-align: center;
+    /* не переносим, обрезаем лишнее */
     white-space: nowrap;
-    /* вертикальные разделители */
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-right: 1px solid var(--border-muted);
 }
 
@@ -583,17 +599,27 @@
 }
 
 .distribution-table tbody td {
-    padding: 11px 14px;
+    padding: 11px 8px;
     font-size: 1.0rem;
     color: var(--text-secondary);
     text-align: center;
+    /* не переносим, обрезаем лишнее */
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-right: 1px solid var(--border-muted);
     vertical-align: middle;
 }
 
 .distribution-table tbody td:last-child {
     border-right: none;
+}
+
+/* kef-cell внутри td не должна растягивать колонку */
+.distribution-table tbody td .kef-cell {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Старые классы — оставляем для совместимости, но они не используются если таблица <table> */
@@ -685,6 +711,7 @@
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
+    min-width: 0;
 }
 
 .total-row {
@@ -692,11 +719,22 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1.1rem;
+    min-width: 0;
+    gap: 8px;
+}
+
+.total-row > span:first-child {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .total-row-value {
     font-size: 1.1rem;
     font-weight: bold;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 /* === ЧИСТАЯ ПРИБЫЛЬ === */
@@ -709,6 +747,8 @@
     border-width: 2px;
     border-style: solid;
     border-color: var(--border-4);
+    min-width: 0;
+    gap: 8px;
 }
 
 .net-profit-label {
@@ -716,11 +756,17 @@
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .net-profit-value {
     font-size: 2.6rem;
     font-weight: bold;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 /* === АДАПТИВНОСТЬ === */
