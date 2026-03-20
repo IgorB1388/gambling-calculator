@@ -622,55 +622,7 @@
     text-overflow: ellipsis;
 }
 
-/* Старые классы — оставляем для совместимости, но они не используются если таблица <table> */
-.table-header {
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    width: 100%;
-    background: var(--bg-elevated);
-    border-bottom: 2px solid var(--border-muted);
-}
 
-.table-body {
-    display: block;
-    width: 100%;
-}
-
-.table-header > span {
-    padding: 12px 10px;
-    font-weight: bold;
-    font-size: 1.0rem;
-    color: var(--text-secondary);
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.table-row {
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    width: 100%;
-    border-bottom: 1px solid var(--border-muted);
-}
-
-.table-row:last-child {
-    border-bottom: none;
-}
-
-.table-row > * {
-    padding: 11px 10px;
-    font-size: 1.0rem;
-    color: var(--text-secondary);
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cell-text {
-    color: var(--text-secondary);
-}
 
 /* === ЯЧЕЙКА КЭФ — уменьшенные размеры чтобы не налезала === */
 .kef-cell {
