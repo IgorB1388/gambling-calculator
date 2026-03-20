@@ -537,7 +537,7 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.1fr 1.3fr;
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
     padding: 13px 15px;
     font-weight: bold;
@@ -552,7 +552,7 @@
 
 .table-row {
     display: grid;
-    grid-template-columns: 1.6fr 0.9fr 1.3fr 1.1fr 1.3fr;
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
     padding: 12px 15px;
     border-bottom: 1px solid var(--border-muted);
