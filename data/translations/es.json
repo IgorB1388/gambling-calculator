@@ -170,7 +170,7 @@
     "arbsOutcomesTooltip": "Número de posibles resultados del evento",
     "arbsOddsTooltip": "Ingresa la mejor cuota para cada resultado de diferentes casas. La calculadora encontrará la distribución óptima.",
     "arbsStakeTooltip": "Monto total que estás dispuesto a apostar. Se distribuirá automáticamente entre los resultados.",
-    "arbsStrategyTooltip": "Beneficio garantizado — igual ganancia en cualquier resultado. Beneficio máximo — máximo en el resultado más probable, menos en los demás.",
+    "arbsStrategyTooltip": "Beneficio garantizado — igual ganancia en cualquier resultado. Beneficio máximo — máximo en el resultado menos probable, devolución en los demás.",
     "arbsProfitPercentInline": "Beneficio: {percent}%",
     "arbsOutcomeType": "Resultado",
     "arbsWin": "Ganancia",
