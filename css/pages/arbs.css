@@ -237,6 +237,8 @@
     transition: all 0.2s;
 }
 
+.stake-input:focus { outline: none; transform: scale(1.02); }
+
 .stake-input.input-error {
     border-color: var(--color-danger) !important;
     box-shadow: 0 0 10px rgba(255, 51, 102, 0.5) !important;
@@ -501,7 +503,6 @@
     color: var(--text-secondary);
 }
 
-.odds-input:focus { transform: scale(1.02); }
 
 .odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
 .odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
