@@ -237,8 +237,6 @@
     transition: all 0.2s;
 }
 
-.stake-input:focus { outline: none; transform: scale(1.02); }
-
 .stake-input.input-error {
     border-color: var(--color-danger) !important;
     box-shadow: 0 0 10px rgba(255, 51, 102, 0.5) !important;
