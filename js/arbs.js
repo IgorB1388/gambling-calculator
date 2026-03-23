@@ -113,9 +113,7 @@ function formatOdds(value) {
     if (value === '' || isNaN(value)) return '2';
     const num = parseFloat(value);
     if (num < 1.01) return '2';
-    // toFixed(3) чтобы не терять точность, потом убираем trailing zeros
-    return parseFloat(num.toFixed(3)).toString();
-}
+ }
 
 // Валидация кэфа при вводе: до 4 цифр до точки, до 3 после
 function enforceOddsFormat(input) {
