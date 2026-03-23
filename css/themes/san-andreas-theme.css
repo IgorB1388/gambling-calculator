@@ -1,4 +1,4 @@
-/* san-andreas-theme.css - ТЕМА SAN ANDREAS (с боковыми декорациями пустыни) */
+/* san-andreas-theme.css - ТЕМА SAN ANDREAS */
 
 :root {
     /* === ЦВЕТА === */
@@ -109,50 +109,8 @@
     --gradient-footer: linear-gradient(90deg, transparent, var(--color-primary), var(--color-primary), transparent);
 }
 
-/* =============================================
-   ДЕКОР: ПУСТЫННЫЙ ПЕЙЗАЖ ПО БОКАМ
-   (аналог небоскрёбов из GTA 4)
-   ============================================= */
-
-/* Левый силуэт — кактусы, камни, койот на скале */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: calc(50vw - 700px);
-    min-width: 0;
-    height: 100%;
-    background-color: #f2d878;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 900'%3E%3Crect width='300' height='900' fill='%23f2d878'/%3E%3C!-- Луна в пустыне --%3E%3Ccircle cx='240' cy='70' r='32' fill='%23fff5e0' opacity='0.85'/%3E%3Ccircle cx='248' cy='62' r='32' fill='%23f2d878'/%3E%3Ccircle cx='240' cy='70' r='42' fill='none' stroke='%23fff5e0' stroke-width='4' opacity='0.25'/%3E%3C!-- Звёзды --%3E%3Cg fill='%23fff5e0' opacity='0.7'%3E%3Ccircle cx='25' cy='45' r='1.2'/%3E%3Ccircle cx='65' cy='25' r='0.9'/%3E%3Ccircle cx='95' cy='55' r='1.0'/%3E%3Ccircle cx='130' cy='35' r='0.8'/%3E%3Ccircle cx='160' cy='70' r='1.1'/%3E%3Ccircle cx='190' cy='40' r='0.9'/%3E%3Ccircle cx='220' cy='60' r='1.3'/%3E%3Ccircle cx='20' cy='95' r='0.8'/%3E%3Ccircle cx='55' cy='115' r='1.0'/%3E%3Ccircle cx='85' cy='85' r='0.9'/%3E%3Ccircle cx='120' cy='105' r='1.2'/%3E%3C/g%3E%3C!-- Большие кактусы сагуаро --%3E%3Cg fill='%232d5a2c'%3E%3C!-- Кактус 1 --%3E%3Crect x='15' y='400' width='18' height='420'/%3E%3Crect x='10' y='380' width='28' height='25'/%3E%3Crect x='18' y='360' width='12' height='25'/%3E%3Crect x='25' y='620' width='12' height='35'/%3E%3C!-- Кактус 2 --%3E%3Crect x='65' y='520' width='15' height='380'/%3E%3Crect x='60' y='500' width='25' height='25'/%3E%3Crect x='68' y='480' width='9' height='25'/%3E%3C!-- Кактус 3 --%3E%3Crect x='110' y='450' width='20' height='450'/%3E%3Crect x='105' y='430' width='30' height='25'/%3E%3Crect x='113' y='410' width='14' height='25'/%3E%3Crect x='120' y='720' width='12' height='35'/%3E%3C!-- Кактус 4 --%3E%3Crect x='170' y='580' width='16' height='320'/%3E%3Crect x='165' y='560' width='26' height='25'/%3E%3Crect x='173' y='540' width='10' height='25'/%3E%3C!-- Кактус 5 --%3E%3Crect x='220' y='480' width='22' height='420'/%3E%3Crect x='215' y='460' width='32' height='25'/%3E%3Crect x='223' y='440' width='16' height='25'/%3E%3C/g%3E%3C!-- Мелкие кактусы и юкки --%3E%3Cg fill='%233d6a2c'%3E%3Crect x='45' y='680' width='8' height='120'/%3E%3Crect x='42' y='670' width='14' height='15'/%3E%3Crect x='135' y='780' width='7' height='100'/%3E%3Crect x='132' y='770' width='13' height='15'/%3E%3Crect x='195' y='820' width='9' height='80'/%3E%3Crect x='192' y='810' width='15' height='15'/%3E%3C/g%3E%3C!-- Камни и валуны --%3E%3Cg fill='%238b6949'%3E%3Ccircle cx='35' cy='820' r='18'/%3E%3Ccircle cx='50' cy='850' r='12'/%3E%3Ccircle cx='95' cy='880' r='22'/%3E%3Ccircle cx='145' cy='860' r='15'/%3E%3Ccircle cx='185' cy='900' r='20'/%3E%3Ccircle cx='250' cy='870' r='17'/%3E%3C/g%3E%3C!-- Койот на скале (силуэт) --%3E%3Cg fill='%234a2a1a' opacity='0.85'%3E%3Cpolygon points='265,730 275,730 270,710'/%3E%3Crect x='267' y='730' width='6' height='35'/%3E%3Crect x='269' y='765' width='2' height='8'/%3E%3Cpolygon points='268,700 272,700 270,690'/%3E%3C/g%3E%3C!-- Следы койота --%3E%3Cg fill='%236b4a2a' opacity='0.4'%3E%3Ccircle cx='280' cy='800' r='1.5'/%3E%3Ccircle cx='278' cy='808' r='1.5'/%3E%3Ccircle cx='276' cy='816' r='1.5'/%3E%3Ccircle cx='274' cy='824' r='1.5'/%3E%3C/g%3E%3C!-- Сухая трава --%3E%3Cg stroke='%23b87c3a' stroke-width='1.5' fill='none' opacity='0.5'%3E%3Cpath d='M15 860 L12 872 L18 872 Z'/%3E%3Cpath d='M55 830 L52 842 L58 842 Z'/%3E%3Cpath d='M125 815 L122 827 L128 827 Z'/%3E%3Cpath d='M205 845 L202 857 L208 857 Z'/%3E%3Cpath d='M265 810 L262 822 L268 822 Z'/%3E%3C/g%3E%3C/svg%3E");
-    background-position: right bottom;
-    background-repeat: no-repeat;
-    background-size: auto 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Правый силуэт — колесо обозрения, салун, койот, кактусы */
-body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: calc(50vw - 700px);
-    min-width: 0;
-    height: 100%;
-    background-color: #f2d878;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 900'%3E%3Crect width='300' height='900' fill='%23f2d878'/%3E%3C!-- Звёзды --%3E%3Cg fill='%23fff5e0' opacity='0.7'%3E%3Ccircle cx='20' cy='30' r='1.1'/%3E%3Ccircle cx='60' cy='55' r='0.9'/%3E%3Ccircle cx='100' cy='25' r='1.3'/%3E%3Ccircle cx='140' cy='45' r='1.0'/%3E%3Ccircle cx='180' cy='35' r='0.8'/%3E%3Ccircle cx='220' cy='65' r='1.2'/%3E%3Ccircle cx='260' cy='40' r='0.9'/%3E%3Ccircle cx='285' cy='55' r='1.0'/%3E%3C/g%3E%3C!-- Колесо обозрения (как в Лас-Вентурасе) --%3E%3Cg stroke='%238b6949' stroke-width='2.5' fill='none'%3E%3Ccircle cx='200' cy='380' r='45' stroke='%238b6949' fill='none' opacity='0.7'/%3E%3C/g%3E%3Cg stroke='%23b87c3a' stroke-width='2' fill='none'%3E%3Cline x1='200' y1='335' x2='200' y2='425'/%3E%3Cline x1='155' y1='380' x2='245' y2='380'/%3E%3Cline x1='170' y1='350' x2='230' y2='410'/%3E%3Cline x1='230' y1='350' x2='170' y2='410'/%3E%3C/g%3E%3Cg fill='%23c47a2a'%3E%3Ccircle cx='200' cy='380' r='7'/%3E%3Ccircle cx='180' cy='345' r='4'/%3E%3Ccircle cx='220' cy='345' r='4'/%3E%3Ccircle cx='180' cy='415' r='4'/%3E%3Ccircle cx='220' cy='415' r='4'/%3E%3Ccircle cx='155' cy='380' r='4'/%3E%3Ccircle cx='245' cy='380' r='4'/%3E%3C/g%3E%3C!-- Салун (вестерн-городок) --%3E%3Cg fill='%239b5e2a'%3E%3Crect x='25' y='620' width='80' height='280'/%3E%3Crect x='35' y='590' width='60' height='30'/%3E%3Crect x='50' y='570' width='30' height='20'/%3E%3C/g%3E%3Cg fill='%23b87c3a'%3E%3Crect x='30' y='650' width='20' height='35'/%3E%3Crect x='55' y='650' width='20' height='35'/%3E%3Crect x='80' y='650' width='20' height='35'/%3E%3C/g%3E%3Cg fill='%238b6949'%3E%3Cpolygon points='65,590 100,620 30,620'/%3E%3Crect x='55' y='710' width='20' height='50'/%3E%3C/g%3E%3C!-- Вывеска SALOON --%3E%3Ctext x='45' y='615' font-size='9' fill='%23e8b800' font-weight='bold' font-family='monospace'%3ESALOON%3C/text%3E%3C!-- Кактусы справа --%3E%3Cg fill='%232d5a2c'%3E%3Crect x='135' y='680' width='15' height='220'/%3E%3Crect x='130' y='660' width='25' height='25'/%3E%3Crect x='138' y='640' width='9' height='25'/%3E%3Crect x='185' y='720' width='12' height='180'/%3E%3Crect x='181' y='700' width='20' height='25'/%3E%3Crect x='188' y='680' width='6' height='25'/%3E%3C/g%3E%3C!-- Койот (силуэт) --%3E%3Cg fill='%234a2a1a' opacity='0.85'%3E%3Cpolygon points='270,780 280,780 275,760'/%3E%3Crect x='272' y='780' width='6' height='40'/%3E%3Crect x='274' y='820' width='2' height='10'/%3E%3Cpolygon points='273,750 277,750 275,740'/%3E%3C/g%3E%3C!-- Следы --%3E%3Cg fill='%236b4a2a' opacity='0.4'%3E%3Ccircle cx='285' cy='850' r='1.5'/%3E%3Ccircle cx='283' cy='858' r='1.5'/%3E%3Ccircle cx='281' cy='866' r='1.5'/%3E%3C/g%3E%3C!-- Перекати-поле --%3E%3Cg fill='%23b87c3a' opacity='0.5'%3E%3Ccircle cx='100' cy='890' r='8'/%3E%3Cpath d='M92 885 L100 880 L108 885 L100 890 Z'/%3E%3C/g%3E%3C/svg%3E");
-    background-position: left bottom;
-    background-repeat: no-repeat;
-    background-size: auto 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-
 /* === ДЕКОР: Яркое солнце === */
 body::before {
-    /* Оставляем оригинальное солнце, но нужно уточнить позицию */
     content: '';
     position: fixed;
     top: -80px;
@@ -174,7 +132,6 @@ body::before {
 
 /* === ДЕКОР: Пальма === */
 body::after {
-    /* Оставляем пальму, но меняем позицию чтобы не конфликтовала с правым декором */
     content: '🌴';
     position: fixed;
     bottom: 10px;
@@ -316,13 +273,6 @@ body {
 }
 
 /* === АДАПТИВНОСТЬ === */
-@media (max-width: 1500px) {
-    body::before,
-    body::after { 
-        display: none; 
-    }
-}
-
 @media (max-width: 768px) {
     body::after { font-size: 3.5rem; right: 20px; opacity: 0.35; }
     body::before { width: 250px; height: 250px; top: -50px; right: -50px; }
@@ -334,17 +284,4 @@ body {
     body::after { font-size: 2.5rem; right: 10px; opacity: 0.28; }
     .site-footer::after { display: none; }
     .road-marking { display: none; }
-}
-
-/* Опционально: лёгкий эффект "марева" в пустыне */
-@keyframes heat-haze {
-    0% { opacity: 0.3; transform: translateY(0); }
-    100% { opacity: 0.5; transform: translateY(2px); }
-}
-
-@media (min-width: 1501px) {
-    body::before,
-    body::after {
-        animation: heat-haze 3s ease-in-out infinite alternate;
-    }
 }
