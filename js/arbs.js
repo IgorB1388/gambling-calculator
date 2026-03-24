@@ -18,23 +18,69 @@ let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
 
+// ========== СОХРАНЕНИЕ И ЗАГРУЗКА СОСТОЯНИЯ (только введённые данные) ==========
+function saveSettingsState() {
+    const state = {
+        oddsValues: oddsValues,
+        bkCount: bkCount,
+        outcomeCount: outcomeCount,
+        strategy: strategy,
+        totalStake: document.getElementById('totalStake')?.value || '1000'
+    };
+    localStorage.setItem('arbSettingsState', JSON.stringify(state));
+}
+
+function loadSettingsState() {
+    const saved = localStorage.getItem('arbSettingsState');
+    if (!saved) return false;
+    try {
+        const state = JSON.parse(saved);
+        oddsValues = state.oddsValues;
+        bkCount = state.bkCount;
+        outcomeCount = state.outcomeCount;
+        strategy = state.strategy;
+        if (document.getElementById('totalStake')) {
+            document.getElementById('totalStake').value = state.totalStake;
+        }
+        return true;
+    } catch (e) {
+        console.log('Ошибка загрузки настроек');
+        return false;
+    }
+}
+
+// ========== ИНИЦИАЛИЗАЦИЯ ==========
 function initApp() {
-    initState();
+    const loaded = loadSettingsState();
+    if (!loaded) {
+        initState();
+    } else {
+        // Убедимся, что oddsValues имеет правильную размерность
+        if (!oddsValues || oddsValues.length !== bkCount) {
+            initState();
+        } else {
+            // Проверим каждую строку на соответствие outcomeCount
+            for (let b = 0; b < bkCount; b++) {
+                if (!oddsValues[b] || oddsValues[b].length !== outcomeCount) {
+                    oddsValues[b] = [];
+                    for (let o = 0; o < outcomeCount; o++) {
+                        oddsValues[b][o] = DEFAULT_ODDS[o];
+                    }
+                }
+            }
+        }
+    }
     renderOddsTable();
     initEventListeners();
     initTooltips();
-    loadLastCalculation();
     updateOutcomePillsActive(outcomeCount);
     updateStrategyPillsActive(strategy);
+    // Сбрасываем результат (показываем заглушку)
+    hasCalculated = false;
+    lastCalculation = null;
+    clearInputHighlights();
+    showPlaceholder();
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.translationsReady) {
-        initApp();
-    } else {
-        document.addEventListener('translationsReady', initApp, { once: true });
-    }
-});
 
 function initState() {
     oddsValues = [];
@@ -45,6 +91,15 @@ function initState() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.translationsReady) {
+        initApp();
+    } else {
+        document.addEventListener('translationsReady', initApp, { once: true });
+    }
+});
+
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 function initTooltips() {
     const popup = document.getElementById('tooltipPopup');
     if (!popup) return;
@@ -115,48 +170,34 @@ function formatOddsForDisplay(value) {
     const intPart = parts[0];
     let fracPart = parts[1];
     if (fracPart.length === 1) fracPart += '0';
-    else if (fracPart.length === 2) {} // оставляем
+    else if (fracPart.length === 2) {}
     else if (fracPart.length > 3) fracPart = fracPart.slice(0, 3);
     return intPart + '.' + fracPart;
 }
 
-// Обработка ввода с учётом ограничений и автоматической вставки точки
+// Обработка ввода с ограничениями
 function processOddsInput(inputElement, event) {
     const oldValue = inputElement.value;
-    const selectionStart = inputElement.selectionStart;
-    const selectionEnd = inputElement.selectionEnd;
-    
-    // Определяем, какой символ был введён (удаление или вставка)
-    // Используем event.inputType для точного понимания
     const inputType = event.inputType;
     const isDelete = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
     const isInsert = inputType === 'insertText' || inputType === 'insertCompositionText';
     
-    if (isDelete) {
-        // Удаление всегда разрешено
-        return true;
-    }
+    if (isDelete) return true;
+    if (!isInsert) return true;
     
-    if (!isInsert) return true; // другие действия (вставка из буфера и т.д.) пропускаем
-    
-    // Получаем введённый символ (предполагаем, что это один символ)
-    // Для более сложных вставок мы не будем обрабатывать автоматическую точку, просто проверим лимиты
     const newChar = event.data;
     if (!newChar) return true;
     
-    // Разрешаем только цифры и точку
     if (!/[\d.]/.test(newChar)) {
         event.preventDefault();
         return false;
     }
     
-    // Если вставляем точку, проверяем, что её ещё нет
     if (newChar === '.') {
         if (oldValue.includes('.')) {
             event.preventDefault();
             return false;
         }
-        // Точку можно вставить только если целая часть не пуста
         if (oldValue === '' || oldValue === '-') {
             event.preventDefault();
             return false;
@@ -164,51 +205,39 @@ function processOddsInput(inputElement, event) {
         return true;
     }
     
-    // Вставляем цифру
-    // Определяем, в какую часть (целую или дробную) происходит вставка
     const dotPos = oldValue.indexOf('.');
     let isIntegerPart = true;
-    if (dotPos !== -1 && selectionStart > dotPos) {
+    if (dotPos !== -1 && inputElement.selectionStart > dotPos) {
         isIntegerPart = false;
     }
     
-    let newValue = oldValue.slice(0, selectionStart) + newChar + oldValue.slice(selectionEnd);
+    let newValue = oldValue.slice(0, inputElement.selectionStart) + newChar + oldValue.slice(inputElement.selectionEnd);
     
     if (isIntegerPart) {
-        // Работаем с целой частью
         const parts = newValue.split('.');
         let intPart = parts[0];
         if (intPart.length > 4) {
-            // Если в целой части уже 4 символа, и мы пытаемся вставить ещё цифру
-            // Проверяем, нет ли точки. Если нет, то автоматически вставляем точку
             if (!oldValue.includes('.')) {
-                // Автоматическая вставка точки после 4 символов
                 const newInt = intPart.slice(0, 4);
                 const extraDigit = intPart.slice(4);
-                // Формируем новое значение: целая (4 цифры) + точка + оставшаяся цифра + возможно существующая дробная часть
                 let newFrac = extraDigit + (parts[1] || '');
                 if (newFrac.length > 3) newFrac = newFrac.slice(0, 3);
                 newValue = newInt + '.' + newFrac;
                 inputElement.value = newValue;
-                // Устанавливаем курсор после точки (в начало дробной)
                 const newDotPos = newValue.indexOf('.');
                 inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
                 event.preventDefault();
                 return false;
             } else {
-                // Точка уже есть, значит попытка вставить лишнюю цифру в целую часть – запрещаем
                 event.preventDefault();
                 return false;
             }
         }
-        // Если целая часть не превышает 4, разрешаем ввод
         return true;
     } else {
-        // Работаем с дробной частью
         const parts = newValue.split('.');
         const fracPart = parts[1] || '';
         if (fracPart.length > 3) {
-            // Дробная часть не может быть длиннее 3
             event.preventDefault();
             return false;
         }
@@ -233,15 +262,17 @@ function applyInputHighlights(bestBkArr) {
 }
 
 function resetOnEdit() {
-    if (!hasCalculated) return;
-    hasCalculated = false;
-    lastCalculation = null;
-    bestBkPerOutcome = [];
-    clearInputHighlights();
-    showPlaceholder();
-    localStorage.removeItem('arbLastCalculation');
+    if (hasCalculated) {
+        hasCalculated = false;
+        lastCalculation = null;
+        bestBkPerOutcome = [];
+        clearInputHighlights();
+        showPlaceholder();
+    }
+    saveSettingsState(); // сохраняем любые изменения
 }
 
+// ========== ОТРИСОВКА ТАБЛИЦЫ КОЭФФИЦИЕНТОВ ==========
 function renderOddsTable() {
     const container = document.getElementById('oddsTable');
     container.innerHTML = '';
@@ -289,15 +320,10 @@ function renderOddsTable() {
                 : '';
 
             input.addEventListener('beforeinput', (e) => {
-                // Отменяем ввод, если он не разрешён
-                const allowed = processOddsInput(input, e);
-                if (!allowed) {
-                    e.preventDefault();
-                }
+                processOddsInput(input, e);
             });
 
             input.addEventListener('input', (e) => {
-                // После того как ввод произошёл (и не был отменён), обновляем данные
                 const val = parseFloat(input.value);
                 if (!isNaN(val)) {
                     oddsValues[b][o] = val;
@@ -319,6 +345,7 @@ function renderOddsTable() {
                     oddsValues[b][o] = null;
                     input.value = '';
                 }
+                saveSettingsState();
             });
 
             row.appendChild(input);
@@ -340,7 +367,6 @@ function renderOddsTable() {
         for (let o = 0; o < outcomeCount; o++) addRow.appendChild(document.createElement('div'));
         container.appendChild(addRow);
     }
-
     updateOutcomePillsActive(outcomeCount);
 }
 
@@ -353,6 +379,7 @@ function addBookmaker() {
     bkCount++;
     resetOnEdit();
     renderOddsTable();
+    saveSettingsState();
 }
 
 function removeBookmaker(index) {
@@ -362,6 +389,7 @@ function removeBookmaker(index) {
     bkCount--;
     resetOnEdit();
     renderOddsTable();
+    saveSettingsState();
 }
 
 function collectOddsValuesFromDom() {
@@ -392,6 +420,7 @@ function changeOutcomeCount(newCount) {
     resetOnEdit();
     updateOutcomePillsActive(newCount);
     renderOddsTable();
+    saveSettingsState();
 }
 
 function changeStrategy(newStrategy) {
@@ -399,31 +428,10 @@ function changeStrategy(newStrategy) {
     strategy = newStrategy;
     updateStrategyPillsActive(newStrategy);
     if (hasCalculated) { calculateArbitrage(); }
+    saveSettingsState();
 }
 
-function initEventListeners() {
-    document.querySelectorAll('.outcome-pill').forEach(btn => {
-        btn.addEventListener('click', function() { changeOutcomeCount(parseInt(this.dataset.outcomes)); });
-    });
-    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
-        btn.addEventListener('click', function() { changeStrategy(this.dataset.strategy); });
-    });
-    document.getElementById('calculateArbBtn').addEventListener('click', calculateArbitrage);
-    document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
-
-    const stakeInput = document.getElementById('totalStake');
-    stakeInput.addEventListener('input', (e) => {
-        showStakeError(false);
-        resetOnEdit();
-    });
-
-    document.addEventListener('languageChanged', () => {
-        renderOddsTable();
-        initTooltips();
-        if (hasCalculated && lastCalculation) displayResults(lastCalculation);
-    });
-}
-
+// ========== ЛОГИКА РАСЧЁТА ==========
 function getBestOddsWithBk() {
     const bestOdds = [];
     const bestBk = [];
@@ -523,7 +531,7 @@ function calculateArbitrage() {
 
     showResults();
     displayResults(lastCalculation);
-    saveLastCalculation();
+    saveSettingsState(); // сохраняем, чтобы при следующем открытии восстановились настройки (но результат не восстанавливается)
 }
 
 function displayResults(data) {
@@ -640,32 +648,31 @@ function resetCalculator() {
     document.getElementById('incomeRow').style.display = 'none';
     document.getElementById('netProfitBlock').style.display = 'none';
     showPlaceholder();
-    localStorage.removeItem('arbLastCalculation');
+    localStorage.removeItem('arbSettingsState');
 }
 
-function saveLastCalculation() {
-    if (lastCalculation) localStorage.setItem('arbLastCalculation', JSON.stringify(lastCalculation));
-}
+function initEventListeners() {
+    document.querySelectorAll('.outcome-pill').forEach(btn => {
+        btn.addEventListener('click', function() { changeOutcomeCount(parseInt(this.dataset.outcomes)); });
+    });
+    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
+        btn.addEventListener('click', function() { changeStrategy(this.dataset.strategy); });
+    });
+    document.getElementById('calculateArbBtn').addEventListener('click', calculateArbitrage);
+    document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 
-function loadLastCalculation() {
-    const saved = localStorage.getItem('arbLastCalculation');
-    if (saved) {
-        try {
-            lastCalculation = JSON.parse(saved);
-            if (lastCalculation.strategy) {
-                strategy = lastCalculation.strategy;
-                updateStrategyPillsActive(strategy);
-            }
-            hasCalculated = true;
-            showResults();
-            displayResults(lastCalculation);
-            if (lastCalculation.isArb && lastCalculation.bestBk) {
-                applyInputHighlights(lastCalculation.bestBk);
-            }
-        } catch (e) {
-            console.log('Ошибка загрузки сохранения');
-        }
-    }
+    const stakeInput = document.getElementById('totalStake');
+    stakeInput.addEventListener('input', (e) => {
+        showStakeError(false);
+        resetOnEdit();
+        saveSettingsState();
+    });
+
+    document.addEventListener('languageChanged', () => {
+        renderOddsTable();
+        initTooltips();
+        if (hasCalculated && lastCalculation) displayResults(lastCalculation);
+    });
 }
 
 window.calculateArbitrage = calculateArbitrage;
