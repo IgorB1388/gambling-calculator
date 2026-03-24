@@ -1,3 +1,4 @@
+
 /* arbs.css */
 
 .arbitrage-container {
@@ -6,10 +7,15 @@
 }
 
 .arbitrage-main-area {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 30px;
     margin-bottom: 40px;
+    align-items: stretch;
+}
+
+@media (max-width: 1100px) {
+    .arbitrage-main-area { grid-template-columns: 1fr; }
 }
 
 /* === ПАНЕЛИ === */
@@ -22,6 +28,7 @@
     flex-direction: column;
     gap: 20px;
     box-sizing: border-box;
+    min-height: 900px;
     min-width: 0;
     overflow: hidden;
 }
@@ -66,6 +73,13 @@
     gap: 12px;
 }
 
+/* Высота первого шага — должна совпадать с .indicator-step */
+.arbs-step:first-of-type {
+    height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .indicator-step */
+    justify-content: center;
+    box-sizing: border-box;
+}
+
 .arbs-step-header {
     display: flex;
     align-items: center;
@@ -87,28 +101,6 @@
     font-size: 0.9rem;
     flex-shrink: 0;
     background: rgba(133, 193, 233, 0.08);
-}
-
-/* === ГОРИЗОНТАЛЬНЫЙ РЯД ДЛЯ ШАГОВ 1 И 2 === */
-.settings-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: start;
-}
-
-.settings-row .arbs-step {
-    margin-bottom: 0;
-}
-
-.settings-row .block-divider {
-    display: none;
-}
-
-/* Убираем фиксированную высоту у первого шага при горизонтальной компоновке */
-.settings-row .arbs-step:first-of-type {
-    height: auto;
-    min-height: auto;
 }
 
 /* === РАЗДЕЛИТЕЛЬ === */
@@ -230,8 +222,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 100%;
-    max-width: 220px;
+    width: 220px;
 }
 
 .stake-input {
@@ -348,8 +339,9 @@
 }
 
 /* === ИНДИКАТОР ВИЛКИ === */
+/* Высота должна совпадать с .arbs-step:first-of-type */
 .indicator-step {
-    height: 100px;
+    height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -511,6 +503,7 @@
     color: var(--text-secondary);
 }
 
+
 .odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
 .odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
 .odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
@@ -563,7 +556,7 @@
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto;
+    table-layout: auto; /* ширина столбцов по содержимому */
 }
 
 .distribution-table thead {
@@ -652,6 +645,7 @@
     gap: 8px;
 }
 
+/* Лейблы "Всего поставлено", "Выплата", "Доход" — цвет как строки таблицы */
 .total-row > span:first-child {
     flex-shrink: 1;
     overflow: hidden;
@@ -681,6 +675,7 @@
     gap: 8px;
 }
 
+/* "ЧИСТАЯ ПРИБЫЛЬ:" — цвет как строки таблицы, шрифт крупнее */
 .net-profit-label {
     font-size: 1.5rem;
     font-weight: bold;
@@ -702,14 +697,9 @@
 
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    .panel { padding: 18px; gap: 16px; }
+    .panel { padding: 18px; gap: 16px; min-height: 0; }
     .panel-title { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; }
     .block-divider { margin: 2px -18px; }
-
-    .settings-row {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
 
     .odds-header-row, .odds-row, .add-bk-row {
         grid-template-columns: 65px repeat(var(--outcome-count, 2), 1fr);
@@ -727,11 +717,12 @@
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
     .panel-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
-    .stake-input-wrapper { max-width: 100%; }
+    .stake-input-wrapper { width: 100%; }
     .settings-label { font-size: 1rem; }
     .panel-title { font-size: 1.4rem; }
     .indicator-status-text { font-size: 1.1rem; }
     .indicator-step { height: auto; min-height: 60px; }
+    .arbs-step:first-of-type { height: auto; min-height: 60px; }
 }
 
 @media (max-width: 480px) {
