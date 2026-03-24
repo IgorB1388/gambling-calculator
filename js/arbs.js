@@ -104,10 +104,7 @@ function updateStrategyPillsActive(activeStrategy) {
     });
 }
 
-// Форматирование при потере фокуса:
-// - если дробная часть отсутствует → добавляем .00
-// - если 1 цифра → добавляем ноль (2.1 → 2.10)
-// - если 2 или 3 цифры → оставляем как есть
+// Форматирование для отображения (на blur)
 function formatOddsForDisplay(value) {
     if (value === '' || value === null || isNaN(value)) return '';
     const num = parseFloat(value);
@@ -118,82 +115,169 @@ function formatOddsForDisplay(value) {
     const intPart = parts[0];
     let fracPart = parts[1];
     if (fracPart.length === 1) fracPart += '0';
-    else if (fracPart.length === 2) {} // оставляем
-    else if (fracPart.length > 3) fracPart = fracPart.slice(0, 3); // обрезаем до 3 (не должно случиться)
+    else if (fracPart.length === 2) {}
+    else if (fracPart.length > 3) fracPart = fracPart.slice(0, 3);
     return intPart + '.' + fracPart;
 }
 
-// Валидация во время ввода:
-// - ограничиваем целую часть 4 цифрами, дробную – 3
-// - автоматически вставляем точку, если целая часть достигла 4 и пользователь вводит ещё цифру
-// - запрещаем ввод новых цифр в целую часть, если там уже 4 цифры
-function validateOddsInput(inputElement) {
-    let rawValue = inputElement.value;
-    const selectionStart = inputElement.selectionStart;
-    const selectionEnd = inputElement.selectionEnd;
+// Основная логика ввода
+function handleOddsInput(input, b, o) {
+    let oldValue = input.value;
+    let cursorPos = input.selectionStart;
+    let newValue = oldValue;
     
-    // Запоминаем исходное значение, чтобы определить, была ли попытка вставить символ
-    const oldValue = rawValue;
+    // Определяем, была ли вставка (paste) – для простоты игнорируем сложные сценарии, но можно обработать
+    // Мы будем реагировать на обычный ввод символов. Если вставка, то может быть много символов сразу.
+    // Для простоты пока оставим как есть, но можно расширить.
+    
+    // Разделяем на целую и дробную части
+    let [intPart, fracPart] = oldValue.split('.');
+    intPart = intPart || '';
+    fracPart = fracPart || '';
+    
+    // Определяем, где находится курсор: в целой или дробной части
+    let dotIndex = oldValue.indexOf('.');
+    let isInFraction = dotIndex !== -1 && cursorPos > dotIndex;
+    
+    // Получаем введённый символ (последний нажатый) – сложно, так как событие input даёт уже новое значение.
+    // Лучше сравнивать длины. Но нам нужно знать, был ли добавлен символ. Будем считать, что если длина увеличилась на 1 и новый символ – цифра, то это добавление.
+    // Но проще: мы будем обрабатывать событие до того, как значение изменится? Нельзя.
+    // Поэтому используем другой подход: в обработчике input мы получаем новое значение, и если оно превышает лимиты – откатываем.
+    // Для этого нужно запомнить предыдущее значение.
+    
+    // Используем замыкание: перед обработчиком сохраняем предыдущее значение.
+}
+
+// Более правильный подход: в обработчике input мы будем анализировать введённый текст и корректировать его,
+// учитывая позицию курсора и ограничения.
+function validateAndCorrectOdds(inputElement, oldValue, newValue, cursorPos) {
+    // Если newValue пустое, разрешаем
+    if (newValue === '') return { value: '', cursor: 0 };
     
     // Разрешаем только цифры и одну точку
-    let cleaned = rawValue.replace(/[^\d.]/g, '');
-    
-    // Ограничиваем количество точек (оставляем только первую)
-    const parts = cleaned.split('.');
+    let cleaned = newValue.replace(/[^\d.]/g, '');
+    let parts = cleaned.split('.');
     if (parts.length > 2) {
         cleaned = parts[0] + '.' + parts.slice(1).join('');
+        parts = cleaned.split('.');
     }
     
-    let integerPart = parts[0] || '';
-    let fractionalPart = parts[1] || '';
+    let intPart = parts[0] || '';
+    let fracPart = parts[1] || '';
     
-    // Проверяем, была ли попытка добавить символ в целую часть, когда она уже 4 символа
-    // Для этого сравниваем длину integerPart до очистки и после, а также учитываем положение курсора
-    let autoInsertedDot = false;
-    
-    // Если нет точки в исходном значении и длина integerPart стала 5 (т.е. добавили лишнюю цифру)
-    if (!oldValue.includes('.') && integerPart.length === 5) {
-        // Вставляем точку после первых 4 символов
-        integerPart = integerPart.slice(0, 4);
-        fractionalPart = integerPart.slice(4);
-        cleaned = integerPart + '.' + fractionalPart;
-        autoInsertedDot = true;
-    } 
-    // Если точка уже есть, но целая часть превысила 4 символа (редко, но вдруг)
-    else if (integerPart.length > 4) {
-        integerPart = integerPart.slice(0, 4);
-        cleaned = integerPart + (fractionalPart ? '.' + fractionalPart : '');
-        autoInsertedDot = true;
+    // Ограничиваем целую часть 4 цифрами
+    if (intPart.length > 4) {
+        intPart = intPart.slice(0, 4);
+        cleaned = intPart + (fracPart ? '.' + fracPart : '');
     }
     
-    // Повторно разбиваем после возможной вставки
-    const finalParts = cleaned.split('.');
-    integerPart = finalParts[0] || '';
-    fractionalPart = finalParts[1] || '';
-    
-    // Ограничиваем дробную часть 3 символами
-    if (fractionalPart.length > 3) {
-        fractionalPart = fractionalPart.slice(0, 3);
-        cleaned = integerPart + '.' + fractionalPart;
-        autoInsertedDot = true;
+    // Ограничиваем дробную часть 3 цифрами
+    if (fracPart.length > 3) {
+        fracPart = fracPart.slice(0, 3);
+        cleaned = intPart + (fracPart ? '.' + fracPart : '');
     }
     
-    // Если ввели только точку, очищаем
-    if (cleaned === '.') cleaned = '';
-    
-    // Если было принудительное изменение (обрезание), то запрещаем дальнейший ввод
-    if (autoInsertedDot) {
-        inputElement.value = cleaned;
-        // Перемещаем курсор после точки, если точка была вставлена
+    // Если cleaned отличается от newValue, значит были обрезания
+    if (cleaned !== newValue) {
+        // Корректируем позицию курсора: если обрезали целую часть, курсор ставим в конец целой
+        // если обрезали дробную, ставим в конец дробной
+        let newCursor = cleaned.length;
         if (cleaned.includes('.')) {
-            const dotPos = cleaned.indexOf('.');
-            inputElement.setSelectionRange(dotPos + 1, dotPos + 1);
+            let dotPos = cleaned.indexOf('.');
+            if (intPart.length > 4 || (fracPart.length > 3 && cursorPos > dotPos)) {
+                newCursor = cleaned.length;
+            }
         }
-        return false;
+        return { value: cleaned, cursor: newCursor };
     }
     
-    inputElement.value = cleaned;
-    return true;
+    // Если всё в порядке, проверяем, не нужно ли автоматически поставить точку после 4-й цифры целой части
+    // Это происходит, когда в целой части ровно 4 цифры, точки нет, и пользователь вводит новую цифру.
+    // Но здесь мы уже получили cleaned, в котором intPart может быть 4, а точки нет.
+    // Если длина newValue увеличилась и intPart стала 5, мы уже обрезали до 4 выше.
+    // Для авто-точки нужно поймать момент, когда после ввода цифры целая часть стала 4, но точки нет.
+    // Это можно определить по сравнению с oldValue.
+    
+    // Альтернатива: обрабатывать ввод на уровне keypress и вручную вставлять точку.
+    // Но мы попробуем здесь: если cleaned не содержит точку, intPart.length === 4, и newValue.length > oldValue.length,
+    // и cursorPos был в конце целой части (или на позиции, где был ввод), то вставляем точку.
+    // Это сложно реализовать надёжно.
+    
+    // Вместо этого предлагаем более простой, но интуитивный подход: если после ввода целая часть стала 4 и нет точки,
+    // то автоматически добавляем точку и перемещаем курсор после неё.
+    if (!cleaned.includes('.') && intPart.length === 4) {
+        // Определяем, что ввод был в конце целой части (или просто в любом месте, но после ввода стало 4)
+        // Мы можем предположить, что если пользователь ввёл 4-ю цифру, то нужно добавить точку.
+        // Для этого сравним oldValue: если oldValue не содержал точку и длина intPart стала 4, а раньше была 3, то добавляем.
+        if (!oldValue.includes('.') && intPart.length === 4 && oldValue.length === 3) {
+            cleaned = intPart + '.';
+            return { value: cleaned, cursor: cleaned.length };
+        }
+    }
+    
+    return { value: cleaned, cursor: cursorPos };
+}
+
+function createOddsInput(b, o) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = `odds-${b}-${o}`;
+    input.className = 'odds-input bg-elevated border-5';
+    input.placeholder = '2.50';
+    input.value = oddsValues[b][o] !== undefined && oddsValues[b][o] !== null 
+        ? formatOddsForDisplay(oddsValues[b][o]) 
+        : '';
+
+    let lastValue = input.value;
+    let lastCursor = 0;
+
+    input.addEventListener('input', (e) => {
+        const oldVal = lastValue;
+        const newVal = input.value;
+        const cursor = input.selectionStart;
+        
+        const { value: corrected, cursor: newCursor } = validateAndCorrectOdds(input, oldVal, newVal, cursor);
+        
+        if (corrected !== newVal) {
+            input.value = corrected;
+            input.setSelectionRange(newCursor, newCursor);
+            lastValue = corrected;
+            lastCursor = newCursor;
+        } else {
+            lastValue = newVal;
+            lastCursor = cursor;
+        }
+        
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) {
+            oddsValues[b][o] = val;
+        } else if (input.value === '' || input.value === '-') {
+            oddsValues[b][o] = null;
+        }
+        resetOnEdit();
+    });
+
+    input.addEventListener('blur', (e) => {
+        let val = parseFloat(input.value);
+        if (!isNaN(val)) {
+            oddsValues[b][o] = val;
+            input.value = formatOddsForDisplay(val);
+        } else if (input.value === '') {
+            oddsValues[b][o] = null;
+            input.value = '';
+        } else {
+            oddsValues[b][o] = null;
+            input.value = '';
+        }
+        lastValue = input.value;
+    });
+
+    input.addEventListener('focus', () => {
+        lastValue = input.value;
+        lastCursor = input.selectionStart;
+    });
+
+    return input;
 }
 
 function clearInputHighlights() {
@@ -259,50 +343,7 @@ function renderOddsTable() {
         row.appendChild(labelCell);
 
         for (let o = 0; o < outcomeCount; o++) {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = `odds-${b}-${o}`;
-            input.className = 'odds-input bg-elevated border-5';
-            input.placeholder = '2.50';
-            input.value = oddsValues[b][o] !== undefined && oddsValues[b][o] !== null 
-                ? formatOddsForDisplay(oddsValues[b][o]) 
-                : '';
-
-            input.addEventListener('input', (e) => {
-                // Сохраняем позицию курсора до валидации
-                const oldStart = input.selectionStart;
-                const oldEnd = input.selectionEnd;
-                const oldValue = input.value;
-                
-                const isValid = validateOddsInput(input);
-                // Если валидация вернула false (была обрезка), то уже курсор перемещён внутри validateOddsInput
-                if (!isValid) {
-                    // Не обновляем данные, просто выходим
-                    return;
-                }
-                const val = parseFloat(input.value);
-                if (!isNaN(val)) {
-                    oddsValues[b][o] = val;
-                } else if (input.value === '' || input.value === '-') {
-                    oddsValues[b][o] = null;
-                }
-                resetOnEdit();
-            });
-
-            input.addEventListener('blur', (e) => {
-                let val = parseFloat(input.value);
-                if (!isNaN(val)) {
-                    oddsValues[b][o] = val;
-                    input.value = formatOddsForDisplay(val);
-                } else if (input.value === '') {
-                    oddsValues[b][o] = null;
-                    input.value = '';
-                } else {
-                    oddsValues[b][o] = null;
-                    input.value = '';
-                }
-            });
-
+            const input = createOddsInput(b, o);
             row.appendChild(input);
         }
         container.appendChild(row);
@@ -547,7 +588,6 @@ function displayResults(data) {
         const tdOdds = document.createElement('td');
         const kefSpan = document.createElement('span');
         kefSpan.className = `kef-cell${data.isArb ? ' arb-highlight-' + i : ''}`;
-        // Отображаем с тем же форматированием (2 знака по умолчанию, 3 если введено)
         kefSpan.textContent = formatOddsForDisplay(odd);
         tdOdds.appendChild(kefSpan);
         tr.appendChild(tdOdds);
