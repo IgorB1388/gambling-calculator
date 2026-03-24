@@ -119,12 +119,12 @@ function formatOddsForDisplay(value) {
     let fracPart = parts[1];
     if (fracPart.length === 1) fracPart += '0';
     else if (fracPart.length === 2) {} // оставляем
-    else if (fracPart.length > 3) fracPart = fracPart.slice(0, 3); // обрезаем до 3, но это уже не должно случаться
+    else if (fracPart.length > 3) fracPart = fracPart.slice(0, 3); // обрезаем до 3 (не должно случиться)
     return intPart + '.' + fracPart;
 }
 
-// Валидация во время ввода: ограничиваем длину целой (4) и дробной (3) частей
-// Возвращает true, если ввод разрешён (т.е. не превышены лимиты)
+// Валидация во время ввода: ограничиваем длину целой (4) и дробной (3) частей.
+// Автоматически вставляет точку, если целая часть достигла 4 и пользователь продолжает вводить цифры.
 function validateOddsInput(inputElement) {
     let rawValue = inputElement.value;
     const selectionStart = inputElement.selectionStart;
@@ -139,19 +139,42 @@ function validateOddsInput(inputElement) {
         cleaned = parts[0] + '.' + parts.slice(1).join('');
     }
     
-    // Целая часть: максимум 4 знака
+    // Автоматическая вставка точки, если целая часть уже 4 символа и нет точки
+    const hasDot = cleaned.includes('.');
     let integerPart = parts[0] || '';
+    if (!hasDot && integerPart.length === 4) {
+        // Если пользователь пытается ввести пятую цифру, вставляем точку
+        // Но мы уже на стадии обработки ввода: нужно определить, была ли попытка добавить цифру.
+        // Проверим, не совпадает ли очищенное значение с исходным после удаления последнего символа.
+        // Простой подход: если длина cleaned стала больше 4, значит пользователь добавил цифру.
+        // Но cleaned может быть длиннее из-за уже существующего ввода. Лучше сравнить с предыдущим состоянием.
+        // Мы можем определить по увеличению длины integerPart. Однако проще: если integerPart.length === 4 и пользователь вводит ещё цифру,
+        // то cleaned будет иметь длину 5 (без точки). Мы тогда вставим точку перед последней цифрой.
+        // Используем более надёжный метод: если после очистки integerPart.length === 4 и общая длина cleaned > 4, значит есть лишняя цифра.
+        if (cleaned.length > 4) {
+            // вставляем точку после первых 4 символов
+            cleaned = integerPart + '.' + cleaned.slice(4);
+            // теперь integerPart остаётся 4, а дробная часть начинается
+        }
+    }
+    
+    // Повторно разбиваем после возможной вставки точки
+    const finalParts = cleaned.split('.');
+    integerPart = finalParts[0] || '';
+    let fractionalPart = finalParts[1] || '';
+    
+    // Целая часть: максимум 4 знака
     let wasTruncated = false;
     if (integerPart.length > 4) {
         integerPart = integerPart.slice(0, 4);
-        cleaned = integerPart + (parts[1] !== undefined ? '.' + parts[1] : '');
+        cleaned = integerPart + (fractionalPart !== '' ? '.' + fractionalPart : '');
         wasTruncated = true;
     }
     
-    // Дробная часть: максимум 3 знака (если есть точка)
-    const newParts = cleaned.split('.');
-    if (newParts[1] !== undefined && newParts[1].length > 3) {
-        cleaned = newParts[0] + '.' + newParts[1].slice(0, 3);
+    // Дробная часть: максимум 3 знака
+    if (fractionalPart.length > 3) {
+        fractionalPart = fractionalPart.slice(0, 3);
+        cleaned = integerPart + '.' + fractionalPart;
         wasTruncated = true;
     }
     
@@ -244,7 +267,6 @@ function renderOddsTable() {
                 const oldValue = input.value;
                 const isValid = validateOddsInput(input);
                 if (!isValid) {
-                    // Если ввод привёл к обрезанию (достигнут лимит), то не обновляем oddsValues
                     return;
                 }
                 const val = parseFloat(input.value);
@@ -260,13 +282,11 @@ function renderOddsTable() {
                 let val = parseFloat(input.value);
                 if (!isNaN(val)) {
                     oddsValues[b][o] = val;
-                    // Форматируем для отображения: дополняем до 2 знаков, если нужно
                     input.value = formatOddsForDisplay(val);
                 } else if (input.value === '') {
                     oddsValues[b][o] = null;
                     input.value = '';
                 } else {
-                    // Если введена невалидная строка, очищаем
                     oddsValues[b][o] = null;
                     input.value = '';
                 }
@@ -516,7 +536,8 @@ function displayResults(data) {
         const tdOdds = document.createElement('td');
         const kefSpan = document.createElement('span');
         kefSpan.className = `kef-cell${data.isArb ? ' arb-highlight-' + i : ''}`;
-        kefSpan.textContent = odd ? odd.toString() : '—';
+        // Отображаем с тем же форматированием (2 знака по умолчанию, 3 если введено)
+        kefSpan.textContent = formatOddsForDisplay(odd);
         tdOdds.appendChild(kefSpan);
         tr.appendChild(tdOdds);
 
