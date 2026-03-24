@@ -18,9 +18,8 @@ let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
 
-// Новые константы для гибкости
+// Константы для гибкости
 const MAX_STAKE_VAL = 9999.999; 
-const ODDS_REGEX = /^\d{0,4}(\.\d{0,3})?$/; 
 
 function initApp() {
     initState();
@@ -108,18 +107,46 @@ function updateStrategyPillsActive(activeStrategy) {
     });
 }
 
-// Улучшенное форматирование: поддерживает до 3 знаков, если они есть
+// Форматирование: просто возвращаем число как есть, без принудительной замены
 function formatOdds(value) {
-    if (value === '' || isNaN(value)) return '2.00';
+    if (value === '' || value === null || isNaN(value)) return '';
     const num = parseFloat(value);
-    if (num < 1.01) return '2.00';
+    if (isNaN(num)) return '';
+    // Убираем лишние нули в конце, но оставляем значение
+    return num.toString();
+}
+
+// Валидация ввода: ограничиваем целую часть (4 знака) и дробную (3 знака)
+function validateOddsInput(inputElement) {
+    let rawValue = inputElement.value;
     
-    const str = num.toString();
-    // Если после точки больше 2 знаков, оставляем 3
-    if (str.includes('.') && str.split('.')[1].length > 2) {
-        return num.toFixed(3);
+    // Разрешаем только цифры и одну точку
+    let cleaned = rawValue.replace(/[^\d.]/g, '');
+    
+    // Ограничиваем количество точек (оставляем только первую)
+    const parts = cleaned.split('.');
+    if (parts.length > 2) {
+        cleaned = parts[0] + '.' + parts.slice(1).join('');
     }
-    return num.toFixed(2);
+    
+    // Целая часть: максимум 4 знака
+    let integerPart = parts[0] || '';
+    if (integerPart.length > 4) {
+        integerPart = integerPart.slice(0, 4);
+        cleaned = integerPart + (parts[1] !== undefined ? '.' + parts[1] : '');
+    }
+    
+    // Дробная часть: максимум 3 знака (если есть точка)
+    const newParts = cleaned.split('.');
+    if (newParts[1] !== undefined && newParts[1].length > 3) {
+        cleaned = newParts[0] + '.' + newParts[1].slice(0, 3);
+    }
+    
+    // Если ввели только точку, очищаем
+    if (cleaned === '.') cleaned = '';
+    
+    inputElement.value = cleaned;
+    return cleaned;
 }
 
 function clearInputHighlights() {
@@ -186,29 +213,31 @@ function renderOddsTable() {
 
         for (let o = 0; o < outcomeCount; o++) {
             const input = document.createElement('input');
-            input.type = 'number';
+            input.type = 'text'; // меняем на text, чтобы number не мешал
             input.id = `odds-${b}-${o}`;
             input.className = 'odds-input bg-elevated border-5';
             input.placeholder = '2.50';
-            input.min = '1.01';
-            input.step = '0.001';
-            input.value = formatOdds(oddsValues[b][o]);
+            input.value = oddsValues[b][o] !== undefined ? oddsValues[b][o].toString() : '';
 
             input.addEventListener('input', (e) => {
-                let valStr = e.target.value;
-                if (!ODDS_REGEX.test(valStr)) {
-                    e.target.value = valStr.slice(0, -1);
-                    return;
-                }
+                validateOddsInput(e.target);
                 const val = parseFloat(e.target.value);
-                if (!isNaN(val) && val >= 1.01) oddsValues[b][o] = val;
+                if (!isNaN(val)) {
+                    oddsValues[b][o] = val;
+                } else if (e.target.value === '' || e.target.value === '-') {
+                    oddsValues[b][o] = null;
+                }
                 resetOnEdit();
             });
 
             input.addEventListener('blur', (e) => {
-                const formatted = formatOdds(e.target.value);
-                e.target.value = formatted;
-                oddsValues[b][o] = parseFloat(formatted);
+                let val = parseFloat(e.target.value);
+                if (!isNaN(val)) {
+                    oddsValues[b][o] = val;
+                    e.target.value = val.toString();
+                } else if (e.target.value === '') {
+                    oddsValues[b][o] = null;
+                }
             });
 
             row.appendChild(input);
@@ -260,7 +289,7 @@ function collectOddsValuesFromDom() {
             const input = document.getElementById(`odds-${b}-${o}`);
             if (input) {
                 const val = parseFloat(input.value);
-                if (!isNaN(val) && val >= 1.01) oddsValues[b][o] = val;
+                if (!isNaN(val)) oddsValues[b][o] = val;
             }
         }
     }
@@ -305,10 +334,6 @@ function initEventListeners() {
     stakeInput.addEventListener('input', (e) => {
         showStakeError(false);
         resetOnEdit();
-        let valStr = e.target.value;
-        if (!ODDS_REGEX.test(valStr)) {
-            e.target.value = valStr.slice(0, -1);
-        }
     });
 
     document.addEventListener('languageChanged', () => {
@@ -325,8 +350,9 @@ function getBestOddsWithBk() {
         let maxOdd = 0;
         let maxBk = 0;
         for (let b = 0; b < bkCount; b++) {
-            if (oddsValues[b][o] > maxOdd) {
-                maxOdd = oddsValues[b][o];
+            const odd = oddsValues[b][o] || 0;
+            if (odd > maxOdd) {
+                maxOdd = odd;
                 maxBk = b;
             }
         }
@@ -338,7 +364,7 @@ function getBestOddsWithBk() {
 
 function calculateGuaranteedStrategy(bestOdds, totalStake) {
     let sumInverse = 0;
-    bestOdds.forEach(odd => sumInverse += 1 / odd);
+    bestOdds.forEach(odd => { if (odd > 0) sumInverse += 1 / odd; });
     const isArb = sumInverse < 1;
     const profitPercent = isArb ? ((1 / sumInverse - 1) * 100) : 0;
     const stakes = bestOdds.map(odd => (totalStake * (1 / odd)) / sumInverse);
@@ -348,7 +374,7 @@ function calculateGuaranteedStrategy(bestOdds, totalStake) {
 
 function calculateMaxStrategy(bestOdds, totalStake) {
     let sumInverse = 0;
-    bestOdds.forEach(odd => sumInverse += 1 / odd);
+    bestOdds.forEach(odd => { if (odd > 0) sumInverse += 1 / odd; });
     if (sumInverse >= 1) return calculateGuaranteedStrategy(bestOdds, totalStake);
 
     let maxOddIndex = 0;
@@ -359,7 +385,7 @@ function calculateMaxStrategy(bestOdds, totalStake) {
     const stakes = new Array(bestOdds.length).fill(0);
     let remainingStake = totalStake;
     for (let i = 0; i < bestOdds.length; i++) {
-        if (i !== maxOddIndex) {
+        if (i !== maxOddIndex && bestOdds[i] > 0) {
             stakes[i] = totalStake / bestOdds[i];
             remainingStake -= stakes[i];
         }
@@ -458,8 +484,7 @@ function displayResults(data) {
         const tdOdds = document.createElement('td');
         const kefSpan = document.createElement('span');
         kefSpan.className = `kef-cell${data.isArb ? ' arb-highlight-' + i : ''}`;
-        // ТУТ ИСПРАВЛЕНИЕ: Используем formatOdds для отображения 3 знаков в таблице
-        kefSpan.textContent = formatOdds(odd);
+        kefSpan.textContent = odd ? odd.toString() : '—';
         tdOdds.appendChild(kefSpan);
         tr.appendChild(tdOdds);
 
