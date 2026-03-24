@@ -1,3 +1,4 @@
+
 /* arbs.css */
 
 .arbitrage-container {
@@ -233,10 +234,10 @@
     font-size: 1.3rem;
     font-weight: bold;
     background: transparent;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: all 0.2s;
 }
 
-.stake-input:focus { outline: none; }
+.stake-input:focus { outline: none; transform: scale(1.02); }
 
 .stake-input.input-error {
     border-color: var(--color-danger) !important;
@@ -257,6 +258,10 @@
     padding: 4px 0;
     color: var(--color-danger) !important;
 }
+
+.stake-input::-webkit-outer-spin-button,
+.stake-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.stake-input[type=number] { -moz-appearance: textfield; }
 
 /* === КНОПКИ УПРАВЛЕНИЯ === */
 .panel-controls {
@@ -334,6 +339,7 @@
 }
 
 /* === ИНДИКАТОР ВИЛКИ === */
+/* Высота должна совпадать с .arbs-step:first-of-type */
 .indicator-step {
     height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
     display: flex;
@@ -482,7 +488,7 @@
 .remove-bk:hover { opacity: 1; transform: scale(1.1); }
 
 .odds-input {
-    padding: 6px 4px;
+    padding: 6px 8px;
     border-radius: 6px;
     border-width: 2px;
     border-style: solid;
@@ -490,23 +496,23 @@
     font-weight: bold;
     width: 100%;
     background: transparent;
-    transition: border-color 0.3s, box-shadow 0.3s, font-size 0.15s;
+    transition: border-color 0.3s, box-shadow 0.3s;
     text-align: center;
     outline: none;
     box-sizing: border-box;
     color: var(--text-secondary);
-    /* без transform при фокусе */
 }
 
-/* Уменьшаем шрифт конкретного инпута если значение длинное (5+ значимых цифр) */
-.odds-input.odds-input-sm { font-size: 0.95rem; }
-.odds-input.odds-input-xs { font-size: 0.82rem; }
 
 .odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
 .odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
 .odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
 .odds-input.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
 .odds-input.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
+
+.odds-input::-webkit-outer-spin-button,
+.odds-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.odds-input[type=number] { -moz-appearance: textfield; }
 
 .add-bk-row {
     margin-top: 4px;
@@ -550,7 +556,7 @@
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto;
+    table-layout: auto; /* ширина столбцов по содержимому */
 }
 
 .distribution-table thead {
@@ -639,6 +645,7 @@
     gap: 8px;
 }
 
+/* Лейблы "Всего поставлено", "Выплата", "Доход" — цвет как строки таблицы */
 .total-row > span:first-child {
     flex-shrink: 1;
     overflow: hidden;
@@ -668,6 +675,7 @@
     gap: 8px;
 }
 
+/* "ЧИСТАЯ ПРИБЫЛЬ:" — цвет как строки таблицы, шрифт крупнее */
 .net-profit-label {
     font-size: 1.5rem;
     font-weight: bold;
@@ -700,9 +708,7 @@
 
     .odds-corner { width: 65px; }
     .odds-bk-label { font-size: 0.95rem; }
-    .odds-input { font-size: 1rem; }
-    .odds-input.odds-input-sm { font-size: 0.88rem; }
-    .odds-input.odds-input-xs { font-size: 0.78rem; }
+    .odds-input { padding: 9px 4px; font-size: 1rem; }
     .odds-header { font-size: 0.95rem; }
 
     .distribution-table thead th,
@@ -730,9 +736,7 @@
 
     .odds-corner { width: 55px; }
     .odds-bk-label { font-size: 0.85rem; }
-    .odds-input { font-size: 0.9rem; }
-    .odds-input.odds-input-sm { font-size: 0.82rem; }
-    .odds-input.odds-input-xs { font-size: 0.72rem; }
+    .odds-input { padding: 7px 2px; font-size: 0.9rem; }
 
     .indicator-circle { width: 38px; height: 38px; }
     .panel-controls { flex-direction: column; }
