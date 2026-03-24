@@ -123,12 +123,17 @@ function formatOddsForDisplay(value) {
     return intPart + '.' + fracPart;
 }
 
-// Валидация во время ввода: ограничиваем длину целой (4) и дробной (3) частей.
-// Автоматически вставляет точку, если целая часть достигла 4 и пользователь продолжает вводить цифры.
+// Валидация во время ввода:
+// - ограничиваем целую часть 4 цифрами, дробную – 3
+// - автоматически вставляем точку, если целая часть достигла 4 и пользователь вводит ещё цифру
+// - запрещаем ввод новых цифр в целую часть, если там уже 4 цифры
 function validateOddsInput(inputElement) {
     let rawValue = inputElement.value;
     const selectionStart = inputElement.selectionStart;
     const selectionEnd = inputElement.selectionEnd;
+    
+    // Запоминаем исходное значение, чтобы определить, была ли попытка вставить символ
+    const oldValue = rawValue;
     
     // Разрешаем только цифры и одну точку
     let cleaned = rawValue.replace(/[^\d.]/g, '');
@@ -139,51 +144,51 @@ function validateOddsInput(inputElement) {
         cleaned = parts[0] + '.' + parts.slice(1).join('');
     }
     
-    // Автоматическая вставка точки, если целая часть уже 4 символа и нет точки
-    const hasDot = cleaned.includes('.');
     let integerPart = parts[0] || '';
-    if (!hasDot && integerPart.length === 4) {
-        // Если пользователь пытается ввести пятую цифру, вставляем точку
-        // Но мы уже на стадии обработки ввода: нужно определить, была ли попытка добавить цифру.
-        // Проверим, не совпадает ли очищенное значение с исходным после удаления последнего символа.
-        // Простой подход: если длина cleaned стала больше 4, значит пользователь добавил цифру.
-        // Но cleaned может быть длиннее из-за уже существующего ввода. Лучше сравнить с предыдущим состоянием.
-        // Мы можем определить по увеличению длины integerPart. Однако проще: если integerPart.length === 4 и пользователь вводит ещё цифру,
-        // то cleaned будет иметь длину 5 (без точки). Мы тогда вставим точку перед последней цифрой.
-        // Используем более надёжный метод: если после очистки integerPart.length === 4 и общая длина cleaned > 4, значит есть лишняя цифра.
-        if (cleaned.length > 4) {
-            // вставляем точку после первых 4 символов
-            cleaned = integerPart + '.' + cleaned.slice(4);
-            // теперь integerPart остаётся 4, а дробная часть начинается
-        }
+    let fractionalPart = parts[1] || '';
+    
+    // Проверяем, была ли попытка добавить символ в целую часть, когда она уже 4 символа
+    // Для этого сравниваем длину integerPart до очистки и после, а также учитываем положение курсора
+    let autoInsertedDot = false;
+    
+    // Если нет точки в исходном значении и длина integerPart стала 5 (т.е. добавили лишнюю цифру)
+    if (!oldValue.includes('.') && integerPart.length === 5) {
+        // Вставляем точку после первых 4 символов
+        integerPart = integerPart.slice(0, 4);
+        fractionalPart = integerPart.slice(4);
+        cleaned = integerPart + '.' + fractionalPart;
+        autoInsertedDot = true;
+    } 
+    // Если точка уже есть, но целая часть превысила 4 символа (редко, но вдруг)
+    else if (integerPart.length > 4) {
+        integerPart = integerPart.slice(0, 4);
+        cleaned = integerPart + (fractionalPart ? '.' + fractionalPart : '');
+        autoInsertedDot = true;
     }
     
-    // Повторно разбиваем после возможной вставки точки
+    // Повторно разбиваем после возможной вставки
     const finalParts = cleaned.split('.');
     integerPart = finalParts[0] || '';
-    let fractionalPart = finalParts[1] || '';
+    fractionalPart = finalParts[1] || '';
     
-    // Целая часть: максимум 4 знака
-    let wasTruncated = false;
-    if (integerPart.length > 4) {
-        integerPart = integerPart.slice(0, 4);
-        cleaned = integerPart + (fractionalPart !== '' ? '.' + fractionalPart : '');
-        wasTruncated = true;
-    }
-    
-    // Дробная часть: максимум 3 знака
+    // Ограничиваем дробную часть 3 символами
     if (fractionalPart.length > 3) {
         fractionalPart = fractionalPart.slice(0, 3);
         cleaned = integerPart + '.' + fractionalPart;
-        wasTruncated = true;
+        autoInsertedDot = true;
     }
     
     // Если ввели только точку, очищаем
     if (cleaned === '.') cleaned = '';
     
-    // Если было обрезание, то запрещаем ввод (не даём дописать лишние символы)
-    if (wasTruncated) {
+    // Если было принудительное изменение (обрезание), то запрещаем дальнейший ввод
+    if (autoInsertedDot) {
         inputElement.value = cleaned;
+        // Перемещаем курсор после точки, если точка была вставлена
+        if (cleaned.includes('.')) {
+            const dotPos = cleaned.indexOf('.');
+            inputElement.setSelectionRange(dotPos + 1, dotPos + 1);
+        }
         return false;
     }
     
@@ -264,9 +269,15 @@ function renderOddsTable() {
                 : '';
 
             input.addEventListener('input', (e) => {
+                // Сохраняем позицию курсора до валидации
+                const oldStart = input.selectionStart;
+                const oldEnd = input.selectionEnd;
                 const oldValue = input.value;
+                
                 const isValid = validateOddsInput(input);
+                // Если валидация вернула false (была обрезка), то уже курсор перемещён внутри validateOddsInput
                 if (!isValid) {
+                    // Не обновляем данные, просто выходим
                     return;
                 }
                 const val = parseFloat(input.value);
