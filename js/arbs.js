@@ -120,66 +120,100 @@ function formatOddsForDisplay(value) {
     return intPart + '.' + fracPart;
 }
 
-// Функция для ограничения ввода с учётом текущего выделения
-function processOddsInput(inputElement, oldValue, newValue, selectionStart, selectionEnd) {
-    // Если вставка или замена
-    // Определяем, какая часть изменилась: целая или дробная
-    // Для простоты будем использовать регулярное выражение для проверки итогового значения на соответствие формату
-    // Но мы хотим предотвратить превышение лимитов, а не просто обрезать.
+// Обработка ввода с учётом ограничений и автоматической вставки точки
+function processOddsInput(inputElement, event) {
+    const oldValue = inputElement.value;
+    const selectionStart = inputElement.selectionStart;
+    const selectionEnd = inputElement.selectionEnd;
     
-    // Разбираем старую и новую строки, чтобы понять, что изменилось
-    const oldParts = oldValue.split('.');
-    const newParts = newValue.split('.');
+    // Определяем, какой символ был введён (удаление или вставка)
+    // Используем event.inputType для точного понимания
+    const inputType = event.inputType;
+    const isDelete = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
+    const isInsert = inputType === 'insertText' || inputType === 'insertCompositionText';
     
-    let oldInt = oldParts[0] || '';
-    let oldFrac = oldParts[1] || '';
-    let newInt = newParts[0] || '';
-    let newFrac = newParts[1] || '';
+    if (isDelete) {
+        // Удаление всегда разрешено
+        return true;
+    }
     
-    // Проверка: если целая часть превышает 4 знака
-    if (newInt.length > 4) {
-        // Если это произошло, то либо пользователь пытался вставить в целую часть при уже 4 знаках
-        // Проверим, не является ли это результатом вставки точки?
-        // Если в старой целой было 4 и нет точки, а новая целая стала 5, значит пользователь пытался ввести пятую цифру.
-        // В этом случае мы должны вставить точку и переместить лишнюю цифру в дробную часть.
-        if (oldInt.length === 4 && oldFrac === '' && !oldValue.includes('.')) {
-            // Автоматическая вставка точки
-            const newIntPart = newInt.slice(0, 4);
-            const newFracPart = newInt.slice(4) + newFrac;
-            const result = newIntPart + '.' + newFracPart.slice(0, 3);
-            inputElement.value = result;
-            // Устанавливаем курсор после точки (на начало дробной части)
-            const dotPos = result.indexOf('.');
-            inputElement.setSelectionRange(dotPos + 1, dotPos + 1);
-            return false; // изменение обработано, дальнейшие действия не нужны
-        }
-        // Иначе превышение лимита целой части – запрещаем ввод
-        inputElement.value = oldValue;
-        // Возвращаем курсор на прежнее место (попробуем)
-        inputElement.setSelectionRange(selectionStart, selectionEnd);
+    if (!isInsert) return true; // другие действия (вставка из буфера и т.д.) пропускаем
+    
+    // Получаем введённый символ (предполагаем, что это один символ)
+    // Для более сложных вставок мы не будем обрабатывать автоматическую точку, просто проверим лимиты
+    const newChar = event.data;
+    if (!newChar) return true;
+    
+    // Разрешаем только цифры и точку
+    if (!/[\d.]/.test(newChar)) {
+        event.preventDefault();
         return false;
     }
     
-    // Если дробная часть превышает 3 знака
-    if (newFrac.length > 3) {
-        // Если новая дробная часть длиннее, чем была, значит пользователь пытался добавить цифру
-        // Если в старой дробной было 3, то запрещаем
-        if (oldFrac.length === 3 && newFrac.length > oldFrac.length) {
-            inputElement.value = oldValue;
-            inputElement.setSelectionRange(selectionStart, selectionEnd);
+    // Если вставляем точку, проверяем, что её ещё нет
+    if (newChar === '.') {
+        if (oldValue.includes('.')) {
+            event.preventDefault();
             return false;
         }
-        // Иначе просто обрезаем дробную часть до 3 знаков
-        const truncated = newInt + '.' + newFrac.slice(0, 3);
-        inputElement.value = truncated;
-        // Перемещаем курсор в конец, если он был в обрезанной части
-        const cursorPos = Math.min(selectionStart, truncated.length);
-        inputElement.setSelectionRange(cursorPos, cursorPos);
-        return false;
+        // Точку можно вставить только если целая часть не пуста
+        if (oldValue === '' || oldValue === '-') {
+            event.preventDefault();
+            return false;
+        }
+        return true;
     }
     
-    // Если всё в порядке, разрешаем
-    return true;
+    // Вставляем цифру
+    // Определяем, в какую часть (целую или дробную) происходит вставка
+    const dotPos = oldValue.indexOf('.');
+    let isIntegerPart = true;
+    if (dotPos !== -1 && selectionStart > dotPos) {
+        isIntegerPart = false;
+    }
+    
+    let newValue = oldValue.slice(0, selectionStart) + newChar + oldValue.slice(selectionEnd);
+    
+    if (isIntegerPart) {
+        // Работаем с целой частью
+        const parts = newValue.split('.');
+        let intPart = parts[0];
+        if (intPart.length > 4) {
+            // Если в целой части уже 4 символа, и мы пытаемся вставить ещё цифру
+            // Проверяем, нет ли точки. Если нет, то автоматически вставляем точку
+            if (!oldValue.includes('.')) {
+                // Автоматическая вставка точки после 4 символов
+                const newInt = intPart.slice(0, 4);
+                const extraDigit = intPart.slice(4);
+                // Формируем новое значение: целая (4 цифры) + точка + оставшаяся цифра + возможно существующая дробная часть
+                let newFrac = extraDigit + (parts[1] || '');
+                if (newFrac.length > 3) newFrac = newFrac.slice(0, 3);
+                newValue = newInt + '.' + newFrac;
+                inputElement.value = newValue;
+                // Устанавливаем курсор после точки (в начало дробной)
+                const newDotPos = newValue.indexOf('.');
+                inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
+                event.preventDefault();
+                return false;
+            } else {
+                // Точка уже есть, значит попытка вставить лишнюю цифру в целую часть – запрещаем
+                event.preventDefault();
+                return false;
+            }
+        }
+        // Если целая часть не превышает 4, разрешаем ввод
+        return true;
+    } else {
+        // Работаем с дробной частью
+        const parts = newValue.split('.');
+        const fracPart = parts[1] || '';
+        if (fracPart.length > 3) {
+            // Дробная часть не может быть длиннее 3
+            event.preventDefault();
+            return false;
+        }
+        return true;
+    }
 }
 
 function clearInputHighlights() {
@@ -254,28 +288,16 @@ function renderOddsTable() {
                 ? formatOddsForDisplay(oddsValues[b][o]) 
                 : '';
 
-            input.addEventListener('input', (e) => {
-                const oldValue = e.target.value; // значение до изменений? Нет, уже новое
-                // Мы должны сохранить предыдущее значение до вызова обработчика
-                // Используем dataset для хранения предыдущего значения
-                const previousValue = input.dataset.prevValue || '';
-                const selectionStart = input.selectionStart;
-                const selectionEnd = input.selectionEnd;
-                
-                const newValue = input.value;
-                
-                const allowed = processOddsInput(input, previousValue, newValue, selectionStart, selectionEnd);
+            input.addEventListener('beforeinput', (e) => {
+                // Отменяем ввод, если он не разрешён
+                const allowed = processOddsInput(input, e);
                 if (!allowed) {
-                    // Если ввод запрещён, восстанавливаем предыдущее значение
-                    input.value = previousValue;
-                    // Возвращаем курсор
-                    input.setSelectionRange(selectionStart, selectionEnd);
-                    return;
+                    e.preventDefault();
                 }
-                
-                // Обновляем предыдущее значение для следующего события
-                input.dataset.prevValue = input.value;
-                
+            });
+
+            input.addEventListener('input', (e) => {
+                // После того как ввод произошёл (и не был отменён), обновляем данные
                 const val = parseFloat(input.value);
                 if (!isNaN(val)) {
                     oddsValues[b][o] = val;
@@ -283,10 +305,6 @@ function renderOddsTable() {
                     oddsValues[b][o] = null;
                 }
                 resetOnEdit();
-            });
-            
-            input.addEventListener('focus', () => {
-                input.dataset.prevValue = input.value;
             });
 
             input.addEventListener('blur', (e) => {
@@ -301,7 +319,6 @@ function renderOddsTable() {
                     oddsValues[b][o] = null;
                     input.value = '';
                 }
-                delete input.dataset.prevValue;
             });
 
             row.appendChild(input);
