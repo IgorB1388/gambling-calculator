@@ -1,22 +1,5 @@
-/* === arbs.css (FULL VERSION) === */
 
-:root {
-    /* Предполагаемые переменные, если они не заданы в основном конфиге */
-    --border-1: #3498db;
-    --border-3: #85c1e9;
-    --border-4: #2ecc71;
-    --border-5: #6aa8ff;
-    --text-1: #3498db;
-    --text-3: #85c1e9;
-    --text-secondary: #ecf0f1;
-    --text-muted: #95a5a6;
-    --color-primary: #3498db;
-    --color-secondary: #ff5fd2;
-    --color-info: #3498db;
-    --color-danger: #e74c3c;
-    --bg-elevated: rgba(255, 255, 255, 0.05);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
+/* arbs.css */
 
 .arbitrage-container {
     max-width: 1400px;
@@ -83,26 +66,18 @@
     box-shadow: 0 0 10px var(--border-4), 0 0 20px var(--border-4);
 }
 
-/* === НОВАЯ ГОРИЗОНТАЛЬНАЯ ГРУППА (ШАГ 1 И 2) === */
-.arbs-settings-top {
-    display: flex;
-    gap: 30px;
-    align-items: flex-start;
-}
-
-.step-outcomes {
-    flex: 0 0 auto;
-}
-
-.step-stake {
-    flex: 1;
-}
-
-/* === ШАГИ === */
+/* === ШАГИ ЛЕВОЙ ПАНЕЛИ === */
 .arbs-step {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+/* Высота первого шага — должна совпадать с .indicator-step */
+.arbs-step:first-of-type {
+    height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .indicator-step */
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .arbs-step-header {
@@ -138,6 +113,7 @@
     flex-shrink: 0;
 }
 
+/* Разделители в правой панели — зелёные как черта под заголовком */
 .panel.border-4 .block-divider {
     background: var(--border-4);
     box-shadow: 0 0 6px var(--border-4);
@@ -198,9 +174,6 @@
     display: none;
     pointer-events: none;
     box-shadow: var(--shadow-md);
-    background: #1a1a1a;
-    color: #fff;
-    border-color: var(--border-3);
 }
 
 /* === КНОПКИ ИСХОДОВ === */
@@ -232,7 +205,7 @@
 
 .outcome-pill.active {
     background: var(--color-secondary) !important;
-    color: #fff !important;
+    color: var(--text-primary) !important;
     border-color: var(--color-secondary) !important;
     box-shadow: 0 0 15px var(--color-secondary) !important;
 }
@@ -249,7 +222,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 220px;
 }
 
 .stake-input {
@@ -262,10 +235,9 @@
     font-weight: bold;
     background: transparent;
     transition: all 0.2s;
-    color: var(--text-secondary);
 }
 
-.stake-input:focus { outline: none; transform: scale(1.01); }
+.stake-input:focus { outline: none; transform: scale(1.02); }
 
 .stake-input.input-error {
     border-color: var(--color-danger) !important;
@@ -278,7 +250,6 @@
     font-size: 1.2rem;
     font-weight: bold;
     pointer-events: none;
-    color: var(--text-3);
 }
 
 .stake-error {
@@ -292,11 +263,174 @@
 .stake-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .stake-input[type=number] { -moz-appearance: textfield; }
 
-/* === ТАБЛИЦА КОЭФФИЦИЕНТОВ (ШАГ 3) === */
-.step-odds {
-    flex: 1;
+/* === КНОПКИ УПРАВЛЕНИЯ === */
+.panel-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
 }
 
+.panel-controls .btn {
+    flex: 1;
+    padding: 16px 16px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 56px;
+    white-space: nowrap;
+}
+
+.panel-controls .btn:hover { transform: translateY(-2px); }
+
+/* === ЗАГЛУШКА === */
+.results-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 20px 20px;
+    gap: 18px;
+    text-align: center;
+}
+
+.placeholder-icon { font-size: 4rem; opacity: 0.4; }
+.placeholder-text { font-size: 1.15rem; font-style: italic; }
+
+.placeholder-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+    margin-top: 8px;
+}
+
+.placeholder-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+}
+
+.step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+/* === РЕЗУЛЬТАТЫ === */
+.results-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* === ИНДИКАТОР ВИЛКИ === */
+/* Высота должна совпадать с .arbs-step:first-of-type */
+.indicator-step {
+    height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.arb-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.indicator-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+    flex-shrink: 0;
+}
+
+.indicator-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.indicator-status-text {
+    font-size: 1.35rem;
+    font-weight: bold;
+}
+
+.indicator-profit { margin-left: auto; }
+
+.profit-badge {
+    font-size: 2.4rem;
+    font-weight: bold;
+}
+
+/* === СТРАТЕГИЯ === */
+.strategy-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.strategy-mini-pills {
+    display: flex;
+    gap: 8px;
+}
+
+.strategy-mini-btn {
+    flex: 1;
+    height: 56px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--border-5);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(106, 168, 255, 0.08);
+    color: var(--text-5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.strategy-mini-btn:hover { transform: translateY(-1px); opacity: 0.85; }
+
+.strategy-mini-btn.active {
+    background: var(--color-info) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--color-info) !important;
+    box-shadow: 0 0 12px var(--color-info) !important;
+}
+
+/* === ТАБЛИЦА КОЭФФИЦИЕНТОВ (левая панель) === */
 .odds-table {
     width: 100%;
     display: flex;
@@ -306,25 +440,24 @@
 
 .odds-header-row {
     display: grid;
-    grid-template-columns: 100px repeat(var(--outcome-count, 2), 1fr);
-    gap: 12px;
+    grid-template-columns: 80px repeat(var(--outcome-count, 2), 1fr);
+    gap: 8px;
     align-items: center;
 }
 
-.odds-corner { width: 100px; }
+.odds-corner { width: 80px; }
 
 .odds-header {
     text-align: center;
     font-weight: bold;
     font-size: 1.05rem;
     padding: 4px;
-    color: var(--text-secondary);
 }
 
 .odds-row {
     display: grid;
-    grid-template-columns: 100px repeat(var(--outcome-count, 2), 1fr);
-    gap: 12px;
+    grid-template-columns: 80px repeat(var(--outcome-count, 2), 1fr);
+    gap: 8px;
     align-items: center;
 }
 
@@ -336,7 +469,6 @@
     font-weight: bold;
     font-size: 1.05rem;
     white-space: nowrap;
-    color: var(--text-secondary);
 }
 
 .remove-bk {
@@ -353,40 +485,44 @@
     flex-shrink: 0;
 }
 
-.remove-bk:hover { opacity: 1; transform: scale(1.1); color: var(--color-danger); }
+.remove-bk:hover { opacity: 1; transform: scale(1.1); }
 
 .odds-input {
-    padding: 10px 8px;
-    border-radius: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
     border-width: 2px;
     border-style: solid;
     font-size: 1.1rem;
     font-weight: bold;
     width: 100%;
     background: transparent;
-    transition: all 0.2s;
+    transition: border-color 0.3s, box-shadow 0.3s;
     text-align: center;
     outline: none;
     box-sizing: border-box;
     color: var(--text-secondary);
-    border-color: var(--border-muted);
 }
 
-.odds-input:focus { border-color: var(--border-3); }
 
-/* Подсветка выигрышных коэффициентов */
 .odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
 .odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
 .odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
 .odds-input.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
 .odds-input.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
 
+.odds-input::-webkit-outer-spin-button,
+.odds-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.odds-input[type=number] { -moz-appearance: textfield; }
+
 .add-bk-row {
-    margin-top: 10px;
+    margin-top: 4px;
     display: grid;
-    grid-template-columns: 100px repeat(var(--outcome-count, 2), 1fr);
-    gap: 12px;
+    grid-template-columns: 80px repeat(var(--outcome-count, 2), 1fr);
+    gap: 8px;
+    align-items: center;
 }
+
+.odds-add-bk { grid-column: 1; width: 100%; }
 
 .add-bk-btn {
     background: transparent;
@@ -395,186 +531,217 @@
     font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
-    padding: 8px 12px;
+    padding: 7px 12px;
     border-radius: 8px;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s;
     white-space: nowrap;
 }
 
-.add-bk-btn:hover { background: rgba(133, 193, 233, 0.1); }
+.add-bk-btn:hover { opacity: 0.8; }
 
-/* === КНОПКИ УПРАВЛЕНИЯ === */
-.panel-controls {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.panel-controls .btn {
-    flex: 1;
-    padding: 16px;
-    font-size: 1.15rem;
-    font-weight: bold;
-    border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 56px;
-}
-
-.panel-controls .btn:hover { transform: translateY(-2px); }
-
-/* === РЕЗУЛЬТАТЫ (ПРАВАЯ ПАНЕЛЬ) === */
-.results-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px 20px;
-    gap: 18px;
-    text-align: center;
-}
-
-.placeholder-icon { font-size: 4rem; opacity: 0.3; }
-.placeholder-text { font-size: 1.15rem; font-style: italic; color: var(--text-muted); }
-
-.results-content {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-/* ИНДИКАТОР */
-.indicator-step {
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-}
-
-.arb-indicator {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 15px 25px;
-    border-radius: 12px;
-    border: 1px solid var(--border-muted);
-    width: 100%;
-}
-
-.indicator-circle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    transition: background-color 0.3s;
-    flex-shrink: 0;
-}
-
-.indicator-status-text { font-size: 1.35rem; font-weight: bold; color: var(--text-secondary); }
-.profit-badge { font-size: 2.4rem; font-weight: bold; }
-
-/* ТАБЛИЦА РАСПРЕДЕЛЕНИЯ */
+/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) === */
 .distribution-table {
     width: 100%;
     border-radius: 12px;
-    border: 1px solid var(--border-muted);
+    border-width: 1px;
+    border-style: solid;
     overflow: hidden;
+    min-width: 0;
 }
 
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto; /* ширина столбцов по содержимому */
 }
 
-.distribution-table thead { background: var(--bg-elevated); }
+.distribution-table thead {
+    background: var(--bg-elevated);
+    border-bottom: 2px solid var(--border-muted);
+}
 
-.distribution-table th, .distribution-table td {
+.distribution-table thead th {
     padding: 12px 8px;
-    text-align: center;
-    border-right: 1px solid var(--border-muted);
-    font-size: 1rem;
+    font-weight: bold;
+    font-size: 1.0rem;
     color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid var(--border-muted);
 }
 
-.distribution-table th:last-child, .distribution-table td:last-child { border-right: none; }
+.distribution-table thead th:last-child { border-right: none; }
 
+.distribution-table tbody tr {
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.distribution-table tbody tr:last-child { border-bottom: none; }
+
+.distribution-table tbody td {
+    padding: 11px 8px;
+    font-size: 1.0rem;
+    color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid var(--border-muted);
+    vertical-align: middle;
+}
+
+.distribution-table tbody td:last-child { border-right: none; }
+
+/* === ЯЧЕЙКА КЭФ === */
 .kef-cell {
     display: inline-flex;
-    padding: 3px 8px;
-    border-radius: 6px;
-    border: 2px solid transparent;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+    font-weight: bold;
+    font-size: 1.0rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    white-space: nowrap;
+    min-width: 44px;
+    box-sizing: border-box;
+}
+
+.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 5px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
+.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 5px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
+.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 5px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
+.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 5px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
+.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 5px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
+
+.outcome-badge {
+    color: var(--text-secondary);
+    font-size: 1rem;
     font-weight: bold;
 }
 
-/* ИТОГИ */
+/* === ИТОГИ === */
 .totals {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 20px;
+    padding: 16px 18px;
     border-radius: 12px;
-    background: var(--bg-elevated);
+    border-width: 1px;
+    border-style: solid;
+    min-width: 0;
 }
 
 .total-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 1.1rem;
+    min-width: 0;
+    gap: 8px;
+}
+
+/* Лейблы "Всего поставлено", "Выплата", "Доход" — цвет как строки таблицы */
+.total-row > span:first-child {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: var(--text-secondary);
 }
 
-.total-row-value { font-weight: bold; font-size: 1.1rem; }
+.total-row-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
 
+/* === ЧИСТАЯ ПРИБЫЛЬ === */
 .net-profit-block {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px;
+    padding: 20px 22px;
     border-radius: 12px;
-    border: 2px solid var(--border-4);
-    background: var(--bg-elevated);
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--border-4);
+    min-width: 0;
+    gap: 8px;
 }
 
-.net-profit-label { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; }
-.net-profit-value { font-size: 2.6rem; font-weight: bold; }
-
-/* СТРАТЕГИЯ */
-.strategy-mini-pills { display: flex; gap: 8px; }
-.strategy-mini-btn {
-    flex: 1;
-    height: 56px;
-    border-radius: 10px;
-    border: 2px solid var(--border-5);
-    background: rgba(106, 168, 255, 0.08);
-    color: var(--text-5);
+/* "ЧИСТАЯ ПРИБЫЛЬ:" — цвет как строки таблицы, шрифт крупнее */
+.net-profit-label {
+    font-size: 1.5rem;
     font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-secondary);
 }
-.strategy-mini-btn.active {
-    background: var(--color-info) !important;
-    color: #fff !important;
-    box-shadow: 0 0 12px var(--color-info);
+
+.net-profit-value {
+    font-size: 2.6rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    .arbs-settings-top { flex-direction: column; gap: 20px; }
+    .panel { padding: 18px; gap: 16px; min-height: 0; }
+    .panel-title { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; }
+    .block-divider { margin: 2px -18px; }
+
     .odds-header-row, .odds-row, .add-bk-row {
-        grid-template-columns: 70px repeat(var(--outcome-count, 2), 1fr);
-        gap: 8px;
+        grid-template-columns: 65px repeat(var(--outcome-count, 2), 1fr);
+        gap: 5px;
     }
-    .panel { padding: 15px; min-height: 0; }
-    .net-profit-value { font-size: 1.9rem; }
+
+    .odds-corner { width: 65px; }
+    .odds-bk-label { font-size: 0.95rem; }
+    .odds-input { padding: 9px 4px; font-size: 1rem; }
+    .odds-header { font-size: 0.95rem; }
+
+    .distribution-table thead th,
+    .distribution-table tbody td { padding: 9px 6px; font-size: 0.9rem; }
+
     .profit-badge { font-size: 1.7rem; }
+    .net-profit-value { font-size: 1.9rem; }
+    .panel-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
+    .stake-input-wrapper { width: 100%; }
+    .settings-label { font-size: 1rem; }
+    .panel-title { font-size: 1.4rem; }
+    .indicator-status-text { font-size: 1.1rem; }
+    .indicator-step { height: auto; min-height: 60px; }
+    .arbs-step:first-of-type { height: auto; min-height: 60px; }
 }
 
 @media (max-width: 480px) {
-    .outcome-pill { width: 44px; height: 44px; font-size: 1.1rem; }
-    .odds-header-row, .odds-row { grid-template-columns: 1fr; }
-    .odds-corner { display: none; }
+    .outcome-pills { justify-content: center; }
+    .outcome-pill { width: 46px; height: 46px; font-size: 1.1rem; }
+
+    .odds-header-row, .odds-row, .add-bk-row {
+        grid-template-columns: 55px repeat(var(--outcome-count, 2), 1fr);
+        gap: 3px;
+    }
+
+    .odds-corner { width: 55px; }
+    .odds-bk-label { font-size: 0.85rem; }
+    .odds-input { padding: 7px 2px; font-size: 0.9rem; }
+
+    .indicator-circle { width: 38px; height: 38px; }
+    .panel-controls { flex-direction: column; }
+    .panel-controls .btn { width: 100%; }
+    .net-profit-value { font-size: 1.6rem; }
+    .profit-badge { font-size: 1.5rem; }
+    .panel-title { font-size: 1.3rem; }
 }
