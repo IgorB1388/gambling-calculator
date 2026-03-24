@@ -17,9 +17,10 @@ let hasCalculated = false;
 let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
-const MAX_STAKE_LENGTH = 8;   /* максимум 8 цифр для ставки */
-const MAX_ODDS_LENGTH  = 6;   /* максимум 6 символов для кэфа (напр. 999.99) */
 
+// Новые константы для гибкости
+const MAX_STAKE_VAL = 9999.999; 
+const ODDS_REGEX = /^\d{0,4}(\.\d{0,3})?$/; 
 
 function initApp() {
     initState();
@@ -107,10 +108,17 @@ function updateStrategyPillsActive(activeStrategy) {
     });
 }
 
-function formatToTwoDecimals(value) {
+// Улучшенное форматирование: поддерживает до 3 знаков, если они есть
+function formatOdds(value) {
     if (value === '' || isNaN(value)) return '2.00';
     const num = parseFloat(value);
     if (num < 1.01) return '2.00';
+    
+    const str = num.toString();
+    // Если после точки больше 2 знаков, оставляем 3
+    if (str.includes('.') && str.split('.')[1].length > 2) {
+        return num.toFixed(3);
+    }
     return num.toFixed(2);
 }
 
@@ -145,7 +153,6 @@ function renderOddsTable() {
     container.innerHTML = '';
     container.style.setProperty('--outcome-count', outcomeCount);
 
-    // Заголовок
     const headerRow = document.createElement('div');
     headerRow.className = 'odds-header-row';
     headerRow.appendChild(Object.assign(document.createElement('div'), { className: 'odds-corner' }));
@@ -157,7 +164,6 @@ function renderOddsTable() {
     }
     container.appendChild(headerRow);
 
-    // Строки БК
     for (let b = 0; b < bkCount; b++) {
         const row = document.createElement('div');
         row.className = 'odds-row';
@@ -185,28 +191,22 @@ function renderOddsTable() {
             input.className = 'odds-input bg-elevated border-5';
             input.placeholder = '2.50';
             input.min = '1.01';
-            input.step = '0.01';
-            input.value = oddsValues[b][o].toFixed(2);
+            input.step = '0.001';
+            input.value = formatOdds(oddsValues[b][o]);
 
             input.addEventListener('input', (e) => {
-                /* ограничение длины кэфа */
-                if (e.target.value.length > MAX_ODDS_LENGTH) {
-                    e.target.value = e.target.value.slice(0, MAX_ODDS_LENGTH);
+                let valStr = e.target.value;
+                if (!ODDS_REGEX.test(valStr)) {
+                    e.target.value = valStr.slice(0, -1);
+                    return;
                 }
                 const val = parseFloat(e.target.value);
                 if (!isNaN(val) && val >= 1.01) oddsValues[b][o] = val;
                 resetOnEdit();
             });
 
-            input.addEventListener('keydown', (e) => {
-                if (e.target.value.length >= MAX_ODDS_LENGTH &&
-                    !['Backspace','Delete','ArrowLeft','ArrowRight','Tab','.'].includes(e.key)) {
-                    e.preventDefault();
-                }
-            });
-
             input.addEventListener('blur', (e) => {
-                const formatted = formatToTwoDecimals(e.target.value);
+                const formatted = formatOdds(e.target.value);
                 e.target.value = formatted;
                 oddsValues[b][o] = parseFloat(formatted);
             });
@@ -216,7 +216,6 @@ function renderOddsTable() {
         container.appendChild(row);
     }
 
-    // Кнопка добавить БК
     if (bkCount < 5) {
         const addRow = document.createElement('div');
         addRow.className = 'add-bk-row';
@@ -303,17 +302,12 @@ function initEventListeners() {
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 
     const stakeInput = document.getElementById('totalStake');
-    stakeInput.addEventListener('input', () => {
+    stakeInput.addEventListener('input', (e) => {
         showStakeError(false);
         resetOnEdit();
-        if (stakeInput.value.length > MAX_STAKE_LENGTH) {
-            stakeInput.value = stakeInput.value.slice(0, MAX_STAKE_LENGTH);
-        }
-    });
-    stakeInput.addEventListener('keydown', (e) => {
-        if (stakeInput.value.length >= MAX_STAKE_LENGTH &&
-            !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) {
-            e.preventDefault();
+        let valStr = e.target.value;
+        if (!ODDS_REGEX.test(valStr)) {
+            e.target.value = valStr.slice(0, -1);
         }
     });
 
@@ -381,17 +375,6 @@ function calculateMaxStrategy(bestOdds, totalStake) {
 
 function calculateArbitrage() {
     collectOddsValuesFromDom();
-
-    for (let b = 0; b < bkCount; b++) {
-        for (let o = 0; o < outcomeCount; o++) {
-            const input = document.getElementById(`odds-${b}-${o}`);
-            if (input) {
-                const formatted = formatToTwoDecimals(input.value);
-                input.value = formatted;
-                oddsValues[b][o] = parseFloat(formatted);
-            }
-        }
-    }
 
     const { bestOdds, bestBk } = getBestOddsWithBk();
     bestBkPerOutcome = bestBk;
@@ -475,7 +458,8 @@ function displayResults(data) {
         const tdOdds = document.createElement('td');
         const kefSpan = document.createElement('span');
         kefSpan.className = `kef-cell${data.isArb ? ' arb-highlight-' + i : ''}`;
-        kefSpan.textContent = odd.toFixed(2);
+        // ТУТ ИСПРАВЛЕНИЕ: Используем formatOdds для отображения 3 знаков в таблице
+        kefSpan.textContent = formatOdds(odd);
         tdOdds.appendChild(kefSpan);
         tr.appendChild(tdOdds);
 
