@@ -18,9 +18,6 @@ let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
 
-// Константы для гибкости
-const MAX_STAKE_VAL = 9999.999; 
-
 function initApp() {
     initState();
     renderOddsTable();
@@ -107,18 +104,31 @@ function updateStrategyPillsActive(activeStrategy) {
     });
 }
 
-// Форматирование: просто возвращаем число как есть, без принудительной замены
-function formatOdds(value) {
+// Форматирование при потере фокуса:
+// - если дробная часть отсутствует → добавляем .00
+// - если 1 цифра → добавляем ноль (2.1 → 2.10)
+// - если 2 или 3 цифры → оставляем как есть
+function formatOddsForDisplay(value) {
     if (value === '' || value === null || isNaN(value)) return '';
     const num = parseFloat(value);
     if (isNaN(num)) return '';
-    // Убираем лишние нули в конце, но оставляем значение
-    return num.toString();
+    const str = num.toString();
+    if (!str.includes('.')) return str + '.00';
+    const parts = str.split('.');
+    const intPart = parts[0];
+    let fracPart = parts[1];
+    if (fracPart.length === 1) fracPart += '0';
+    else if (fracPart.length === 2) {} // оставляем
+    else if (fracPart.length > 3) fracPart = fracPart.slice(0, 3); // обрезаем до 3, но это уже не должно случаться
+    return intPart + '.' + fracPart;
 }
 
-// Валидация ввода: ограничиваем целую часть (4 знака) и дробную (3 знака)
+// Валидация во время ввода: ограничиваем длину целой (4) и дробной (3) частей
+// Возвращает true, если ввод разрешён (т.е. не превышены лимиты)
 function validateOddsInput(inputElement) {
     let rawValue = inputElement.value;
+    const selectionStart = inputElement.selectionStart;
+    const selectionEnd = inputElement.selectionEnd;
     
     // Разрешаем только цифры и одну точку
     let cleaned = rawValue.replace(/[^\d.]/g, '');
@@ -131,22 +141,31 @@ function validateOddsInput(inputElement) {
     
     // Целая часть: максимум 4 знака
     let integerPart = parts[0] || '';
+    let wasTruncated = false;
     if (integerPart.length > 4) {
         integerPart = integerPart.slice(0, 4);
         cleaned = integerPart + (parts[1] !== undefined ? '.' + parts[1] : '');
+        wasTruncated = true;
     }
     
     // Дробная часть: максимум 3 знака (если есть точка)
     const newParts = cleaned.split('.');
     if (newParts[1] !== undefined && newParts[1].length > 3) {
         cleaned = newParts[0] + '.' + newParts[1].slice(0, 3);
+        wasTruncated = true;
     }
     
     // Если ввели только точку, очищаем
     if (cleaned === '.') cleaned = '';
     
+    // Если было обрезание, то запрещаем ввод (не даём дописать лишние символы)
+    if (wasTruncated) {
+        inputElement.value = cleaned;
+        return false;
+    }
+    
     inputElement.value = cleaned;
-    return cleaned;
+    return true;
 }
 
 function clearInputHighlights() {
@@ -213,30 +232,43 @@ function renderOddsTable() {
 
         for (let o = 0; o < outcomeCount; o++) {
             const input = document.createElement('input');
-            input.type = 'text'; // меняем на text, чтобы number не мешал
+            input.type = 'text';
             input.id = `odds-${b}-${o}`;
             input.className = 'odds-input bg-elevated border-5';
             input.placeholder = '2.50';
-            input.value = oddsValues[b][o] !== undefined ? oddsValues[b][o].toString() : '';
+            input.value = oddsValues[b][o] !== undefined && oddsValues[b][o] !== null 
+                ? formatOddsForDisplay(oddsValues[b][o]) 
+                : '';
 
             input.addEventListener('input', (e) => {
-                validateOddsInput(e.target);
-                const val = parseFloat(e.target.value);
+                const oldValue = input.value;
+                const isValid = validateOddsInput(input);
+                if (!isValid) {
+                    // Если ввод привёл к обрезанию (достигнут лимит), то не обновляем oddsValues
+                    return;
+                }
+                const val = parseFloat(input.value);
                 if (!isNaN(val)) {
                     oddsValues[b][o] = val;
-                } else if (e.target.value === '' || e.target.value === '-') {
+                } else if (input.value === '' || input.value === '-') {
                     oddsValues[b][o] = null;
                 }
                 resetOnEdit();
             });
 
             input.addEventListener('blur', (e) => {
-                let val = parseFloat(e.target.value);
+                let val = parseFloat(input.value);
                 if (!isNaN(val)) {
                     oddsValues[b][o] = val;
-                    e.target.value = val.toString();
-                } else if (e.target.value === '') {
+                    // Форматируем для отображения: дополняем до 2 знаков, если нужно
+                    input.value = formatOddsForDisplay(val);
+                } else if (input.value === '') {
                     oddsValues[b][o] = null;
+                    input.value = '';
+                } else {
+                    // Если введена невалидная строка, очищаем
+                    oddsValues[b][o] = null;
+                    input.value = '';
                 }
             });
 
