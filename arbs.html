@@ -77,6 +77,7 @@
                                         value="1000">
                                     <span class="stake-suffix text-3">$</span>
                                 </div>
+                                <!-- stake-error элемент удалён, ошибок больше не показываем -->
                             </div>
 
                             <div class="panel-controls">
@@ -118,6 +119,7 @@
 
                         <!-- Результаты -->
                         <div class="results-content" id="resultsContent" style="display:none;">
+                            <!-- Индикатор -->
                             <div class="indicator-step">
                                 <div class="arb-indicator bg-elevated border-1" id="arbIndicator">
                                     <div class="indicator-circle" id="indicatorCircle"></div>
@@ -130,8 +132,10 @@
                                 </div>
                             </div>
 
+                            <!-- Зелёная черта под индикатором (всегда видна) -->
                             <div class="block-divider"></div>
 
+                            <!-- Контейнер для деталей (скрывается, если вилки нет) -->
                             <div id="arbDetailsContainer">
                                 <div class="strategy-block">
                                     <div class="settings-label-row">
@@ -149,7 +153,7 @@
                                 <div class="distribution-table border-1" id="distributionTable">
                                     <table>
                                         <thead class="bg-elevated">
-                                            <tr id="tableHeader"> </tr>
+                                            <tr id="tableHeader"></tr>
                                         </thead>
                                         <tbody id="tableBody"></tbody>
                                     </table>
