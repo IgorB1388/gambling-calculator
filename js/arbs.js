@@ -562,8 +562,8 @@ function displayResults(data) {
         arbStatus.textContent = `${window.getTranslation('arbsFound') || '✅ Вилка найдена!'} +${pct}%`;
         arbStatus.className = 'indicator-status-text text-4';
         indicatorProfit.style.display = 'none';
-        // Показываем детали (таблицу, стратегию и т.д.)
-        if (detailsContainer) detailsContainer.style.display = 'block';
+        // Показываем детали (таблицу, стратегию и т.д.) — используем flex для сохранения отступов
+        if (detailsContainer) detailsContainer.style.display = 'flex';
     } else {
         indicatorCircle.className = 'indicator-circle bg-danger-solid';
         arbStatus.textContent = window.getTranslation('arbsNotFound') || '❌ Вилки нет';
