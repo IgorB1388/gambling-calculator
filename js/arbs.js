@@ -137,30 +137,74 @@ function showResults() {
     document.getElementById('resultsContent').style.display = 'flex';
 }
 
-// Обработка поля ставки: только цифры и точка, максимум 8 целых, 2 дробных
-function validateStakeInput(input) {
-    let value = input.value;
-    // Удаляем всё, кроме цифр и точки
-    let cleaned = value.replace(/[^\d.]/g, '');
-    // Ограничиваем количество точек
-    const parts = cleaned.split('.');
-    if (parts.length > 2) {
-        cleaned = parts[0] + '.' + parts.slice(1).join('');
+// ========== ОБРАБОТКА ВВОДА СТАВКИ (как у коэффициентов, но 8 целых, 2 дробных) ==========
+function processStakeInput(inputElement, event) {
+    const oldValue = inputElement.value;
+    const inputType = event.inputType;
+    const isDelete = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
+    const isInsert = inputType === 'insertText' || inputType === 'insertCompositionText';
+    
+    if (isDelete) return true;
+    if (!isInsert) return true;
+    
+    const newChar = event.data;
+    if (!newChar) return true;
+    
+    if (!/[\d.]/.test(newChar)) {
+        event.preventDefault();
+        return false;
     }
-    // Целая часть: максимум 8 цифр
-    let intPart = parts[0] || '';
-    if (intPart.length > 8) {
-        intPart = intPart.slice(0, 8);
-        cleaned = intPart + (parts[1] !== undefined ? '.' + parts[1] : '');
+    
+    if (newChar === '.') {
+        if (oldValue.includes('.')) {
+            event.preventDefault();
+            return false;
+        }
+        if (oldValue === '' || oldValue === '-') {
+            event.preventDefault();
+            return false;
+        }
+        return true;
     }
-    // Дробная часть: максимум 2 цифры
-    if (parts[1] !== undefined && parts[1].length > 2) {
-        cleaned = intPart + '.' + parts[1].slice(0, 2);
+    
+    const dotPos = oldValue.indexOf('.');
+    let isIntegerPart = true;
+    if (dotPos !== -1 && inputElement.selectionStart > dotPos) {
+        isIntegerPart = false;
     }
-    // Если осталась только точка, удаляем
-    if (cleaned === '.') cleaned = '';
-    input.value = cleaned;
-    return cleaned;
+    
+    let newValue = oldValue.slice(0, inputElement.selectionStart) + newChar + oldValue.slice(inputElement.selectionEnd);
+    
+    if (isIntegerPart) {
+        const parts = newValue.split('.');
+        let intPart = parts[0];
+        if (intPart.length > 8) {
+            if (!oldValue.includes('.')) {
+                const newInt = intPart.slice(0, 8);
+                const extraDigit = intPart.slice(8);
+                let newFrac = extraDigit + (parts[1] || '');
+                if (newFrac.length > 2) newFrac = newFrac.slice(0, 2);
+                newValue = newInt + '.' + newFrac;
+                inputElement.value = newValue;
+                const newDotPos = newValue.indexOf('.');
+                inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
+                event.preventDefault();
+                return false;
+            } else {
+                event.preventDefault();
+                return false;
+            }
+        }
+        return true;
+    } else {
+        const parts = newValue.split('.');
+        const fracPart = parts[1] || '';
+        if (fracPart.length > 2) {
+            event.preventDefault();
+            return false;
+        }
+        return true;
+    }
 }
 
 function normalizeStakeInput() {
@@ -170,14 +214,36 @@ function normalizeStakeInput() {
         input.value = '1000';
         return;
     }
-    let num = parseFloat(val);
+    // Удаляем всё, кроме цифр и точки
+    let cleaned = val.replace(/[^\d.]/g, '');
+    const parts = cleaned.split('.');
+    let intPart = parts[0] || '';
+    if (intPart.length > 8) intPart = intPart.slice(0, 8);
+    let fracPart = parts[1] || '';
+    if (fracPart.length > 2) fracPart = fracPart.slice(0, 2);
+    
+    if (fracPart === '') {
+        cleaned = intPart;
+    } else {
+        cleaned = intPart + '.' + fracPart;
+    }
+    
+    let num = parseFloat(cleaned);
     if (isNaN(num) || num <= 0) {
         input.value = '1000';
         return;
     }
-    // Ограничиваем максимальное значение, но не обязательно
-    if (num > 99999999.99) input.value = '99999999.99';
-    else input.value = num.toString();
+    if (num > 99999999.99) {
+        input.value = '99999999.99';
+        return;
+    }
+    // Форматируем: если нет точки, добавляем .00
+    if (!cleaned.includes('.')) {
+        cleaned += '.00';
+    } else if (cleaned.split('.')[1].length === 1) {
+        cleaned += '0';
+    }
+    input.value = cleaned;
 }
 
 function updateOutcomePillsActive(count) {
@@ -618,28 +684,28 @@ function displayResults(data) {
 
     let rowsHtml = '';
     for (let m = 0; m < metricLabels.length; m++) {
-        let rowHtml = `<td class="metric-label">${metricLabels[m]}】`;
+        let rowHtml = `<td class="metric-label">${metricLabels[m]}<\/td>`;
         for (let i = 0; i < outcomes; i++) {
             if (m === 0) { // Коэффициент
                 const odd = data.bestOdds[i];
                 const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
-                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span>`;
+                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span><\/td>`;
             } else if (m === 1) { // Ставка
-                rowHtml += `<td>${data.stakes[i].toFixed(2)} $`;
+                rowHtml += `<td>${data.stakes[i].toFixed(2)} $<\/td>`;
             } else if (m === 2) { // Результат
                 if (data.isArb) {
                     const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
                     const badgeStyle = isMaxWin ? 'color: var(--color-warning); font-weight: bold;' : 'color: var(--color-success); font-weight: bold;';
                     const badgeText = isMaxWin ? returnText : winText;
-                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span>`;
+                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span><\/td>`;
                 } else {
-                    rowHtml += `<td>—`;
+                    rowHtml += `<td>—<\/td>`;
                 }
             } else { // Выплата
-                rowHtml += `<td>${data.payouts[i].toFixed(2)} $`;
+                rowHtml += `<td>${data.payouts[i].toFixed(2)} $<\/td>`;
             }
         }
-        rowsHtml += `<tr>${rowHtml}</tr>`;
+        rowsHtml += `<tr>${rowHtml}<\/tr>`;
     }
     tableBody.innerHTML = rowsHtml;
 
@@ -692,8 +758,10 @@ function initEventListeners() {
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 
     const stakeInput = document.getElementById('totalStake');
+    stakeInput.addEventListener('beforeinput', (e) => {
+        processStakeInput(stakeInput, e);
+    });
     stakeInput.addEventListener('input', (e) => {
-        validateStakeInput(stakeInput);
         resetOnEdit();
         saveSettingsState();
     });
