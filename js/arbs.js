@@ -1,4 +1,4 @@
-// arbs.js - Анализатор вилок
+// arbs.js - Анализатор вилок (с сокрытием деталей при отсутствии вилки)
 
 const ARB_COLORS = [
     '#00f0ff',
@@ -59,7 +59,6 @@ function initApp() {
         if (!oddsValues || oddsValues.length !== bkCount) {
             initState();
         } else {
-            // Проверим каждую строку на соответствие outcomeCount
             for (let b = 0; b < bkCount; b++) {
                 if (!oddsValues[b] || oddsValues[b].length !== outcomeCount) {
                     oddsValues[b] = [];
@@ -75,11 +74,14 @@ function initApp() {
     initTooltips();
     updateOutcomePillsActive(outcomeCount);
     updateStrategyPillsActive(strategy);
-    // Сбрасываем результат (показываем заглушку)
+    // Сбрасываем результат
     hasCalculated = false;
     lastCalculation = null;
     clearInputHighlights();
     showPlaceholder();
+    // Скрываем детали (контейнер с таблицей и т.д.)
+    const detailsContainer = document.getElementById('arbDetailsContainer');
+    if (detailsContainer) detailsContainer.style.display = 'none';
 }
 
 function initState() {
@@ -127,6 +129,9 @@ function positionTooltip(e, popup) {
 function showPlaceholder() {
     document.getElementById('resultsPlaceholder').style.display = 'flex';
     document.getElementById('resultsContent').style.display = 'none';
+    // Скрываем детали, если они были видны
+    const detailsContainer = document.getElementById('arbDetailsContainer');
+    if (detailsContainer) detailsContainer.style.display = 'none';
 }
 
 function showResults() {
@@ -268,8 +273,11 @@ function resetOnEdit() {
         bestBkPerOutcome = [];
         clearInputHighlights();
         showPlaceholder();
+        // Скрываем детали
+        const detailsContainer = document.getElementById('arbDetailsContainer');
+        if (detailsContainer) detailsContainer.style.display = 'none';
     }
-    saveSettingsState(); // сохраняем любые изменения
+    saveSettingsState();
 }
 
 // ========== ОТРИСОВКА ТАБЛИЦЫ КОЭФФИЦИЕНТОВ ==========
@@ -314,7 +322,7 @@ function renderOddsTable() {
             input.type = 'text';
             input.id = `odds-${b}-${o}`;
             input.className = 'odds-input bg-elevated border-5';
-            // placeholder убран, чтобы не показывался серый текст
+            // placeholder убран
             input.value = oddsValues[b][o] !== undefined && oddsValues[b][o] !== null 
                 ? formatOddsForDisplay(oddsValues[b][o]) 
                 : '';
@@ -339,11 +347,10 @@ function renderOddsTable() {
                     oddsValues[b][o] = val;
                     input.value = formatOddsForDisplay(val);
                 } else if (input.value === '' || input.value === '-') {
-                    // Восстанавливаем значение по умолчанию
                     const defaultVal = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
                     oddsValues[b][o] = defaultVal;
                     input.value = formatOddsForDisplay(defaultVal);
-                    resetOnEdit(); // вызываем сброс результата при восстановлении
+                    resetOnEdit();
                 } else {
                     oddsValues[b][o] = null;
                     input.value = '';
@@ -526,18 +533,20 @@ function calculateArbitrage() {
 
     hasCalculated = true;
 
+    // Подсветка лучших БК (только при наличии вилки)
     if (result.isArb) {
         applyInputHighlights(bestBk);
     } else {
         clearInputHighlights();
     }
 
-    showResults();
+    showResults(); // показываем блок результатов (скрываем заглушку)
     displayResults(lastCalculation);
-    saveSettingsState(); // сохраняем, чтобы при следующем открытии восстановились настройки (но результат не восстанавливается)
+    saveSettingsState();
 }
 
 function displayResults(data) {
+    const detailsContainer = document.getElementById('arbDetailsContainer');
     const indicatorCircle = document.getElementById('indicatorCircle');
     const arbStatus = document.getElementById('arbStatus');
     const indicatorProfit = document.getElementById('indicatorProfit');
@@ -553,11 +562,17 @@ function displayResults(data) {
         arbStatus.textContent = `${window.getTranslation('arbsFound') || '✅ Вилка найдена!'} +${pct}%`;
         arbStatus.className = 'indicator-status-text text-4';
         indicatorProfit.style.display = 'none';
+        // Показываем детали (таблицу, стратегию и т.д.)
+        if (detailsContainer) detailsContainer.style.display = 'block';
     } else {
         indicatorCircle.className = 'indicator-circle bg-danger-solid';
         arbStatus.textContent = window.getTranslation('arbsNotFound') || '❌ Вилки нет';
         arbStatus.className = 'indicator-status-text text-7';
         indicatorProfit.style.display = 'none';
+        // Скрываем детали, так как вилки нет
+        if (detailsContainer) detailsContainer.style.display = 'none';
+        // Не нужно заполнять таблицу и итоги
+        return;
     }
 
     const isMaxStrategy = data.strategy === 'max' && data.maxOddIndex !== undefined;
@@ -651,6 +666,9 @@ function resetCalculator() {
     document.getElementById('incomeRow').style.display = 'none';
     document.getElementById('netProfitBlock').style.display = 'none';
     showPlaceholder();
+    // Скрываем детали
+    const detailsContainer = document.getElementById('arbDetailsContainer');
+    if (detailsContainer) detailsContainer.style.display = 'none';
     localStorage.removeItem('arbSettingsState');
 }
 
