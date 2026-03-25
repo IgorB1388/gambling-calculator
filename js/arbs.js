@@ -314,7 +314,7 @@ function renderOddsTable() {
             input.type = 'text';
             input.id = `odds-${b}-${o}`;
             input.className = 'odds-input bg-elevated border-5';
-            input.placeholder = '2.50';
+            // placeholder убран, чтобы не показывался серый текст
             input.value = oddsValues[b][o] !== undefined && oddsValues[b][o] !== null 
                 ? formatOddsForDisplay(oddsValues[b][o]) 
                 : '';
