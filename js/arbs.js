@@ -64,7 +64,7 @@ function initApp() {
                 if (!oddsValues[b] || oddsValues[b].length !== outcomeCount) {
                     oddsValues[b] = [];
                     for (let o = 0; o < outcomeCount; o++) {
-                        oddsValues[b][o] = DEFAULT_ODDS[o];
+                        oddsValues[b][o] = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
                     }
                 }
             }
@@ -86,7 +86,7 @@ function initState() {
     oddsValues = [];
     for (let b = 0; b < bkCount; b++) {
         const row = [];
-        for (let o = 0; o < outcomeCount; o++) row.push(DEFAULT_ODDS[o]);
+        for (let o = 0; o < outcomeCount; o++) row.push(DEFAULT_ODDS[o % DEFAULT_ODDS.length]);
         oddsValues.push(row);
     }
 }
@@ -338,9 +338,12 @@ function renderOddsTable() {
                 if (!isNaN(val)) {
                     oddsValues[b][o] = val;
                     input.value = formatOddsForDisplay(val);
-                } else if (input.value === '') {
-                    oddsValues[b][o] = null;
-                    input.value = '';
+                } else if (input.value === '' || input.value === '-') {
+                    // Восстанавливаем значение по умолчанию
+                    const defaultVal = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
+                    oddsValues[b][o] = defaultVal;
+                    input.value = formatOddsForDisplay(defaultVal);
+                    resetOnEdit(); // вызываем сброс результата при восстановлении
                 } else {
                     oddsValues[b][o] = null;
                     input.value = '';
@@ -374,7 +377,7 @@ function addBookmaker() {
     if (bkCount >= 5) return;
     collectOddsValuesFromDom();
     const newRow = [];
-    for (let o = 0; o < outcomeCount; o++) newRow.push(DEFAULT_ODDS[o]);
+    for (let o = 0; o < outcomeCount; o++) newRow.push(DEFAULT_ODDS[o % DEFAULT_ODDS.length]);
     oddsValues.push(newRow);
     bkCount++;
     resetOnEdit();
@@ -411,7 +414,7 @@ function changeOutcomeCount(newCount) {
     for (let b = 0; b < bkCount; b++) {
         const newRow = [];
         for (let o = 0; o < newCount; o++) {
-            newRow.push(o < outcomeCount ? oddsValues[b][o] : DEFAULT_ODDS[o]);
+            newRow.push(o < outcomeCount ? oddsValues[b][o] : DEFAULT_ODDS[o % DEFAULT_ODDS.length]);
         }
         newOddsValues.push(newRow);
     }
