@@ -16,7 +16,7 @@ let lastCalculation = null;
 let hasCalculated = false;
 let bestBkPerOutcome = [];
 
-const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00, 5.00];
+const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00]; // до 4 исходов
 
 // ========== СОХРАНЕНИЕ И ЗАГРУЗКА СОСТОЯНИЯ (только введённые данные) ==========
 function saveSettingsState() {
@@ -55,7 +55,6 @@ function initApp() {
     if (!loaded) {
         initState();
     } else {
-        // Убедимся, что oddsValues имеет правильную размерность
         if (!oddsValues || oddsValues.length !== bkCount) {
             initState();
         } else {
@@ -74,14 +73,14 @@ function initApp() {
     initTooltips();
     updateOutcomePillsActive(outcomeCount);
     updateStrategyPillsActive(strategy);
-    // Сбрасываем результат
     hasCalculated = false;
     lastCalculation = null;
     clearInputHighlights();
     showPlaceholder();
-    // Скрываем детали (контейнер с таблицей и т.д.)
     const detailsContainer = document.getElementById('arbDetailsContainer');
     if (detailsContainer) detailsContainer.style.display = 'none';
+    // Убедимся, что сумма ставки всегда корректна
+    normalizeStakeInput();
 }
 
 function initState() {
@@ -138,17 +137,47 @@ function showResults() {
     document.getElementById('resultsContent').style.display = 'flex';
 }
 
-function showStakeError(show) {
-    const input = document.getElementById('totalStake');
-    const errorEl = document.getElementById('stakeError');
-    if (show) {
-        input.classList.add('input-error');
-        errorEl.style.display = 'block';
-        errorEl.textContent = window.getTranslation('invalidStake') || 'Введите корректную сумму ставки';
-    } else {
-        input.classList.remove('input-error');
-        errorEl.style.display = 'none';
+// Обработка поля ставки: только цифры и точка, максимум 8 целых, 2 дробных
+function validateStakeInput(input) {
+    let value = input.value;
+    // Удаляем всё, кроме цифр и точки
+    let cleaned = value.replace(/[^\d.]/g, '');
+    // Ограничиваем количество точек
+    const parts = cleaned.split('.');
+    if (parts.length > 2) {
+        cleaned = parts[0] + '.' + parts.slice(1).join('');
     }
+    // Целая часть: максимум 8 цифр
+    let intPart = parts[0] || '';
+    if (intPart.length > 8) {
+        intPart = intPart.slice(0, 8);
+        cleaned = intPart + (parts[1] !== undefined ? '.' + parts[1] : '');
+    }
+    // Дробная часть: максимум 2 цифры
+    if (parts[1] !== undefined && parts[1].length > 2) {
+        cleaned = intPart + '.' + parts[1].slice(0, 2);
+    }
+    // Если осталась только точка, удаляем
+    if (cleaned === '.') cleaned = '';
+    input.value = cleaned;
+    return cleaned;
+}
+
+function normalizeStakeInput() {
+    const input = document.getElementById('totalStake');
+    let val = input.value.trim();
+    if (val === '') {
+        input.value = '1000';
+        return;
+    }
+    let num = parseFloat(val);
+    if (isNaN(num) || num <= 0) {
+        input.value = '1000';
+        return;
+    }
+    // Ограничиваем максимальное значение, но не обязательно
+    if (num > 99999999.99) input.value = '99999999.99';
+    else input.value = num.toString();
 }
 
 function updateOutcomePillsActive(count) {
@@ -163,7 +192,6 @@ function updateStrategyPillsActive(activeStrategy) {
     });
 }
 
-// Форматирование для отображения: 2 знака после запятой по умолчанию, 3 если введено
 function formatOddsForDisplay(value) {
     if (value === '' || value === null || isNaN(value)) return '';
     const num = parseFloat(value);
@@ -179,7 +207,7 @@ function formatOddsForDisplay(value) {
     return intPart + '.' + fracPart;
 }
 
-// Обработка ввода с ограничениями
+// Обработка ввода коэффициентов
 function processOddsInput(inputElement, event) {
     const oldValue = inputElement.value;
     const inputType = event.inputType;
@@ -278,7 +306,6 @@ function resetOnEdit() {
     saveSettingsState();
 }
 
-// ========== ОТРИСОВКА ТАБЛИЦЫ КОЭФФИЦИЕНТОВ ==========
 function renderOddsTable() {
     const container = document.getElementById('oddsTable');
     container.innerHTML = '';
@@ -412,7 +439,7 @@ function collectOddsValuesFromDom() {
 }
 
 function changeOutcomeCount(newCount) {
-    if (newCount < 2 || newCount > 5 || newCount === outcomeCount) return;
+    if (newCount < 2 || newCount > 4 || newCount === outcomeCount) return;
     collectOddsValuesFromDom();
     const newOddsValues = [];
     for (let b = 0; b < bkCount; b++) {
@@ -497,18 +524,19 @@ function calculateMaxStrategy(bestOdds, totalStake) {
 
 function calculateArbitrage() {
     collectOddsValuesFromDom();
-
-    const { bestOdds, bestBk } = getBestOddsWithBk();
-    bestBkPerOutcome = bestBk;
-
+    // Принудительно нормализуем сумму ставки
+    normalizeStakeInput();
     const totalStake = parseFloat(document.getElementById('totalStake').value);
 
     if (isNaN(totalStake) || totalStake <= 0) {
-        showStakeError(true);
+        // Если всё же NaN (не должно случиться после normalize), подставляем 1000
+        document.getElementById('totalStake').value = '1000';
+        calculateArbitrage(); // рекурсивно пересчитаем
         return;
     }
 
-    showStakeError(false);
+    const { bestOdds, bestBk } = getBestOddsWithBk();
+    bestBkPerOutcome = bestBk;
 
     const result = strategy === 'guaranteed'
         ? calculateGuaranteedStrategy(bestOdds, totalStake)
@@ -574,7 +602,6 @@ function displayResults(data) {
     const returnText = window.getTranslation('arbsReturn') || 'Возврат';
     const outcomeLabel = window.getTranslation('arbsOutcomeLabel') || 'Исход';
 
-    // Транспонированная таблица
     const outcomes = data.bestOdds.length;
     const metricLabels = [
         window.getTranslation('arbsOdds') || 'Коэффициент',
@@ -583,36 +610,33 @@ function displayResults(data) {
         window.getTranslation('arbsPayout') || 'Выплата'
     ];
 
-    // Заголовки: пустая левая ячейка + исходы
     let headerHtml = '<th></th>';
     for (let i = 0; i < outcomes; i++) {
         headerHtml += `<th>${outcomeLabel} ${i + 1}</th>`;
     }
     tableHeader.innerHTML = headerHtml;
 
-    // Строки таблицы
     let rowsHtml = '';
     for (let m = 0; m < metricLabels.length; m++) {
-        let rowHtml = `<td class="metric-label">${metricLabels[m]}</td>`;
+        let rowHtml = `<td class="metric-label">${metricLabels[m]}】`;
         for (let i = 0; i < outcomes; i++) {
             if (m === 0) { // Коэффициент
                 const odd = data.bestOdds[i];
                 const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
-                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span></td>`;
+                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span>`;
             } else if (m === 1) { // Ставка
-                rowHtml += `<td>${data.stakes[i].toFixed(2)} $</td>`;
+                rowHtml += `<td>${data.stakes[i].toFixed(2)} $`;
             } else if (m === 2) { // Результат
                 if (data.isArb) {
                     const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
-                    const badgeClass = isMaxWin ? 'outcome-badge' : 'outcome-badge';
                     const badgeStyle = isMaxWin ? 'color: var(--color-warning); font-weight: bold;' : 'color: var(--color-success); font-weight: bold;';
                     const badgeText = isMaxWin ? returnText : winText;
-                    rowHtml += `<td><span class="${badgeClass}" style="${badgeStyle}">${badgeText}</span></td>`;
+                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span>`;
                 } else {
-                    rowHtml += `<td>—</td>`;
+                    rowHtml += `<td>—`;
                 }
             } else { // Выплата
-                rowHtml += `<td>${data.payouts[i].toFixed(2)} $</td>`;
+                rowHtml += `<td>${data.payouts[i].toFixed(2)} $`;
             }
         }
         rowsHtml += `<tr>${rowHtml}</tr>`;
@@ -646,8 +670,7 @@ function resetCalculator() {
     initState();
     renderOddsTable();
     clearInputHighlights();
-    document.getElementById('totalStake').value = 1000;
-    showStakeError(false);
+    document.getElementById('totalStake').value = '1000';
     updateOutcomePillsActive(2);
     updateStrategyPillsActive('guaranteed');
     document.getElementById('incomeRow').style.display = 'none';
@@ -670,7 +693,12 @@ function initEventListeners() {
 
     const stakeInput = document.getElementById('totalStake');
     stakeInput.addEventListener('input', (e) => {
-        showStakeError(false);
+        validateStakeInput(stakeInput);
+        resetOnEdit();
+        saveSettingsState();
+    });
+    stakeInput.addEventListener('blur', () => {
+        normalizeStakeInput();
         resetOnEdit();
         saveSettingsState();
     });
