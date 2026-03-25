@@ -95,108 +95,102 @@
                     </div>
 
                     <!-- ПРАВАЯ ПАНЕЛЬ -->
-                    <div class="panel bg-surface border-4 shadow-default">
+                   <!-- ПРАВАЯ ПАНЕЛЬ -->
+<div class="panel bg-surface border-4 shadow-default">
+    <div class="panel-title text-4" data-i18n="arbsResultsTitle"></div>
 
-                        <div class="panel-title text-4" data-i18n="arbsResultsTitle"></div>
+    <!-- Заглушка -->
+    <div class="results-placeholder" id="resultsPlaceholder">
+        <div class="placeholder-icon">📊</div>
+        <div class="placeholder-text text-muted" data-i18n="arbsPlaceholder"></div>
+        <div class="placeholder-steps">
+            <div class="placeholder-step text-muted">
+                <span class="step-num text-1">1</span>
+                <span data-i18n="arbsPlaceholderStep1"></span>
+            </div>
+            <div class="placeholder-step text-muted">
+                <span class="step-num text-1">2</span>
+                <span data-i18n="arbsPlaceholderStep2"></span>
+            </div>
+            <div class="placeholder-step text-muted">
+                <span class="step-num text-1">3</span>
+                <span data-i18n="arbsPlaceholderStep3"></span>
+            </div>
+        </div>
+    </div>
 
-                        <!-- Заглушка -->
-                        <div class="results-placeholder" id="resultsPlaceholder">
-                            <div class="placeholder-icon">📊</div>
-                            <div class="placeholder-text text-muted" data-i18n="arbsPlaceholder"></div>
-                            <div class="placeholder-steps">
-                                <div class="placeholder-step text-muted">
-                                    <span class="step-num text-1">1</span>
-                                    <span data-i18n="arbsPlaceholderStep1"></span>
-                                </div>
-                                <div class="placeholder-step text-muted">
-                                    <span class="step-num text-1">2</span>
-                                    <span data-i18n="arbsPlaceholderStep2"></span>
-                                </div>
-                                <div class="placeholder-step text-muted">
-                                    <span class="step-num text-1">3</span>
-                                    <span data-i18n="arbsPlaceholderStep3"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Результаты -->
-                        <div class="results-content" id="resultsContent" style="display:none;">
-
-                            <!-- Индикатор — обёртка выравнивает по высоте с первым шагом слева -->
-                            <div class="indicator-step">
-                                <div class="arb-indicator bg-elevated border-1" id="arbIndicator">
-                                    <div class="indicator-circle" id="indicatorCircle"></div>
-                                    <div class="indicator-text">
-                                        <span class="indicator-status-text" id="arbStatus">—</span>
-                                    </div>
-                                    <div class="indicator-profit" id="indicatorProfit" style="display:none;">
-                                        <span class="profit-badge text-4" id="profitBadge"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="block-divider"></div>
-
-                            <div class="strategy-block">
-                                <div class="settings-label-row">
-                                    <span class="settings-label text-3" data-i18n="arbsStrategyLabel"></span>
-                                    <span class="tooltip-icon" data-tooltip-key="arbsStrategyTooltip">?</span>
-                                </div>
-                                <div class="strategy-mini-pills">
-                                    <button class="strategy-mini-btn active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed"></button>
-                                    <button class="strategy-mini-btn" data-strategy="max" data-i18n="arbsStrategyMax"></button>
-                                </div>
-                            </div>
-
-                            <div class="block-divider"></div>
-
-                            <!-- Таблица: настоящий <table> для правильного выравнивания столбцов -->
-                            <div class="distribution-table border-1" id="distributionTable">
-                                <table>
-                                    <colgroup>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                    </colgroup>
-                                    <thead class="bg-elevated">
-                                        <tr>
-                                            <th data-i18n="arbsOutcome"></th>
-                                            <th data-i18n="arbsOdds"></th>
-                                            <th data-i18n="arbsStake"></th>
-                                            <th data-i18n="arbsOutcomeType"></th>
-                                            <th data-i18n="arbsPayout"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableBody"></tbody>
-                                </table>
-                            </div>
-
-                            <div class="totals bg-elevated border-1">
-                                <div class="total-row">
-                                    <span class="text-muted" data-i18n="arbsTotalStake"></span>
-                                    <span class="total-row-value text-3" id="totalStakeDisplay">0 $</span>
-                                </div>
-                                <div class="total-row">
-                                    <span class="text-muted" data-i18n="arbsTotalPayoutRow"></span>
-                                    <span class="total-row-value text-3" id="totalPayout">0 $</span>
-                                </div>
-                                <div class="total-row" id="incomeRow" style="display:none;">
-                                    <span class="text-muted" data-i18n="arbsIncomeRow"></span>
-                                    <span class="total-row-value text-4" id="incomePercent"></span>
-                                </div>
-                            </div>
-
-                            <div class="net-profit-block bg-elevated" id="netProfitBlock" style="display:none;">
-                                <span class="net-profit-label text-muted" data-i18n="arbsNetProfit"></span>
-                                <span class="net-profit-value text-4" id="netProfit">0 $</span>
-                            </div>
-
-                        </div>
-                    </div>
-
+    <!-- Результаты -->
+    <div class="results-content" id="resultsContent" style="display:none;">
+        <!-- Индикатор -->
+        <div class="indicator-step">
+            <div class="arb-indicator bg-elevated border-1" id="arbIndicator">
+                <div class="indicator-circle" id="indicatorCircle"></div>
+                <div class="indicator-text">
+                    <span class="indicator-status-text" id="arbStatus">—</span>
                 </div>
+                <div class="indicator-profit" id="indicatorProfit" style="display:none;">
+                    <span class="profit-badge text-4" id="profitBadge"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контейнер для деталей (скрывается, если вилки нет) -->
+        <div id="arbDetailsContainer">
+            <div class="block-divider"></div>
+
+            <div class="strategy-block">
+                <div class="settings-label-row">
+                    <span class="settings-label text-3" data-i18n="arbsStrategyLabel"></span>
+                    <span class="tooltip-icon" data-tooltip-key="arbsStrategyTooltip">?</span>
+                </div>
+                <div class="strategy-mini-pills">
+                    <button class="strategy-mini-btn active" data-strategy="guaranteed" data-i18n="arbsStrategyGuaranteed"></button>
+                    <button class="strategy-mini-btn" data-strategy="max" data-i18n="arbsStrategyMax"></button>
+                </div>
+            </div>
+
+            <div class="block-divider"></div>
+
+            <div class="distribution-table border-1" id="distributionTable">
+                <table>
+                    <colgroup>
+                        <col><col><col><col><col>
+                    </colgroup>
+                    <thead class="bg-elevated">
+                        <tr>
+                            <th data-i18n="arbsOutcome"></th>
+                            <th data-i18n="arbsOdds"></th>
+                            <th data-i18n="arbsStake"></th>
+                            <th data-i18n="arbsOutcomeType"></th>
+                            <th data-i18n="arbsPayout"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="totals bg-elevated border-1">
+                <div class="total-row">
+                    <span class="text-muted" data-i18n="arbsTotalStake"></span>
+                    <span class="total-row-value text-3" id="totalStakeDisplay">0 $</span>
+                </div>
+                <div class="total-row">
+                    <span class="text-muted" data-i18n="arbsTotalPayoutRow"></span>
+                    <span class="total-row-value text-3" id="totalPayout">0 $</span>
+                </div>
+                <div class="total-row" id="incomeRow" style="display:none;">
+                    <span class="text-muted" data-i18n="arbsIncomeRow"></span>
+                    <span class="total-row-value text-4" id="incomePercent"></span>
+                </div>
+            </div>
+
+            <div class="net-profit-block bg-elevated" id="netProfitBlock" style="display:none;">
+                <span class="net-profit-label text-muted" data-i18n="arbsNetProfit"></span>
+                <span class="net-profit-value text-4" id="netProfit">0 $</span>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
         </div>
 
