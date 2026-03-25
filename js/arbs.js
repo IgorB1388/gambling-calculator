@@ -136,7 +136,7 @@ function showResults() {
     document.getElementById('resultsContent').style.display = 'flex';
 }
 
-// ========== НОВАЯ ЛОГИКА ВВОДА СТАВКИ (8 целых, 2 дробных, автоточка на 8-й цифре) ==========
+// ========== ЛОГИКА ВВОДА СТАВКИ (8 целых, 2 дробных, автоточка на 8-й цифре) ==========
 function processStakeInput(inputElement, event) {
     const oldValue = inputElement.value;
     const inputType = event.inputType;
@@ -181,8 +181,7 @@ function processStakeInput(inputElement, event) {
         // Если целая часть стала ровно 8 символов и точки ещё нет → вставляем точку
         if (intPart.length === 8 && !oldValue.includes('.')) {
             const newInt = intPart;
-            const newFrac = '';
-            newValue = newInt + '.' + newFrac;
+            newValue = newInt + '.';
             inputElement.value = newValue;
             const newDotPos = newValue.indexOf('.');
             inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
@@ -263,7 +262,7 @@ function formatOddsForDisplay(value) {
     return intPart + '.' + fracPart;
 }
 
-// Обработка ввода коэффициентов (4 целых, 3 дробных)
+// ========== ЛОГИКА ВВОДА КОЭФФИЦИЕНТОВ (4 целых, 3 дробных, автоточка на 4-й цифре) ==========
 function processOddsInput(inputElement, event) {
     const oldValue = inputElement.value;
     const inputType = event.inputType;
@@ -304,6 +303,19 @@ function processOddsInput(inputElement, event) {
     if (isIntegerPart) {
         const parts = newValue.split('.');
         let intPart = parts[0];
+        
+        // Если целая часть стала ровно 4 символа и точки ещё нет → вставляем точку
+        if (intPart.length === 4 && !oldValue.includes('.')) {
+            const newInt = intPart;
+            newValue = newInt + '.';
+            inputElement.value = newValue;
+            const newDotPos = newValue.indexOf('.');
+            inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
+            event.preventDefault();
+            return false;
+        }
+        
+        // Если целая часть превысила 4 (при вставке или копировании)
         if (intPart.length > 4) {
             if (!oldValue.includes('.')) {
                 const newInt = intPart.slice(0, 4);
@@ -423,17 +435,15 @@ function renderOddsTable() {
 
             input.addEventListener('blur', (e) => {
                 let val = parseFloat(input.value);
-                if (!isNaN(val)) {
+                if (!isNaN(val) && val > 1) {
                     oddsValues[b][o] = val;
                     input.value = formatOddsForDisplay(val);
-                } else if (input.value === '' || input.value === '-') {
+                } else {
+                    // значение ≤1 или некорректно – заменяем на дефолтный коэффициент
                     const defaultVal = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
                     oddsValues[b][o] = defaultVal;
                     input.value = formatOddsForDisplay(defaultVal);
                     resetOnEdit();
-                } else {
-                    oddsValues[b][o] = null;
-                    input.value = '';
                 }
                 saveSettingsState();
             });
@@ -693,7 +703,7 @@ function displayResults(data) {
                 rowHtml += `<td>${data.payouts[i].toFixed(2)} $`;
             }
         }
-        rowsHtml += `<tr>${rowHtml} </td>`;
+        rowsHtml += `<tr>${rowHtml} </tr>`;
     }
     tableBody.innerHTML = rowsHtml;
 
