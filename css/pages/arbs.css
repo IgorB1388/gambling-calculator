@@ -502,7 +502,6 @@
     color: var(--text-secondary);
 }
 
-
 .odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
 .odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
 .odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
@@ -542,20 +541,20 @@
 
 .add-bk-btn:hover { opacity: 0.8; }
 
-/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) === */
+/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) — ТРАНСПОНИРОВАННАЯ === */
 .distribution-table {
     width: 100%;
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
-    overflow: hidden;
+    overflow-x: auto;
     min-width: 0;
 }
 
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto; /* ширина столбцов по содержимому */
+    table-layout: auto;
 }
 
 .distribution-table thead {
@@ -571,6 +570,7 @@
     text-align: center;
     white-space: nowrap;
     border-right: 1px solid var(--border-muted);
+    background: var(--bg-elevated);
 }
 
 .distribution-table thead th:last-child { border-right: none; }
@@ -592,6 +592,14 @@
 }
 
 .distribution-table tbody td:last-child { border-right: none; }
+
+/* Первый столбец (заголовки строк) — такой же как th */
+.distribution-table tbody td:first-child {
+    background: var(--bg-elevated);
+    font-weight: bold;
+    color: var(--text-secondary);
+    border-right: 1px solid var(--border-muted);
+}
 
 /* === ЯЧЕЙКА КЭФ === */
 .kef-cell {
@@ -644,7 +652,6 @@
     gap: 8px;
 }
 
-/* Лейблы "Всего поставлено", "Выплата", "Доход" — цвет как строки таблицы */
 .total-row > span:first-child {
     flex-shrink: 1;
     overflow: hidden;
@@ -674,7 +681,6 @@
     gap: 8px;
 }
 
-/* "ЧИСТАЯ ПРИБЫЛЬ:" — цвет как строки таблицы, шрифт крупнее */
 .net-profit-label {
     font-size: 1.5rem;
     font-weight: bold;
@@ -692,6 +698,13 @@
     font-weight: bold;
     flex-shrink: 0;
     white-space: nowrap;
+}
+
+/* === КОНТЕЙНЕР ДЕТАЛЕЙ (отступы) === */
+#arbDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 /* === АДАПТИВНОСТЬ === */
@@ -743,11 +756,4 @@
     .net-profit-value { font-size: 1.6rem; }
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
-}
-
-/* === ВОССТАНОВЛЕНИЕ ОТСТУПОВ В КОНТЕЙНЕРЕ ДЕТАЛЕЙ (для корректного отображения при вилке) === */
-#arbDetailsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
 }
