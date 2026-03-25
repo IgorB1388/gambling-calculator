@@ -1,4 +1,4 @@
-// arbs.js - Анализатор вилок (с сокрытием деталей при отсутствии вилки)
+// arbs.js - Анализатор вилок
 
 const ARB_COLORS = [
     '#00f0ff',
@@ -129,7 +129,6 @@ function positionTooltip(e, popup) {
 function showPlaceholder() {
     document.getElementById('resultsPlaceholder').style.display = 'flex';
     document.getElementById('resultsContent').style.display = 'none';
-    // Скрываем детали, если они были видны
     const detailsContainer = document.getElementById('arbDetailsContainer');
     if (detailsContainer) detailsContainer.style.display = 'none';
 }
@@ -273,7 +272,6 @@ function resetOnEdit() {
         bestBkPerOutcome = [];
         clearInputHighlights();
         showPlaceholder();
-        // Скрываем детали
         const detailsContainer = document.getElementById('arbDetailsContainer');
         if (detailsContainer) detailsContainer.style.display = 'none';
     }
@@ -322,7 +320,6 @@ function renderOddsTable() {
             input.type = 'text';
             input.id = `odds-${b}-${o}`;
             input.className = 'odds-input bg-elevated border-5';
-            // placeholder убран
             input.value = oddsValues[b][o] !== undefined && oddsValues[b][o] !== null 
                 ? formatOddsForDisplay(oddsValues[b][o]) 
                 : '';
@@ -533,14 +530,13 @@ function calculateArbitrage() {
 
     hasCalculated = true;
 
-    // Подсветка лучших БК (только при наличии вилки)
     if (result.isArb) {
         applyInputHighlights(bestBk);
     } else {
         clearInputHighlights();
     }
 
-    showResults(); // показываем блок результатов (скрываем заглушку)
+    showResults();
     displayResults(lastCalculation);
     saveSettingsState();
 }
@@ -551,6 +547,7 @@ function displayResults(data) {
     const arbStatus = document.getElementById('arbStatus');
     const indicatorProfit = document.getElementById('indicatorProfit');
     const tableBody = document.getElementById('tableBody');
+    const tableHeader = document.getElementById('tableHeader');
     const netProfitBlock = document.getElementById('netProfitBlock');
     const netProfitEl = document.getElementById('netProfit');
     const incomeRow = document.getElementById('incomeRow');
@@ -562,16 +559,13 @@ function displayResults(data) {
         arbStatus.textContent = `${window.getTranslation('arbsFound') || '✅ Вилка найдена!'} +${pct}%`;
         arbStatus.className = 'indicator-status-text text-4';
         indicatorProfit.style.display = 'none';
-        // Показываем детали (таблицу, стратегию и т.д.) — используем flex для сохранения отступов
         if (detailsContainer) detailsContainer.style.display = 'flex';
     } else {
         indicatorCircle.className = 'indicator-circle bg-danger-solid';
         arbStatus.textContent = window.getTranslation('arbsNotFound') || '❌ Вилки нет';
         arbStatus.className = 'indicator-status-text text-7';
         indicatorProfit.style.display = 'none';
-        // Скрываем детали, так как вилки нет
         if (detailsContainer) detailsContainer.style.display = 'none';
-        // Не нужно заполнять таблицу и итоги
         return;
     }
 
@@ -580,73 +574,66 @@ function displayResults(data) {
     const returnText = window.getTranslation('arbsReturn') || 'Возврат';
     const outcomeLabel = window.getTranslation('arbsOutcomeLabel') || 'Исход';
 
-    tableBody.innerHTML = '';
-    data.bestOdds.forEach((odd, i) => {
-        const tr = document.createElement('tr');
+    // Транспонированная таблица
+    const outcomes = data.bestOdds.length;
+    const metricLabels = [
+        window.getTranslation('arbsOdds') || 'Коэффициент',
+        window.getTranslation('arbsStake') || 'Ставка',
+        window.getTranslation('arbsOutcomeType') || 'Результат',
+        window.getTranslation('arbsPayout') || 'Выплата'
+    ];
 
-        const tdOutcome = document.createElement('td');
-        tdOutcome.textContent = `${outcomeLabel} ${i + 1}`;
-        tr.appendChild(tdOutcome);
+    // Заголовки: пустая левая ячейка + исходы
+    let headerHtml = '<th></th>';
+    for (let i = 0; i < outcomes; i++) {
+        headerHtml += `<th>${outcomeLabel} ${i + 1}</th>`;
+    }
+    tableHeader.innerHTML = headerHtml;
 
-        const tdOdds = document.createElement('td');
-        const kefSpan = document.createElement('span');
-        kefSpan.className = `kef-cell${data.isArb ? ' arb-highlight-' + i : ''}`;
-        kefSpan.textContent = formatOddsForDisplay(odd);
-        tdOdds.appendChild(kefSpan);
-        tr.appendChild(tdOdds);
-
-        const tdStake = document.createElement('td');
-        tdStake.textContent = `${data.stakes[i].toFixed(2)} $`;
-        tr.appendChild(tdStake);
-
-        const tdResult = document.createElement('td');
-        if (data.isArb) {
-            const badge = document.createElement('span');
-            badge.className = 'outcome-badge';
-            if (isMaxStrategy && i !== data.maxOddIndex) {
-                badge.style.color = 'var(--color-warning)';
-                badge.style.fontWeight = 'bold';
-                badge.textContent = returnText;
-            } else {
-                badge.style.color = 'var(--color-success)';
-                badge.style.fontWeight = 'bold';
-                badge.textContent = winText;
+    // Строки таблицы
+    let rowsHtml = '';
+    for (let m = 0; m < metricLabels.length; m++) {
+        let rowHtml = `<td class="metric-label">${metricLabels[m]}</td>`;
+        for (let i = 0; i < outcomes; i++) {
+            if (m === 0) { // Коэффициент
+                const odd = data.bestOdds[i];
+                const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
+                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span></td>`;
+            } else if (m === 1) { // Ставка
+                rowHtml += `<td>${data.stakes[i].toFixed(2)} $</td>`;
+            } else if (m === 2) { // Результат
+                if (data.isArb) {
+                    const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
+                    const badgeClass = isMaxWin ? 'outcome-badge' : 'outcome-badge';
+                    const badgeStyle = isMaxWin ? 'color: var(--color-warning); font-weight: bold;' : 'color: var(--color-success); font-weight: bold;';
+                    const badgeText = isMaxWin ? returnText : winText;
+                    rowHtml += `<td><span class="${badgeClass}" style="${badgeStyle}">${badgeText}</span></td>`;
+                } else {
+                    rowHtml += `<td>—</td>`;
+                }
+            } else { // Выплата
+                rowHtml += `<td>${data.payouts[i].toFixed(2)} $</td>`;
             }
-            tdResult.appendChild(badge);
-        } else {
-            tdResult.textContent = '—';
         }
-        tr.appendChild(tdResult);
-
-        const tdPayout = document.createElement('td');
-        tdPayout.textContent = `${data.payouts[i].toFixed(2)} $`;
-        tr.appendChild(tdPayout);
-
-        tableBody.appendChild(tr);
-    });
+        rowsHtml += `<tr>${rowHtml}</tr>`;
+    }
+    tableBody.innerHTML = rowsHtml;
 
     document.getElementById('totalStakeDisplay').textContent = data.totalStake.toFixed(2) + ' $';
-
-    if (data.isArb) {
-        document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' $';
-        incomeRow.style.display = 'flex';
-        if (isMaxStrategy) {
-            const minPct = (Math.min(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
-            const maxPct = (Math.max(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
-            incomePercent.textContent = `+${minPct}% — +${maxPct}%`;
-        } else {
-            const pct = (data.guaranteedPayout / data.totalStake * 100 - 100).toFixed(1);
-            incomePercent.textContent = `+${pct}%`;
-        }
-        const netProfit = data.guaranteedPayout - data.totalStake;
-        netProfitBlock.style.display = 'flex';
-        netProfitEl.textContent = '+' + netProfit.toFixed(2) + ' $';
-        netProfitEl.className = 'net-profit-value text-4';
+    document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' $';
+    incomeRow.style.display = 'flex';
+    if (isMaxStrategy) {
+        const minPct = (Math.min(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
+        const maxPct = (Math.max(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
+        incomePercent.textContent = `+${minPct}% — +${maxPct}%`;
     } else {
-        document.getElementById('totalPayout').textContent = '0 $';
-        incomeRow.style.display = 'none';
-        netProfitBlock.style.display = 'none';
+        const pct = (data.guaranteedPayout / data.totalStake * 100 - 100).toFixed(1);
+        incomePercent.textContent = `+${pct}%`;
     }
+    const netProfit = data.guaranteedPayout - data.totalStake;
+    netProfitBlock.style.display = 'flex';
+    netProfitEl.textContent = '+' + netProfit.toFixed(2) + ' $';
+    netProfitEl.className = 'net-profit-value text-4';
 }
 
 function resetCalculator() {
@@ -666,7 +653,6 @@ function resetCalculator() {
     document.getElementById('incomeRow').style.display = 'none';
     document.getElementById('netProfitBlock').style.display = 'none';
     showPlaceholder();
-    // Скрываем детали
     const detailsContainer = document.getElementById('arbDetailsContainer');
     if (detailsContainer) detailsContainer.style.display = 'none';
     localStorage.removeItem('arbSettingsState');
