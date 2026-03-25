@@ -1,4 +1,3 @@
-
 /* arbs.css */
 
 .arbitrage-container {
@@ -744,4 +743,11 @@
     .net-profit-value { font-size: 1.6rem; }
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
+}
+
+/* === ВОССТАНОВЛЕНИЕ ОТСТУПОВ В КОНТЕЙНЕРЕ ДЕТАЛЕЙ (для корректного отображения при вилке) === */
+#arbDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
