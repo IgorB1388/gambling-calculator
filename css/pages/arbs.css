@@ -547,6 +547,7 @@
     border-radius: 12px;
     border-width: 1px;
     border-style: solid;
+    overflow-x: auto;
     min-width: 0;
 }
 
@@ -567,7 +568,7 @@
     font-size: 1.0rem;
     color: var(--text-secondary);
     text-align: center;
-    white-space: normal;
+    white-space: nowrap;
     border-right: 1px solid var(--border-muted);
     background: var(--bg-elevated);
 }
@@ -585,7 +586,7 @@
     font-size: 1.0rem;
     color: var(--text-secondary);
     text-align: center;
-    white-space: normal;
+    white-space: nowrap;
     border-right: 1px solid var(--border-muted);
     vertical-align: middle;
 }
@@ -598,7 +599,6 @@
     font-weight: bold;
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
-    white-space: nowrap;
 }
 
 /* === ЯЧЕЙКА КЭФ === */
