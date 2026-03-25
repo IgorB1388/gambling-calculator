@@ -79,6 +79,7 @@ function initApp() {
     showPlaceholder();
     const detailsContainer = document.getElementById('arbDetailsContainer');
     if (detailsContainer) detailsContainer.style.display = 'none';
+    // Убедимся, что сумма ставки всегда корректна
     normalizeStakeInput();
 }
 
@@ -136,74 +137,30 @@ function showResults() {
     document.getElementById('resultsContent').style.display = 'flex';
 }
 
-// Функция обработки ввода ставки (8 целых, 2 дробных)
-function processStakeInput(inputElement, event) {
-    const oldValue = inputElement.value;
-    const inputType = event.inputType;
-    const isDelete = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
-    const isInsert = inputType === 'insertText' || inputType === 'insertCompositionText';
-    
-    if (isDelete) return true;
-    if (!isInsert) return true;
-    
-    const newChar = event.data;
-    if (!newChar) return true;
-    
-    if (!/[\d.]/.test(newChar)) {
-        event.preventDefault();
-        return false;
+// Обработка поля ставки: только цифры и точка, максимум 8 целых, 2 дробных
+function validateStakeInput(input) {
+    let value = input.value;
+    // Удаляем всё, кроме цифр и точки
+    let cleaned = value.replace(/[^\d.]/g, '');
+    // Ограничиваем количество точек
+    const parts = cleaned.split('.');
+    if (parts.length > 2) {
+        cleaned = parts[0] + '.' + parts.slice(1).join('');
     }
-    
-    if (newChar === '.') {
-        if (oldValue.includes('.')) {
-            event.preventDefault();
-            return false;
-        }
-        if (oldValue === '' || oldValue === '-') {
-            event.preventDefault();
-            return false;
-        }
-        return true;
+    // Целая часть: максимум 8 цифр
+    let intPart = parts[0] || '';
+    if (intPart.length > 8) {
+        intPart = intPart.slice(0, 8);
+        cleaned = intPart + (parts[1] !== undefined ? '.' + parts[1] : '');
     }
-    
-    const dotPos = oldValue.indexOf('.');
-    let isIntegerPart = true;
-    if (dotPos !== -1 && inputElement.selectionStart > dotPos) {
-        isIntegerPart = false;
+    // Дробная часть: максимум 2 цифры
+    if (parts[1] !== undefined && parts[1].length > 2) {
+        cleaned = intPart + '.' + parts[1].slice(0, 2);
     }
-    
-    let newValue = oldValue.slice(0, inputElement.selectionStart) + newChar + oldValue.slice(inputElement.selectionEnd);
-    
-    if (isIntegerPart) {
-        const parts = newValue.split('.');
-        let intPart = parts[0];
-        if (intPart.length > 8) {
-            if (!oldValue.includes('.')) {
-                const newInt = intPart.slice(0, 8);
-                const extraDigit = intPart.slice(8);
-                let newFrac = extraDigit + (parts[1] || '');
-                if (newFrac.length > 2) newFrac = newFrac.slice(0, 2);
-                newValue = newInt + '.' + newFrac;
-                inputElement.value = newValue;
-                const newDotPos = newValue.indexOf('.');
-                inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
-                event.preventDefault();
-                return false;
-            } else {
-                event.preventDefault();
-                return false;
-            }
-        }
-        return true;
-    } else {
-        const parts = newValue.split('.');
-        const fracPart = parts[1] || '';
-        if (fracPart.length > 2) {
-            event.preventDefault();
-            return false;
-        }
-        return true;
-    }
+    // Если осталась только точка, удаляем
+    if (cleaned === '.') cleaned = '';
+    input.value = cleaned;
+    return cleaned;
 }
 
 function normalizeStakeInput() {
@@ -218,20 +175,21 @@ function normalizeStakeInput() {
         input.value = '1000';
         return;
     }
-    let parts = val.split('.');
-    let intPart = parts[0];
-    let fracPart = parts[1] || '';
-    if (fracPart.length > 2) {
-        fracPart = fracPart.slice(0, 2);
-        val = intPart + '.' + fracPart;
-    } else if (fracPart.length === 1) {
-        val = intPart + '.' + fracPart + '0';
-    } else if (fracPart.length === 0 && val.includes('.')) {
-        val = intPart + '.00';
-    }
-    num = parseFloat(val);
-    if (num > 99999999.99) val = '99999999.99';
-    input.value = val;
+    // Ограничиваем максимальное значение, но не обязательно
+    if (num > 99999999.99) input.value = '99999999.99';
+    else input.value = num.toString();
+}
+
+function updateOutcomePillsActive(count) {
+    document.querySelectorAll('.outcome-pill').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.outcomes) === count);
+    });
+}
+
+function updateStrategyPillsActive(activeStrategy) {
+    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.strategy === activeStrategy);
+    });
 }
 
 function formatOddsForDisplay(value) {
@@ -249,6 +207,7 @@ function formatOddsForDisplay(value) {
     return intPart + '.' + fracPart;
 }
 
+// Обработка ввода коэффициентов
 function processOddsInput(inputElement, event) {
     const oldValue = inputElement.value;
     const inputType = event.inputType;
@@ -408,14 +367,17 @@ function renderOddsTable() {
 
             input.addEventListener('blur', (e) => {
                 let val = parseFloat(input.value);
-                if (!isNaN(val) && val > 1) {
+                if (!isNaN(val)) {
                     oddsValues[b][o] = val;
                     input.value = formatOddsForDisplay(val);
-                } else {
+                } else if (input.value === '' || input.value === '-') {
                     const defaultVal = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
                     oddsValues[b][o] = defaultVal;
                     input.value = formatOddsForDisplay(defaultVal);
                     resetOnEdit();
+                } else {
+                    oddsValues[b][o] = null;
+                    input.value = '';
                 }
                 saveSettingsState();
             });
@@ -470,7 +432,7 @@ function collectOddsValuesFromDom() {
             const input = document.getElementById(`odds-${b}-${o}`);
             if (input) {
                 const val = parseFloat(input.value);
-                if (!isNaN(val) && val > 1) oddsValues[b][o] = val;
+                if (!isNaN(val)) oddsValues[b][o] = val;
             }
         }
     }
@@ -562,12 +524,14 @@ function calculateMaxStrategy(bestOdds, totalStake) {
 
 function calculateArbitrage() {
     collectOddsValuesFromDom();
+    // Принудительно нормализуем сумму ставки
     normalizeStakeInput();
     const totalStake = parseFloat(document.getElementById('totalStake').value);
 
     if (isNaN(totalStake) || totalStake <= 0) {
+        // Если всё же NaN (не должно случиться после normalize), подставляем 1000
         document.getElementById('totalStake').value = '1000';
-        calculateArbitrage();
+        calculateArbitrage(); // рекурсивно пересчитаем
         return;
     }
 
@@ -654,28 +618,28 @@ function displayResults(data) {
 
     let rowsHtml = '';
     for (let m = 0; m < metricLabels.length; m++) {
-        let rowHtml = `<td class="metric-label">${metricLabels[m]}<\/td>`;
+        let rowHtml = `<td class="metric-label">${metricLabels[m]}】`;
         for (let i = 0; i < outcomes; i++) {
-            if (m === 0) {
+            if (m === 0) { // Коэффициент
                 const odd = data.bestOdds[i];
                 const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
-                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span><\/td>`;
-            } else if (m === 1) {
-                rowHtml += `<td>${data.stakes[i].toFixed(2)} $<\/td>`;
-            } else if (m === 2) {
+                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span>`;
+            } else if (m === 1) { // Ставка
+                rowHtml += `<td>${data.stakes[i].toFixed(2)} $`;
+            } else if (m === 2) { // Результат
                 if (data.isArb) {
                     const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
                     const badgeStyle = isMaxWin ? 'color: var(--color-warning); font-weight: bold;' : 'color: var(--color-success); font-weight: bold;';
                     const badgeText = isMaxWin ? returnText : winText;
-                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span><\/td>`;
+                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span>`;
                 } else {
-                    rowHtml += `<td>—<\/td>`;
+                    rowHtml += `<td>—`;
                 }
-            } else {
-                rowHtml += `<td>${data.payouts[i].toFixed(2)} $<\/td>`;
+            } else { // Выплата
+                rowHtml += `<td>${data.payouts[i].toFixed(2)} $`;
             }
         }
-        rowsHtml += `<tr>${rowHtml}<\/tr>`;
+        rowsHtml += `<tr>${rowHtml}</tr>`;
     }
     tableBody.innerHTML = rowsHtml;
 
@@ -728,10 +692,8 @@ function initEventListeners() {
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 
     const stakeInput = document.getElementById('totalStake');
-    stakeInput.addEventListener('beforeinput', (e) => {
-        processStakeInput(stakeInput, e);
-    });
     stakeInput.addEventListener('input', (e) => {
+        validateStakeInput(stakeInput);
         resetOnEdit();
         saveSettingsState();
     });
