@@ -610,7 +610,7 @@
     font-weight: bold;
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
-    text-align: left;
+    text-align: center;
     padding-left: 12px;
     padding-right: 14px;
 }
