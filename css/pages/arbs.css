@@ -541,7 +541,7 @@
 
 .add-bk-btn:hover { opacity: 0.8; }
 
-/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) — ТРАНСПОНИРОВАННАЯ === */
+/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) === */
 .distribution-table {
     width: 100%;
     border-radius: 12px;
@@ -554,6 +554,7 @@
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
+    /* auto позволяет первому столбцу сжаться до содержимого */
     table-layout: auto;
 }
 
@@ -571,6 +572,12 @@
     white-space: nowrap;
     border-right: 1px solid var(--border-muted);
     background: var(--bg-elevated);
+}
+
+/* Первый th (пустой заголовок над metric-label) — сжимается под контент */
+.distribution-table thead th:first-child {
+    width: 1%;
+    white-space: nowrap;
 }
 
 .distribution-table thead th:last-child { border-right: none; }
@@ -593,12 +600,19 @@
 
 .distribution-table tbody td:last-child { border-right: none; }
 
-/* Первый столбец (заголовки строк) — такой же как th */
-.distribution-table tbody td:first-child {
+/* === ЛЕВЫЙ СТОЛБЕЦ (metric-label) — ширина по содержимому + небольшой отступ === */
+.distribution-table tbody td.metric-label {
+    /* width: 1% + white-space: nowrap = браузер даёт ровно столько места,
+       сколько нужно самой длинной строке в этом столбце */
+    width: 1%;
+    white-space: nowrap;
     background: var(--bg-elevated);
     font-weight: bold;
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
+    text-align: left;
+    padding-left: 12px;
+    padding-right: 14px;
 }
 
 /* === ЯЧЕЙКА КЭФ === */
@@ -707,13 +721,6 @@
     gap: 14px;
 }
 
-/* === ЛЕВЫЙ СТОЛБЕЦ (метрики) – центр, отступы 4px === */
-.distribution-table tbody td.metric-label {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-    text-align: center !important;
-}
-
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
     .panel { padding: 18px; gap: 16px; min-height: 0; }
@@ -733,10 +740,10 @@
     .distribution-table thead th,
     .distribution-table tbody td { padding: 9px 6px; font-size: 0.9rem; }
 
-    /* Сохраняем 4px отступы для левого столбца и на мобильных */
+    /* Сохраняем авто-ширину и отступы для metric-label на мобильных */
     .distribution-table tbody td.metric-label {
-        padding-left: 4px !important;
-        padding-right: 4px !important;
+        padding-left: 8px;
+        padding-right: 10px;
     }
 
     .profit-badge { font-size: 1.7rem; }
