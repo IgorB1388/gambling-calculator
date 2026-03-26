@@ -611,8 +611,8 @@
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
     text-align: center;
-    padding-left: 12px;
-    padding-right: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 /* === ЯЧЕЙКА КЭФ === */
