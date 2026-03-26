@@ -18,6 +18,18 @@ let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00]; // до 4 исходов
 
+// ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМАТИРОВАНИЯ ЧИСЕЛ С ПРОБЕЛАМИ ==========
+function formatNumberWithSpaces(num) {
+    if (isNaN(num)) return '0';
+    // Разделяем целую и дробную части
+    let parts = num.toString().split('.');
+    let integerPart = parts[0];
+    let fractionalPart = parts[1] !== undefined ? '.' + parts[1] : '';
+    // Добавляем пробелы через каждые 3 цифры в целой части
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return integerPart + fractionalPart;
+}
+
 // ========== СОХРАНЕНИЕ И ЗАГРУЗКА СОСТОЯНИЯ (только введённые данные) ==========
 function saveSettingsState() {
     const state = {
@@ -688,7 +700,7 @@ function displayResults(data) {
                 const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
                 rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span><\/td>`;
             } else if (m === 1) { // Ставка
-                rowHtml += `<td>${data.stakes[i].toFixed(2)} $<\/td>`;
+                rowHtml += `<td>${formatNumberWithSpaces(data.stakes[i].toFixed(2))} $<\/td>`;
             } else if (m === 2) { // Результат
                 if (data.isArb) {
                     const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
@@ -699,15 +711,15 @@ function displayResults(data) {
                     rowHtml += `<td>—<\/td>`;
                 }
             } else { // Выплата
-                rowHtml += `<td>${data.payouts[i].toFixed(2)} $<\/td>`;
+                rowHtml += `<td>${formatNumberWithSpaces(data.payouts[i].toFixed(2))} $<\/td>`;
             }
         }
         rowsHtml += `<tr>${rowHtml}<\/tr>`;
     }
     tableBody.innerHTML = rowsHtml;
 
-    document.getElementById('totalStakeDisplay').textContent = data.totalStake.toFixed(2) + ' $';
-    document.getElementById('totalPayout').textContent = data.guaranteedPayout.toFixed(2) + ' $';
+    document.getElementById('totalStakeDisplay').textContent = formatNumberWithSpaces(data.totalStake.toFixed(2)) + ' $';
+    document.getElementById('totalPayout').textContent = formatNumberWithSpaces(data.guaranteedPayout.toFixed(2)) + ' $';
     incomeRow.style.display = 'flex';
     if (isMaxStrategy) {
         const minPct = (Math.min(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
@@ -719,7 +731,7 @@ function displayResults(data) {
     }
     const netProfit = data.guaranteedPayout - data.totalStake;
     netProfitBlock.style.display = 'flex';
-    netProfitEl.textContent = '+' + netProfit.toFixed(2) + ' $';
+    netProfitEl.textContent = '+' + formatNumberWithSpaces(netProfit.toFixed(2)) + ' $';
     netProfitEl.className = 'net-profit-value text-4';
 }
 
