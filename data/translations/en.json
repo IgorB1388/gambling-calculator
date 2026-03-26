@@ -155,7 +155,7 @@
     "arbsPayout": "Payout",
     "arbsTotalStake": "Total staked:",
     "arbsTotalPayout": "Total payout:",
-    "arbsNetProfit": "Net profit:",
+    "arbsNetProfit": "Profit:",
     "arbsStrategyLabel": "CALCULATION STRATEGY:",
     "arbsStrategyGuaranteed": "Guaranteed profit",
     "arbsStrategyMax": "Maximum profit with refund",
