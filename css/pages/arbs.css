@@ -601,10 +601,12 @@
     border-right: 1px solid var(--border-muted);
 }
 
-/* Левый столбец (метрики) – уменьшенные отступы */
-.distribution-table tbody td.metric-label {
-    padding-left: 4px;
-    padding-right: 4px;
+/* Левый столбец (метрики) – строго 4px отступы слева и справа, выравнивание влево */
+.distribution-table tbody td.metric-label,
+.distribution-table tbody td.metric-label:first-child {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    text-align: left !important;
 }
 
 /* === ЯЧЕЙКА КЭФ === */
