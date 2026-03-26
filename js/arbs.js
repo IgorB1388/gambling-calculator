@@ -722,11 +722,11 @@ function displayResults(data) {
     document.getElementById('totalPayout').textContent = formatNumberWithSpaces(data.guaranteedPayout.toFixed(2)) + ' $';
     incomeRow.style.display = 'flex';
     if (isMaxStrategy) {
-        const minPct = (Math.min(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
-        const maxPct = (Math.max(...data.payouts) / data.totalStake * 100 - 100).toFixed(1);
+        const minPct = (Math.min(...data.payouts) / data.totalStake * 100 - 100).toFixed(2);
+        const maxPct = (Math.max(...data.payouts) / data.totalStake * 100 - 100).toFixed(2);
         incomePercent.textContent = `+${minPct}% — +${maxPct}%`;
     } else {
-        const pct = (data.guaranteedPayout / data.totalStake * 100 - 100).toFixed(1);
+        const pct = (data.guaranteedPayout / data.totalStake * 100 - 100).toFixed(2);
         incomePercent.textContent = `+${pct}%`;
     }
     const netProfit = data.guaranteedPayout - data.totalStake;
