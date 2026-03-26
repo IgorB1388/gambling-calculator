@@ -439,7 +439,6 @@ function renderOddsTable() {
                     oddsValues[b][o] = val;
                     input.value = formatOddsForDisplay(val);
                 } else {
-                    // значение ≤1 или некорректно – заменяем на дефолтный коэффициент
                     const defaultVal = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
                     oddsValues[b][o] = defaultVal;
                     input.value = formatOddsForDisplay(defaultVal);
@@ -682,28 +681,28 @@ function displayResults(data) {
 
     let rowsHtml = '';
     for (let m = 0; m < metricLabels.length; m++) {
-        let rowHtml = `<td class="metric-label">${metricLabels[m]}】`;
+        let rowHtml = `<td class="metric-label">${metricLabels[m]}<\/td>`;
         for (let i = 0; i < outcomes; i++) {
             if (m === 0) { // Коэффициент
                 const odd = data.bestOdds[i];
                 const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
-                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span>`;
+                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span><\/td>`;
             } else if (m === 1) { // Ставка
-                rowHtml += `<td>${data.stakes[i].toFixed(2)} $`;
+                rowHtml += `<td>${data.stakes[i].toFixed(2)} $<\/td>`;
             } else if (m === 2) { // Результат
                 if (data.isArb) {
                     const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
                     const badgeStyle = isMaxWin ? 'color: var(--color-warning); font-weight: bold;' : 'color: var(--color-success); font-weight: bold;';
                     const badgeText = isMaxWin ? returnText : winText;
-                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span>`;
+                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span><\/td>`;
                 } else {
-                    rowHtml += `<td>—`;
+                    rowHtml += `<td>—<\/td>`;
                 }
             } else { // Выплата
-                rowHtml += `<td>${data.payouts[i].toFixed(2)} $`;
+                rowHtml += `<td>${data.payouts[i].toFixed(2)} $<\/td>`;
             }
         }
-        rowsHtml += `<tr>${rowHtml} </tr>`;
+        rowsHtml += `<tr>${rowHtml}<\/tr>`;
     }
     tableBody.innerHTML = rowsHtml;
 
