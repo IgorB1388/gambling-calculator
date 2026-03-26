@@ -601,14 +601,6 @@
     border-right: 1px solid var(--border-muted);
 }
 
-/* Левый столбец (метрики) – строго 4px отступы слева и справа, выравнивание влево */
-.distribution-table tbody td.metric-label,
-.distribution-table tbody td.metric-label:first-child {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-    text-align: left !important;
-}
-
 /* === ЯЧЕЙКА КЭФ === */
 .kef-cell {
     display: inline-flex;
@@ -715,6 +707,13 @@
     gap: 14px;
 }
 
+/* === ЛЕВЫЙ СТОЛБЕЦ (метрики) – центр, отступы 4px === */
+.distribution-table tbody td.metric-label {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    text-align: center !important;
+}
+
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
     .panel { padding: 18px; gap: 16px; min-height: 0; }
@@ -734,6 +733,12 @@
     .distribution-table thead th,
     .distribution-table tbody td { padding: 9px 6px; font-size: 0.9rem; }
 
+    /* Сохраняем 4px отступы для левого столбца и на мобильных */
+    .distribution-table tbody td.metric-label {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
     .panel-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
@@ -744,7 +749,6 @@
     .indicator-step { height: auto; min-height: 60px; }
     .arbs-step:first-of-type { height: auto; min-height: 60px; }
 }
-
 
 @media (max-width: 480px) {
     .outcome-pills { justify-content: center; }
