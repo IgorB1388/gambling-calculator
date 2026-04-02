@@ -44,6 +44,8 @@
     padding-left: 25px;
     padding-right: 25px;
     position: relative;
+    /* 9. Лёгкая text-shadow на заголовки панелей */
+    text-shadow: 0 0 18px currentColor, 0 0 6px currentColor;
 }
 
 .panel-title::after {
@@ -72,7 +74,6 @@
     gap: 12px;
 }
 
-/* Высота первого шага — должна совпадать с .indicator-step */
 .arbs-step:first-of-type {
     height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .indicator-step */
     justify-content: center;
@@ -85,6 +86,7 @@
     gap: 12px;
 }
 
+/* 5. Глоу на кружки номеров шагов; 6. Цифры строго по центру */
 .arbs-step-badge {
     width: 30px;
     height: 30px;
@@ -98,8 +100,12 @@
     justify-content: center;
     font-weight: bold;
     font-size: 0.9rem;
+    line-height: 1;
+    padding: 0;
     flex-shrink: 0;
     background: rgba(133, 193, 233, 0.08);
+    box-shadow: 0 0 8px var(--border-3), 0 0 16px var(--border-3);
+    text-shadow: 0 0 8px currentColor;
 }
 
 /* === РАЗДЕЛИТЕЛЬ === */
@@ -112,7 +118,6 @@
     flex-shrink: 0;
 }
 
-/* Разделители в правой панели — зелёные как черта под заголовком */
 .panel.border-4 .block-divider {
     background: var(--border-4);
     box-shadow: 0 0 6px var(--border-4);
@@ -136,6 +141,8 @@
     font-weight: bold;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    /* 9. Лёгкая text-shadow на подзаголовки */
+    text-shadow: 0 0 12px currentColor;
 }
 
 /* === ТУЛТИП === */
@@ -160,6 +167,7 @@
     color: var(--text-3);
 }
 
+/* 7. Тултип — читаемый фон, контраст, обводка */
 .tooltip-popup {
     position: fixed;
     max-width: 280px;
@@ -167,12 +175,15 @@
     border-radius: 8px;
     border-width: 1px;
     border-style: solid;
+    border-color: var(--border-3);
+    background: var(--bg-body) !important;
+    color: var(--text-primary) !important;
     font-size: 0.95rem;
     line-height: 1.5;
     z-index: 10000;
     display: none;
     pointer-events: none;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-md), 0 0 12px var(--border-3);
 }
 
 /* === КНОПКИ ИСХОДОВ === */
@@ -224,9 +235,10 @@
     width: 220px;
 }
 
+/* 2. Убран правый padding под знак валюты */
 .stake-input {
     width: 100%;
-    padding: 13px 40px 13px 15px;
+    padding: 13px 15px;
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
@@ -327,6 +339,8 @@
     justify-content: center;
     font-weight: bold;
     font-size: 0.95rem;
+    line-height: 1;
+    padding: 0;
     flex-shrink: 0;
 }
 
@@ -338,7 +352,6 @@
 }
 
 /* === ИНДИКАТОР ВИЛКИ === */
-/* Высота должна совпадать с .arbs-step:first-of-type */
 .indicator-step {
     height: 100px; /* МЕНЯТЬ ВМЕСТЕ С .arbs-step:first-of-type */
     display: flex;
@@ -554,7 +567,6 @@
 .distribution-table table {
     width: 100%;
     border-collapse: collapse;
-    /* auto позволяет первому столбцу сжаться до содержимого */
     table-layout: auto;
 }
 
@@ -563,10 +575,11 @@
     border-bottom: 2px solid var(--border-muted);
 }
 
+/* 3. Заголовки колонок чуть крупнее */
 .distribution-table thead th {
     padding: 12px 8px;
     font-weight: bold;
-    font-size: 1.0rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
@@ -574,7 +587,6 @@
     background: var(--bg-elevated);
 }
 
-/* Первый th (пустой заголовок над metric-label) — сжимается под контент */
 .distribution-table thead th:first-child {
     width: 1%;
     white-space: nowrap;
@@ -588,9 +600,10 @@
 
 .distribution-table tbody tr:last-child { border-bottom: none; }
 
+/* 3. Ячейки строк чуть крупнее */
 .distribution-table tbody td {
     padding: 11px 8px;
-    font-size: 1.0rem;
+    font-size: 1.05rem;
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
@@ -600,14 +613,13 @@
 
 .distribution-table tbody td:last-child { border-right: none; }
 
-/* === ЛЕВЫЙ СТОЛБЕЦ (metric-label) — ширина по содержимому + небольшой отступ === */
+/* 3. metric-label чуть крупнее */
 .distribution-table tbody td.metric-label {
-    /* width: 1% + white-space: nowrap = браузер даёт ровно столько места,
-       сколько нужно самой длинной строке в этом столбце */
     width: 1%;
     white-space: nowrap;
     background: var(--bg-elevated);
     font-weight: bold;
+    font-size: 1.05rem;
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
     text-align: center;
@@ -681,6 +693,17 @@
     white-space: nowrap;
 }
 
+/* 4. Строка Доход — label крупнее и цвета как у значения (text-4) */
+#incomeRow > span:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-4) !important;
+}
+
+#incomeRow .total-row-value {
+    font-size: 1.2rem;
+}
+
 /* === ЧИСТАЯ ПРИБЫЛЬ === */
 .net-profit-block {
     display: flex;
@@ -714,7 +737,7 @@
     white-space: nowrap;
 }
 
-/* === КОНТЕЙНЕР ДЕТАЛЕЙ (отступы) === */
+/* === КОНТЕЙНЕР ДЕТАЛЕЙ === */
 #arbDetailsContainer {
     display: flex;
     flex-direction: column;
@@ -740,7 +763,6 @@
     .distribution-table thead th,
     .distribution-table tbody td { padding: 9px 6px; font-size: 0.9rem; }
 
-    /* Сохраняем авто-ширину и отступы для metric-label на мобильных */
     .distribution-table tbody td.metric-label {
         padding-left: 8px;
         padding-right: 10px;
