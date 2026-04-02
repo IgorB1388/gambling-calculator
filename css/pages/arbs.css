@@ -1,3 +1,5 @@
+/* arbs.css */
+
 .arbitrage-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -673,16 +675,6 @@
     white-space: nowrap;
 }
 
-/* Строка "Доход" – увеличиваем шрифт и делаем надпись цветом процента */
-#incomeRow > span:first-child {
-    font-size: 1.2rem;
-    color: var(--text-4);
-}
-
-#incomeRow .total-row-value {
-    font-size: 1.2rem;
-}
-
 /* === ЧИСТАЯ ПРИБЫЛЬ === */
 .net-profit-block {
     display: flex;
@@ -752,12 +744,6 @@
         padding-right: 10px;
     }
 
-    /* Строка "Доход" на мобильных */
-    #incomeRow > span:first-child,
-    #incomeRow .total-row-value {
-        font-size: 1.1rem;
-    }
-
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
     .panel-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
@@ -788,4 +774,21 @@
     .net-profit-value { font-size: 1.6rem; }
     .profit-badge { font-size: 1.5rem; }
     .panel-title { font-size: 1.3rem; }
+}
+
+/* === УСИЛЕННЫЕ ПРАВИЛА ДЛЯ СТРОКИ "ДОХОД" === */
+#incomeRow > span:first-child,
+#incomeRow .total-row-value {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+}
+#incomeRow > span:first-child {
+    color: var(--text-4) !important;
+}
+
+@media (max-width: 768px) {
+    #incomeRow > span:first-child,
+    #incomeRow .total-row-value {
+        font-size: 1.1rem !important;
+    }
 }
