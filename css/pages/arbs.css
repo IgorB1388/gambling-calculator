@@ -566,7 +566,7 @@
 .distribution-table thead th {
     padding: 12px 8px;
     font-weight: bold;
-    font-size: 1.0rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
@@ -607,6 +607,7 @@
     width: 1%;
     white-space: nowrap;
     background: var(--bg-elevated);
+     font-size: 1.2rem;
     font-weight: bold;
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
