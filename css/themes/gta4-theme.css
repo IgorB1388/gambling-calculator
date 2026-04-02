@@ -102,7 +102,7 @@
     --gradient-footer: linear-gradient(90deg, transparent, var(--color-primary), var(--color-primary), transparent);
 
     /* === ПОДСВЕТКА ПАР ВИЛОК === */
-    --arb-hl-0: #4db8ff;
+    --arb-hl-0: #AF52DE;
     --arb-hl-1: #f1c40f;
     --arb-hl-2: #2ecc71;
     --arb-hl-3: #e67e22;
