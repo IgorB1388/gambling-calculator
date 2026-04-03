@@ -31,13 +31,15 @@ function formatNumberWithSpaces(num) {
 function formatMoney(value) {
     if (isNaN(value)) return '0';
     let num = parseFloat(value);
+    // Округляем до 2 знаков для корректного сравнения с .00
     let rounded = num.toFixed(2);
     if (rounded.endsWith('.00')) {
+        // Целое число – показываем без дробной части
         return formatNumberWithSpaces(Math.floor(num).toString());
     } else {
-        let trimmed = rounded.replace(/\.?0+$/, '');
-        if (trimmed.endsWith('.')) trimmed = trimmed.slice(0, -1);
-        return formatNumberWithSpaces(trimmed);
+        // Есть дробная часть – показываем с двумя знаками (например, 44.50)
+        // Но если после округления получилось .5? Нет, toFixed(2) даст .50
+        return formatNumberWithSpaces(rounded);
     }
 }
 
@@ -587,7 +589,6 @@ function calculateGuaranteedStrategy(bestOdds, totalStake) {
     bestOdds.forEach(odd => { if (odd > 0) sumInverse += 1 / odd; });
     const isArbRaw = sumInverse < 1;
     const profitPercent = isArbRaw ? ((1 / sumInverse - 1) * 100) : 0;
-    // Вилка считается только если доходность > 0.01% (минимальная монетарная единица)
     const isArb = isArbRaw && profitPercent > 0.01;
     const stakes = bestOdds.map(odd => (totalStake * (1 / odd)) / sumInverse);
     const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
@@ -618,7 +619,7 @@ function calculateMaxStrategy(bestOdds, totalStake) {
     const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
     const guaranteedPayout = payouts[maxOddIndex];
     const profitPercent = ((guaranteedPayout - totalStake) / totalStake) * 100;
-    const isArb = profitPercent > 0.01; // Только если доходность > 0.01%
+    const isArb = profitPercent > 0.01;
     return { stakes, payouts, guaranteedPayout, isArb, profitPercent, sumInverse, maxOddIndex };
 }
 
