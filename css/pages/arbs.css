@@ -697,7 +697,9 @@
     flex-shrink: 1;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;    
+    white-space: nowrap;
+    color: var(--text-4);
+    
 }
 
 .net-profit-value {
@@ -705,6 +707,7 @@
     font-weight: bold;
     flex-shrink: 0;
     white-space: nowrap;
+    
 }
 
 /* === КОНТЕЙНЕР ДЕТАЛЕЙ (отступы) === */
