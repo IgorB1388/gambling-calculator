@@ -698,7 +698,7 @@
 
 /* === ПРИБЫЛЬ слово === */
 .net-profit-label {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -711,7 +711,7 @@
 }
 /* === ПРИБЫЛЬ число === */
 .net-profit-value {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: bold;
     flex-shrink: 0;
     white-space: nowrap;
