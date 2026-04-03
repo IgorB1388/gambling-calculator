@@ -220,16 +220,16 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 220px;
+    width: 220px; 
 }
 
 .stake-input {
     width: 100%;
-    padding: 13px 40px 13px 15px;
+    padding: 13px 15px;   
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.8rem;
+    font-size: 1.8rem;    
     font-weight: bold;
     background: transparent;
     transition: all 0.2s;
