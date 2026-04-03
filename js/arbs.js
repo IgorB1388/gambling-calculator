@@ -1,4 +1,4 @@
-// arbs.js - Анализатор вилок
+// arbs.js - Анализатор вилок (без знаков доллара)
 
 const ARB_COLORS = [
     '#00f0ff',
@@ -18,7 +18,7 @@ let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00]; // до 4 исходов
 
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ФОРМАТИРОВАНИЯ ==========
+// ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМАТИРОВАНИЯ ЧИСЕЛ С ПРОБЕЛАМИ ==========
 function formatNumberWithSpaces(num) {
     if (isNaN(num)) return '0';
     let parts = num.toString().split('.');
@@ -28,28 +28,13 @@ function formatNumberWithSpaces(num) {
     return integerPart + fractionalPart;
 }
 
-function formatMoney(value) {
-    if (isNaN(value)) return '0';
-    let formatted = value.toFixed(2);
-    // убираем .00, если есть
-    if (formatted.endsWith('.00')) {
-        return formatNumberWithSpaces(formatted.slice(0, -3));
-    }
-    return formatNumberWithSpaces(formatted);
-}
-
 function formatPercent(value) {
     if (isNaN(value)) return '0';
     let formatted = value.toFixed(2);
-    // убираем .00, если есть
-    if (formatted.endsWith('.00')) {
-        return formatted.slice(0, -3);
-    }
-    // убираем завершающие нули после точки, но оставляем хотя бы один знак
+    if (formatted.endsWith('.00')) return formatted.slice(0, -3);
     if (formatted.includes('.')) {
         formatted = formatted.replace(/\.?0+$/, '');
-        // Если после точки ничего не осталось, удаляем точку
-        if (formatted.endsWith('.')) {
+        if (formatted.includes('.') && formatted.split('.')[1].length === 0) {
             formatted = formatted.slice(0, -1);
         }
     }
@@ -216,7 +201,6 @@ function processStakeInput(inputElement, event) {
         const parts = newValue.split('.');
         let intPart = parts[0];
         
-        // Если целая часть стала ровно 8 символов и точки ещё нет → вставляем точку
         if (intPart.length === 8 && !oldValue.includes('.')) {
             const newInt = intPart;
             newValue = newInt + '.';
@@ -227,7 +211,6 @@ function processStakeInput(inputElement, event) {
             return false;
         }
         
-        // Если целая часть превысила 8 (при вставке или копировании)
         if (intPart.length > 8) {
             if (!oldValue.includes('.')) {
                 const newInt = intPart.slice(0, 8);
@@ -342,7 +325,6 @@ function processOddsInput(inputElement, event) {
         const parts = newValue.split('.');
         let intPart = parts[0];
         
-        // Если целая часть стала ровно 4 символа и точки ещё нет → вставляем точку
         if (intPart.length === 4 && !oldValue.includes('.')) {
             const newInt = intPart;
             newValue = newInt + '.';
@@ -353,7 +335,6 @@ function processOddsInput(inputElement, event) {
             return false;
         }
         
-        // Если целая часть превысила 4 (при вставке или копировании)
         if (intPart.length > 4) {
             if (!oldValue.includes('.')) {
                 const newInt = intPart.slice(0, 4);
@@ -726,7 +707,7 @@ function displayResults(data) {
                 const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
                 rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span><\/td>`;
             } else if (m === 1) { // Ставка
-                rowHtml += `<td>${formatMoney(data.stakes[i])} $<\/td>`;
+                rowHtml += `<td>${formatNumberWithSpaces(data.stakes[i].toFixed(2))}<\/td>`;
             } else if (m === 2) { // Результат
                 if (data.isArb) {
                     const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
@@ -737,15 +718,15 @@ function displayResults(data) {
                     rowHtml += `<td>—<\/td>`;
                 }
             } else { // Выплата
-                rowHtml += `<td>${formatMoney(data.payouts[i])} $<\/td>`;
+                rowHtml += `<td>${formatNumberWithSpaces(data.payouts[i].toFixed(2))}<\/td>`;
             }
         }
         rowsHtml += `<tr>${rowHtml}<\/tr>`;
     }
     tableBody.innerHTML = rowsHtml;
 
-    document.getElementById('totalStakeDisplay').textContent = formatMoney(data.totalStake) + ' $';
-    document.getElementById('totalPayout').textContent = formatMoney(data.guaranteedPayout) + ' $';
+    document.getElementById('totalStakeDisplay').textContent = formatNumberWithSpaces(data.totalStake.toFixed(2));
+    document.getElementById('totalPayout').textContent = formatNumberWithSpaces(data.guaranteedPayout.toFixed(2));
     incomeRow.style.display = 'flex';
     if (isMaxStrategy) {
         const minPct = formatPercent(Math.min(...data.payouts) / data.totalStake * 100 - 100);
@@ -757,7 +738,7 @@ function displayResults(data) {
     }
     const netProfit = data.guaranteedPayout - data.totalStake;
     netProfitBlock.style.display = 'flex';
-    netProfitEl.textContent = '+' + formatMoney(netProfit) + ' $';
+    netProfitEl.textContent = '+' + formatNumberWithSpaces(netProfit.toFixed(2));
     netProfitEl.className = 'net-profit-value text-4';
 }
 
