@@ -38,9 +38,10 @@
     font-weight: bold;
     display: flex;
     align-items: center;
+    justify-content: center;
     padding-bottom: 16px;
-    margin-left: -25px;
-    margin-right: -25px;
+    margin-left: 0;
+    margin-right: 0;
     padding-left: 25px;
     padding-right: 25px;
     position: relative;
