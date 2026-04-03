@@ -71,7 +71,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    }
+}
 
 /* Высота первого шага — должна совпадать с .indicator-step */
 .arbs-step:first-of-type {
@@ -145,20 +145,22 @@
     height: 20px;
     border-radius: 50%;
     border: 1px solid var(--border-muted);
-    color: var(--text-muted);
+    color: var(--text-3);          /* сделали ярче */
     font-size: 0.8rem;
     font-weight: bold;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
     transition: all 0.2s;
+    background: rgba(255,255,255,0.1); /* лёгкий фон для заметности */
 }
 
 .tooltip-icon:hover {
     border-color: var(--border-3);
     color: var(--text-3);
+    background: rgba(255,255,255,0.2);
 }
 
 .tooltip-popup {
@@ -180,7 +182,7 @@
 .outcome-pills {
     display: flex;
     gap: 10px;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .outcome-pill {
@@ -223,16 +225,16 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 220px; 
+    width: 220px;
 }
 
 .stake-input {
     width: 100%;
-    padding: 13px 15px;   
+    padding: 13px 15px;
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.8rem;    
+    font-size: 1.8rem;
     font-weight: bold;
     background: transparent;
     transition: all 0.2s;
@@ -274,7 +276,7 @@
 .panel-controls .btn {
     flex: 1;
     padding: 16px 16px;
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: bold;
     border-radius: 12px;
     border-width: 2px;
@@ -287,6 +289,15 @@
     gap: 8px;
     min-height: 56px;
     white-space: nowrap;
+}
+
+.panel-controls .btn i {
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.panel-controls .btn-primary-bg {
+    border-color: var(--color-primary) !important;
 }
 
 .panel-controls .btn:hover { transform: translateY(-2px); }
@@ -408,7 +419,7 @@
     border-width: 2px;
     border-style: solid;
     border-color: var(--border-5);
-    font-size: 1rem;
+    font-size: 1.15rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
@@ -463,7 +474,6 @@
 }
 
 /* === БК 1, БК 2 и тд === */
-
 .odds-bk-label {
     display: flex;
     align-items: center;
@@ -565,6 +575,7 @@
     background: var(--bg-elevated);
     border-bottom: 2px solid var(--border-muted);
 }
+
 /* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (верхняя строка) === */
 .distribution-table thead th {
     padding: 12px 8px;
@@ -707,15 +718,14 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--text-4);
-    
 }
+
 /* === ПРИБЫЛЬ число === */
 .net-profit-value {
     font-size: 2.25rem;
     font-weight: bold;
     flex-shrink: 0;
     white-space: nowrap;
-    
 }
 
 /* === КОНТЕЙНЕР ДЕТАЛЕЙ (отступы) === */
@@ -744,7 +754,6 @@
     .distribution-table thead th,
     .distribution-table tbody td { padding: 9px 6px; font-size: 0.9rem; }
 
-    /* На мобильных делаем заголовки и левый столбец чуть крупнее данных */
     .distribution-table thead th {
         font-size: 1.0rem;
     }
@@ -754,9 +763,13 @@
         padding-right: 10px;
     }
 
+    .strategy-mini-btn {
+        font-size: 1rem;
+    }
+
     .profit-badge { font-size: 1.7rem; }
     .net-profit-value { font-size: 1.9rem; }
-    .panel-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
+    .panel-controls .btn { padding: 13px 10px; font-size: 1.15rem; }
     .stake-input-wrapper { width: 100%; }
     .settings-label { font-size: 1rem; }
     .panel-title { font-size: 1.4rem; }
