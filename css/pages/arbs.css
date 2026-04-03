@@ -779,7 +779,7 @@
 /* === УСИЛЕННЫЕ ПРАВИЛА ДЛЯ СТРОКИ "ДОХОД" === */
 #incomeRow > span:first-child,
 #incomeRow .total-row-value {
-    font-size: 1.4rem !important;
+    font-size: 1.6rem !important;
     font-weight: bold !important;
 }
 #incomeRow > span:first-child {
