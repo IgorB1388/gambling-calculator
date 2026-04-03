@@ -690,7 +690,7 @@
 }
 
 .net-profit-label {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -703,7 +703,7 @@
 }
 
 .net-profit-value {
-    font-size: 2.6rem;
+    font-size: 2.5rem;
     font-weight: bold;
     flex-shrink: 0;
     white-space: nowrap;
