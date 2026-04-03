@@ -34,7 +34,7 @@
 
 /* === ЗАГОЛОВОК ПАНЕЛИ === */
 .panel-title {
-    font-size: 1.6rem;
+    font-size: 2.5rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -130,8 +130,9 @@
     gap: 8px;
 }
 
+/* === Шаги и стратегия расчета === */
 .settings-label {
-    font-size: 1.1rem;
+    font-size: 1.8rem;
     font-weight: bold;
     letter-spacing: 0.05em;
     text-transform: uppercase;
