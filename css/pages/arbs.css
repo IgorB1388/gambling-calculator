@@ -450,7 +450,7 @@
 .odds-header {
     text-align: center;
     font-weight: bold;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
     padding: 4px;
 }
 
@@ -467,7 +467,7 @@
     justify-content: space-between;
     gap: 4px;
     font-weight: bold;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
     white-space: nowrap;
 }
 
@@ -492,7 +492,7 @@
     border-radius: 6px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: bold;
     width: 100%;
     background: transparent;
