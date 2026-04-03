@@ -1,4 +1,4 @@
-/* arbs.css */
+/* arbs.css – финальная версия с корректным выравниванием */
 
 .arbitrage-container {
     max-width: 1400px;
@@ -73,7 +73,6 @@
     gap: 20px;
 }
 
-/* Высота первого шага — должна совпадать с .indicator-step */
 .arbs-step:first-of-type {
     height: 100px;
     justify-content: center;
@@ -131,7 +130,6 @@
     gap: 8px;
 }
 
-/* === Шаги и стратегия расчета === */
 .settings-label {
     font-size: 1.6rem;
     font-weight: bold;
@@ -139,13 +137,13 @@
     text-transform: uppercase;
 }
 
-/* === ТУЛТИП === */
+/* === ТУЛТИП (знак вопроса) – выравнивание === */
 .tooltip-icon {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     border: 1px solid var(--border-muted);
-    color: var(--text-3);          /* сделали ярче */
+    color: var(--text-3);
     font-size: 0.8rem;
     font-weight: bold;
     display: inline-flex;
@@ -154,7 +152,9 @@
     cursor: pointer;
     flex-shrink: 0;
     transition: all 0.2s;
-    background: rgba(255,255,255,0.1); /* лёгкий фон для заметности */
+    background: rgba(255,255,255,0.1);
+    line-height: 1;          /* фикс вертикали */
+    margin-top: 2px;         /* небольшая коррекция вниз (подберите на глаз) */
 }
 
 .tooltip-icon:hover {
@@ -266,7 +266,7 @@
 .stake-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .stake-input[type=number] { -moz-appearance: textfield; }
 
-/* === КНОПКИ УПРАВЛЕНИЯ === */
+/* === КНОПКИ УПРАВЛЕНИЯ (РАССЧИТАТЬ / СБРОСИТЬ) === */
 .panel-controls {
     display: flex;
     gap: 12px;
@@ -293,7 +293,8 @@
 
 .panel-controls .btn i {
     vertical-align: middle;
-    line-height: 1;
+    margin-top: -2px;         /* поднимаем иконки вверх */
+    display: inline-block;
 }
 
 .panel-controls .btn-primary-bg {
@@ -458,7 +459,6 @@
 
 .odds-corner { width: 80px; }
 
-/* === Исход 1, 2 и тд === */
 .odds-header {
     text-align: center;
     font-weight: bold;
@@ -473,7 +473,6 @@
     align-items: center;
 }
 
-/* === БК 1, БК 2 и тд === */
 .odds-bk-label {
     display: flex;
     align-items: center;
@@ -576,7 +575,6 @@
     border-bottom: 2px solid var(--border-muted);
 }
 
-/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (верхняя строка) === */
 .distribution-table thead th {
     padding: 12px 8px;
     font-weight: bold;
@@ -613,7 +611,6 @@
 
 .distribution-table tbody td:last-child { border-right: none; }
 
-/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (левый столбец) === */
 .distribution-table tbody td.metric-label {
     width: 1%;
     white-space: nowrap;
@@ -707,7 +704,6 @@
     gap: 8px;
 }
 
-/* === ПРИБЫЛЬ слово === */
 .net-profit-label {
     font-size: 2.25rem;
     font-weight: bold;
@@ -720,7 +716,6 @@
     color: var(--text-4);
 }
 
-/* === ПРИБЫЛЬ число === */
 .net-profit-value {
     font-size: 2.25rem;
     font-weight: bold;
