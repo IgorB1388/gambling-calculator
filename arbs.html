@@ -75,9 +75,8 @@
                                     <input type="text" id="totalStake"
                                         class="stake-input bg-body border-3 text-3"
                                         value="1000">
-                                    <span class="stake-suffix text-3">$</span>
+                                    <!-- Символ $ удалён -->
                                 </div>
-                                <!-- stake-error элемент удалён, ошибок больше не показываем -->
                             </div>
 
                             <div class="panel-controls">
@@ -153,7 +152,7 @@
                                 <div class="distribution-table border-1" id="distributionTable">
                                     <table>
                                         <thead class="bg-elevated">
-                                            <tr id="tableHeader"></tr>
+                                            <tr id="tableHeader"><tr>
                                         </thead>
                                         <tbody id="tableBody"></tbody>
                                     </table>
@@ -162,11 +161,11 @@
                                 <div class="totals bg-elevated border-1">
                                     <div class="total-row">
                                         <span class="text-muted" data-i18n="arbsTotalStake"></span>
-                                        <span class="total-row-value text-3" id="totalStakeDisplay">0 $</span>
+                                        <span class="total-row-value text-3" id="totalStakeDisplay">0</span>
                                     </div>
                                     <div class="total-row">
                                         <span class="text-muted" data-i18n="arbsTotalPayoutRow"></span>
-                                        <span class="total-row-value text-3" id="totalPayout">0 $</span>
+                                        <span class="total-row-value text-3" id="totalPayout">0</span>
                                     </div>
                                     <div class="total-row" id="incomeRow" style="display:none;">
                                         <span class="text-muted" data-i18n="arbsIncomeRow"></span>
@@ -176,7 +175,7 @@
 
                                 <div class="net-profit-block bg-elevated" id="netProfitBlock" style="display:none;">
                                     <span class="net-profit-label text-muted" data-i18n="arbsNetProfit"></span>
-                                    <span class="net-profit-value text-4" id="netProfit">0 $</span>
+                                    <span class="net-profit-value text-4" id="netProfit">0</span>
                                 </div>
                             </div>
                         </div>
