@@ -1,4 +1,4 @@
-// arbs.js - Анализатор вилок (без знаков доллара)
+// arbs.js - Анализатор вилок
 
 const ARB_COLORS = [
     '#00f0ff',
@@ -18,7 +18,7 @@ let bestBkPerOutcome = [];
 
 const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00]; // до 4 исходов
 
-// ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМАТИРОВАНИЯ ЧИСЕЛ С ПРОБЕЛАМИ ==========
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ФОРМАТИРОВАНИЯ ==========
 function formatNumberWithSpaces(num) {
     if (isNaN(num)) return '0';
     let parts = num.toString().split('.');
@@ -26,6 +26,19 @@ function formatNumberWithSpaces(num) {
     let fractionalPart = parts[1] !== undefined ? '.' + parts[1] : '';
     integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     return integerPart + fractionalPart;
+}
+
+function formatMoney(value) {
+    if (isNaN(value)) return '0';
+    let num = parseFloat(value);
+    let rounded = num.toFixed(2);
+    if (rounded.endsWith('.00')) {
+        return formatNumberWithSpaces(Math.floor(num).toString());
+    } else {
+        let trimmed = rounded.replace(/\.?0+$/, '');
+        if (trimmed.endsWith('.')) trimmed = trimmed.slice(0, -1);
+        return formatNumberWithSpaces(trimmed);
+    }
 }
 
 function formatPercent(value) {
@@ -572,8 +585,10 @@ function getBestOddsWithBk() {
 function calculateGuaranteedStrategy(bestOdds, totalStake) {
     let sumInverse = 0;
     bestOdds.forEach(odd => { if (odd > 0) sumInverse += 1 / odd; });
-    const isArb = sumInverse < 1;
-    const profitPercent = isArb ? ((1 / sumInverse - 1) * 100) : 0;
+    const isArbRaw = sumInverse < 1;
+    const profitPercent = isArbRaw ? ((1 / sumInverse - 1) * 100) : 0;
+    // Вилка считается только если доходность > 0.01% (минимальная монетарная единица)
+    const isArb = isArbRaw && profitPercent > 0.01;
     const stakes = bestOdds.map(odd => (totalStake * (1 / odd)) / sumInverse);
     const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
     return { stakes, payouts, guaranteedPayout: payouts[0], isArb, profitPercent, sumInverse };
@@ -603,7 +618,8 @@ function calculateMaxStrategy(bestOdds, totalStake) {
     const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
     const guaranteedPayout = payouts[maxOddIndex];
     const profitPercent = ((guaranteedPayout - totalStake) / totalStake) * 100;
-    return { stakes, payouts, guaranteedPayout, isArb: true, profitPercent, sumInverse, maxOddIndex };
+    const isArb = profitPercent > 0.01; // Только если доходность > 0.01%
+    return { stakes, payouts, guaranteedPayout, isArb, profitPercent, sumInverse, maxOddIndex };
 }
 
 function calculateArbitrage() {
@@ -707,7 +723,7 @@ function displayResults(data) {
                 const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
                 rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span><\/td>`;
             } else if (m === 1) { // Ставка
-                rowHtml += `<td>${formatNumberWithSpaces(data.stakes[i].toFixed(2))}<\/td>`;
+                rowHtml += `<td>${formatMoney(data.stakes[i])}<\/td>`;
             } else if (m === 2) { // Результат
                 if (data.isArb) {
                     const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
@@ -718,15 +734,15 @@ function displayResults(data) {
                     rowHtml += `<td>—<\/td>`;
                 }
             } else { // Выплата
-                rowHtml += `<td>${formatNumberWithSpaces(data.payouts[i].toFixed(2))}<\/td>`;
+                rowHtml += `<td>${formatMoney(data.payouts[i])}<\/td>`;
             }
         }
         rowsHtml += `<tr>${rowHtml}<\/tr>`;
     }
     tableBody.innerHTML = rowsHtml;
 
-    document.getElementById('totalStakeDisplay').textContent = formatNumberWithSpaces(data.totalStake.toFixed(2));
-    document.getElementById('totalPayout').textContent = formatNumberWithSpaces(data.guaranteedPayout.toFixed(2));
+    document.getElementById('totalStakeDisplay').textContent = formatMoney(data.totalStake);
+    document.getElementById('totalPayout').textContent = formatMoney(data.guaranteedPayout);
     incomeRow.style.display = 'flex';
     if (isMaxStrategy) {
         const minPct = formatPercent(Math.min(...data.payouts) / data.totalStake * 100 - 100);
@@ -738,7 +754,7 @@ function displayResults(data) {
     }
     const netProfit = data.guaranteedPayout - data.totalStake;
     netProfitBlock.style.display = 'flex';
-    netProfitEl.textContent = '+' + formatNumberWithSpaces(netProfit.toFixed(2));
+    netProfitEl.textContent = '+' + formatMoney(netProfit);
     netProfitEl.className = 'net-profit-value text-4';
 }
 
