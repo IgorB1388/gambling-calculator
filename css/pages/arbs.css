@@ -697,8 +697,7 @@
     flex-shrink: 1;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-secondary);
+    white-space: nowrap;    
 }
 
 .net-profit-value {
