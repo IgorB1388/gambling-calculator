@@ -31,10 +31,14 @@ function formatNumberWithSpaces(num) {
 function formatMoney(value) {
     if (isNaN(value)) return '0';
     let num = parseFloat(value);
+    // Округляем до 2 знаков для корректного сравнения с .00
     let rounded = num.toFixed(2);
     if (rounded.endsWith('.00')) {
+        // Целое число – показываем без дробной части
         return formatNumberWithSpaces(Math.floor(num).toString());
     } else {
+        // Есть дробная часть – показываем с двумя знаками (например, 44.50)
+        // Но если после округления получилось .5? Нет, toFixed(2) даст .50
         return formatNumberWithSpaces(rounded);
     }
 }
@@ -52,34 +56,14 @@ function formatPercent(value) {
     return formatted;
 }
 
-// Форматирование отображаемой суммы ставки с пробелами (без изменения хранимого значения)
-function formatStakeDisplay(value) {
-    if (!value) return '';
-    let numStr = value.toString().replace(/\s/g, ''); // убираем существующие пробелы
-    let num = parseFloat(numStr);
-    if (isNaN(num)) return value;
-    let parts = numStr.split('.');
-    let integerPart = parts[0];
-    let fractionalPart = parts[1] !== undefined ? '.' + parts[1] : '';
-    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    return integerPart + fractionalPart;
-}
-
-// Убирает пробелы из строки ставки для получения чистого числа
-function cleanStakeValue(str) {
-    return str.replace(/\s/g, '');
-}
-
 // ========== СОХРАНЕНИЕ И ЗАГРУЗКА СОСТОЯНИЯ (только введённые данные) ==========
 function saveSettingsState() {
-    const stakeInput = document.getElementById('totalStake');
-    let rawStake = stakeInput ? cleanStakeValue(stakeInput.value) : '1000';
     const state = {
         oddsValues: oddsValues,
         bkCount: bkCount,
         outcomeCount: outcomeCount,
         strategy: strategy,
-        totalStake: rawStake
+        totalStake: document.getElementById('totalStake')?.value || '1000'
     };
     localStorage.setItem('arbSettingsState', JSON.stringify(state));
 }
@@ -94,8 +78,7 @@ function loadSettingsState() {
         outcomeCount = state.outcomeCount;
         strategy = state.strategy;
         if (document.getElementById('totalStake')) {
-            let rawStake = state.totalStake || '1000';
-            document.getElementById('totalStake').value = formatStakeDisplay(rawStake);
+            document.getElementById('totalStake').value = state.totalStake;
         }
         return true;
     } catch (e) {
@@ -192,11 +175,8 @@ function showResults() {
 }
 
 // ========== ЛОГИКА ВВОДА СТАВКИ (8 целых, 2 дробных, автоточка на 8-й цифре) ==========
-// Эта функция работает с "сырым" значением (без пробелов). Пробелы убираем перед вызовом.
 function processStakeInput(inputElement, event) {
-    // Получаем текущее значение без пробелов
-    let rawValue = cleanStakeValue(inputElement.value);
-    const oldValue = rawValue;
+    const oldValue = inputElement.value;
     const inputType = event.inputType;
     const isDelete = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
     const isInsert = inputType === 'insertText' || inputType === 'insertCompositionText';
@@ -239,7 +219,6 @@ function processStakeInput(inputElement, event) {
         if (intPart.length === 8 && !oldValue.includes('.')) {
             const newInt = intPart;
             newValue = newInt + '.';
-            // Обновляем отображаемое значение (без пробелов) и позицию курсора
             inputElement.value = newValue;
             const newDotPos = newValue.indexOf('.');
             inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
@@ -278,21 +257,18 @@ function processStakeInput(inputElement, event) {
 
 function normalizeStakeInput() {
     const input = document.getElementById('totalStake');
-    let val = cleanStakeValue(input.value);
+    let val = input.value.trim();
     if (val === '') {
-        input.value = formatStakeDisplay('1000');
+        input.value = '1000';
         return;
     }
     let num = parseFloat(val);
     if (isNaN(num) || num <= 0) {
-        input.value = formatStakeDisplay('1000');
+        input.value = '1000';
         return;
     }
-    if (num > 99999999.99) {
-        input.value = formatStakeDisplay('99999999.99');
-    } else {
-        input.value = formatStakeDisplay(val);
-    }
+    if (num > 99999999.99) input.value = '99999999.99';
+    else input.value = num.toString();
 }
 
 function updateOutcomePillsActive(count) {
@@ -650,11 +626,10 @@ function calculateMaxStrategy(bestOdds, totalStake) {
 function calculateArbitrage() {
     collectOddsValuesFromDom();
     normalizeStakeInput();
-    const rawStake = cleanStakeValue(document.getElementById('totalStake').value);
-    const totalStake = parseFloat(rawStake);
+    const totalStake = parseFloat(document.getElementById('totalStake').value);
 
     if (isNaN(totalStake) || totalStake <= 0) {
-        document.getElementById('totalStake').value = formatStakeDisplay('1000');
+        document.getElementById('totalStake').value = '1000';
         calculateArbitrage();
         return;
     }
@@ -794,7 +769,7 @@ function resetCalculator() {
     initState();
     renderOddsTable();
     clearInputHighlights();
-    document.getElementById('totalStake').value = formatStakeDisplay('1000');
+    document.getElementById('totalStake').value = '1000';
     updateOutcomePillsActive(2);
     updateStrategyPillsActive('guaranteed');
     document.getElementById('incomeRow').style.display = 'none';
@@ -816,34 +791,17 @@ function initEventListeners() {
     document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
 
     const stakeInput = document.getElementById('totalStake');
-    
-    // При вводе: работаем с сырым значением (без пробелов), но отображаем без пробелов
     stakeInput.addEventListener('beforeinput', (e) => {
-        // Убираем пробелы из текущего значения перед обработкой
-        const cleanValue = cleanStakeValue(stakeInput.value);
-        if (stakeInput.value !== cleanValue) {
-            stakeInput.value = cleanValue;
-        }
         processStakeInput(stakeInput, e);
     });
-    
     stakeInput.addEventListener('input', (e) => {
-        // После каждого ввода сохраняем чистое значение (без пробелов)
         resetOnEdit();
         saveSettingsState();
     });
-    
     stakeInput.addEventListener('blur', () => {
-        // При потере фокуса форматируем с пробелами
         normalizeStakeInput();
         resetOnEdit();
         saveSettingsState();
-    });
-    
-    stakeInput.addEventListener('focus', () => {
-        // При фокусе убираем пробелы для удобства редактирования
-        let raw = cleanStakeValue(stakeInput.value);
-        stakeInput.value = raw;
     });
 
     document.addEventListener('languageChanged', () => {
