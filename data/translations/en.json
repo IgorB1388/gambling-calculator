@@ -143,7 +143,7 @@
     "arbsSubtitle": "Arbitrage calculator",
     "arbsSettingsTitle": "ARBITRAGE SETTINGS",
     "arbsOutcomesLabel": "NUMBER OF OUTCOMES:",
-    "arbsOddsLabel": "ODDS (BM 1 / BM 2)",
+    "arbsOddsLabel": "ODDS",
     "arbsStakeLabel": "TOTAL STAKE:",
     "arbsCalculateBtn": "CALCULATE",
     "arbsResultsTitle": "RESULTS",
