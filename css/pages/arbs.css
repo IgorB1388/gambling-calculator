@@ -1,859 +1,796 @@
-// arbs.js - Анализатор вилок
+/* arbs.css */
 
-const ARB_COLORS = [
-    '#00f0ff',
-    '#ffd966',
-    '#b36bff',
-    '#ff9966',
-    '#ff5fd2',
-];
-
-let bkCount = 2;
-let outcomeCount = 2;
-let oddsValues = [];
-let strategy = 'guaranteed';
-let lastCalculation = null;
-let hasCalculated = false;
-let bestBkPerOutcome = [];
-
-const DEFAULT_ODDS = [2.00, 2.00, 3.00, 4.00]; // до 4 исходов
-
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ФОРМАТИРОВАНИЯ ==========
-function formatNumberWithSpaces(num) {
-    if (isNaN(num)) return '0';
-    let parts = num.toString().split('.');
-    let integerPart = parts[0];
-    let fractionalPart = parts[1] !== undefined ? '.' + parts[1] : '';
-    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    return integerPart + fractionalPart;
+.arbitrage-container {
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-function formatMoney(value) {
-    if (isNaN(value)) return '0';
-    let num = parseFloat(value);
-    let rounded = num.toFixed(2);
-    if (rounded.endsWith('.00')) {
-        return formatNumberWithSpaces(Math.floor(num).toString());
-    } else {
-        return formatNumberWithSpaces(rounded);
-    }
+.arbitrage-main-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+    align-items: stretch;
 }
 
-function formatPercent(value) {
-    if (isNaN(value)) return '0';
-    let formatted = value.toFixed(2);
-    if (formatted.endsWith('.00')) return formatted.slice(0, -3);
-    if (formatted.includes('.')) {
-        formatted = formatted.replace(/\.?0+$/, '');
-        if (formatted.includes('.') && formatted.split('.')[1].length === 0) {
-            formatted = formatted.slice(0, -1);
-        }
-    }
-    return formatted;
+@media (max-width: 1100px) {
+    .arbitrage-main-area { grid-template-columns: 1fr; }
 }
 
-// Форматирование отображаемой суммы ставки с пробелами (без изменения хранимого значения)
-function formatStakeDisplay(value) {
-    if (!value) return '';
-    let numStr = value.toString().replace(/\s/g, ''); // убираем существующие пробелы
-    let num = parseFloat(numStr);
-    if (isNaN(num)) return value;
-    let parts = numStr.split('.');
-    let integerPart = parts[0];
-    let fractionalPart = parts[1] !== undefined ? '.' + parts[1] : '';
-    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    return integerPart + fractionalPart;
+/* === ПАНЕЛИ === */
+.panel {
+    border-radius: 15px;
+    padding: 25px;
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    min-height: 900px;
+    min-width: 0;
+    overflow: hidden;
 }
 
-// Убирает пробелы из строки ставки для получения чистого числа
-function cleanStakeValue(str) {
-    return str.replace(/\s/g, '');
+/* === ЗАГОЛОВОК ПАНЕЛИ === */
+.panel-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    padding-bottom: 16px;
+    margin-left: -25px;
+    margin-right: -25px;
+    padding-left: 25px;
+    padding-right: 25px;
+    position: relative;
 }
 
-// ========== СОХРАНЕНИЕ И ЗАГРУЗКА СОСТОЯНИЯ (только введённые данные) ==========
-function saveSettingsState() {
-    const stakeInput = document.getElementById('totalStake');
-    let rawStake = stakeInput ? cleanStakeValue(stakeInput.value) : '1000';
-    const state = {
-        oddsValues: oddsValues,
-        bkCount: bkCount,
-        outcomeCount: outcomeCount,
-        strategy: strategy,
-        totalStake: rawStake
-    };
-    localStorage.setItem('arbSettingsState', JSON.stringify(state));
+.panel-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
 }
 
-function loadSettingsState() {
-    const saved = localStorage.getItem('arbSettingsState');
-    if (!saved) return false;
-    try {
-        const state = JSON.parse(saved);
-        oddsValues = state.oddsValues;
-        bkCount = state.bkCount;
-        outcomeCount = state.outcomeCount;
-        strategy = state.strategy;
-        if (document.getElementById('totalStake')) {
-            let rawStake = state.totalStake || '1000';
-            document.getElementById('totalStake').value = formatStakeDisplay(rawStake);
-        }
-        return true;
-    } catch (e) {
-        console.log('Ошибка загрузки настроек');
-        return false;
-    }
+.panel.border-1 .panel-title::after {
+    background: var(--border-1);
+    box-shadow: 0 0 10px var(--border-1), 0 0 20px var(--border-1);
 }
 
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
-function initApp() {
-    const loaded = loadSettingsState();
-    if (!loaded) {
-        initState();
-    } else {
-        if (!oddsValues || oddsValues.length !== bkCount) {
-            initState();
-        } else {
-            for (let b = 0; b < bkCount; b++) {
-                if (!oddsValues[b] || oddsValues[b].length !== outcomeCount) {
-                    oddsValues[b] = [];
-                    for (let o = 0; o < outcomeCount; o++) {
-                        oddsValues[b][o] = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
-                    }
-                }
-            }
-        }
-    }
-    renderOddsTable();
-    initEventListeners();
-    initTooltips();
-    updateOutcomePillsActive(outcomeCount);
-    updateStrategyPillsActive(strategy);
-    hasCalculated = false;
-    lastCalculation = null;
-    clearInputHighlights();
-    showPlaceholder();
-    const detailsContainer = document.getElementById('arbDetailsContainer');
-    if (detailsContainer) detailsContainer.style.display = 'none';
-    normalizeStakeInput();
+.panel.border-4 .panel-title::after {
+    background: var(--border-4);
+    box-shadow: 0 0 10px var(--border-4), 0 0 20px var(--border-4);
 }
 
-function initState() {
-    oddsValues = [];
-    for (let b = 0; b < bkCount; b++) {
-        const row = [];
-        for (let o = 0; o < outcomeCount; o++) row.push(DEFAULT_ODDS[o % DEFAULT_ODDS.length]);
-        oddsValues.push(row);
-    }
+/* === ШАГИ ЛЕВОЙ ПАНЕЛИ === */
+.arbs-step {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.translationsReady) {
-        initApp();
-    } else {
-        document.addEventListener('translationsReady', initApp, { once: true });
-    }
-});
-
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
-function initTooltips() {
-    const popup = document.getElementById('tooltipPopup');
-    if (!popup) return;
-    document.querySelectorAll('.tooltip-icon').forEach(icon => {
-        icon.addEventListener('mouseenter', (e) => {
-            const key = icon.getAttribute('data-tooltip-key');
-            const text = window.getTranslation ? window.getTranslation(key) : key;
-            if (!text) return;
-            popup.textContent = text;
-            popup.style.display = 'block';
-            positionTooltip(e, popup);
-        });
-        icon.addEventListener('mousemove', (e) => positionTooltip(e, popup));
-        icon.addEventListener('mouseleave', () => { popup.style.display = 'none'; });
-    });
+/* Высота первого шага — должна совпадать с .indicator-step */
+.arbs-step:first-of-type {
+    height: 100px;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
-function positionTooltip(e, popup) {
-    const x = e.clientX + 12;
-    const y = e.clientY + 12;
-    popup.style.left = Math.min(x, window.innerWidth - popup.offsetWidth - 16) + 'px';
-    popup.style.top = Math.min(y, window.innerHeight - popup.offsetHeight - 16) + 'px';
+.arbs-step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-function showPlaceholder() {
-    document.getElementById('resultsPlaceholder').style.display = 'flex';
-    document.getElementById('resultsContent').style.display = 'none';
-    const detailsContainer = document.getElementById('arbDetailsContainer');
-    if (detailsContainer) detailsContainer.style.display = 'none';
+.arbs-step-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--border-3);
+    color: var(--text-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    background: rgba(133, 193, 233, 0.08);
 }
 
-function showResults() {
-    document.getElementById('resultsPlaceholder').style.display = 'none';
-    document.getElementById('resultsContent').style.display = 'flex';
+/* === РАЗДЕЛИТЕЛЬ === */
+.block-divider {
+    height: 1px;
+    background: var(--color-primary);
+    box-shadow: 0 0 6px var(--color-primary);
+    margin: 2px -25px;
+    border: none;
+    flex-shrink: 0;
 }
 
-// ========== ЛОГИКА ВВОДА СТАВКИ (8 целых, 2 дробных, автоточка на 8-й цифре) ==========
-// Эта функция работает с "сырым" значением (без пробелов). Пробелы убираем перед вызовом.
-function processStakeInput(inputElement, event) {
-    // Получаем текущее значение без пробелов
-    let rawValue = cleanStakeValue(inputElement.value);
-    const oldValue = rawValue;
-    const inputType = event.inputType;
-    const isDelete = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
-    const isInsert = inputType === 'insertText' || inputType === 'insertCompositionText';
+.panel.border-4 .block-divider {
+    background: var(--border-4);
+    box-shadow: 0 0 6px var(--border-4);
+}
+
+/* === ГРУППЫ НАСТРОЕК === */
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings-label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* === ТУЛТИП === */
+.tooltip-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--border-muted);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.tooltip-icon:hover {
+    border-color: var(--border-3);
+    color: var(--text-3);
+}
+
+.tooltip-popup {
+    position: fixed;
+    max-width: 280px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    z-index: 10000;
+    display: none;
+    pointer-events: none;
+    box-shadow: var(--shadow-md);
+}
+
+/* === КНОПКИ ИСХОДОВ === */
+.outcome-pills {
+    display: flex;
+    gap: 10px;
+}
+
+.outcome-pill {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--color-secondary) !important;
+    background: rgba(255, 95, 210, 0.08) !important;
+    color: var(--color-secondary) !important;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.outcome-pill:hover { transform: scale(1.1); opacity: 0.85; }
+
+.outcome-pill.active {
+    background: var(--color-secondary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--color-secondary) !important;
+    box-shadow: 0 0 15px var(--color-secondary) !important;
+}
+
+/* === СТАВКА === */
+.stake-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.stake-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 220px; 
+}
+
+.stake-input {
+    width: 100%;
+    padding: 13px 15px;   
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 1.8rem;    
+    font-weight: bold;
+    background: transparent;
+    transition: all 0.2s;
+}
+
+.stake-input:focus { outline: none; transform: scale(1.02); }
+
+.stake-input.input-error {
+    border-color: var(--color-danger) !important;
+    box-shadow: 0 0 10px rgba(255, 51, 102, 0.5) !important;
+}
+
+.stake-suffix {
+    position: absolute;
+    right: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.stake-error {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 4px 0;
+    color: var(--color-danger) !important;
+}
+
+.stake-input::-webkit-outer-spin-button,
+.stake-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.stake-input[type=number] { -moz-appearance: textfield; }
+
+/* === КНОПКИ УПРАВЛЕНИЯ === */
+.panel-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.panel-controls .btn {
+    flex: 1;
+    padding: 16px 16px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 56px;
+    white-space: nowrap;
+}
+
+.panel-controls .btn:hover { transform: translateY(-2px); }
+
+/* === ЗАГЛУШКА === */
+.results-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 20px 20px;
+    gap: 18px;
+    text-align: center;
+}
+
+.placeholder-icon { font-size: 4rem; opacity: 0.4; }
+.placeholder-text { font-size: 1.15rem; font-style: italic; }
+
+.placeholder-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+    margin-top: 8px;
+}
+
+.placeholder-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+}
+
+.step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+/* === РЕЗУЛЬТАТЫ === */
+.results-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* === ИНДИКАТОР ВИЛКИ === */
+.indicator-step {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.arb-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.indicator-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+    flex-shrink: 0;
+}
+
+.indicator-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.indicator-status-text {
+    font-size: 1.35rem;
+    font-weight: bold;
+}
+
+.indicator-profit { margin-left: auto; }
+
+.profit-badge {
+    font-size: 2.4rem;
+    font-weight: bold;
+}
+
+/* === СТРАТЕГИЯ === */
+.strategy-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.strategy-mini-pills {
+    display: flex;
+    gap: 8px;
+}
+
+.strategy-mini-btn {
+    flex: 1;
+    height: 56px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--border-5);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(106, 168, 255, 0.08);
+    color: var(--text-5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.strategy-mini-btn:hover { transform: translateY(-1px); opacity: 0.85; }
+
+.strategy-mini-btn.active {
+    background: var(--color-info) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--color-info) !important;
+    box-shadow: 0 0 12px var(--color-info) !important;
+}
+
+/* === ТАБЛИЦА КОЭФФИЦИЕНТОВ (левая панель) === */
+.odds-table {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.odds-header-row {
+    display: grid;
+    grid-template-columns: 80px repeat(var(--outcome-count, 2), 1fr);
+    gap: 8px;
+    align-items: center;
+}
+
+.odds-corner { width: 80px; }
+
+.odds-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.05rem;
+    padding: 4px;
+}
+
+.odds-row {
+    display: grid;
+    grid-template-columns: 80px repeat(var(--outcome-count, 2), 1fr);
+    gap: 8px;
+    align-items: center;
+}
+
+.odds-bk-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    font-weight: bold;
+    font-size: 1.05rem;
+    white-space: nowrap;
+}
+
+.remove-bk {
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.7;
+    transition: all 0.2s;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.remove-bk:hover { opacity: 1; transform: scale(1.1); }
+
+.odds-input {
+    padding: 6px 8px;
+    border-radius: 6px;
+    border-width: 2px;
+    border-style: solid;
+    font-size: 1.1rem;
+    font-weight: bold;
+    width: 100%;
+    background: transparent;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    text-align: center;
+    outline: none;
+    box-sizing: border-box;
+    color: var(--text-secondary);
+}
+
+.odds-input.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 8px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
+.odds-input.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 8px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
+.odds-input.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 8px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
+.odds-input.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 8px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
+.odds-input.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 8px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
+
+.odds-input::-webkit-outer-spin-button,
+.odds-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.odds-input[type=number] { -moz-appearance: textfield; }
+
+.add-bk-row {
+    margin-top: 4px;
+    display: grid;
+    grid-template-columns: 80px repeat(var(--outcome-count, 2), 1fr);
+    gap: 8px;
+    align-items: center;
+}
+
+.odds-add-bk { grid-column: 1; width: 100%; }
+
+.add-bk-btn {
+    background: transparent;
+    border: 2px solid var(--border-3);
+    color: var(--text-3);
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 7px 12px;
+    border-radius: 8px;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.add-bk-btn:hover { opacity: 0.8; }
+
+/* === ТАБЛИЦА РАСПРЕДЕЛЕНИЯ (правая панель) === */
+.distribution-table {
+    width: 100%;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+    overflow-x: auto;
+    min-width: 0;
+}
+
+.distribution-table table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.distribution-table thead {
+    background: var(--bg-elevated);
+    border-bottom: 2px solid var(--border-muted);
+}
+
+.distribution-table thead th {
+    padding: 12px 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid var(--border-muted);
+    background: var(--bg-elevated);
+}
+
+.distribution-table thead th:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.distribution-table thead th:last-child { border-right: none; }
+
+.distribution-table tbody tr {
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.distribution-table tbody tr:last-child { border-bottom: none; }
+
+.distribution-table tbody td {
+    padding: 11px 8px;
+    font-size: 1.0rem;
+    color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid var(--border-muted);
+    vertical-align: middle;
+}
+
+.distribution-table tbody td:last-child { border-right: none; }
+
+.distribution-table tbody td.metric-label {
+    width: 1%;
+    white-space: nowrap;
+    background: var(--bg-elevated);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-secondary);
+    border-right: 1px solid var(--border-muted);
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* === ЯЧЕЙКА КЭФ === */
+.kef-cell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+    font-weight: bold;
+    font-size: 1.0rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    white-space: nowrap;
+    min-width: 44px;
+    box-sizing: border-box;
+}
+
+.kef-cell.arb-highlight-0 { border-color: var(--arb-hl-0) !important; box-shadow: 0 0 5px var(--arb-hl-0); color: var(--arb-hl-0) !important; }
+.kef-cell.arb-highlight-1 { border-color: var(--arb-hl-1) !important; box-shadow: 0 0 5px var(--arb-hl-1); color: var(--arb-hl-1) !important; }
+.kef-cell.arb-highlight-2 { border-color: var(--arb-hl-2) !important; box-shadow: 0 0 5px var(--arb-hl-2); color: var(--arb-hl-2) !important; }
+.kef-cell.arb-highlight-3 { border-color: var(--arb-hl-3) !important; box-shadow: 0 0 5px var(--arb-hl-3); color: var(--arb-hl-3) !important; }
+.kef-cell.arb-highlight-4 { border-color: var(--arb-hl-4) !important; box-shadow: 0 0 5px var(--arb-hl-4); color: var(--arb-hl-4) !important; }
+
+.outcome-badge {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* === ИТОГИ === */
+.totals {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+    min-width: 0;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    min-width: 0;
+    gap: 8px;
+}
+
+.total-row > span:first-child {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-secondary);
+}
+
+.total-row-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* === ЧИСТАЯ ПРИБЫЛЬ === */
+.net-profit-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 22px;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--border-4);
+    min-width: 0;
+    gap: 8px;
+}
+
+.net-profit-label {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-4);
     
-    if (isDelete) return true;
-    if (!isInsert) return true;
+}
+
+.net-profit-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    white-space: nowrap;
     
-    const newChar = event.data;
-    if (!newChar) return true;
-    
-    if (!/[\d.]/.test(newChar)) {
-        event.preventDefault();
-        return false;
-    }
-    
-    if (newChar === '.') {
-        if (oldValue.includes('.')) {
-            event.preventDefault();
-            return false;
-        }
-        if (oldValue === '' || oldValue === '-') {
-            event.preventDefault();
-            return false;
-        }
-        return true;
-    }
-    
-    const dotPos = oldValue.indexOf('.');
-    let isIntegerPart = true;
-    if (dotPos !== -1 && inputElement.selectionStart > dotPos) {
-        isIntegerPart = false;
-    }
-    
-    let newValue = oldValue.slice(0, inputElement.selectionStart) + newChar + oldValue.slice(inputElement.selectionEnd);
-    
-    if (isIntegerPart) {
-        const parts = newValue.split('.');
-        let intPart = parts[0];
-        
-        if (intPart.length === 8 && !oldValue.includes('.')) {
-            const newInt = intPart;
-            newValue = newInt + '.';
-            // Обновляем отображаемое значение (без пробелов) и позицию курсора
-            inputElement.value = newValue;
-            const newDotPos = newValue.indexOf('.');
-            inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
-            event.preventDefault();
-            return false;
-        }
-        
-        if (intPart.length > 8) {
-            if (!oldValue.includes('.')) {
-                const newInt = intPart.slice(0, 8);
-                const extraDigit = intPart.slice(8);
-                let newFrac = extraDigit + (parts[1] || '');
-                if (newFrac.length > 2) newFrac = newFrac.slice(0, 2);
-                newValue = newInt + '.' + newFrac;
-                inputElement.value = newValue;
-                const newDotPos = newValue.indexOf('.');
-                inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
-                event.preventDefault();
-                return false;
-            } else {
-                event.preventDefault();
-                return false;
-            }
-        }
-        return true;
-    } else {
-        const parts = newValue.split('.');
-        const fracPart = parts[1] || '';
-        if (fracPart.length > 2) {
-            event.preventDefault();
-            return false;
-        }
-        return true;
-    }
 }
 
-function normalizeStakeInput() {
-    const input = document.getElementById('totalStake');
-    let val = cleanStakeValue(input.value);
-    if (val === '') {
-        input.value = formatStakeDisplay('1000');
-        return;
-    }
-    let num = parseFloat(val);
-    if (isNaN(num) || num <= 0) {
-        input.value = formatStakeDisplay('1000');
-        return;
-    }
-    if (num > 99999999.99) {
-        input.value = formatStakeDisplay('99999999.99');
-    } else {
-        input.value = formatStakeDisplay(val);
-    }
+/* === КОНТЕЙНЕР ДЕТАЛЕЙ (отступы) === */
+#arbDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-function updateOutcomePillsActive(count) {
-    document.querySelectorAll('.outcome-pill').forEach(btn => {
-        btn.classList.toggle('active', parseInt(btn.dataset.outcomes) === count);
-    });
-}
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 768px) {
+    .panel { padding: 18px; gap: 16px; min-height: 0; }
+    .panel-title { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; }
+    .block-divider { margin: 2px -18px; }
 
-function updateStrategyPillsActive(activeStrategy) {
-    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.strategy === activeStrategy);
-    });
-}
-
-function formatOddsForDisplay(value) {
-    if (value === '' || value === null || isNaN(value)) return '';
-    const num = parseFloat(value);
-    if (isNaN(num)) return '';
-    const str = num.toString();
-    if (!str.includes('.')) return str + '.00';
-    const parts = str.split('.');
-    const intPart = parts[0];
-    let fracPart = parts[1];
-    if (fracPart.length === 1) fracPart += '0';
-    else if (fracPart.length === 2) {}
-    else if (fracPart.length > 3) fracPart = fracPart.slice(0, 3);
-    return intPart + '.' + fracPart;
-}
-
-// ========== ЛОГИКА ВВОДА КОЭФФИЦИЕНТОВ (4 целых, 3 дробных, автоточка на 4-й цифре) ==========
-function processOddsInput(inputElement, event) {
-    const oldValue = inputElement.value;
-    const inputType = event.inputType;
-    const isDelete = inputType === 'deleteContentBackward' || inputType === 'deleteContentForward';
-    const isInsert = inputType === 'insertText' || inputType === 'insertCompositionText';
-    
-    if (isDelete) return true;
-    if (!isInsert) return true;
-    
-    const newChar = event.data;
-    if (!newChar) return true;
-    
-    if (!/[\d.]/.test(newChar)) {
-        event.preventDefault();
-        return false;
-    }
-    
-    if (newChar === '.') {
-        if (oldValue.includes('.')) {
-            event.preventDefault();
-            return false;
-        }
-        if (oldValue === '' || oldValue === '-') {
-            event.preventDefault();
-            return false;
-        }
-        return true;
-    }
-    
-    const dotPos = oldValue.indexOf('.');
-    let isIntegerPart = true;
-    if (dotPos !== -1 && inputElement.selectionStart > dotPos) {
-        isIntegerPart = false;
-    }
-    
-    let newValue = oldValue.slice(0, inputElement.selectionStart) + newChar + oldValue.slice(inputElement.selectionEnd);
-    
-    if (isIntegerPart) {
-        const parts = newValue.split('.');
-        let intPart = parts[0];
-        
-        if (intPart.length === 4 && !oldValue.includes('.')) {
-            const newInt = intPart;
-            newValue = newInt + '.';
-            inputElement.value = newValue;
-            const newDotPos = newValue.indexOf('.');
-            inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
-            event.preventDefault();
-            return false;
-        }
-        
-        if (intPart.length > 4) {
-            if (!oldValue.includes('.')) {
-                const newInt = intPart.slice(0, 4);
-                const extraDigit = intPart.slice(4);
-                let newFrac = extraDigit + (parts[1] || '');
-                if (newFrac.length > 3) newFrac = newFrac.slice(0, 3);
-                newValue = newInt + '.' + newFrac;
-                inputElement.value = newValue;
-                const newDotPos = newValue.indexOf('.');
-                inputElement.setSelectionRange(newDotPos + 1, newDotPos + 1);
-                event.preventDefault();
-                return false;
-            } else {
-                event.preventDefault();
-                return false;
-            }
-        }
-        return true;
-    } else {
-        const parts = newValue.split('.');
-        const fracPart = parts[1] || '';
-        if (fracPart.length > 3) {
-            event.preventDefault();
-            return false;
-        }
-        return true;
-    }
-}
-
-function clearInputHighlights() {
-    document.querySelectorAll('.odds-input').forEach(inp => {
-        for (let i = 0; i < 5; i++) inp.classList.remove(`arb-highlight-${i}`);
-        inp.style.borderColor = '';
-        inp.style.boxShadow = '';
-    });
-}
-
-function applyInputHighlights(bestBkArr) {
-    clearInputHighlights();
-    bestBkArr.forEach((bkIdx, outcomeIdx) => {
-        const input = document.getElementById(`odds-${bkIdx}-${outcomeIdx}`);
-        if (input) input.classList.add(`arb-highlight-${outcomeIdx}`);
-    });
-}
-
-function resetOnEdit() {
-    if (hasCalculated) {
-        hasCalculated = false;
-        lastCalculation = null;
-        bestBkPerOutcome = [];
-        clearInputHighlights();
-        showPlaceholder();
-        const detailsContainer = document.getElementById('arbDetailsContainer');
-        if (detailsContainer) detailsContainer.style.display = 'none';
-    }
-    saveSettingsState();
-}
-
-function renderOddsTable() {
-    const container = document.getElementById('oddsTable');
-    container.innerHTML = '';
-    container.style.setProperty('--outcome-count', outcomeCount);
-
-    const headerRow = document.createElement('div');
-    headerRow.className = 'odds-header-row';
-    headerRow.appendChild(Object.assign(document.createElement('div'), { className: 'odds-corner' }));
-    for (let o = 0; o < outcomeCount; o++) {
-        const header = document.createElement('div');
-        header.className = 'odds-header text-1';
-        header.textContent = `${window.getTranslation('arbsOutcomeLabel') || 'Исход'} ${o + 1}`;
-        headerRow.appendChild(header);
-    }
-    container.appendChild(headerRow);
-
-    for (let b = 0; b < bkCount; b++) {
-        const row = document.createElement('div');
-        row.className = 'odds-row';
-
-        const labelCell = document.createElement('div');
-        labelCell.className = 'odds-bk-label';
-        const labelText = document.createElement('span');
-        labelText.className = 'text-1';
-        labelText.textContent = `${window.getTranslation('arbsBkLabel') || 'БК'} ${b + 1}`;
-        labelCell.appendChild(labelText);
-
-        if (bkCount > 2) {
-            const removeBtn = document.createElement('span');
-            removeBtn.className = 'remove-bk text-7';
-            removeBtn.textContent = '✖️';
-            removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeBookmaker(b); });
-            labelCell.appendChild(removeBtn);
-        }
-        row.appendChild(labelCell);
-
-        for (let o = 0; o < outcomeCount; o++) {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = `odds-${b}-${o}`;
-            input.className = 'odds-input bg-elevated border-5';
-            input.value = oddsValues[b][o] !== undefined && oddsValues[b][o] !== null 
-                ? formatOddsForDisplay(oddsValues[b][o]) 
-                : '';
-
-            input.addEventListener('beforeinput', (e) => {
-                processOddsInput(input, e);
-            });
-
-            input.addEventListener('input', (e) => {
-                const val = parseFloat(input.value);
-                if (!isNaN(val)) {
-                    oddsValues[b][o] = val;
-                } else if (input.value === '' || input.value === '-') {
-                    oddsValues[b][o] = null;
-                }
-                resetOnEdit();
-            });
-
-            input.addEventListener('blur', (e) => {
-                let val = parseFloat(input.value);
-                if (!isNaN(val) && val > 1) {
-                    oddsValues[b][o] = val;
-                    input.value = formatOddsForDisplay(val);
-                } else {
-                    const defaultVal = DEFAULT_ODDS[o % DEFAULT_ODDS.length];
-                    oddsValues[b][o] = defaultVal;
-                    input.value = formatOddsForDisplay(defaultVal);
-                    resetOnEdit();
-                }
-                saveSettingsState();
-            });
-
-            row.appendChild(input);
-        }
-        container.appendChild(row);
+    .odds-header-row, .odds-row, .add-bk-row {
+        grid-template-columns: 65px repeat(var(--outcome-count, 2), 1fr);
+        gap: 5px;
     }
 
-    if (bkCount < 5) {
-        const addRow = document.createElement('div');
-        addRow.className = 'add-bk-row';
-        const addCell = document.createElement('div');
-        addCell.className = 'odds-add-bk';
-        const addBtn = document.createElement('button');
-        addBtn.className = 'add-bk-btn';
-        addBtn.textContent = window.getTranslation('arbsAddBk') || 'Добавить БК';
-        addBtn.addEventListener('click', addBookmaker);
-        addCell.appendChild(addBtn);
-        addRow.appendChild(addCell);
-        for (let o = 0; o < outcomeCount; o++) addRow.appendChild(document.createElement('div'));
-        container.appendChild(addRow);
+    .odds-corner { width: 65px; }
+    .odds-bk-label { font-size: 0.95rem; }
+    .odds-input { padding: 9px 4px; font-size: 1rem; }
+    .odds-header { font-size: 0.95rem; }
+
+    .distribution-table thead th,
+    .distribution-table tbody td { padding: 9px 6px; font-size: 0.9rem; }
+
+    /* На мобильных делаем заголовки и левый столбец чуть крупнее данных */
+    .distribution-table thead th {
+        font-size: 1.0rem;
     }
-    updateOutcomePillsActive(outcomeCount);
-}
-
-function addBookmaker() {
-    if (bkCount >= 5) return;
-    collectOddsValuesFromDom();
-    const newRow = [];
-    for (let o = 0; o < outcomeCount; o++) newRow.push(DEFAULT_ODDS[o % DEFAULT_ODDS.length]);
-    oddsValues.push(newRow);
-    bkCount++;
-    resetOnEdit();
-    renderOddsTable();
-    saveSettingsState();
-}
-
-function removeBookmaker(index) {
-    if (bkCount <= 2) return;
-    collectOddsValuesFromDom();
-    oddsValues.splice(index, 1);
-    bkCount--;
-    resetOnEdit();
-    renderOddsTable();
-    saveSettingsState();
-}
-
-function collectOddsValuesFromDom() {
-    for (let b = 0; b < bkCount; b++) {
-        for (let o = 0; o < outcomeCount; o++) {
-            const input = document.getElementById(`odds-${b}-${o}`);
-            if (input) {
-                const val = parseFloat(input.value);
-                if (!isNaN(val)) oddsValues[b][o] = val;
-            }
-        }
-    }
-}
-
-function changeOutcomeCount(newCount) {
-    if (newCount < 2 || newCount > 4 || newCount === outcomeCount) return;
-    collectOddsValuesFromDom();
-    const newOddsValues = [];
-    for (let b = 0; b < bkCount; b++) {
-        const newRow = [];
-        for (let o = 0; o < newCount; o++) {
-            newRow.push(o < outcomeCount ? oddsValues[b][o] : DEFAULT_ODDS[o % DEFAULT_ODDS.length]);
-        }
-        newOddsValues.push(newRow);
-    }
-    oddsValues = newOddsValues;
-    outcomeCount = newCount;
-    resetOnEdit();
-    updateOutcomePillsActive(newCount);
-    renderOddsTable();
-    saveSettingsState();
-}
-
-function changeStrategy(newStrategy) {
-    if (newStrategy === strategy) return;
-    strategy = newStrategy;
-    updateStrategyPillsActive(newStrategy);
-    if (hasCalculated) { calculateArbitrage(); }
-    saveSettingsState();
-}
-
-// ========== ЛОГИКА РАСЧЁТА ==========
-function getBestOddsWithBk() {
-    const bestOdds = [];
-    const bestBk = [];
-    for (let o = 0; o < outcomeCount; o++) {
-        let maxOdd = 0;
-        let maxBk = 0;
-        for (let b = 0; b < bkCount; b++) {
-            const odd = oddsValues[b][o] || 0;
-            if (odd > maxOdd) {
-                maxOdd = odd;
-                maxBk = b;
-            }
-        }
-        bestOdds.push(maxOdd);
-        bestBk.push(maxBk);
-    }
-    return { bestOdds, bestBk };
-}
-
-function calculateGuaranteedStrategy(bestOdds, totalStake) {
-    let sumInverse = 0;
-    bestOdds.forEach(odd => { if (odd > 0) sumInverse += 1 / odd; });
-    const isArbRaw = sumInverse < 1;
-    const profitPercent = isArbRaw ? ((1 / sumInverse - 1) * 100) : 0;
-    const isArb = isArbRaw && profitPercent > 0.01;
-    const stakes = bestOdds.map(odd => (totalStake * (1 / odd)) / sumInverse);
-    const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
-    return { stakes, payouts, guaranteedPayout: payouts[0], isArb, profitPercent, sumInverse };
-}
-
-function calculateMaxStrategy(bestOdds, totalStake) {
-    let sumInverse = 0;
-    bestOdds.forEach(odd => { if (odd > 0) sumInverse += 1 / odd; });
-    if (sumInverse >= 1) return calculateGuaranteedStrategy(bestOdds, totalStake);
-
-    let maxOddIndex = 0;
-    for (let i = 1; i < bestOdds.length; i++) {
-        if (bestOdds[i] > bestOdds[maxOddIndex]) maxOddIndex = i;
+    .distribution-table tbody td.metric-label {
+        font-size: 1.0rem;
+        padding-left: 8px;
+        padding-right: 10px;
     }
 
-    const stakes = new Array(bestOdds.length).fill(0);
-    let remainingStake = totalStake;
-    for (let i = 0; i < bestOdds.length; i++) {
-        if (i !== maxOddIndex && bestOdds[i] > 0) {
-            stakes[i] = totalStake / bestOdds[i];
-            remainingStake -= stakes[i];
-        }
-    }
-    if (remainingStake <= 0) return calculateGuaranteedStrategy(bestOdds, totalStake);
-
-    stakes[maxOddIndex] = remainingStake;
-    const payouts = stakes.map((stake, i) => stake * bestOdds[i]);
-    const guaranteedPayout = payouts[maxOddIndex];
-    const profitPercent = ((guaranteedPayout - totalStake) / totalStake) * 100;
-    const isArb = profitPercent > 0.01;
-    return { stakes, payouts, guaranteedPayout, isArb, profitPercent, sumInverse, maxOddIndex };
+    .profit-badge { font-size: 1.7rem; }
+    .net-profit-value { font-size: 1.9rem; }
+    .panel-controls .btn { padding: 13px 10px; font-size: 1.05rem; }
+    .stake-input-wrapper { width: 100%; }
+    .settings-label { font-size: 1rem; }
+    .panel-title { font-size: 1.4rem; }
+    .indicator-status-text { font-size: 1.1rem; }
+    .indicator-step { height: auto; min-height: 60px; }
+    .arbs-step:first-of-type { height: auto; min-height: 60px; }
 }
 
-function calculateArbitrage() {
-    collectOddsValuesFromDom();
-    normalizeStakeInput();
-    const rawStake = cleanStakeValue(document.getElementById('totalStake').value);
-    const totalStake = parseFloat(rawStake);
+@media (max-width: 480px) {
+    .outcome-pills { justify-content: center; }
+    .outcome-pill { width: 46px; height: 46px; font-size: 1.1rem; }
 
-    if (isNaN(totalStake) || totalStake <= 0) {
-        document.getElementById('totalStake').value = formatStakeDisplay('1000');
-        calculateArbitrage();
-        return;
+    .odds-header-row, .odds-row, .add-bk-row {
+        grid-template-columns: 55px repeat(var(--outcome-count, 2), 1fr);
+        gap: 3px;
     }
 
-    const { bestOdds, bestBk } = getBestOddsWithBk();
-    bestBkPerOutcome = bestBk;
+    .odds-corner { width: 55px; }
+    .odds-bk-label { font-size: 0.85rem; }
+    .odds-input { padding: 7px 2px; font-size: 0.9rem; }
 
-    const result = strategy === 'guaranteed'
-        ? calculateGuaranteedStrategy(bestOdds, totalStake)
-        : calculateMaxStrategy(bestOdds, totalStake);
-
-    lastCalculation = {
-        bestOdds,
-        bestBk,
-        stakes: result.stakes,
-        payouts: result.payouts,
-        totalStake,
-        sumInverse: result.sumInverse,
-        isArb: result.isArb,
-        profitPercent: result.profitPercent,
-        strategy,
-        guaranteedPayout: result.guaranteedPayout,
-        maxOddIndex: result.maxOddIndex
-    };
-
-    hasCalculated = true;
-
-    if (result.isArb) {
-        applyInputHighlights(bestBk);
-    } else {
-        clearInputHighlights();
-    }
-
-    showResults();
-    displayResults(lastCalculation);
-    saveSettingsState();
+    .indicator-circle { width: 38px; height: 38px; }
+    .panel-controls { flex-direction: column; }
+    .panel-controls .btn { width: 100%; }
+    .net-profit-value { font-size: 1.6rem; }
+    .profit-badge { font-size: 1.5rem; }
+    .panel-title { font-size: 1.3rem; }
 }
 
-function displayResults(data) {
-    const detailsContainer = document.getElementById('arbDetailsContainer');
-    const indicatorCircle = document.getElementById('indicatorCircle');
-    const arbStatus = document.getElementById('arbStatus');
-    const indicatorProfit = document.getElementById('indicatorProfit');
-    const tableBody = document.getElementById('tableBody');
-    const tableHeader = document.getElementById('tableHeader');
-    const netProfitBlock = document.getElementById('netProfitBlock');
-    const netProfitEl = document.getElementById('netProfit');
-    const incomeRow = document.getElementById('incomeRow');
-    const incomePercent = document.getElementById('incomePercent');
-
-    if (data.isArb) {
-        indicatorCircle.className = 'indicator-circle bg-success-solid';
-        const pct = formatPercent(data.profitPercent);
-        arbStatus.textContent = `${window.getTranslation('arbsFound') || '✅ Вилка найдена!'} +${pct}%`;
-        arbStatus.className = 'indicator-status-text text-4';
-        indicatorProfit.style.display = 'none';
-        if (detailsContainer) detailsContainer.style.display = 'flex';
-    } else {
-        indicatorCircle.className = 'indicator-circle bg-danger-solid';
-        arbStatus.textContent = window.getTranslation('arbsNotFound') || '❌ Вилки нет';
-        arbStatus.className = 'indicator-status-text text-7';
-        indicatorProfit.style.display = 'none';
-        if (detailsContainer) detailsContainer.style.display = 'none';
-        return;
-    }
-
-    const isMaxStrategy = data.strategy === 'max' && data.maxOddIndex !== undefined;
-    const winText = window.getTranslation('arbsWin') || 'Выигрыш';
-    const returnText = window.getTranslation('arbsReturn') || 'Возврат';
-    const outcomeLabel = window.getTranslation('arbsOutcomeLabel') || 'Исход';
-
-    const outcomes = data.bestOdds.length;
-    const metricLabels = [
-        window.getTranslation('arbsOdds') || 'Коэффициент',
-        window.getTranslation('arbsStake') || 'Ставка',
-        window.getTranslation('arbsOutcomeType') || 'Результат',
-        window.getTranslation('arbsPayout') || 'Выплата'
-    ];
-
-    let headerHtml = '<th></th>';
-    for (let i = 0; i < outcomes; i++) {
-        headerHtml += `<th>${outcomeLabel} ${i + 1}</th>`;
-    }
-    tableHeader.innerHTML = headerHtml;
-
-    let rowsHtml = '';
-    for (let m = 0; m < metricLabels.length; m++) {
-        let rowHtml = `<td class="metric-label">${metricLabels[m]}<\/td>`;
-        for (let i = 0; i < outcomes; i++) {
-            if (m === 0) { // Коэффициент
-                const odd = data.bestOdds[i];
-                const highlightClass = data.isArb ? ` arb-highlight-${i}` : '';
-                rowHtml += `<td><span class="kef-cell${highlightClass}">${formatOddsForDisplay(odd)}</span><\/td>`;
-            } else if (m === 1) { // Ставка
-                rowHtml += `<td>${formatMoney(data.stakes[i])}<\/td>`;
-            } else if (m === 2) { // Результат
-                if (data.isArb) {
-                    const isMaxWin = isMaxStrategy && i !== data.maxOddIndex;
-                    const badgeStyle = isMaxWin ? 'color: var(--color-warning); font-weight: bold;' : 'color: var(--color-success); font-weight: bold;';
-                    const badgeText = isMaxWin ? returnText : winText;
-                    rowHtml += `<td><span class="outcome-badge" style="${badgeStyle}">${badgeText}</span><\/td>`;
-                } else {
-                    rowHtml += `<td>—<\/td>`;
-                }
-            } else { // Выплата
-                rowHtml += `<td>${formatMoney(data.payouts[i])}<\/td>`;
-            }
-        }
-        rowsHtml += `<tr>${rowHtml}<\/tr>`;
-    }
-    tableBody.innerHTML = rowsHtml;
-
-    document.getElementById('totalStakeDisplay').textContent = formatMoney(data.totalStake);
-    document.getElementById('totalPayout').textContent = formatMoney(data.guaranteedPayout);
-    incomeRow.style.display = 'flex';
-    if (isMaxStrategy) {
-        const minPct = formatPercent(Math.min(...data.payouts) / data.totalStake * 100 - 100);
-        const maxPct = formatPercent(Math.max(...data.payouts) / data.totalStake * 100 - 100);
-        incomePercent.textContent = `+${minPct}% — +${maxPct}%`;
-    } else {
-        const pct = formatPercent(data.guaranteedPayout / data.totalStake * 100 - 100);
-        incomePercent.textContent = `+${pct}%`;
-    }
-    const netProfit = data.guaranteedPayout - data.totalStake;
-    netProfitBlock.style.display = 'flex';
-    netProfitEl.textContent = '+' + formatMoney(netProfit);
-    netProfitEl.className = 'net-profit-value text-4';
+/* === УСИЛЕННЫЕ ПРАВИЛА ДЛЯ СТРОКИ "ДОХОД" === */
+#incomeRow > span:first-child,
+#incomeRow .total-row-value {
+    font-size: 1.6rem !important;
+    font-weight: bold !important;
+}
+#incomeRow > span:first-child {
+    color: var(--text-4) !important;
 }
 
-function resetCalculator() {
-    bkCount = 2;
-    outcomeCount = 2;
-    strategy = 'guaranteed';
-    hasCalculated = false;
-    lastCalculation = null;
-    bestBkPerOutcome = [];
-    initState();
-    renderOddsTable();
-    clearInputHighlights();
-    document.getElementById('totalStake').value = formatStakeDisplay('1000');
-    updateOutcomePillsActive(2);
-    updateStrategyPillsActive('guaranteed');
-    document.getElementById('incomeRow').style.display = 'none';
-    document.getElementById('netProfitBlock').style.display = 'none';
-    showPlaceholder();
-    const detailsContainer = document.getElementById('arbDetailsContainer');
-    if (detailsContainer) detailsContainer.style.display = 'none';
-    localStorage.removeItem('arbSettingsState');
+@media (max-width: 768px) {
+    #incomeRow > span:first-child,
+    #incomeRow .total-row-value {
+        font-size: 1.1rem !important;
+    }
 }
-
-function initEventListeners() {
-    document.querySelectorAll('.outcome-pill').forEach(btn => {
-        btn.addEventListener('click', function() { changeOutcomeCount(parseInt(this.dataset.outcomes)); });
-    });
-    document.querySelectorAll('.strategy-mini-btn').forEach(btn => {
-        btn.addEventListener('click', function() { changeStrategy(this.dataset.strategy); });
-    });
-    document.getElementById('calculateArbBtn').addEventListener('click', calculateArbitrage);
-    document.getElementById('resetArbBtn').addEventListener('click', resetCalculator);
-
-    const stakeInput = document.getElementById('totalStake');
-    
-    // При вводе: работаем с сырым значением (без пробелов), но отображаем без пробелов
-    stakeInput.addEventListener('beforeinput', (e) => {
-        // Убираем пробелы из текущего значения перед обработкой
-        const cleanValue = cleanStakeValue(stakeInput.value);
-        if (stakeInput.value !== cleanValue) {
-            stakeInput.value = cleanValue;
-        }
-        processStakeInput(stakeInput, e);
-    });
-    
-    stakeInput.addEventListener('input', (e) => {
-        // После каждого ввода сохраняем чистое значение (без пробелов)
-        resetOnEdit();
-        saveSettingsState();
-    });
-    
-    stakeInput.addEventListener('blur', () => {
-        // При потере фокуса форматируем с пробелами
-        normalizeStakeInput();
-        resetOnEdit();
-        saveSettingsState();
-    });
-    
-    stakeInput.addEventListener('focus', () => {
-        // При фокусе убираем пробелы для удобства редактирования
-        let raw = cleanStakeValue(stakeInput.value);
-        stakeInput.value = raw;
-    });
-
-    document.addEventListener('languageChanged', () => {
-        renderOddsTable();
-        initTooltips();
-        if (hasCalculated && lastCalculation) displayResults(lastCalculation);
-    });
-}
-
-window.calculateArbitrage = calculateArbitrage;
-window.addBookmaker = addBookmaker;
-window.removeBookmaker = removeBookmaker;
-window.changeStrategy = changeStrategy;
