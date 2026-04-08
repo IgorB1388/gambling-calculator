@@ -789,15 +789,15 @@
     .indicator-circle { width: 38px; height: 38px; }
     .panel-controls { flex-direction: column; }
     .panel-controls .btn { width: 100%; }
-    .net-profit-value { font-size: 1.6rem; }
-    .profit-badge { font-size: 1.5rem; }
-    .panel-title { font-size: 1.3rem; }
+    .net-profit-value { font-size: 1.5rem; }
+    .profit-badge { font-size: 1.4rem; }
+    .panel-title { font-size: 1.15rem; }
 }
 
 /* === УСИЛЕННЫЕ ПРАВИЛА ДЛЯ СТРОКИ "ДОХОД" === */
 #incomeRow > span:first-child,
 #incomeRow .total-row-value {
-    font-size: 1.6rem !important;
+    font-size: 1.5rem !important;
     font-weight: bold !important;
 }
 #incomeRow > span:first-child {
