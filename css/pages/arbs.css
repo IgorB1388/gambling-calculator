@@ -293,7 +293,7 @@
 
 .panel-controls .btn i {
     vertical-align: middle;
-    margin-top: -2px;         /* поднимаем иконки вверх */
+    margin-top: -2px;         
     display: inline-block;
 }
 
@@ -462,7 +462,7 @@
 .odds-header {
     text-align: center;
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     padding: 4px;
 }
 
@@ -479,7 +479,7 @@
     justify-content: space-between;
     gap: 4px;
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     white-space: nowrap;
 }
 
@@ -504,7 +504,7 @@
     border-radius: 6px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     font-weight: bold;
     width: 100%;
     background: transparent;
@@ -578,7 +578,7 @@
 .distribution-table thead th {
     padding: 12px 8px;
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
@@ -601,7 +601,7 @@
 
 .distribution-table tbody td {
     padding: 11px 8px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
@@ -615,7 +615,7 @@
     width: 1%;
     white-space: nowrap;
     background: var(--bg-elevated);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
