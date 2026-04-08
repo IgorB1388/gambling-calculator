@@ -34,7 +34,7 @@
 
 /* === ЗАГОЛОВОК ПАНЕЛЕЙ === */
 .panel-title {
-    font-size: 2.2rem;
+    font-size: 1.6rem; /* было 2.2rem — слишком доминировал над контентом */
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -131,7 +131,7 @@
 }
 
 .settings-label {
-    font-size: 1.6rem;
+    font-size: 1.05rem; /* было 1.6rem — почти равнялся panel-title, иерархия нарушалась */
     font-weight: bold;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -389,14 +389,14 @@
 }
 
 .indicator-status-text {
-    font-size: 1.35rem;
+    font-size: 1.1rem; /* было 1.35rem — слишком крупно для строки-статуса */
     font-weight: bold;
 }
 
 .indicator-profit { margin-left: auto; }
 
 .profit-badge {
-    font-size: 2.4rem;
+    font-size: 2rem; /* было 2.4rem */
     font-weight: bold;
 }
 
@@ -420,7 +420,7 @@
     border-width: 2px;
     border-style: solid;
     border-color: var(--border-5);
-    font-size: 1.15rem;
+    font-size: 0.95rem; /* было 1.15rem */
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
@@ -462,7 +462,7 @@
 .odds-header {
     text-align: center;
     font-weight: bold;
-    font-size: 1.15rem;
+    font-size: 0.95rem; /* было 1.15rem */
     padding: 4px;
 }
 
@@ -479,7 +479,7 @@
     justify-content: space-between;
     gap: 4px;
     font-weight: bold;
-    font-size: 1.15rem;
+    font-size: 0.95rem; /* было 1.15rem */
     white-space: nowrap;
 }
 
@@ -578,7 +578,7 @@
 .distribution-table thead th {
     padding: 12px 8px;
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.05rem; /* было 1.3rem — заголовки таблицы не должны быть крупнее panel-title */
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
@@ -601,7 +601,7 @@
 
 .distribution-table tbody td {
     padding: 11px 8px;
-    font-size: 1.1rem;
+    font-size: 1.0rem; /* было 1.1rem */
     color: var(--text-secondary);
     text-align: center;
     white-space: nowrap;
@@ -615,7 +615,7 @@
     width: 1%;
     white-space: nowrap;
     background: var(--bg-elevated);
-    font-size: 1.3rem;
+    font-size: 1.05rem; /* было 1.3rem */
     font-weight: bold;
     color: var(--text-secondary);
     border-right: 1px solid var(--border-muted);
@@ -670,7 +670,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.5rem;
+    font-size: 1.1rem; /* было 1.5rem — итоги не должны конкурировать с прибылью */
     min-width: 0;
     gap: 8px;
 }
@@ -684,7 +684,7 @@
 }
 
 .total-row-value {
-    font-size: 1.5rem;
+    font-size: 1.1rem; /* было 1.5rem */
     font-weight: bold;
     flex-shrink: 0;
     white-space: nowrap;
@@ -705,7 +705,7 @@
 }
 
 .net-profit-label {
-    font-size: 2.25rem;
+    font-size: 1.9rem; /* было 2.25rem */
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -717,7 +717,7 @@
 }
 
 .net-profit-value {
-    font-size: 2.25rem;
+    font-size: 1.9rem; /* было 2.25rem */
     font-weight: bold;
     flex-shrink: 0;
     white-space: nowrap;
@@ -759,16 +759,16 @@
     }
 
     .strategy-mini-btn {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .profit-badge { font-size: 1.7rem; }
-    .net-profit-value { font-size: 1.9rem; }
+    .net-profit-value { font-size: 1.6rem; }
     .panel-controls .btn { padding: 13px 10px; font-size: 1.15rem; }
     .stake-input-wrapper { width: 100%; }
-    .settings-label { font-size: 1rem; }
-    .panel-title { font-size: 1.4rem; }
-    .indicator-status-text { font-size: 1.1rem; }
+    .settings-label { font-size: 0.9rem; }
+    .panel-title { font-size: 1.3rem; }
+    .indicator-status-text { font-size: 1rem; }
     .indicator-step { height: auto; min-height: 60px; }
     .arbs-step:first-of-type { height: auto; min-height: 60px; }
 }
@@ -789,15 +789,15 @@
     .indicator-circle { width: 38px; height: 38px; }
     .panel-controls { flex-direction: column; }
     .panel-controls .btn { width: 100%; }
-    .net-profit-value { font-size: 1.5rem; }
-    .profit-badge { font-size: 1.4rem; }
-    .panel-title { font-size: 1.15rem; }
+    .net-profit-value { font-size: 1.4rem; }
+    .profit-badge { font-size: 1.3rem; }
+    .panel-title { font-size: 1.1rem; }
 }
 
 /* === УСИЛЕННЫЕ ПРАВИЛА ДЛЯ СТРОКИ "ДОХОД" === */
 #incomeRow > span:first-child,
 #incomeRow .total-row-value {
-    font-size: 1.5rem !important;
+    font-size: 1.1rem !important; /* было 1.5rem */
     font-weight: bold !important;
 }
 #incomeRow > span:first-child {
@@ -807,6 +807,6 @@
 @media (max-width: 768px) {
     #incomeRow > span:first-child,
     #incomeRow .total-row-value {
-        font-size: 1.1rem !important;
+        font-size: 0.95rem !important;
     }
 }
