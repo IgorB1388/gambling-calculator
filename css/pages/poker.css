@@ -22,30 +22,30 @@
     padding: 25px;
     border-width: 2px;
     border-style: solid;
-}
-
-.panel:first-child {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
 }
 
-/* === ЗАГОЛОВОК ПАНЕЛИ — крупнее подзаголовков, центрирован по высоте === */
+/* === ЗАГОЛОВОК ПАНЕЛИ — размер и позиционирование как в arbs.css === */
 .panel-title {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     font-weight: bold;
-    padding-bottom: 12px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    margin-bottom: 4px;
-    min-height: 2.2rem;
     letter-spacing: 0.04em;
+    min-height: 2.2rem;
 }
 
-/* === ПОДЗАГОЛОВКИ СЕКЦИЙ — заметно мельче панельного заголовка === */
+/* === ПОДЗАГОЛОВКИ СЕКЦИЙ — как settings-label в arbs.css === */
 .section-title {
     margin-bottom: 3px;
-    font-size: 1.0rem;
+    font-size: 1.05rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -53,14 +53,14 @@
     flex-shrink: 0;
     height: 28px;
     position: relative;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 /* === СЕКЦИИ РУКИ И БОРДА === */
 .hand-section, .board-section {
     border-radius: 12px;
     padding: 15px 20px;
-    margin-bottom: 15px;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
     border-width: 2px;
@@ -177,16 +177,18 @@
 .opponents-control {
     padding: 15px;
     border-radius: 10px;
-    margin-bottom: 20px;
     border-width: 2px;
     border-style: solid;
 }
 
+/* Лейбл оппонентов — как settings-label в arbs.css */
 .opponents-label {
     font-weight: bold;
     margin-bottom: 10px;
     text-align: center;
-    font-size: 1.0rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .opponent-pills {
@@ -202,7 +204,7 @@
     border-radius: 50%;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
@@ -211,14 +213,13 @@
     justify-content: center;
 }
 
-.opponent-pill:hover { transform: scale(1.1); }
+.opponent-pill:hover { transform: scale(1.1); opacity: 0.85; }
 
 /* === СЕТКА КОЛОДЫ === */
 .deck-grid {
     display: grid;
     grid-template-columns: repeat(13, 1fr);
     gap: 6px;
-    margin: 0 0 20px 0;
     padding: 15px 20px;
     border-radius: 12px;
     border-width: 2px;
@@ -247,7 +248,7 @@
     z-index: 10;
 }
 
-/* === ВЫБРАННАЯ КАРТА — затемняем === */
+/* === ВЫБРАННАЯ КАРТА === */
 .deck-card.selected {
     cursor: default;
     opacity: 0.35;
@@ -255,7 +256,6 @@
 }
 
 .deck-card.selected:hover { transform: none; }
-
 .deck-card.selected .card-face { display: none; }
 
 .deck-card.selected::after {
@@ -289,29 +289,42 @@
     line-height: 1;
 }
 
-/* === КНОПКИ === */
+/* === КНОПКИ — как panel-controls .btn в arbs.css === */
 .controls {
     display: flex;
-    gap: 15px;
-    margin-top: 25px;
+    gap: 12px;
+    margin-top: 4px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
+    flex: 1;
+    padding: 16px 16px;
+    font-size: 1.3rem;
     font-weight: bold;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
     cursor: pointer;
     transition: all 0.3s;
-    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 56px;
+    white-space: nowrap;
     position: relative;
     overflow: hidden;
 }
 
-.btn:hover { transform: translateY(-3px); }
+.btn i {
+    vertical-align: middle;
+    margin-top: -2px;
+    display: inline-block;
+}
+
+.btn:hover { transform: translateY(-2px); }
 .btn:active { transform: scale(0.95); }
 
 .btn-primary:disabled {
@@ -359,13 +372,13 @@
     padding: 25px;
     border-width: 2px;
     border-style: solid;
+    box-sizing: border-box;
 }
 
 .results-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    margin-bottom: 10px;
 }
 
 .result-card {
@@ -379,6 +392,14 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
+}
+
+/* Лейбл результата — как settings-label в arbs.css */
+.result-card > div:first-child {
+    font-size: 1.05rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .result-percent {
@@ -395,7 +416,6 @@
 .drop-hint {
     font-size: 0.9rem;
     text-align: center;
-    margin-top: 5px;
 }
 
 .slot-empty { font-size: 2.5rem; }
@@ -432,8 +452,9 @@
 /* === АДАПТИВНОСТЬ 768px === */
 @media (max-width: 768px) {
     .section-title::before { width: 12px; height: 12px; right: -4px; top: -4px; }
-    .panel { padding: 20px 15px; }
-    .hand-section, .board-section { min-height: 180px; padding: 12px; margin-bottom: 10px; }
+    .panel { padding: 18px; gap: 16px; }
+    .panel-title { font-size: 1.3rem; }
+    .hand-section, .board-section { min-height: 180px; padding: 12px; }
     .card-slot { width: 70px; height: 100px; font-size: 2rem; }
     .real-card { width: 70px; height: 100px; }
     .card-content { font-size: 2rem; }
@@ -441,30 +462,30 @@
     .deck-card { aspect-ratio: 3/4; }
     .card-value { font-size: 0.8rem; }
     .card-suit-large { font-size: 1rem; }
-    .btn { min-width: 150px; padding: 10px 20px; font-size: 1rem; }
+    .btn { padding: 13px 10px; font-size: 1.15rem; }
     .result-percent { font-size: 2.8rem; }
     .results-grid { grid-template-columns: 1fr; gap: 15px; }
     .result-card { min-height: 140px; padding: 15px; }
-    .opponent-pill { width: 40px; height: 40px; font-size: 1.1rem; }
+    .opponent-pill { width: 40px; height: 40px; font-size: 1.0rem; }
     .controls { gap: 10px; }
-    .panel-title { font-size: 1.1rem; }
     .section-title { font-size: 0.9rem; }
+    .opponents-label { font-size: 0.9rem; }
+    .result-card > div:first-child { font-size: 0.9rem; }
 }
 
 /* === АДАПТИВНОСТЬ 480px === */
 @media (max-width: 480px) {
     .section-title::before { width: 10px; height: 10px; right: -3px; top: -3px; }
     .panel { padding: 15px; }
+    .panel-title { font-size: 1.1rem; }
     .hand-section, .board-section { min-height: 160px; padding: 10px; }
     .card-slot { width: 60px; height: 85px; font-size: 1.8rem; }
     .real-card { width: 60px; height: 85px; }
     .card-content { font-size: 1.8rem; }
-    .btn { min-width: 130px; padding: 8px 15px; font-size: 0.9rem; }
+    .btn { padding: 8px 15px; font-size: 0.9rem; min-height: 44px; }
     .result-percent { font-size: 2.5rem; }
     .result-card { min-height: 130px; }
     .deck-grid { grid-template-columns: repeat(4, 1fr); }
     .opponent-pills { gap: 5px; }
-    .opponent-pill { width: 35px; height: 35px; font-size: 1rem; }
-    .panel-title { font-size: 1rem; }
-    .section-title { font-size: 0.85rem; }
+    .opponent-pill { width: 35px; height: 35px; font-size: 0.9rem; }
 }
