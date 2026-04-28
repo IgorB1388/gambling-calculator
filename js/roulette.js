@@ -1,6 +1,5 @@
 // roulette.js - Анализатор стратегий рулетки
 
-// --- Конфигурация ---
 const RouletteConfig = {
     european: {
         numbers: 37, zeroNumbers: [0], type: 'european',
@@ -29,51 +28,33 @@ const BetDefinitions = {
     column3:    { numbers: [3,6,9,12,15,18,21,24,27,30,33,36], payout: 2 }
 };
 
-// Пресеты стратегий
 const Presets = {
     martingale_red: {
-        conditions: [{ not: false, type: 'red', customNumbers: '', percent: 100 }],
-        progression: 'martingale',
-        triggerType: 'missed',
-        triggerCount: 1,
-        afterTrigger: 'until_win',
-        betAmount: 10,
-        bankroll: 1000,
-        maxSpins: 200
+        conditions: [{ not: false, type: 'red', customNumbers: '' }],
+        progression: 'martingale', triggerType: 'missed', triggerCount: 1,
+        afterTrigger: 'until_win', betAmount: 10, bankroll: 1000, maxSpins: 200,
+        stopSpins: true, stopTarget: false, targetAmount: 2000
     },
     flat_even: {
-        conditions: [{ not: false, type: 'even', customNumbers: '', percent: 100 }],
-        progression: 'flat',
-        triggerType: 'missed',
-        triggerCount: 3,
-        afterTrigger: 'once',
-        betAmount: 10,
-        bankroll: 1000,
-        maxSpins: 100
+        conditions: [{ not: false, type: 'even', customNumbers: '' }],
+        progression: 'flat', triggerType: 'missed', triggerCount: 3,
+        afterTrigger: 'once', betAmount: 10, bankroll: 1000, maxSpins: 100,
+        stopSpins: true, stopTarget: false, targetAmount: 2000
     },
     fibonacci_dozens: {
-        conditions: [{ not: false, type: 'dozen1', customNumbers: '', percent: 100 }],
-        progression: 'fibonacci',
-        triggerType: 'missed',
-        triggerCount: 2,
-        afterTrigger: 'until_win',
-        betAmount: 10,
-        bankroll: 1000,
-        maxSpins: 150
+        conditions: [{ not: false, type: 'dozen1', customNumbers: '' }],
+        progression: 'fibonacci', triggerType: 'missed', triggerCount: 2,
+        afterTrigger: 'until_win', betAmount: 10, bankroll: 1000, maxSpins: 150,
+        stopSpins: true, stopTarget: false, targetAmount: 2000
     },
     antimartingale_black: {
-        conditions: [{ not: false, type: 'black', customNumbers: '', percent: 100 }],
-        progression: 'antimartingale',
-        triggerType: 'hit',
-        triggerCount: 1,
-        afterTrigger: 'until_win',
-        betAmount: 10,
-        bankroll: 1000,
-        maxSpins: 100
+        conditions: [{ not: false, type: 'black', customNumbers: '' }],
+        progression: 'antimartingale', triggerType: 'hit', triggerCount: 1,
+        afterTrigger: 'until_win', betAmount: 10, bankroll: 1000, maxSpins: 100,
+        stopSpins: true, stopTarget: false, targetAmount: 2000
     }
 };
 
-// Подсказки к прогрессиям
 const ProgressionHints = {
     flat: 'progressionHintFlat',
     martingale: 'progressionHintMartingale',
@@ -82,7 +63,6 @@ const ProgressionHints = {
     dalembert: 'progressionHintDalembert'
 };
 
-// Фиксированное количество сессий — достаточно для репрезентативной статистики
 const SESSION_COUNT = 1000;
 
 let isSimulating = false;
@@ -110,12 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function initTooltips() {
     const popup = document.getElementById('tooltipPopup');
     if (!popup) return;
-
     document.querySelectorAll('.tooltip-icon').forEach(icon => {
         icon.addEventListener('mouseenter', (e) => {
             const key = icon.getAttribute('data-tooltip-key');
             const text = window.getTranslation ? window.getTranslation(key) : key;
-            if (!text) return;
+            if (!text || text === key) return;
             popup.textContent = text;
             popup.style.display = 'block';
             positionTooltip(e, popup);
@@ -166,7 +145,7 @@ function parseCustomNumbers(input) {
 
 // --- Условия ---
 function initConditions() {
-    conditions = [{ not: false, type: 'red', customNumbers: '', percent: 100 }];
+    conditions = [{ not: false, type: 'red', customNumbers: '' }];
     renderConditions();
     calculateTotalBet();
 }
@@ -247,8 +226,7 @@ function renderConditions() {
             const customInput = document.createElement('input');
             customInput.type = 'text';
             customInput.className = 'condition-custom-input';
-            const placeholder = window.getTranslation ? (window.getTranslation('customNumbersPlaceholder') || '') : '';
-            customInput.placeholder = placeholder;
+            customInput.placeholder = window.getTranslation ? (window.getTranslation('customNumbersPlaceholder') || '') : '';
             customInput.value = cond.customNumbers;
             customInput.addEventListener('input', () => {
                 conditions[index].customNumbers = customInput.value;
@@ -274,7 +252,7 @@ function renderConditions() {
 
 function addCondition() {
     if (conditions.length >= MAX_CONDITIONS) return;
-    conditions.push({ not: false, type: 'red', customNumbers: '', percent: 0 });
+    conditions.push({ not: false, type: 'red', customNumbers: '' });
     renderConditions();
     calculateTotalBet();
 }
@@ -302,8 +280,7 @@ function getNumbersForCondition(cond) {
 function getPayoutForNumbers(numbers) {
     if (numbers.length === 0) return 1;
     for (const [key, def] of Object.entries(BetDefinitions)) {
-        if (def.numbers.length === numbers.length &&
-            def.numbers.every(n => numbers.includes(n))) {
+        if (def.numbers.length === numbers.length && def.numbers.every(n => numbers.includes(n))) {
             return def.payout;
         }
     }
@@ -317,7 +294,8 @@ function getPayoutForNumbers(numbers) {
 
 function calculateTotalBet() {
     if (conditions.length === 0) {
-        document.getElementById('totalBetText').textContent = '—';
+        const el = document.getElementById('totalBetText');
+        if (el) el.textContent = '—';
         return { finalNumbers: [] };
     }
 
@@ -328,10 +306,8 @@ function calculateTotalBet() {
     }
 
     finalNumbers.sort((a, b) => {
-        if (a === 0) return -1;
-        if (b === 0) return 1;
-        if (a === 37) return -1;
-        if (b === 37) return 1;
+        if (a === 0) return -1; if (b === 0) return 1;
+        if (a === 37) return -1; if (b === 37) return 1;
         return a - b;
     });
 
@@ -351,7 +327,7 @@ function calculateTotalBet() {
     return { finalNumbers };
 }
 
-// --- Пресеты ---
+// --- Пресеты (фикс: применяем до сброса select) ---
 function applyPreset(presetKey) {
     const preset = Presets[presetKey];
     if (!preset) return;
@@ -365,8 +341,10 @@ function applyPreset(presetKey) {
     document.getElementById('afterTriggerMode').value = preset.afterTrigger;
     document.getElementById('progressionType').value = preset.progression;
     document.getElementById('maxSpins').value = preset.maxSpins;
-    document.getElementById('stopSpins').checked = true;
-    document.getElementById('stopTarget').checked = false;
+    document.getElementById('stopSpins').checked = preset.stopSpins;
+    document.getElementById('stopTarget').checked = preset.stopTarget;
+    document.getElementById('targetAmount').value = preset.targetAmount;
+
     updateTargetInputState();
     updateProgressionHint();
     renderConditions();
@@ -374,25 +352,19 @@ function applyPreset(presetKey) {
 }
 
 // --- Симуляция ---
-function getNextBet(baseBet, currentBet, progression, consecutiveLosses, consecutiveWins, fibSeq) {
+function getNextBet(baseBet, progression, consecutiveLosses, consecutiveWins, fibSeq) {
     switch (progression) {
-        case 'flat':
-            return baseBet;
-        case 'martingale':
-            return consecutiveLosses > 0 ? baseBet * Math.pow(2, consecutiveLosses) : baseBet;
-        case 'antimartingale':
-            return consecutiveWins > 0 ? baseBet * Math.pow(2, consecutiveWins) : baseBet;
+        case 'flat': return baseBet;
+        case 'martingale': return consecutiveLosses > 0 ? baseBet * Math.pow(2, consecutiveLosses) : baseBet;
+        case 'antimartingale': return consecutiveWins > 0 ? baseBet * Math.pow(2, consecutiveWins) : baseBet;
         case 'fibonacci': {
             while (fibSeq.length <= consecutiveLosses + 1) {
                 fibSeq.push(fibSeq[fibSeq.length - 1] + fibSeq[fibSeq.length - 2]);
             }
-            const idx = Math.max(0, consecutiveLosses);
-            return baseBet * fibSeq[idx];
+            return baseBet * fibSeq[Math.max(0, consecutiveLosses)];
         }
-        case 'dalembert':
-            return Math.max(baseBet, baseBet + consecutiveLosses * baseBet - consecutiveWins * baseBet);
-        default:
-            return baseBet;
+        case 'dalembert': return Math.max(baseBet, baseBet + consecutiveLosses * baseBet - consecutiveWins * baseBet);
+        default: return baseBet;
     }
 }
 
@@ -407,10 +379,9 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
     let consecutiveLosses = 0;
     let consecutiveWins = 0;
     let fibSeq = [1, 1];
-    let bankruptSpins = null;
 
     while (true) {
-        if (stopBankrupt && bankroll <= 0) { bankruptSpins = spins; break; }
+        if (stopBankrupt && bankroll <= 0) break;
         if (stopTarget && bankroll >= targetAmount) break;
         if (stopSpins && spins >= maxSpins) break;
 
@@ -434,10 +405,9 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
         }
 
         if (inBettingMode) {
-            const currentBet = getNextBet(baseBet, baseBet, progression, consecutiveLosses, consecutiveWins, fibSeq);
-            const actualBet = Math.min(currentBet, bankroll);
-
-            if (actualBet <= 0) { bankruptSpins = spins; break; }
+            const bet = getNextBet(baseBet, progression, consecutiveLosses, consecutiveWins, fibSeq);
+            const actualBet = Math.min(bet, bankroll);
+            if (actualBet <= 0) break;
 
             bankroll -= actualBet;
 
@@ -445,7 +415,6 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
                 bankroll += actualBet + actualBet * payout;
                 consecutiveWins++;
                 consecutiveLosses = 0;
-
                 if (afterTriggerMode === 'once' || afterTriggerMode === 'until_win') {
                     inBettingMode = false;
                     triggerCounter = 0;
@@ -453,7 +422,6 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
             } else {
                 consecutiveLosses++;
                 consecutiveWins = 0;
-
                 if (afterTriggerMode === 'once') {
                     inBettingMode = false;
                     triggerCounter = 0;
@@ -464,9 +432,7 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
 
     return {
         profit: bankroll - startingBankroll,
-        spins,
-        bankrupt: bankroll <= 0,
-        bankruptSpins
+        bankrupt: bankroll <= 0
     };
 }
 
@@ -474,116 +440,66 @@ function runSimulation(config, startingBankroll, baseBet, targetNumbers, payout,
     triggerType, triggerCount, afterTriggerMode, progression,
     stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins) {
 
-    const sessions = [];
+    const profits = [];
+    let bankruptCount = 0;
+
     for (let i = 0; i < SESSION_COUNT; i++) {
-        sessions.push(simulateSession(
+        const s = simulateSession(
             config, startingBankroll, baseBet, targetNumbers, payout,
             triggerType, triggerCount, afterTriggerMode, progression,
             stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins
-        ));
+        );
+        profits.push(s.profit);
+        if (s.bankrupt) bankruptCount++;
     }
 
-    const successfulSessions = sessions.filter(s => s.profit > 0).length;
-    const bankruptSessions = sessions.filter(s => s.bankrupt);
-    const avgProfit = sessions.reduce((sum, s) => sum + s.profit, 0) / SESSION_COUNT;
-    const avgSpins = sessions.reduce((sum, s) => sum + s.spins, 0) / SESSION_COUNT;
-    const maxProfit = Math.max(...sessions.map(s => s.profit));
-    const minProfit = Math.min(...sessions.map(s => s.profit));
-
-    const bankruptSpinsArr = bankruptSessions.map(s => s.bankruptSpins).filter(v => v !== null);
-    const avgSpinsBankrupt = bankruptSpinsArr.length > 0
-        ? bankruptSpinsArr.reduce((a, b) => a + b, 0) / bankruptSpinsArr.length
-        : 0;
+    profits.sort((a, b) => a - b);
+    const winCount = profits.filter(p => p > 0).length;
+    const avgProfit = profits.reduce((s, p) => s + p, 0) / SESSION_COUNT;
 
     return {
-        winRate: successfulSessions / SESSION_COUNT,
+        winRate: winCount / SESSION_COUNT,
         avgProfit,
-        riskRate: bankruptSessions.length / SESSION_COUNT,
-        successfulSessions,
-        bankruptSessions: bankruptSessions.length,
-        totalSessions: SESSION_COUNT,
-        avgSpins,
-        avgSpinsBankrupt,
-        maxProfit,
-        maxLoss: Math.abs(minProfit),
-        profitDistribution: sessions.map(s => s.profit).sort((a, b) => a - b)
+        riskRate: bankruptCount / SESSION_COUNT,
+        profitMin: profits[0],
+        profitMax: profits[SESSION_COUNT - 1],
+        profitMedian: profits[Math.floor(SESSION_COUNT / 2)],
+        profitablePercent: (winCount / SESSION_COUNT) * 100
     };
 }
 
 // --- Отображение результатов ---
-function getRiskHint(riskRate) {
-    if (riskRate < 0.1) return window.getTranslation('riskLow') || '✅ Низкий риск';
-    if (riskRate < 0.3) return window.getTranslation('riskMedium') || '⚠️ Средний риск';
-    return window.getTranslation('riskHigh') || '🔴 Высокий риск';
-}
-
-function getWinRateHint(winRate) {
-    if (winRate >= 0.6) return window.getTranslation('winRateGood') || '✅ Хорошая';
-    if (winRate >= 0.4) return window.getTranslation('winRateAvg') || '⚠️ Средняя';
-    return window.getTranslation('winRateBad') || '🔴 Низкая';
-}
-
-function getProfitHint(avgProfit) {
-    if (avgProfit > 0) return window.getTranslation('profitPositive') || '✅ В плюсе';
-    if (avgProfit === 0) return window.getTranslation('profitNeutral') || '➖ В ноль';
-    return window.getTranslation('profitNegative') || '🔴 В минусе';
-}
-
 function displayResults(results) {
     document.getElementById('resultsPlaceholder').style.display = 'none';
-    document.getElementById('resultsContent').style.display = 'flex';
-    document.getElementById('resultsContent').style.flexDirection = 'column';
-    document.getElementById('resultsContent').style.gap = '16px';
+    const content = document.getElementById('resultsContent');
+    content.style.display = 'flex';
 
+    // Главные три цифры
     document.getElementById('winRate').textContent = (results.winRate * 100).toFixed(1) + '%';
-    document.getElementById('avgProfit').textContent = '$' + Math.round(results.avgProfit);
+    document.getElementById('avgProfit').textContent = (results.avgProfit >= 0 ? '+' : '') + '$' + Math.round(results.avgProfit);
     document.getElementById('riskPercent').textContent = (results.riskRate * 100).toFixed(1) + '%';
 
-    document.getElementById('winRateHint').textContent = getWinRateHint(results.winRate);
-    document.getElementById('avgProfitHint').textContent = getProfitHint(results.avgProfit);
-    document.getElementById('riskHint').textContent = getRiskHint(results.riskRate);
+    // Хинты
+    const t = (key) => window.getTranslation ? window.getTranslation(key) : key;
+    document.getElementById('winRateHint').textContent =
+        results.winRate >= 0.6 ? t('winRateGood') : results.winRate >= 0.4 ? t('winRateAvg') : t('winRateBad');
+    document.getElementById('avgProfitHint').textContent =
+        results.avgProfit > 0 ? t('profitPositive') : results.avgProfit === 0 ? t('profitNeutral') : t('profitNegative');
+    document.getElementById('riskHint').textContent =
+        results.riskRate < 0.1 ? t('riskLow') : results.riskRate < 0.3 ? t('riskMedium') : t('riskHigh');
 
-    document.getElementById('sessionsSimulated').textContent = results.totalSessions;
-    document.getElementById('successfulSessions').textContent = results.successfulSessions;
-    document.getElementById('bankruptSessions').textContent = results.bankruptSessions;
-    document.getElementById('avgSpins').textContent = Math.round(results.avgSpins);
-    document.getElementById('avgSpinsBankrupt').textContent =
-        results.avgSpinsBankrupt > 0 ? Math.round(results.avgSpinsBankrupt) : '—';
-    document.getElementById('maxProfit').textContent = '$' + results.maxProfit;
-    document.getElementById('maxLoss').textContent = '$' + results.maxLoss;
+    // Бар
+    const pct = results.profitablePercent.toFixed(1);
+    document.getElementById('profitablePercent').textContent = pct + '%';
+    document.getElementById('profitableBar').style.width = pct + '%';
 
-    drawChart(results.profitDistribution);
+    // Мин / медиана / макс
+    document.getElementById('resultMin').textContent = 'мин: $' + results.profitMin;
+    document.getElementById('resultMedian').textContent = 'медиана: $' + results.profitMedian;
+    document.getElementById('resultMax').textContent = 'макс: +$' + results.profitMax;
 }
 
-function drawChart(distribution) {
-    const container = document.getElementById('chartPlaceholder');
-    if (!container || distribution.length === 0) return;
-
-    const positivePercent = (distribution.filter(v => v > 0).length / distribution.length) * 100;
-    const min = Math.min(...distribution);
-    const max = Math.max(...distribution);
-
-    container.innerHTML = `
-        <div style="width:100%;padding:8px 4px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <span class="text-muted" style="font-size:0.82rem;" data-i18n="profitableSessions"></span>
-                <span class="text-4" style="font-weight:bold;">${positivePercent.toFixed(1)}%</span>
-            </div>
-            <div style="width:100%;height:22px;background:var(--bg-body);border-radius:11px;overflow:hidden;margin-bottom:12px;">
-                <div style="width:${positivePercent}%;height:100%;background:var(--color-success);border-radius:11px;transition:width 0.5s;"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
-                <span class="text-7">мин: $${min}</span>
-                <span class="text-muted">медиана: $${distribution[Math.floor(distribution.length/2)]}</span>
-                <span class="text-4">макс: +$${max}</span>
-            </div>
-        </div>
-    `;
-
-    if (window.reloadTranslationsForNewContent) window.reloadTranslationsForNewContent(container);
-}
-
-// --- Главная функция симуляции ---
+// --- Главная функция ---
 async function simulateStrategy() {
     if (isSimulating) return;
 
@@ -604,11 +520,11 @@ async function simulateStrategy() {
     const { finalNumbers } = calculateTotalBet();
 
     if (!finalNumbers || finalNumbers.length === 0) {
-        alert(window.getTranslation('noCommonNumbers') || '❌ Нет общих чисел');
+        alert(window.getTranslation ? window.getTranslation('noCommonNumbers') : '❌ Нет общих чисел');
         return;
     }
     if (betAmount > startingBankroll) {
-        alert(window.getTranslation('betTooLarge') || 'Ставка не может быть больше банка!');
+        alert(window.getTranslation ? window.getTranslation('betTooLarge') : 'Ставка не может быть больше банка!');
         return;
     }
 
@@ -644,6 +560,7 @@ function resetSimulation() {
     document.getElementById('progressionType').value = 'flat';
     document.getElementById('targetAmount').value = 2000;
     document.getElementById('maxSpins').value = 100;
+    document.getElementById('stopBankrupt').checked = true;
     document.getElementById('stopTarget').checked = false;
     document.getElementById('stopSpins').checked = true;
     const presetsSelect = document.getElementById('presetsSelect');
@@ -677,12 +594,15 @@ function initEventListeners() {
     const progressionSel = document.getElementById('progressionType');
     if (progressionSel) progressionSel.addEventListener('change', updateProgressionHint);
 
+    // Фикс пресетов: применяем сразу, потом сбрасываем select отдельно
     const presetsSelect = document.getElementById('presetsSelect');
     if (presetsSelect) {
         presetsSelect.addEventListener('change', function() {
-            if (this.value) {
-                applyPreset(this.value);
-                this.value = '';
+            const val = this.value;
+            if (val) {
+                applyPreset(val);
+                // Сброс через requestAnimationFrame чтобы не мешать рендеру
+                requestAnimationFrame(() => { this.value = ''; });
             }
         });
     }
