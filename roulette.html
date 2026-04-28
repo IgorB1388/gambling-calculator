@@ -19,6 +19,7 @@
         <div class="content-wrapper">
             <div class="roulette-analyzer-container">
 
+                <!-- ШАПКА -->
                 <div class="page-header bg-surface border-primary shadow-default">
                     <div class="page-header-icon">🎰</div>
                     <h1 class="text-gradient" data-i18n="rouletteTitle"></h1>
@@ -37,187 +38,197 @@
                     <span class="presets-hint text-muted" data-i18n="presetsHint"></span>
                 </div>
 
-                <div class="analyzer-main-area">
+                <!-- ВЕРТИКАЛЬНЫЙ ФЛОУ -->
+                <div class="analyzer-flow">
 
-                    <!-- ЛЕВАЯ ПАНЕЛЬ: НАСТРОЙКИ -->
-                    <div class="panel bg-surface border-1 shadow-default">
-                        <div class="panel-title text-1" style="border-bottom: 2px solid var(--border-1);" data-i18n="rouletteSettingsTitle"></div>
-
-                        <!-- ШАГ 1 -->
-                        <div class="step-divider">
-                            <div class="step-divider-line"></div>
-                            <div class="step-divider-header">
-                                <div class="step-badge">1</div>
-                                <span class="step-title" data-i18n="stepBasic"></span>
-                            </div>
+                    <!-- ШАГ 1: РУЛЕТКА И БАНК -->
+                    <div class="flow-step bg-surface border-1 shadow-default">
+                        <div class="step-divider-header">
+                            <div class="step-badge">1</div>
+                            <span class="step-title text-1" data-i18n="stepBasic"></span>
                         </div>
 
-                        <div class="settings-group">
-                            <div class="settings-label text-primary" data-i18n="rouletteTypeLabel"></div>
-                            <div class="option-pills" id="rouletteTypePills">
-                                <button class="option-pill active" data-type="european">
-                                    <img src="images/flags/eu.png" alt="EU" class="roulette-flag">
-                                    <span data-i18n="rouletteEuropean"></span>
-                                </button>
-                                <button class="option-pill" data-type="american">
-                                    <img src="images/flags/us.png" alt="US" class="roulette-flag">
-                                    <span data-i18n="rouletteAmerican"></span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="settings-group">
-                            <div class="settings-label text-primary" data-i18n="bankrollLabel"></div>
-                            <div class="stake-row">
-                                <div class="stake-input-wrapper">
-                                    <input type="number" id="startingBankroll" class="stake-input bg-elevated border-muted text-primary" value="1000" min="1" step="1">
-                                    <span class="stake-suffix text-muted">$</span>
+                        <div class="step-body">
+                            <div class="settings-group">
+                                <div class="settings-label text-primary" data-i18n="rouletteTypeLabel"></div>
+                                <div class="option-pills" id="rouletteTypePills">
+                                    <button class="option-pill active" data-type="european">
+                                        <img src="images/flags/eu.png" alt="EU" class="roulette-flag">
+                                        <span data-i18n="rouletteEuropean"></span>
+                                    </button>
+                                    <button class="option-pill" data-type="american">
+                                        <img src="images/flags/us.png" alt="US" class="roulette-flag">
+                                        <span data-i18n="rouletteAmerican"></span>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="settings-group">
-                            <div class="settings-label text-primary" data-i18n="betSizeLabel"></div>
-                            <div class="stake-row">
-                                <div class="stake-input-wrapper">
-                                    <input type="number" id="betAmount" class="stake-input bg-elevated border-muted text-primary" value="10" min="1" step="1">
-                                    <span class="stake-suffix text-muted">$</span>
+                            <div class="inline-fields">
+                                <div class="settings-group">
+                                    <div class="settings-label text-primary" data-i18n="bankrollLabel"></div>
+                                    <div class="stake-input-wrapper">
+                                        <input type="number" id="startingBankroll" class="stake-input bg-elevated border-muted text-primary" value="1000" min="1" step="1">
+                                        <span class="stake-suffix text-muted">$</span>
+                                    </div>
+                                </div>
+
+                                <div class="settings-group">
+                                    <div class="settings-label text-primary" data-i18n="betSizeLabel"></div>
+                                    <div class="stake-input-wrapper">
+                                        <input type="number" id="betAmount" class="stake-input bg-elevated border-muted text-primary" value="10" min="1" step="1">
+                                        <span class="stake-suffix text-muted">$</span>
+                                    </div>
                                 </div>
                             </div>
-                            <select id="progressionType" class="progression-select bg-elevated border-muted text-primary">
-                                <option value="flat" data-i18n="progressionFlat"></option>
-                                <option value="martingale" data-i18n="progressionMartingale"></option>
-                                <option value="antimartingale" data-i18n="progressionAntiMartingale"></option>
-                                <option value="fibonacci" data-i18n="progressionFibonacci"></option>
-                                <option value="dalembert" data-i18n="progressionDalembert"></option>
-                            </select>
-                            <div class="progression-hint text-muted" id="progressionHint"></div>
-                        </div>
 
-                        <!-- ШАГ 2 -->
-                        <div class="step-divider">
-                            <div class="step-divider-line"></div>
-                            <div class="step-divider-header">
-                                <div class="step-badge">2</div>
-                                <span class="step-title" data-i18n="stepBet"></span>
-                            </div>
-                        </div>
-
-                        <div class="settings-group">
-                            <div class="settings-label-row">
-                                <span class="settings-label text-primary" data-i18n="conditionsLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="conditionsTooltip">?</span>
-                            </div>
-                            <div id="conditionsContainer" class="conditions-container"></div>
-                            <button id="addConditionBtn" class="add-condition-btn">
-                                <i class="fas fa-plus"></i> <span data-i18n="addCondition"></span>
-                            </button>
-                            <div id="totalBetDisplay" class="total-bet-display bg-elevated border-muted">
-                                <span class="text-muted" data-i18n="totalBet"></span>
-                                <span class="text-1" id="totalBetText">—</span>
-                            </div>
-                        </div>
-
-                        <!-- ШАГ 3 -->
-                        <div class="step-divider">
-                            <div class="step-divider-line"></div>
-                            <div class="step-divider-header">
-                                <div class="step-badge">3</div>
-                                <span class="step-title" data-i18n="stepTrigger"></span>
-                            </div>
-                        </div>
-
-                        <div class="settings-group">
-                            <div class="settings-label-row">
-                                <span class="settings-label text-primary" data-i18n="triggerLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="triggerTooltip">?</span>
-                            </div>
-                            <div class="trigger-builder">
-                                <select id="triggerType" class="trigger-select bg-elevated border-muted text-primary">
-                                    <option value="missed" data-i18n="triggerMissed"></option>
-                                    <option value="hit" data-i18n="triggerHit"></option>
+                            <div class="settings-group">
+                                <select id="progressionType" class="progression-select bg-elevated border-muted text-primary">
+                                    <option value="flat" data-i18n="progressionFlat"></option>
+                                    <option value="martingale" data-i18n="progressionMartingale"></option>
+                                    <option value="antimartingale" data-i18n="progressionAntiMartingale"></option>
+                                    <option value="fibonacci" data-i18n="progressionFibonacci"></option>
+                                    <option value="dalembert" data-i18n="progressionDalembert"></option>
                                 </select>
-                                <input type="number" id="triggerCount" class="trigger-input bg-elevated border-muted text-primary" value="3" min="1" max="20" step="1">
-                                <span class="text-muted" data-i18n="triggerTimes"></span>
-                            </div>
-                            <div class="settings-label-row" style="margin-top: 8px;">
-                                <span class="settings-label text-primary" data-i18n="afterTriggerLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="afterTriggerTooltip">?</span>
-                            </div>
-                            <select id="afterTriggerMode" class="trigger-select bg-elevated border-muted text-primary">
-                                <option value="once" data-i18n="afterTriggerOnce"></option>
-                                <option value="until_win" data-i18n="afterTriggerUntilWin"></option>
-                            </select>
-                        </div>
-
-                        <!-- ШАГ 4 -->
-                        <div class="step-divider">
-                            <div class="step-divider-line"></div>
-                            <div class="step-divider-header">
-                                <div class="step-badge">4</div>
-                                <span class="step-title" data-i18n="stepStop"></span>
+                                <div class="progression-hint text-muted" id="progressionHint"></div>
                             </div>
                         </div>
-
-                        <div class="settings-group">
-                            <div class="settings-label text-primary" data-i18n="stopConditionsLabel"></div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="stopBankrupt" checked>
-                                <label for="stopBankrupt" class="text-muted" data-i18n="stopBankrupt"></label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="stopTarget">
-                                <label for="stopTarget" class="text-muted" data-i18n="stopTarget"></label>
-                            </div>
-                            <div class="stake-row" style="margin-left: 25px; margin-top: 4px;">
-                                <div class="stake-input-wrapper" style="width: 140px;">
-                                    <input type="number" id="targetAmount" class="stake-input bg-elevated border-muted text-primary" value="2000" min="1" step="1" disabled>
-                                    <span class="stake-suffix text-muted">$</span>
-                                </div>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="stopSpins" checked>
-                                <label for="stopSpins" class="text-muted" data-i18n="stopSpins"></label>
-                            </div>
-                            <div class="stake-row" style="margin-left: 25px; margin-top: 4px;">
-                                <div class="stake-input-wrapper" style="width: 140px;">
-                                    <input type="number" id="maxSpins" class="stake-input bg-elevated border-muted text-primary" value="100" min="1" step="1">
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
-                    <!-- ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ -->
-                    <div class="panel bg-surface border-1 shadow-default">
+                    <!-- ШАГ 2: НА ЧТО СТАВИМ -->
+                    <div class="flow-step bg-surface border-1 shadow-default">
+                        <div class="step-divider-header">
+                            <div class="step-badge">2</div>
+                            <span class="step-title text-1" data-i18n="stepBet"></span>
+                        </div>
 
-                        <!-- Количество сессий -->
-                        <div class="settings-group">
-                            <div class="settings-label-row">
-                                <span class="settings-label text-primary" data-i18n="sessionsLabel"></span>
-                                <span class="tooltip-icon" data-tooltip-key="sessionsTooltip">?</span>
-                            </div>
-                            <div class="stake-row">
-                                <div class="stake-input-wrapper" style="width: 140px;">
-                                    <input type="number" id="sessionCount" class="stake-input bg-elevated border-muted text-primary" value="500" min="1" max="10000" step="1">
+                        <div class="step-body">
+                            <div class="settings-group">
+                                <div class="settings-label-row">
+                                    <span class="settings-label text-primary" data-i18n="conditionsLabel"></span>
+                                    <span class="tooltip-icon" data-tooltip-key="conditionsTooltip">?</span>
+                                </div>
+                                <div id="conditionsContainer" class="conditions-container"></div>
+                                <button id="addConditionBtn" class="add-condition-btn">
+                                    <i class="fas fa-plus"></i> <span data-i18n="addCondition"></span>
+                                </button>
+                                <div id="totalBetDisplay" class="total-bet-display bg-elevated border-muted">
+                                    <span class="text-muted" data-i18n="totalBet"></span>
+                                    <span class="text-1" id="totalBetText">—</span>
                                 </div>
                             </div>
-                            <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
+                        </div>
+                    </div>
+
+                    <!-- ШАГ 3: КОГДА СТАВИМ -->
+                    <div class="flow-step bg-surface border-1 shadow-default">
+                        <div class="step-divider-header">
+                            <div class="step-badge">3</div>
+                            <span class="step-title text-1" data-i18n="stepTrigger"></span>
                         </div>
 
-                        <!-- Кнопки -->
-                        <div class="results-controls">
-                            <button class="btn btn-primary-bg btn-primary-text border-secondary" id="simulateBtn">
-                                <i class="fas fa-cogs"></i>
-                                <span data-i18n="simulateBtn"></span>
-                            </button>
-                            <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text" id="resetBtn">
-                                <i class="fas fa-undo-alt"></i>
-                                <span data-i18n="resetBtn"></span>
-                            </button>
+                        <div class="step-body">
+                            <div class="settings-group">
+                                <div class="settings-label-row">
+                                    <span class="settings-label text-primary" data-i18n="triggerLabel"></span>
+                                    <span class="tooltip-icon" data-tooltip-key="triggerTooltip">?</span>
+                                </div>
+                                <div class="trigger-builder">
+                                    <select id="triggerType" class="trigger-select bg-elevated border-muted text-primary">
+                                        <option value="missed" data-i18n="triggerMissed"></option>
+                                        <option value="hit" data-i18n="triggerHit"></option>
+                                    </select>
+                                    <input type="number" id="triggerCount" class="trigger-input bg-elevated border-muted text-primary" value="3" min="1" max="20" step="1">
+                                    <span class="text-muted" data-i18n="triggerTimes"></span>
+                                </div>
+
+                                <div class="settings-label-row" style="margin-top: 8px;">
+                                    <span class="settings-label text-primary" data-i18n="afterTriggerLabel"></span>
+                                    <span class="tooltip-icon" data-tooltip-key="afterTriggerTooltip">?</span>
+                                </div>
+                                <select id="afterTriggerMode" class="trigger-select bg-elevated border-muted text-primary">
+                                    <option value="once" data-i18n="afterTriggerOnce"></option>
+                                    <option value="until_win" data-i18n="afterTriggerUntilWin"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ШАГ 4: СТОП-УСЛОВИЯ -->
+                    <div class="flow-step bg-surface border-1 shadow-default">
+                        <div class="step-divider-header">
+                            <div class="step-badge">4</div>
+                            <span class="step-title text-1" data-i18n="stepStop"></span>
                         </div>
 
-                        <div class="panel-title text-1" style="border-bottom: 2px solid var(--border-1);" data-i18n="rouletteResultsTitle"></div>
+                        <div class="step-body">
+                            <div class="settings-group">
+                                <div class="settings-label text-primary" data-i18n="stopConditionsLabel"></div>
+
+                                <div class="stop-conditions-grid">
+                                    <div class="stop-condition-row">
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="stopBankrupt" checked>
+                                            <label for="stopBankrupt" class="text-muted" data-i18n="stopBankrupt"></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="stop-condition-row">
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="stopTarget">
+                                            <label for="stopTarget" class="text-muted" data-i18n="stopTarget"></label>
+                                        </div>
+                                        <div class="stake-input-wrapper stop-input-inline">
+                                            <input type="number" id="targetAmount" class="stake-input bg-elevated border-muted text-primary" value="2000" min="1" step="1" disabled>
+                                            <span class="stake-suffix text-muted">$</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="stop-condition-row">
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="stopSpins" checked>
+                                            <label for="stopSpins" class="text-muted" data-i18n="stopSpins"></label>
+                                        </div>
+                                        <div class="stake-input-wrapper stop-input-inline">
+                                            <input type="number" id="maxSpins" class="stake-input bg-elevated border-muted text-primary" value="100" min="1" step="1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Расширенные настройки (скрыто) -->
+                            <div class="advanced-toggle" id="advancedToggle">
+                                <span class="text-muted" data-i18n="advancedSettings"></span>
+                                <i class="fas fa-chevron-down text-muted" id="advancedChevron"></i>
+                            </div>
+                            <div class="advanced-body" id="advancedBody" style="display:none;">
+                                <div class="settings-group">
+                                    <div class="settings-label-row">
+                                        <span class="settings-label text-primary" data-i18n="sessionsLabel"></span>
+                                        <span class="tooltip-icon" data-tooltip-key="sessionsTooltip">?</span>
+                                    </div>
+                                    <div class="stake-input-wrapper" style="width: 160px;">
+                                        <input type="number" id="sessionCount" class="stake-input bg-elevated border-muted text-primary" value="500" min="1" max="10000" step="1">
+                                    </div>
+                                    <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- КНОПКИ -->
+                    <div class="sim-controls">
+                        <button class="btn btn-primary-bg btn-primary-text border-secondary btn-simulate" id="simulateBtn">
+                            <i class="fas fa-cogs"></i>
+                            <span data-i18n="simulateBtn"></span>
+                        </button>
+                        <button class="btn btn-secondary-bg btn-secondary-border btn-secondary-text btn-reset" id="resetBtn">
+                            <i class="fas fa-undo-alt"></i>
+                            <span data-i18n="resetBtn"></span>
+                        </button>
+                    </div>
+
+                    <!-- РЕЗУЛЬТАТЫ -->
+                    <div class="results-section bg-surface border-1 shadow-default">
 
                         <!-- Заглушка -->
                         <div class="results-placeholder" id="resultsPlaceholder">
@@ -239,8 +250,10 @@
                             </div>
                         </div>
 
-                        <!-- Результаты -->
+                        <!-- Контент результатов -->
                         <div class="results-content" id="resultsContent" style="display:none;">
+
+                            <div class="results-title text-1" data-i18n="rouletteResultsTitle"></div>
 
                             <div class="results-grid-compact">
                                 <div class="stat-card bg-elevated border-muted">
@@ -298,9 +311,9 @@
                             </div>
 
                         </div>
-
                     </div>
-                </div>
+
+                </div><!-- /analyzer-flow -->
 
             </div>
         </div>
@@ -317,5 +330,15 @@
     <script src="js/main.js"></script>
     <script src="js/roulette.js"></script>
     <script src="js/theme-switcher.js"></script>
+    <script>
+        // Аккордеон расширенных настроек
+        document.getElementById('advancedToggle').addEventListener('click', function() {
+            const body = document.getElementById('advancedBody');
+            const chevron = document.getElementById('advancedChevron');
+            const open = body.style.display === 'none';
+            body.style.display = open ? 'flex' : 'none';
+            chevron.style.transform = open ? 'rotate(180deg)' : '';
+        });
+    </script>
 </body>
 </html>
