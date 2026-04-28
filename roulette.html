@@ -195,23 +195,7 @@
                                 </div>
                             </div>
 
-                            <!-- Расширенные настройки (скрыто) -->
-                            <div class="advanced-toggle" id="advancedToggle">
-                                <span class="text-muted" data-i18n="advancedSettings"></span>
-                                <i class="fas fa-chevron-down text-muted" id="advancedChevron"></i>
-                            </div>
-                            <div class="advanced-body" id="advancedBody" style="display:none;">
-                                <div class="settings-group">
-                                    <div class="settings-label-row">
-                                        <span class="settings-label text-primary" data-i18n="sessionsLabel"></span>
-                                        <span class="tooltip-icon" data-tooltip-key="sessionsTooltip">?</span>
-                                    </div>
-                                    <div class="stake-input-wrapper" style="width: 160px;">
-                                        <input type="number" id="sessionCount" class="stake-input bg-elevated border-muted text-primary" value="500" min="1" max="10000" step="1">
-                                    </div>
-                                    <div class="setting-hint text-muted" data-i18n="sessionsHint"></div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 
@@ -330,15 +314,6 @@
     <script src="js/main.js"></script>
     <script src="js/roulette.js"></script>
     <script src="js/theme-switcher.js"></script>
-    <script>
-        // Аккордеон расширенных настроек
-        document.getElementById('advancedToggle').addEventListener('click', function() {
-            const body = document.getElementById('advancedBody');
-            const chevron = document.getElementById('advancedChevron');
-            const open = body.style.display === 'none';
-            body.style.display = open ? 'flex' : 'none';
-            chevron.style.transform = open ? 'rotate(180deg)' : '';
-        });
-    </script>
+
 </body>
 </html>
