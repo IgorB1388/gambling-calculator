@@ -1,7 +1,7 @@
-/* roulette.css - АНАЛИЗАТОР РУЛЕТКИ */
+/* roulette.css - АНАЛИЗАТОР РУЛЕТКИ (вертикальный флоу) */
 
 .roulette-analyzer-container {
-    max-width: 1400px;
+    max-width: 760px;
     margin: 0 auto;
 }
 
@@ -34,26 +34,30 @@
     font-style: italic;
 }
 
-/* === СТЕППЕР === */
-.step-divider {
-    margin: 8px 0 0 0;
+/* === ВЕРТИКАЛЬНЫЙ ФЛОУ === */
+.analyzer-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
 }
 
-.step-divider-line {
-    width: 100%;
-    height: 1px;
-    background: var(--color-primary);
-    box-shadow: 0 0 6px var(--color-primary);
-    margin-bottom: 14px;
-    border-radius: 1px;
-    border: none;
+/* === ШАГИ === */
+.flow-step {
+    border-radius: 15px;
+    padding: 20px 24px;
+    border-width: 2px;
+    border-style: solid;
+    box-sizing: border-box;
 }
 
 .step-divider-header {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 6px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-muted);
 }
 
 .step-badge {
@@ -76,47 +80,231 @@
     font-weight: bold;
     letter-spacing: 0.07em;
     text-transform: uppercase;
+}
+
+.step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* === ИНЛАЙН ПОЛЯ (банк + ставка рядом) === */
+.inline-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* === СТОП-УСЛОВИЯ === */
+.stop-conditions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stop-condition-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.stop-input-inline {
+    width: 130px;
+}
+
+
+/* === КНОПКИ СИМУЛЯЦИИ === */
+.sim-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-simulate {
+    flex: 1;
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 56px;
+}
+
+.btn-simulate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.btn-simulate:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-reset {
+    padding: 16px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 56px;
+    white-space: nowrap;
+}
+
+.btn-reset:hover { transform: translateY(-2px); }
+
+/* === СЕКЦИЯ РЕЗУЛЬТАТОВ === */
+.results-section {
+    border-radius: 15px;
+    padding: 24px;
+    border-width: 2px;
+    border-style: solid;
+    box-sizing: border-box;
+}
+
+.results-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-muted);
+}
+
+/* === ЗАГЛУШКА === */
+.results-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    gap: 16px;
+    text-align: center;
+}
+
+.placeholder-icon { font-size: 3.5rem; opacity: 0.4; }
+
+.placeholder-text {
+    font-size: 1.05rem;
+    font-style: italic;
+}
+
+.placeholder-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+    margin-top: 8px;
+}
+
+.placeholder-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--border-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    flex-shrink: 0;
     color: var(--text-1);
 }
 
-/* === ОСНОВНАЯ СЕТКА === */
-.analyzer-main-area {
+/* === КАРТОЧКИ РЕЗУЛЬТАТОВ === */
+.results-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.results-grid-compact {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
 }
 
-@media (max-width: 1100px) {
-    .analyzer-main-area { grid-template-columns: 1fr; }
-}
-
-/* === ПАНЕЛЬ === */
-.panel {
-    border-radius: 15px;
-    padding: 25px;
+.stat-card {
+    padding: 16px 14px;
+    border-radius: 12px;
     border-width: 2px;
     border-style: solid;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    box-sizing: border-box;
-    min-height: 820px;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
 }
 
-.panel-title {
-    font-size: 1.4rem;
-    font-weight: bold;
-    padding-bottom: 12px;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    min-height: 2.5rem;
+.stat-label { font-size: 0.82rem; }
+.stat-value { font-size: 1.8rem; font-weight: bold; }
+.stat-hint { font-size: 0.75rem; min-height: 1rem; }
+
+/* === ДЕТАЛЬНАЯ СТАТИСТИКА === */
+.stats-detailed {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 4px 16px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.stats-row:last-child { border-bottom: none; }
+
+/* === ГРАФИК === */
+.chart-container {
+    padding: 14px;
+    border-radius: 12px;
+    border-width: 1px;
+    border-style: solid;
+    min-height: 80px;
+}
+
+.chart-placeholder {
+    width: 100%;
+    min-height: 80px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-style: dashed;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
 }
 
-/* === ГРУППЫ НАСТРОЕК === */
+/* === ОБЩИЕ ЭЛЕМЕНТЫ ФОРМЫ === */
+
 .settings-group {
     display: flex;
     flex-direction: column;
@@ -130,7 +318,7 @@
 }
 
 .settings-label {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -174,13 +362,6 @@
 }
 
 /* === ПОЛЕ СТАВКИ === */
-.stake-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-start;
-}
-
 .stake-input-wrapper {
     position: relative;
     display: flex;
@@ -194,7 +375,7 @@
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: bold;
     background: transparent;
     transition: all 0.2s;
@@ -231,10 +412,9 @@
     font-size: 0.82rem;
     font-style: italic;
     min-height: 1.2rem;
-    padding: 2px 0;
 }
 
-/* === КНОПКИ РУЛЕТКИ === */
+/* === ПИЛЮЛИ РУЛЕТКИ === */
 .option-pills {
     display: flex;
     gap: 10px;
@@ -316,8 +496,7 @@
     gap: 4px;
 }
 
-.condition-not input[type="checkbox"],
-.condition-logic input[type="checkbox"] {
+.condition-not input[type="checkbox"] {
     width: 15px;
     height: 15px;
     cursor: pointer;
@@ -476,156 +655,25 @@
     font-style: italic;
 }
 
-/* === КНОПКИ РЕЗУЛЬТАТОВ === */
-.results-controls {
-    display: flex;
-    gap: 12px;
-}
-
-.results-controls .btn {
-    flex: 1;
-    padding: 14px 16px;
-    font-size: 1.05rem;
-    font-weight: bold;
-    border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 52px;
-    white-space: nowrap;
-}
-
-.results-controls .btn:hover { transform: translateY(-2px); }
-
-/* === ЗАГЛУШКА РЕЗУЛЬТАТОВ === */
-.results-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 20px 0 20px;
-    gap: 16px;
-    text-align: center;
-}
-
-.placeholder-icon { font-size: 3.5rem; opacity: 0.4; }
-
-.placeholder-text {
-    font-size: 1.05rem;
-    font-style: italic;
-}
-
-.placeholder-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: left;
-    margin-top: 8px;
-}
-
-.placeholder-step {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-}
-
-.step-num {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 1px solid var(--border-1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.85rem;
-    flex-shrink: 0;
-    color: var(--text-1);
-}
-
-/* === КАРТОЧКИ РЕЗУЛЬТАТОВ === */
-.results-grid-compact {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
-.stat-card {
-    padding: 14px;
-    border-radius: 12px;
-    border-width: 2px;
-    border-style: solid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 4px;
-}
-
-.stat-label { font-size: 0.82rem; }
-.stat-value { font-size: 1.6rem; font-weight: bold; }
-.stat-hint { font-size: 0.72rem; min-height: 1rem; }
-
-/* === ДЕТАЛЬНАЯ СТАТИСТИКА === */
-.stats-detailed {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border-width: 1px;
-    border-style: solid;
-}
-
-.stats-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1rem;
-    padding: 2px 0;
-    border-bottom: 1px solid var(--border-muted);
-}
-
-.stats-row:last-child { border-bottom: none; }
-
-/* === ГРАФИК === */
-.chart-container {
-    padding: 14px;
-    border-radius: 12px;
-    border-width: 1px;
-    border-style: solid;
-    min-height: 100px;
-}
-
-.chart-placeholder {
-    width: 100%;
-    min-height: 80px;
-    border-radius: 8px;
-    border-width: 1px;
-    border-style: dashed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 /* === АДАПТИВНОСТЬ === */
 @media (max-width: 768px) {
-    .panel { padding: 18px; gap: 16px; min-height: 0; }
-    .results-grid-compact { grid-template-columns: 1fr; }
+    .flow-step { padding: 16px 18px; }
+    .results-section { padding: 18px; }
+    .results-grid-compact { grid-template-columns: repeat(3, 1fr); }
+    .inline-fields { grid-template-columns: 1fr 1fr; }
     .presets-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
     .presets-select { width: 100%; }
     .stake-input-wrapper { width: 100%; }
     .trigger-builder { flex-direction: column; align-items: stretch; }
+    .sim-controls { gap: 10px; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
+    .inline-fields { grid-template-columns: 1fr; }
+    .results-grid-compact { grid-template-columns: 1fr; }
     .option-pills { flex-direction: column; }
     .option-pill { width: 100%; justify-content: center; }
-    .results-controls { flex-direction: column; }
-    .results-controls .btn { width: 100%; }
+    .sim-controls { flex-direction: column; }
+    .btn-reset { width: 100%; }
+    .stop-condition-row { flex-direction: column; align-items: flex-start; }
 }
