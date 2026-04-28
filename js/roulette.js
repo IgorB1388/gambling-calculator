@@ -82,7 +82,8 @@ const ProgressionHints = {
     dalembert: 'progressionHintDalembert'
 };
 
-const MAX_SESSIONS = 10000;
+// Фиксированное количество сессий — достаточно для репрезентативной статистики
+const SESSION_COUNT = 1000;
 
 let isSimulating = false;
 let conditions = [];
@@ -95,7 +96,6 @@ function initApp() {
     updateTargetInputState();
     initConditions();
     updateProgressionHint();
-    initSessionValidation();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -105,44 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('translationsReady', initApp, { once: true });
     }
 });
-
-// --- Валидация поля сессий ---
-function initSessionValidation() {
-    const input = document.getElementById('sessionCount');
-    if (!input) return;
-
-    input.max = MAX_SESSIONS;
-
-    let errorEl = document.getElementById('sessionCountError');
-    if (!errorEl) {
-        errorEl = document.createElement('div');
-        errorEl.id = 'sessionCountError';
-        errorEl.style.cssText = 'font-size:0.85rem;font-weight:bold;color:var(--color-danger);visibility:hidden;min-height:1.2em;margin-top:4px;';
-        input.parentElement.parentElement.insertBefore(errorEl, input.parentElement.nextSibling);
-    }
-
-    input.addEventListener('input', () => validateSessionCount());
-}
-
-function validateSessionCount() {
-    const input = document.getElementById('sessionCount');
-    const errorEl = document.getElementById('sessionCountError');
-    if (!input || !errorEl) return true;
-
-    const val = parseInt(input.value);
-    if (val > MAX_SESSIONS) {
-        input.style.borderColor = 'var(--color-danger)';
-        input.style.boxShadow = '0 0 10px rgba(231,76,60,0.5)';
-        errorEl.textContent = window.getTranslation ? window.getTranslation('sessionCountError') : `Максимум ${MAX_SESSIONS.toLocaleString()} сессий`;
-        errorEl.style.visibility = 'visible';
-        return false;
-    } else {
-        input.style.borderColor = '';
-        input.style.boxShadow = '';
-        errorEl.style.visibility = 'hidden';
-        return true;
-    }
-}
 
 // --- Тултипы ---
 function initTooltips() {
@@ -510,10 +472,10 @@ function simulateSession(config, startingBankroll, baseBet, targetNumbers, payou
 
 function runSimulation(config, startingBankroll, baseBet, targetNumbers, payout,
     triggerType, triggerCount, afterTriggerMode, progression,
-    stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins, sessionCount) {
+    stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins) {
 
     const sessions = [];
-    for (let i = 0; i < sessionCount; i++) {
+    for (let i = 0; i < SESSION_COUNT; i++) {
         sessions.push(simulateSession(
             config, startingBankroll, baseBet, targetNumbers, payout,
             triggerType, triggerCount, afterTriggerMode, progression,
@@ -523,8 +485,8 @@ function runSimulation(config, startingBankroll, baseBet, targetNumbers, payout,
 
     const successfulSessions = sessions.filter(s => s.profit > 0).length;
     const bankruptSessions = sessions.filter(s => s.bankrupt);
-    const avgProfit = sessions.reduce((sum, s) => sum + s.profit, 0) / sessionCount;
-    const avgSpins = sessions.reduce((sum, s) => sum + s.spins, 0) / sessionCount;
+    const avgProfit = sessions.reduce((sum, s) => sum + s.profit, 0) / SESSION_COUNT;
+    const avgSpins = sessions.reduce((sum, s) => sum + s.spins, 0) / SESSION_COUNT;
     const maxProfit = Math.max(...sessions.map(s => s.profit));
     const minProfit = Math.min(...sessions.map(s => s.profit));
 
@@ -534,12 +496,12 @@ function runSimulation(config, startingBankroll, baseBet, targetNumbers, payout,
         : 0;
 
     return {
-        winRate: successfulSessions / sessionCount,
+        winRate: successfulSessions / SESSION_COUNT,
         avgProfit,
-        riskRate: bankruptSessions.length / sessionCount,
+        riskRate: bankruptSessions.length / SESSION_COUNT,
         successfulSessions,
         bankruptSessions: bankruptSessions.length,
-        totalSessions: sessionCount,
+        totalSessions: SESSION_COUNT,
         avgSpins,
         avgSpinsBankrupt,
         maxProfit,
@@ -624,7 +586,6 @@ function drawChart(distribution) {
 // --- Главная функция симуляции ---
 async function simulateStrategy() {
     if (isSimulating) return;
-    if (!validateSessionCount()) return;
 
     const rouletteType = document.querySelector('[data-type].active')?.dataset.type || 'european';
     const config = RouletteConfig[rouletteType];
@@ -639,7 +600,6 @@ async function simulateStrategy() {
     const targetAmount = parseInt(document.getElementById('targetAmount').value) || 2000;
     const stopSpins = document.getElementById('stopSpins').checked;
     const maxSpins = parseInt(document.getElementById('maxSpins').value) || 100;
-    const sessionCount = Math.min(parseInt(document.getElementById('sessionCount').value) || 500, MAX_SESSIONS);
 
     const { finalNumbers } = calculateTotalBet();
 
@@ -664,7 +624,7 @@ async function simulateStrategy() {
         const results = runSimulation(
             config, startingBankroll, betAmount, finalNumbers, payout,
             triggerType, triggerCount, afterTriggerMode, progression,
-            stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins, sessionCount
+            stopBankrupt, stopTarget, targetAmount, stopSpins, maxSpins
         );
         displayResults(results);
         isSimulating = false;
@@ -684,14 +644,12 @@ function resetSimulation() {
     document.getElementById('progressionType').value = 'flat';
     document.getElementById('targetAmount').value = 2000;
     document.getElementById('maxSpins').value = 100;
-    document.getElementById('sessionCount').value = 500;
     document.getElementById('stopTarget').checked = false;
     document.getElementById('stopSpins').checked = true;
     const presetsSelect = document.getElementById('presetsSelect');
     if (presetsSelect) presetsSelect.value = '';
     updateTargetInputState();
     updateProgressionHint();
-    validateSessionCount();
     document.getElementById('resultsPlaceholder').style.display = 'flex';
     document.getElementById('resultsContent').style.display = 'none';
     initConditions();
